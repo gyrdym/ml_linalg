@@ -18,7 +18,7 @@ void main() {
     test('Vector initialization via default constructor... ', () {
       vector1 = new Vector(5);
 
-      expect(vector1, equals([0.0, 0.0, 0.0, 0.0, 0.0]));
+      expect(vector1, equals(new Vector.from([0.0, 0.0, 0.0, 0.0, 0.0])));
       expect(() => vector1[11], throwsRangeError);
       expect(() => vector1[-1], throwsRangeError);
 
@@ -381,9 +381,9 @@ void main() {
       expect(vector1, equals([1.0, 3.0, 2.0, 11.5, 2.0 , 3.0, 4.0, 5.0, 6.0]));
     });
 
-    test('`getRange` method testing... ', () {
-      Iterable<double> res = vector4.getRange(0, 3);
-      expect(res, equals([1.0, 3.0, 2.0]));
-    });
+//    test('`getRange` method testing... ', () {
+//      Iterable<double> res = vector4.getRange(0, 3);
+//      expect(res, equals([1.0, 3.0, 2.0]));
+//    });
   });
 }

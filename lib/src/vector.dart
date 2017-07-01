@@ -1,9 +1,8 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
-import 'dart:collection';
 import 'norm.dart';
 
-class Vector extends ListBase<double> {
+class Vector {
   Float32x4List _innerList;
   int _origLength;
 
@@ -43,6 +42,10 @@ class Vector extends ListBase<double> {
 
   int get length => _origLength;
 
+  bool operator ==(Vector vector) {
+    return vector._innerList == _innerList;
+  }
+
   double operator [](int index) => _getByIndex(index);
 
   void operator []=(int index, double value) { _setByIndex(index, value); }
@@ -71,7 +74,7 @@ class Vector extends ListBase<double> {
 
   Vector abs({bool inPlace = false}) => _abs(inPlace);
 
-  Vector cut(int start, [int end]) => new Vector.from(sublist(start, end));
+  Vector cut(int start, [int end]) => _cut(start, end);
 
   Vector copy() => new Vector.fromTypedList(_innerList, _origLength);
 
@@ -90,7 +93,7 @@ class Vector extends ListBase<double> {
     return math.pow(intPow(exp).abs().sum(), 1 / exp);
   }
 
-  void addAll(Iterable<double> iterable) { concat(new Vector.from(iterable)); }
+  void addAll(Iterable<double> collection) { concat(new Vector.from(collection)); }
 
   void _setLength(int newLength) {
     if (newLength < 0) {
@@ -307,6 +310,18 @@ class Vector extends ListBase<double> {
     }
 
     return inPlace ? this : new Vector.fromTypedList(_bufList, _origLength);
+  }
+
+  Vector _cut(int start, [int end]) {
+    end = (end > length || end == null) ? length : end;
+
+    List<double> _tmp = new List(end - start);
+
+    for (int i = start; i < end; i++) {
+      _tmp.add(this[i]);
+    }
+
+    return new Vector.from(_tmp);
   }
 
   RangeError _outOfRangeError(index) => new RangeError("Index $index out of range!");
