@@ -3,7 +3,8 @@ import 'dart:typed_data';
 import 'norm.dart';
 import 'vector.dart';
 
-part 'float32_vector.dart';
+part 'float32x4_vector.dart';
+part 'float64x2_vector.dart';
 
 abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
     implements Vector<TypedListType> {
@@ -152,14 +153,16 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   TypedListType _convertSIMDListToTyped(SIMDListType source) {
     List<double> _list = [];
 
-    for (int i = 0; i < source.length - 1; i++) {
-      _list.addAll(_SIMDValueToList(source[i]));
+    if (source.length > 0) {
+      for (int i = 0; i < source.length - 1; i++) {
+        _list.addAll(_SIMDValueToList(source[i]));
+      }
+
+      int lengthRemainder = _origLength % _laneLength;
+      List<double> remainder = _getPartOfSIMDValueAsList(source.last, lengthRemainder);
+
+      _list.addAll(remainder);
     }
-
-    int lengthRemainder = _origLength % _laneLength;
-    List<double> remainder = _getPartOfSIMDValueAsList(source.last, lengthRemainder);
-
-    _list.addAll(remainder);
 
     return _createTypedListFrom(_list);
   }
