@@ -5,15 +5,15 @@ import 'vector.dart';
 
 part 'float32_vector.dart';
 
-abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List>
+abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
     implements Vector<TypedListType> {
 
   SIMDListType _innerList;
   int _origLength;
-  final int _laneLength = 0;
+  int get _laneLength;
 
   _SIMDVector(int length) {
-    _innerList = _createSIMDList((length / 4).ceil());
+    _innerList = _createSIMDList((length / _laneLength).ceil());
     _origLength = length;
   }
 
@@ -99,39 +99,39 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   double _summarize() {
-    Float32x4 sum = this._innerList.reduce((Float32x4 sum, Float32x4 item) => item + sum);
-    return sum.x + sum.y + sum.z + sum.w;
+    SIMDValueType sum = _innerList.reduce((SIMDValueType sum, SIMDValueType item) => _SIMDValuesSum(item, sum));
+    return _SIMDValueSum(sum);
   }
 
   _SIMDVector _abs() {
-    SIMDListType list = _createSIMDListFrom(_innerList.map((Float32x4 item) => item.abs())
+    SIMDListType list = _createSIMDListFrom(_innerList.map((SIMDValueType item) => _SIMDValueAbs(item))
                                                 .toList(growable: false));
 
     return _createVectorFromTypedList(list, _origLength);
   }
 
-  Float32x4 _laneIntPow(Float32x4 lane, int e) {
+  SIMDValueType _laneIntPow(SIMDValueType lane, int e) {
     if (e == 0) {
-      return new Float32x4.splat(1.0);
+      return _createSIMDValueFilled(1.0);
     }
 
-    Float32x4 x = _laneIntPow(lane, e ~/ 2);
-    Float32x4 sqrX = x * x;
+    SIMDValueType x = _laneIntPow(lane, e ~/ 2);
+    SIMDValueType sqrX = _SIMDValuesProduct(x, x);
 
     if (e % 2 == 0) {
       return sqrX;
     }
 
-    return (lane * sqrX);
+    return _SIMDValuesProduct(lane, sqrX);
   }
 
   SIMDListType _convertCollectionToSIMDList(Iterable<double> source) {
-    int partsCount = (source.length / 4).ceil();
-    SIMDListType _bufferList = _createSIMDList(partsCount);
+    int lanesCount = (source.length / _laneLength).ceil();
+    SIMDListType _bufferList = _createSIMDList(lanesCount);
 
-    for (int i = 0; i < partsCount; i++) {
-      int end = (i + 1) * 4;
-      int start = end - 4;
+    for (int i = 0; i < lanesCount; i++) {
+      int end = (i + 1) * _laneLength;
+      int start = end - _laneLength;
       int diff = end - source.length;
       List<double> sublist;
 
@@ -143,12 +143,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
         sublist = source.toList(growable: false).sublist(start, end);
       }
 
-      double x = sublist[0] ?? 0.0;
-      double y = sublist[1] ?? 0.0;
-      double z = sublist[2] ?? 0.0;
-      double w = sublist[3] ?? 0.0;
-
-      _bufferList[i] = new Float32x4(x, y, z, w);
+      _bufferList[i] = _createSIMDValueFromList(sublist);
     }
 
     return _bufferList;
@@ -158,38 +153,28 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     List<double> _list = [];
 
     for (int i = 0; i < source.length - 1; i++) {
-      Float32x4 item = source[i];
-      _list.addAll([item.x, item.y, item.z, item.w]);
+      _list.addAll(_SIMDValueToList(source[i]));
     }
 
-    int remainder = _origLength % 4;
+    int lengthRemainder = _origLength % _laneLength;
+    List<double> remainder = _getPartOfSIMDValueAsList(source.last, lengthRemainder);
 
-    switch (remainder) {
-      case 1:
-        _list.add(source.last.x);
-        break;
-      case 2:
-        _list.addAll([source.last.x, source.last.y]);
-        break;
-      case 3:
-        _list.addAll([source.last.x, source.last.y, source.last.z]);
-        break;
-    }
+    _list.addAll(remainder);
 
     return _createTypedListFrom(_list);
   }
 
-  SIMDVectorType _elementWiseOperation(Object value, operation(Float32x4 a, Float32x4 b)) {
+  SIMDVectorType _elementWiseOperation(Object value, operation(SIMDValueType a, SIMDValueType b)) {
     if (value is SIMDVectorType && value.length != this.length) {
       throw _mismatchLengthError();
     }
 
-    Float32x4 _scalarValue;
+    SIMDValueType _scalarValue;
 
     if (value is SIMDVectorType) {
       //do nothing
     } else if (value is double) {
-      _scalarValue = new Float32x4.splat(value);
+      _scalarValue = _createSIMDValueFilled(value);
     } else {
       throw new UnsupportedError('Unsupported operand type (${value.runtimeType})');
     }
@@ -213,6 +198,14 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     return _createVectorFromTypedList(_list, _origLength);
   }
 
+  SIMDValueType _createSIMDValueFilled(double value);
+  SIMDValueType _createSIMDValueFromList(List<double> list);
+  SIMDValueType _SIMDValuesProduct(SIMDValueType a, SIMDValueType b);
+  SIMDValueType _SIMDValuesSum(SIMDValueType a, SIMDValueType b);
+  SIMDValueType _SIMDValueAbs(SIMDValueType a);
+  double _SIMDValueSum(SIMDValueType a);
+  List<double> _SIMDValueToList(SIMDValueType a);
+  List<double> _getPartOfSIMDValueAsList(SIMDValueType a, int lanesCount);
   SIMDListType _createSIMDList(int length);
   SIMDListType _createSIMDListFrom(List list);
   TypedListType _createTypedListFrom(List<double> list);
