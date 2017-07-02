@@ -1,7 +1,6 @@
-import 'dart:typed_data' show Float32List, TypedData;
 import 'norm.dart';
 
-abstract class Vector {
+abstract class Vector<T> {
   int get length;
 
   bool operator ==(Vector vector);
@@ -26,5 +25,5 @@ abstract class Vector {
   double norm([Norm norm = Norm.EUCLIDEAN]);
   double sum();
 
-  Float32List asTypedList();
+  T asTypedList();
 }
