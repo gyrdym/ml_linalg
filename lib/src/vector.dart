@@ -201,7 +201,7 @@ class Vector {
   }
 
   double _summarize() {
-    Float32x4 sum = this._innerList.reduce((Float32x4 item, Float32x4 sum) => item + sum);
+    Float32x4 sum = this._innerList.reduce((Float32x4 sum, Float32x4 item) => item + sum);
     return sum.x + sum.y + sum.z + sum.w;
   }
 
