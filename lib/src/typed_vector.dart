@@ -47,10 +47,6 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   int get length => _origLength;
 
-  bool operator ==(SIMDVectorType vector) {
-    return vector._innerList == _innerList;
-  }
-
   SIMDVectorType operator +(SIMDVectorType vector) => _elementWiseOperation(vector, (a, b) => a + b);
 
   SIMDVectorType operator -(SIMDVectorType vector) => _elementWiseOperation(vector, (a, b) => a - b);
