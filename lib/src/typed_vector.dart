@@ -86,7 +86,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     return math.pow(intPow(exp).abs().sum(), 1 / exp);
   }
 
-  TypedListType asTypedList() => _convertSIMDListToTyped(_innerList);
+  TypedListType asList() => _convertSIMDListToTyped(_innerList);
 
   int _getExpForNorm(Norm norm) {
     switch(norm) {

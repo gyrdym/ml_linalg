@@ -25,5 +25,5 @@ abstract class Vector<T> {
   double norm([Norm norm = Norm.EUCLIDEAN]);
   double sum();
 
-  T asTypedList();
+  T asList();
 }
