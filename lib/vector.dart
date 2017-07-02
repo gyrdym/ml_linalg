@@ -1,2 +1,2 @@
 export 'src/norm.dart';
-export 'src/vector.dart';
+export 'src/float32_vector.dart';
