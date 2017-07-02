@@ -3,8 +3,6 @@ import 'norm.dart';
 abstract class Vector<T> {
   int get length;
 
-  bool operator ==(Vector vector);
-
   Vector operator +(Vector vector);
   Vector operator -(Vector vector);
   Vector operator *(Vector vector);
