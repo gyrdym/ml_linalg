@@ -3,8 +3,8 @@ import 'package:benchmark_harness/benchmark_harness.dart';
 
 const int AMOUNT_OF_ELEMENTS = 10000000;
 
-Vector vector1;
-Vector vector2;
+Float32x4Vector vector1;
+Float32x4Vector vector2;
 
 class VectorInitializationBenchmark extends BenchmarkBase {
   const VectorInitializationBenchmark() : super('Vector initialization, $AMOUNT_OF_ELEMENTS elements');
@@ -14,7 +14,7 @@ class VectorInitializationBenchmark extends BenchmarkBase {
   }
 
   void run() {
-    vector1 = new Vector.from(new List<double>.filled(AMOUNT_OF_ELEMENTS, 1.0));
+    vector1 = new Float32x4Vector.from(new List<double>.filled(AMOUNT_OF_ELEMENTS, 1.0));
   }
 
   void tearDown() {
@@ -34,8 +34,8 @@ class VectorAdditionBenchmark extends BenchmarkBase {
   }
 
   void setup() {
-    vector1 = new Vector.from(new List<double>.filled(AMOUNT_OF_ELEMENTS, 1.0));
-    vector2 = new Vector.from(new List<double>.filled(AMOUNT_OF_ELEMENTS, 1.0));
+    vector1 = new Float32x4Vector.from(new List<double>.filled(AMOUNT_OF_ELEMENTS, 1.0));
+    vector2 = new Float32x4Vector.from(new List<double>.filled(AMOUNT_OF_ELEMENTS, 1.0));
   }
 
   void tearDown() {
