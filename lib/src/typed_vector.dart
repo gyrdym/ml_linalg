@@ -6,46 +6,61 @@ import 'vector.dart';
 part 'float32x4_vector.dart';
 part 'float64x2_vector.dart';
 
+/// A vector with SIMD (single instruction, multiple data) architecture support
+///
+/// An entity, that extends this class, may has potentially infinite length (in terms of vector algebra - number of
+/// dimensions). Vector components are contained in special typed data structure, that allow to perform vector operations
+/// extremely fast due to hardware assisted computations.
+///
+/// Let's assume some considerations:
+/// - High performance of vector operations is provided by SIMD types of dart language
+/// - Each SIMD-typed value is a "cell", that contains several floating point values (at the present moment - 2 or 4).
+/// - 
 abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
     implements Vector<TypedListType> {
 
+  /// An efficient typed list
   SIMDListType _innerList;
-  int _origLength;
+
+  /// A number of vector elements
+  int _length;
+
+  ///
   int get _laneLength;
 
   _SIMDVector(int length) {
     _innerList = _createSIMDList((length / _laneLength).ceil());
-    _origLength = length;
+    _length = length;
   }
 
   _SIMDVector.from(Iterable<double> source) {
-    _origLength = source.length;
+    _length = source.length;
     _innerList = _convertCollectionToSIMDList(source);
   }
 
   _SIMDVector.fromTypedList(SIMDListType source, [int origLength]) {
-    _origLength = origLength ?? source.length * _laneLength;
+    _length = origLength ?? source.length * _laneLength;
     _innerList = source;
   }
 
   _SIMDVector.filled(int length, double value) {
-    _origLength = length;
+    _length = length;
     _innerList = _convertCollectionToSIMDList(new List<double>.filled(length, value));
   }
 
   _SIMDVector.zero(int length) {
-    _origLength = length;
+    _length = length;
     _innerList = _convertCollectionToSIMDList(new List<double>.filled(length, 0.0));
   }
 
   _SIMDVector.randomFilled(int length, {int seed}) {
     math.Random random = new math.Random(seed);
     List<double> _list = new List<double>.generate(length, (_) => random.nextDouble());
-    _origLength = length;
+    _length = length;
     _innerList = _convertCollectionToSIMDList(_list);
   }
 
-  int get length => _origLength;
+  int get length => _length;
 
   SIMDVectorType operator +(SIMDVectorType vector) => _elementWiseOperation(vector, (a, b) => a + b);
 
@@ -69,7 +84,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   SIMDVectorType abs() => _abs();
 
-  SIMDVectorType copy() => _createVectorFromTypedList(_innerList, _origLength);
+  SIMDVectorType copy() => _createVectorFromTypedList(_innerList, _length);
 
   double dot(SIMDVectorType vector) => (this * vector).sum();
 
@@ -104,7 +119,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     SIMDListType list = _createSIMDListFrom(_innerList.map((SIMDValueType item) => _SIMDValueAbs(item))
                                                 .toList(growable: false));
 
-    return _createVectorFromTypedList(list, _origLength);
+    return _createVectorFromTypedList(list, _length);
   }
 
   SIMDValueType _laneIntPow(SIMDValueType lane, int e) {
@@ -154,7 +169,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
         _list.addAll(_SIMDValueToList(source[i]));
       }
 
-      int lengthRemainder = _origLength % _laneLength;
+      int lengthRemainder = _length % _laneLength;
       List<double> remainder = _getPartOfSIMDValueAsList(source.last, lengthRemainder);
 
       _list.addAll(remainder);
@@ -184,7 +199,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
       _list[i] = operation(this._innerList[i], value is SIMDVectorType ? value._innerList[i] : _scalarValue);
     }
 
-    return _createVectorFromTypedList(_list, _origLength);
+    return _createVectorFromTypedList(_list, _length);
   }
 
   SIMDVectorType _elementWisePow(int exp) {
@@ -194,7 +209,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
       _list[i] = _laneIntPow(_innerList[i], exp);
     }
 
-    return _createVectorFromTypedList(_list, _origLength);
+    return _createVectorFromTypedList(_list, _length);
   }
 
   SIMDValueType _createSIMDValueFilled(double value);
