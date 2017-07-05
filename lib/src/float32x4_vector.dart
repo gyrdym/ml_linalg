@@ -1,5 +1,17 @@
 part of 'typed_vector.dart';
 
+/// A vector with SIMD (single instruction, multiple data) architecture support
+///
+/// This vector may has potentially infinite length (in terms of vector algebra - number of
+/// dimensions). Vector components are contained in [Float32x4List] data structure, that allow to perform vector operations
+/// extremely fast due to hardware assisted computations.
+///
+/// Let's assume some considerations:
+/// - High performance of vector operations is provided by SIMD types of dart language
+/// - Each SIMD-typed value is a "cell", that contains (in case of [Float32x4Vector]) four 32-digit floating point values.
+/// Type of this values is [Float32x4]
+/// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
+/// simultaneously (in parallel, in this case - in four threads)
 class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float32List, Float32x4> {
   @override
   int get _laneLength => 4;
@@ -8,7 +20,7 @@ class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float3
 
   Float32x4Vector.from(Iterable<double> source) : super.from(source);
 
-  Float32x4Vector.fromTypedList(Float32x4List source, [int origLength]) : super.fromTypedList(source, origLength);
+  Float32x4Vector.fromSIMDList(Float32x4List source, [int origLength]) : super.fromSIMDList(source, origLength);
 
   Float32x4Vector.filled(int length, double value) : super.filled(length, value);
 
@@ -23,7 +35,7 @@ class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float3
   Float32List _createTypedListFrom(List<double> list) => new Float32List.fromList(list);
 
   Float32x4Vector _createVectorFromTypedList(Float32x4List list, int length) => new Float32x4Vector
-      .fromTypedList(list, length);
+      .fromSIMDList(list, length);
 
   Float32x4 _createSIMDValueFilled(double value) => new Float32x4.splat(value);
 

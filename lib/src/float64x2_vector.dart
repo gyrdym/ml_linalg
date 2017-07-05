@@ -1,5 +1,17 @@
 part of 'typed_vector.dart';
 
+/// A vector with SIMD (single instruction, multiple data) architecture support
+///
+/// This vector may has potentially infinite length (in terms of vector algebra - number of
+/// dimensions). Vector components are contained in [Float64x2List] data structure, that allow to perform vector operations
+/// extremely fast due to hardware assisted computations.
+///
+/// Let's assume some considerations:
+/// - High performance of vector operations is provided by SIMD types of dart language
+/// - Each SIMD-typed value is a "cell", that contains (in case of [Float64x2Vector]) two 64-digit floating point values.
+/// Type of this values is [Float64x2]
+/// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
+/// simultaneously (in parallel, in this case - in two threads)
 class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float64List, Float64x2> {
   @override
   int get _laneLength => 2;
@@ -8,7 +20,7 @@ class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float6
 
   Float64x2Vector.from(Iterable<double> source) : super.from(source);
 
-  Float64x2Vector.fromTypedList(Float64x2List source, [int origLength]) : super.fromTypedList(source, origLength);
+  Float64x2Vector.fromTypedList(Float64x2List source, [int origLength]) : super.fromSIMDList(source, origLength);
 
   Float64x2Vector.filled(int length, double value) : super.filled(length, value);
 

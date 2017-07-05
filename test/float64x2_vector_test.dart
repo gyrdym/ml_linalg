@@ -197,7 +197,6 @@ void main() {
       Float64x2Vector tmp = vector.copy();
 
       expect(tmp.asList(), equals([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]));
-      expect(tmp == vector, isTrue);
       expect(identical(tmp, vector), isFalse);
     });
   });
