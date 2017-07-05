@@ -28,10 +28,10 @@ void main() {
         new Float32x4(9.0, 10.0, 0.0, 0.0)
       ]);
 
-      Float32x4Vector vector = new Float32x4Vector.fromTypedList(typedList);
+      Float32x4Vector vector = new Float32x4Vector.fromSIMDList(typedList);
       expect(vector.length, equals(12));
 
-      vector = new Float32x4Vector.fromTypedList(typedList, 10);
+      vector = new Float32x4Vector.fromSIMDList(typedList, 10);
       expect(vector.asList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
       expect(vector.length, equals(10));
     });
@@ -194,7 +194,6 @@ void main() {
       Float32x4Vector tmp = vector.copy();
 
       expect(tmp.asList(), equals([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]));
-      expect(tmp == vector, isTrue);
       expect(identical(tmp, vector), isFalse);
     });
   });
