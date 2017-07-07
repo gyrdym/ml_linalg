@@ -17,7 +17,7 @@ part 'float64x2_vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (at the present moment - 2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
 /// simultaneously (in parallel)
-abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
+abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
     implements Vector<TypedListType> {
 
   /// An efficient typed list
@@ -30,35 +30,38 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// restricted by computing platform architecture)
   int get _laneLength;
 
-  _SIMDVector(int length) {
+  /// Creates a vector with [length] empty components
+  SIMDVector(int length) {
     _innerList = _createSIMDList((length / _laneLength).ceil());
     _length = length;
   }
 
-  _SIMDVector.from(Iterable<double> source) {
+  /// Creates a vector from collection
+  SIMDVector.from(Iterable<double> source) {
     _length = source.length;
     _innerList = _convertCollectionToSIMDList(source);
   }
 
-  _SIMDVector.fromSIMDList(SIMDListType source, [int origLength]) {
+  /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
+  SIMDVector.fromSIMDList(SIMDListType source, [int origLength]) {
     _length = origLength ?? source.length * _laneLength;
     _innerList = source;
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
-  _SIMDVector.filled(int length, double value) {
+  SIMDVector.filled(int length, double value) {
     _length = length;
     _innerList = _convertCollectionToSIMDList(new List<double>.filled(length, value));
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
-  _SIMDVector.zero(int length) {
+  SIMDVector.zero(int length) {
     _length = length;
     _innerList = _convertCollectionToSIMDList(new List<double>.filled(length, 0.0));
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
-  _SIMDVector.randomFilled(int length, {int seed}) {
+  SIMDVector.randomFilled(int length, {int seed}) {
     math.Random random = new math.Random(seed);
     List<double> _list = new List<double>.generate(length, (_) => random.nextDouble());
     _length = length;
@@ -105,6 +108,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   TypedListType asList() => _convertSIMDListToTyped(_innerList);
 
+  /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
   int _getExpForNorm(Norm norm) {
     switch(norm) {
       case Norm.EUCLIDEAN:
@@ -116,18 +120,21 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     }
   }
 
+  /// Returns sum of all vector components
   double _summarize() {
     SIMDValueType sum = _innerList.reduce((SIMDValueType sum, SIMDValueType item) => _SIMDValuesSum(item, sum));
     return _SIMDValueSum(sum);
   }
 
-  _SIMDVector _abs() {
+  /// Returns a vector filled with absolute values of an each component of [this] vector
+  SIMDVector _abs() {
     SIMDListType list = _createSIMDListFrom(_innerList.map((SIMDValueType item) => _SIMDValueAbs(item))
                                                 .toList(growable: false));
 
     return _createVectorFromTypedList(list, _length);
   }
 
+  /// Returns lane (a single SIMD value) raised to the integer power
   SIMDValueType _laneIntPow(SIMDValueType lane, int e) {
     if (e == 0) {
       return _createSIMDValueFilled(1.0);
@@ -143,6 +150,9 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     return _SIMDValuesProduct(lane, sqrX);
   }
 
+  /// Returns SIMD list (e.g. Float32x4List) as result of converting iterable source
+  ///
+  /// All sequence of [source] elements splits into groups with [_laneLength] length
   SIMDListType _convertCollectionToSIMDList(Iterable<double> source) {
     int lanesCount = (source.length / _laneLength).ceil();
     SIMDListType _bufferList = _createSIMDList(lanesCount);
@@ -167,6 +177,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     return _bufferList;
   }
 
+  /// Returns special typed list (e.g. Float32List) as a result of converting SIMD [source]
   TypedListType _convertSIMDListToTyped(SIMDListType source) {
     List<double> _list = [];
 
