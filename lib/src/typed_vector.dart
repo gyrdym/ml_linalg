@@ -195,6 +195,7 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
     return _createTypedListFrom(_list);
   }
 
+  /// Returns a vector as a result of applying to [this] any element-wise operation (e.g. vector addition)
   SIMDVectorType _elementWiseOperation(Object value, operation(SIMDValueType a, SIMDValueType b)) {
     if (value is SIMDVectorType && value.length != this.length) {
       throw _mismatchLengthError();
@@ -219,6 +220,7 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
     return _createVectorFromTypedList(_list, _length);
   }
 
+  /// Returns a vector as a result of applying to [this] element-wise raising to power
   SIMDVectorType _elementWisePow(int exp) {
     SIMDListType _list = _createSIMDList(_innerList.length);
 
@@ -228,6 +230,9 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
 
     return _createVectorFromTypedList(_list, _length);
   }
+
+  // Factory methods are below
+
 
   SIMDValueType _createSIMDValueFilled(double value);
   SIMDValueType _createSIMDValueFromList(List<double> list);
