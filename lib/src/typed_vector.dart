@@ -152,16 +152,16 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
 
   /// Returns SIMD list (e.g. Float32x4List) as result of converting iterable source
   ///
-  /// All sequence of [source] elements splits into groups with [_laneLength] length
-  SIMDListType _convertCollectionToSIMDList(Iterable<double> source) {
-    int lanesCount = (source.length / _laneLength).ceil();
-    SIMDListType _bufferList = _createSIMDList(lanesCount);
-    List<double> fixedLengthSource = source.toList(growable: false);
+  /// All sequence of [collection] elements splits into groups with [_laneLength] length
+  SIMDListType _convertCollectionToSIMDList(Iterable<double> collection) {
+    int lanesCount = (collection.length / _laneLength).ceil();
+    SIMDListType targetList = _createSIMDList(lanesCount);
+    List<double> fixedLengthSource = collection.toList(growable: false);
 
     for (int i = 0; i < lanesCount; i++) {
       int end = (i + 1) * _laneLength;
       int start = end - _laneLength;
-      int diff = end - source.length;
+      int diff = end - collection.length;
       List<double> sublist;
 
       if (diff > 0) {
@@ -172,10 +172,10 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
         sublist = fixedLengthSource.sublist(start, end);
       }
 
-      _bufferList[i] = _createSIMDValueFromList(sublist);
+      targetList[i] = _createSIMDValueFromList(sublist);
     }
 
-    return _bufferList;
+    return targetList;
   }
 
   /// Returns special typed list (e.g. Float32List) as a result of converting SIMD [source]
