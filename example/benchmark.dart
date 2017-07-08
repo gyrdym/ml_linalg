@@ -1,7 +1,7 @@
 import 'package:dart_vector/vector.dart';
 import 'package:benchmark_harness/benchmark_harness.dart';
 
-const int AMOUNT_OF_ELEMENTS = 10000000;
+const int AMOUNT_OF_ELEMENTS = 1000000;
 
 Float32x4Vector vector1;
 Float32x4Vector vector2;
@@ -42,4 +42,9 @@ class VectorAdditionBenchmark extends BenchmarkBase {
     vector1 = null;
     vector2 = null;
   }
+}
+
+void main() {
+//  VectorAdditionBenchmark.main();
+  VectorInitializationBenchmark.main();
 }
