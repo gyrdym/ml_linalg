@@ -156,6 +156,7 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
   SIMDListType _convertCollectionToSIMDList(Iterable<double> source) {
     int lanesCount = (source.length / _laneLength).ceil();
     SIMDListType _bufferList = _createSIMDList(lanesCount);
+    List<double> fixedLengthSource = source.toList(growable: false);
 
     for (int i = 0; i < lanesCount; i++) {
       int end = (i + 1) * _laneLength;
@@ -165,10 +166,10 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
 
       if (diff > 0) {
         List<double> zeroItems = new List<double>.filled(diff, 0.0);
-        sublist = source.toList(growable: false).sublist(start);
+        sublist = fixedLengthSource.sublist(start);
         sublist.addAll(zeroItems);
       } else {
-        sublist = source.toList(growable: false).sublist(start, end);
+        sublist = fixedLengthSource.sublist(start, end);
       }
 
       _bufferList[i] = _createSIMDValueFromList(sublist);
