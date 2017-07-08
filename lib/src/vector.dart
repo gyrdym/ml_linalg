@@ -29,10 +29,10 @@ abstract class Vector<T> {
   ///Performs a vector and a scalar addition ([value] is added to each component of a vector)
   Vector scalarAdd(double value);
 
-  ///Performs subtraction of a vector and a scalar (from each component of a vector [value] is subtracted)
+  ///Performs subtraction of a vector and a scalar ([value] is subtracted from an each component of a vector )
   Vector scalarSub(double value);
 
-  ///Finds the absolute value of an each component of a vector
+  ///Returns a vector with absolute value of an each vector component
   Vector abs();
 
   ///Returns a copy of a vector
