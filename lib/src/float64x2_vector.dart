@@ -16,29 +16,43 @@ class Float64x2Vector extends SIMDVector<Float64x2Vector, Float64x2List, Float64
   @override
   int get _laneLength => 2;
 
+  /// Creates a [Float64x2Vector] vector with [length] empty components
   Float64x2Vector(int length) : super(length);
 
+  /// Creates a [Float64x2Vector] vector from collection
   Float64x2Vector.from(Iterable<double> source) : super.from(source);
 
+  /// Creates a [Float64x2Vector] vector from [Float64x2List] list
   Float64x2Vector.fromTypedList(Float64x2List source, [int origLength]) : super.fromSIMDList(source, origLength);
 
+  /// Creates a [Float64x2Vector] vector with length equals [length] and fills all elements of created vector with a zero
   Float64x2Vector.filled(int length, double value) : super.filled(length, value);
 
+  /// Creates a [Float64x2Vector] vector with length equals [length] and fills all elements of created vector with a zero
   Float64x2Vector.zero(int length) : super.zero(length);
 
+  /// Creates a [Float64x2Vector] vector with length equals [length] and fills all elements of created vector with a random value
   Float64x2Vector.randomFilled(int length, {int seed}) : super.randomFilled(length, seed: seed);
 
+  // Factory methods implementation:
+
+  @override
   Float64x2List _createSIMDList(int length) => new Float64x2List(length);
 
+  @override
   Float64x2List _createSIMDListFrom(List list) => new Float64x2List.fromList(list);
 
+  @override
   Float64List _createTypedListFrom(List<double> list) => new Float64List.fromList(list);
 
+  @override
   Float64x2Vector _createVectorFromTypedList(Float64x2List list, int length) => new Float64x2Vector
       .fromTypedList(list, length);
 
+  @override
   Float64x2 _createSIMDValueFilled(double value) => new Float64x2.splat(value);
 
+  @override
   Float64x2 _createSIMDValueFromList(List<double> list) {
     double x = list[0] ?? 0.0;
     double y = list[1] ?? 0.0;
@@ -46,16 +60,22 @@ class Float64x2Vector extends SIMDVector<Float64x2Vector, Float64x2List, Float64
     return new Float64x2(x, y);
   }
 
+  @override
   Float64x2 _SIMDValuesProduct(Float64x2 a, Float64x2 b) => a * b;
 
+  @override
   Float64x2 _SIMDValuesSum(Float64x2 a, Float64x2 b) => a + b;
 
+  @override
   Float64x2 _SIMDValueAbs(Float64x2 a) => a.abs();
 
+  @override
   double _SIMDValueSum(Float64x2 a) => a.x + a.y;
 
+  @override
   List<double> _SIMDValueToList(Float64x2 a) => [a.x, a.y];
 
+  @override
   List<double> _getPartOfSIMDValueAsList(Float64x2 a, int lanesCount) {
     switch (lanesCount) {
       case 1:
