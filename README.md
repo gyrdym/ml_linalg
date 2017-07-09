@@ -1,4 +1,4 @@
-# dart_simd_vector
+# simd_vector
 Algebraic vector with SIMD support and a potentially infinite length.
 
 All vector operations are supported by SIMD computation architecture, so this library presents two high performance SIMD 
@@ -9,7 +9,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Vector addition:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   Float32x4Vector vector2 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -19,7 +19,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Vector subtraction:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([4.0, 5.0, 6.0, 7.0, 8.0]);
   Float32x4Vector vector2 = new Float32x4Vector.from([2.0, 3.0, 2.0, 3.0, 2.0]);
@@ -29,7 +29,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Vector multiplication:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   Float32x4Vector vector2 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -39,7 +39,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Vector division:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([6.0, 12.0, 24.0, 48.0, 96.0]);
   Float32x4Vector vector2 = new Float32x4Vector.from([3.0, 4.0, 6.0, 8.0, 12.0]);
@@ -49,7 +49,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Euclidean norm:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   double result = vector1.norm();
@@ -58,7 +58,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Manhattan norm:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   double result = vector1.norm(Norm.MANHATTAN);
@@ -67,7 +67,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Mean value:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   double result = vector1.mean();
@@ -76,7 +76,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Sum of all vector elements:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   double result = vector1.sum();
@@ -85,7 +85,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Dot product of two vectors
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   Float32x4Vector vector2 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -95,7 +95,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Addition of a vector and a scalar:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   double scalar = 5.0;
@@ -105,7 +105,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Subtraction scalar value from a vector:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   double scalar = 5.0;
@@ -115,7 +115,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Multiplication of a scalar value and a vector:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   double scalar = 5.0;
@@ -125,7 +125,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Division of a vector by a scalar value:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([25.0, 50.0, 75.0, 100.0, 125.0]);
   double scalar = 5.0;
@@ -135,7 +135,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Finding a Euclidean distance between two vectors:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   Float32x4Vector vector2 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -145,7 +145,7 @@ At the present moment are implemented most common vector operations, such as:
 
 - Finding a Manhattan distance between two vectors:
 ````Dart
-  import 'package:dart_simd_vector/vector.dart';
+  import 'package:simd_vector/vector.dart';
 
   Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   Float32x4Vector vector2 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
