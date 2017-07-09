@@ -1,5 +1,9 @@
 # dart_simd_vector
-Algebraic vector with SIMD support and a potentially infinite length
+Algebraic vector with SIMD support and a potentially infinite length.
+
+All vector operations are supported by SIMD computation architecture, so this library presents two high performance SIMD 
+vector classes: `Float32x4Vector` and `Float64x2Vector`. Operations in the first one are performed in a lane with four "threads"
+and in the second one - in a lane with two "threads".
 
 At the present moment are implemented most common vector operations, such as:
 
