@@ -12,7 +12,7 @@ part of 'typed_vector.dart';
 /// Type of this values is [Float32x4]
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
 /// simultaneously (in parallel, in this case - in four threads)
-class Float32x4Vector extends SIMDVector<Float32x4Vector, Float32x4List, Float32List, Float32x4> {
+class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float32List, Float32x4> {
   @override
   int get _laneLength => 4;
 
