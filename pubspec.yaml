@@ -1,4 +1,4 @@
-name: dart_vector
+name: dart_simd_vector
 description: Algebraic vector with SIMD support and a potentially infinite length
 version: 0.2.0
 author: Ilya Gyrdymov <ilgyrd@gmail.com>
