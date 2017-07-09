@@ -16,9 +16,6 @@ class Float32x4Vector extends SIMDVector<Float32x4Vector, Float32x4List, Float32
   @override
   int get _laneLength => 4;
 
-  /// Creates a [Float32x4Vector] vector with [length] empty components
-  Float32x4Vector(int length) : super(length);
-
   /// Creates a [Float32x4Vector] vector from collection
   Float32x4Vector.from(Iterable<double> source) : super.from(source);
 

@@ -16,9 +16,6 @@ class Float64x2Vector extends SIMDVector<Float64x2Vector, Float64x2List, Float64
   @override
   int get _laneLength => 2;
 
-  /// Creates a [Float64x2Vector] vector with [length] empty components
-  Float64x2Vector(int length) : super(length);
-
   /// Creates a [Float64x2Vector] vector from collection
   Float64x2Vector.from(Iterable<double> source) : super.from(source);
 

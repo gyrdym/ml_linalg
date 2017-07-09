@@ -30,12 +30,6 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
   /// restricted by computing platform architecture)
   int get _laneLength;
 
-  /// Creates a vector with [length] empty components
-  SIMDVector(int length) {
-    _innerList = _createSIMDList((length / _laneLength).ceil());
-    _length = length;
-  }
-
   /// Creates a vector from collection
   SIMDVector.from(Iterable<double> source) {
     _length = source.length;
