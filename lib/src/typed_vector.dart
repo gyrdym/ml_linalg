@@ -17,7 +17,7 @@ part 'float64x2_vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (at the present moment - 2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
 /// simultaneously (in parallel)
-abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
+abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
     implements Vector<TypedListType> {
 
   /// An efficient typed list
@@ -31,31 +31,31 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
   int get _laneLength;
 
   /// Creates a vector from collection
-  SIMDVector.from(Iterable<double> source) {
+  _SIMDVector.from(Iterable<double> source) {
     _length = source.length;
     _innerList = _convertCollectionToSIMDList(source);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
-  SIMDVector.fromSIMDList(SIMDListType source, [int origLength]) {
+  _SIMDVector.fromSIMDList(SIMDListType source, [int origLength]) {
     _length = origLength ?? source.length * _laneLength;
     _innerList = source;
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
-  SIMDVector.filled(int length, double value) {
+  _SIMDVector.filled(int length, double value) {
     _length = length;
     _innerList = _convertCollectionToSIMDList(new List<double>.filled(length, value));
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
-  SIMDVector.zero(int length) {
+  _SIMDVector.zero(int length) {
     _length = length;
     _innerList = _convertCollectionToSIMDList(new List<double>.filled(length, 0.0));
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
-  SIMDVector.randomFilled(int length, {int seed}) {
+  _SIMDVector.randomFilled(int length, {int seed}) {
     math.Random random = new math.Random(seed);
     List<double> _list = new List<double>.generate(length, (_) => random.nextDouble());
     _length = length;
@@ -121,7 +121,7 @@ abstract class SIMDVector<SIMDVectorType extends SIMDVector, SIMDListType extend
   }
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
-  SIMDVector _abs() {
+  _SIMDVector _abs() {
     SIMDListType list = _createSIMDListFrom(_innerList.map((SIMDValueType item) => _SIMDValueAbs(item))
                                                 .toList(growable: false));
 
