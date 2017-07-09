@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:dart_simd_vector/vector.dart';
+import 'package:simd_vector/vector.dart';
 import 'package:test/test.dart';
 import 'package:matcher/matcher.dart';
 
