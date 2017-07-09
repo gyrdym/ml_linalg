@@ -15,6 +15,7 @@ void main() {
   scalarMultiplication();
   scalarDivision();
   euclideanDistanceBetweenVectors();
+  manhattanDistanceBetweenVectors();
 }
 
 void addition() {
@@ -109,4 +110,11 @@ void euclideanDistanceBetweenVectors() {
   Float32x4Vector vector2 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   double result = vector1.distanceTo(vector2);
   print(result); // ~~2.23
+}
+
+void manhattanDistanceBetweenVectors() {
+  Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  Float32x4Vector vector2 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  double result = vector1.distanceTo(vector2, Norm.MANHATTAN);
+  print(result); // 5.0
 }
