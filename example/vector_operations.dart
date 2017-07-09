@@ -1,4 +1,4 @@
-import 'package:dart_simd_vector/vector.dart';
+import 'package:simd_vector/vector.dart';
 
 void main() {
   addition();
