@@ -1,37 +1,42 @@
 import 'dart:typed_data';
-import 'package:dart_vector/vector.dart';
+import 'package:dart_simd_vector/vector.dart';
 import 'package:test/test.dart';
 import 'package:matcher/matcher.dart';
 
 void main() {
   group('Float32x4Vector constructors.', () {
-    test('Default constructor', () {
-      Float32x4Vector vector = new Float32x4Vector(5);
-      expect(vector.asList(), equals([0.0, 0.0, 0.0, 0.0, 0.0]));
-      expect(vector.length, equals(5));
-    });
-
     test('`from` constructor', () {
-      //dynamic-length list
+      //from dynamic-length list
       Float32x4Vector vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      expect(vector1.asList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
       expect(vector1.length, equals(6));
 
-      //fixed-length list
+      vector1 = new Float32x4Vector.from([1.0, 2.0]);
+      expect(vector1.asList(), equals([1.0, 2.0]));
+      expect(vector1.length, equals(2));
+
+      //from fixed-length list
       Float32x4Vector vector2 = new Float32x4Vector.from(new List.filled(11, 1.0));
+      expect(vector2.asList(), equals([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]));
       expect(vector2.length, 11);
+
+      vector2 = new Float32x4Vector.from(new List.filled(1, 2.0));
+      expect(vector2.asList(), equals([2.0]));
+      expect(vector2.length, 1);
     });
 
-    test('`fromTypedList` constructor', () {
+    test('`fromSIMDList` constructor', () {
       Float32x4List typedList = new Float32x4List.fromList([
         new Float32x4(1.0, 2.0, 3.0, 4.0),
         new Float32x4(5.0, 6.0, 7.0, 8.0),
         new Float32x4(9.0, 10.0, 0.0, 0.0)
       ]);
 
-      Float32x4Vector vector = new Float32x4Vector.fromTypedList(typedList);
+      Float32x4Vector vector = new Float32x4Vector.fromSIMDList(typedList);
+      expect(vector.asList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 0.0, 0.0]));
       expect(vector.length, equals(12));
 
-      vector = new Float32x4Vector.fromTypedList(typedList, 10);
+      vector = new Float32x4Vector.fromSIMDList(typedList, 10);
       expect(vector.asList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
       expect(vector.length, equals(10));
     });
@@ -41,6 +46,23 @@ void main() {
 
       expect(vector.asList(), equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
       expect(vector.length, equals(10));
+    });
+
+    test('`zero` constructor', () {
+      Float32x4Vector vector = new Float32x4Vector.zero(10);
+
+      expect(vector.asList(), equals([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]));
+      expect(vector.length, equals(10));
+
+      vector = new Float32x4Vector.zero(1);
+
+      expect(vector.asList(), equals([0.0]));
+      expect(vector.length, equals(1));
+
+      vector = new Float32x4Vector.zero(2);
+
+      expect(vector.asList(), equals([0.0, 0.0]));
+      expect(vector.length, equals(2));
     });
   });
 
@@ -194,7 +216,6 @@ void main() {
       Float32x4Vector tmp = vector.copy();
 
       expect(tmp.asList(), equals([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]));
-      expect(tmp == vector, isTrue);
       expect(identical(tmp, vector), isFalse);
     });
   });

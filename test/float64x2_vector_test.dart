@@ -1,16 +1,10 @@
 import 'dart:typed_data';
-import 'package:dart_vector/vector.dart';
+import 'package:dart_simd_vector/vector.dart';
 import 'package:test/test.dart';
 import 'package:matcher/matcher.dart';
 
 void main() {
   group('Float64x2Vector constructors.', () {
-    test('Default constructor', () {
-      Float64x2Vector vector = new Float64x2Vector(5);
-      expect(vector.asList(), equals([0.0, 0.0, 0.0, 0.0, 0.0]));
-      expect(vector.length, equals(5));
-    });
-
     test('`from` constructor', () {
       //dynamic-length list
       Float64x2Vector vector1 = new Float64x2Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -197,7 +191,6 @@ void main() {
       Float64x2Vector tmp = vector.copy();
 
       expect(tmp.asList(), equals([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]));
-      expect(tmp == vector, isTrue);
       expect(identical(tmp, vector), isFalse);
     });
   });
