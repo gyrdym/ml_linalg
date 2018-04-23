@@ -152,23 +152,19 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   SIMDListType _convertCollectionToSIMDList(Iterable<double> collection) {
     final lanesNumber = (collection.length / _laneSize).ceil();
     final targetList = _createSIMDList(lanesNumber);
-    final laneAsSimpleList = new List<double>(_laneSize);
-    final zerosSimpleList = new List<double>.filled(_laneSize, 0.0, growable: false);
-    int i = 0;
+    final fixedLengthSource = collection.toList(growable: false);
 
-    for (final scalar in collection) {
-      if (i != 0 && i % _laneSize == 0) {
-        final laneIndex = i ~/ _laneSize - 1;
-        targetList[laneIndex] = _createSIMDValueFromSimpleList(laneAsSimpleList);
-        laneAsSimpleList.setRange(0, _laneSize, zerosSimpleList);
-      }
+    for (int i = 0; i < lanesNumber; i++) {
+      final laneLimitIndex = (i + 1) * _laneSize;
+      final laneStartIndex = laneLimitIndex - _laneSize;
+      final residual = collection.length - laneLimitIndex;
+      final laneAsSimpleList = (residual < 0) ?
+        (fixedLengthSource.sublist(laneStartIndex)..addAll(new List<double>.filled(-residual, 0.0)))
+      :
+        fixedLengthSource.sublist(laneStartIndex, laneLimitIndex)..length = _laneSize;
 
-      final bufferIndex = i < _laneSize ? i : i % _laneSize;
-      laneAsSimpleList[bufferIndex] = scalar;
-      i++;
+      targetList[i] = _createSIMDValueFromSimpleList(laneAsSimpleList);
     }
-
-    targetList[targetList.length - 1] = _createSIMDValueFromSimpleList(laneAsSimpleList);
 
     return targetList;
   }
