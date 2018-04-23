@@ -35,7 +35,8 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a vector from collection
   _SIMDVector.from(Iterable<double> source) {
     _length = source.length;
-    _innerList = _convertCollectionToSIMDList(source);
+    _simpleInnerList = _createTypedListFrom(source);
+    _innerList = _convertCollectionToSIMDList(_simpleInnerList);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
@@ -47,13 +48,17 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
   _SIMDVector.filled(int length, double value) {
     _length = length;
-    _innerList = _convertCollectionToSIMDList(new List<double>.filled(length, value));
+    // @TODO: make a factory-method for filled typed list
+    _simpleInnerList = _createTypedListFrom(new List<double>.filled(length, value));
+    _innerList = _convertCollectionToSIMDList(_simpleInnerList);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
   _SIMDVector.zero(int length) {
     _length = length;
-    _innerList = _convertCollectionToSIMDList(new List<double>.filled(length, 0.0));
+    // @TODO: make a factory-method for filled typed list
+    _simpleInnerList = _createTypedListFrom(new List<double>.filled(length, 0.0));
+    _innerList = _convertCollectionToSIMDList(_simpleInnerList);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
@@ -152,16 +157,20 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   SIMDListType _convertCollectionToSIMDList(Iterable<double> collection) {
     final lanesNumber = (collection.length / _laneSize).ceil();
     final targetList = _createSIMDList(lanesNumber);
-    final fixedLengthSource = collection.toList(growable: false);
+    final efficientSource = collection is TypedListType ?
+      (collection as TypedListType) : collection.toList(growable: false);
 
     for (int i = 0; i < lanesNumber; i++) {
       final laneLimitIndex = (i + 1) * _laneSize;
       final laneStartIndex = laneLimitIndex - _laneSize;
-      final residual = collection.length - laneLimitIndex;
+      final residual = efficientSource.length - laneLimitIndex;
       final laneAsSimpleList = (residual < 0) ?
-        (fixedLengthSource.sublist(laneStartIndex)..addAll(new List<double>.filled(-residual, 0.0)))
-      :
-        fixedLengthSource.sublist(laneStartIndex, laneLimitIndex)..length = _laneSize;
+        ([]
+          ..addAll(efficientSource.sublist(laneStartIndex))
+          ..addAll(new List<double>.filled(-residual, 0.0))
+          ..length = _laneSize
+        )
+      : efficientSource.sublist(laneStartIndex, laneLimitIndex);
 
       targetList[i] = _createSIMDValueFromSimpleList(laneAsSimpleList);
     }
