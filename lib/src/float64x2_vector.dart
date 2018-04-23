@@ -14,7 +14,7 @@ part of 'typed_vector.dart';
 /// simultaneously (in parallel, in this case - in two threads)
 class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float64List, Float64x2> {
   @override
-  int get _laneLength => 2;
+  int get _laneSize => 2;
 
   /// Creates a [Float64x2Vector] vector from collection
   Float64x2Vector.from(Iterable<double> source) : super.from(source);
@@ -50,7 +50,7 @@ class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float6
   Float64x2 _createSIMDValueFilled(double value) => new Float64x2.splat(value);
 
   @override
-  Float64x2 _createSIMDValueFromList(List<double> list) {
+  Float64x2 _createSIMDValueFromSimpleList(List<double> list) {
     double x = list[0] ?? 0.0;
     double y = list[1] ?? 0.0;
 

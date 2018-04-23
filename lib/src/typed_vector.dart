@@ -18,7 +18,9 @@ part 'float64x2_vector.dart';
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
 /// simultaneously (in parallel)
 abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
-    implements Vector<TypedListType> {
+    implements Vector<TypedListType>, Iterable<double> {
+
+  TypedListType _simpleInnerList;
 
   /// An efficient typed list
   SIMDListType _innerList;
@@ -28,7 +30,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   /// Computation lane width (lane supports 2 or 4 elements to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
-  int get _laneLength;
+  int get _laneSize;
 
   /// Creates a vector from collection
   _SIMDVector.from(Iterable<double> source) {
@@ -38,7 +40,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
   _SIMDVector.fromSIMDList(SIMDListType source, [int origLength]) {
-    _length = origLength ?? source.length * _laneLength;
+    _length = origLength ?? source.length * _laneSize;
     _innerList = source;
   }
 
@@ -144,30 +146,29 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     return _SIMDValuesProduct(lane, sqrX);
   }
 
-  /// Returns SIMD list (e.g. Float32x4List) as result of converting iterable source
+  /// Returns SIMD list (e.g. Float32x4List) as a result of converting iterable source
   ///
-  /// All sequence of [collection] elements splits into groups with [_laneLength] length
+  /// All sequence of [collection] elements splits into groups with [_laneSize] length
   SIMDListType _convertCollectionToSIMDList(Iterable<double> collection) {
-    int lanesCount = (collection.length / _laneLength).ceil();
-    SIMDListType targetList = _createSIMDList(lanesCount);
-    List<double> fixedLengthSource = collection.toList(growable: false);
+    final lanesNumber = (collection.length / _laneSize).ceil();
+    final targetList = _createSIMDList(lanesNumber);
+    final laneAsSimpleList = new List<double>(_laneSize);
+    final zerosSimpleList = new List<double>.filled(_laneSize, 0.0, growable: false);
+    int i = 0;
 
-    for (int i = 0; i < lanesCount; i++) {
-      int end = (i + 1) * _laneLength;
-      int start = end - _laneLength;
-      int diff = end - collection.length;
-      List<double> sublist;
-
-      if (diff > 0) {
-        List<double> zeroItems = new List<double>.filled(diff, 0.0);
-        sublist = fixedLengthSource.sublist(start);
-        sublist.addAll(zeroItems);
-      } else {
-        sublist = fixedLengthSource.sublist(start, end);
+    for (final scalar in collection) {
+      if (i != 0 && i % _laneSize == 0) {
+        final laneIndex = i ~/ _laneSize - 1;
+        targetList[laneIndex] = _createSIMDValueFromSimpleList(laneAsSimpleList);
+        laneAsSimpleList.setRange(0, _laneSize, zerosSimpleList);
       }
 
-      targetList[i] = _createSIMDValueFromList(sublist);
+      final bufferIndex = i < _laneSize ? i : i % _laneSize;
+      laneAsSimpleList[bufferIndex] = scalar;
+      i++;
     }
+
+    targetList[targetList.length - 1] = _createSIMDValueFromSimpleList(laneAsSimpleList);
 
     return targetList;
   }
@@ -181,7 +182,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
         _list.addAll(_SIMDValueToList(source[i]));
       }
 
-      int lengthRemainder = _length % _laneLength;
+      int lengthRemainder = _length % _laneSize;
       List<double> remainder = _getPartOfSIMDValueAsList(source.last, lengthRemainder);
 
       _list.addAll(remainder);
@@ -206,7 +207,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
       throw new UnsupportedError('Unsupported operand type (${value.runtimeType})');
     }
 
-    SIMDListType _list = _createSIMDList(this._innerList.length);
+    final _list = _createSIMDList(this._innerList.length);
 
     for (int i = 0; i < this._innerList.length; i++) {
       _list[i] = operation(this._innerList[i], value is SIMDVectorType ? value._innerList[i] : _scalarValue);
@@ -228,7 +229,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   // Factory methods are below
   SIMDValueType _createSIMDValueFilled(double value);
-  SIMDValueType _createSIMDValueFromList(List<double> list);
+  SIMDValueType _createSIMDValueFromSimpleList(List<double> list);
   SIMDValueType _SIMDValuesProduct(SIMDValueType a, SIMDValueType b);
   SIMDValueType _SIMDValuesSum(SIMDValueType a, SIMDValueType b);
   SIMDValueType _SIMDValueAbs(SIMDValueType a);
@@ -241,4 +242,87 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   SIMDVectorType _createVectorFromTypedList(SIMDListType list, int length);
 
   RangeError _mismatchLengthError() => new RangeError('Vectors length must be equal');
+
+  // `Iterable` interface implementation
+
+  @override
+  double get first => _innerList.first;
+
+  @override
+  bool get isEmpty => _innerList.isEmpty;
+
+  @override
+  bool get isNotEmpty => _innerList.isNotEmpty;
+
+  @override
+  Iterator<double> get iterator => _simpleInnerList.iterator;
+
+  @override
+  double get last => _simpleInnerList.last;
+
+  @override
+  double get single => _simpleInnerList.single;
+
+  @override
+  bool any(Function test) => _simpleInnerList.any(test);
+
+  @override
+  bool contains(double value) => _simpleInnerList.contains(value);
+
+  @override
+  double elementAt(int position) => _simpleInnerList.elementAt(position);
+
+  @override
+  bool every(Function test) => _simpleInnerList.every(test);
+
+  @override
+  Iterable<double> expand<double>(Function expander) => _simpleInnerList.expand(expander);
+
+  @override
+  double firstWhere(Function test, {Function orElse}) => _simpleInnerList.firstWhere(test, orElse: orElse);
+
+  @override
+  double fold<double>(double initialValue, Function combine) => _simpleInnerList.fold(initialValue, combine);
+
+  @override
+  void forEach(Function callback) => _simpleInnerList.forEach(callback);
+
+  @override
+  String join([String separator]) => _simpleInnerList.join(separator);
+
+  @override
+  double lastWhere<double>(Function callback, {Function orElse}) => _simpleInnerList.lastWhere(callback, orElse: orElse);
+
+  @override
+  Iterable<double> map<double>(Function mapper) => _simpleInnerList.map(mapper);
+
+  @override
+  double reduce(Function reducer) => _simpleInnerList.reduce(reducer);
+
+  @override
+  double singleWhere(Function test) => _simpleInnerList.singleWhere(test);
+
+  @override
+  Iterable<double> skip(int count) => _simpleInnerList.skip(count);
+
+  @override
+  Iterable<double> skipWhile(Function test) => _simpleInnerList.skipWhile(test);
+
+  @override
+  Iterable<double> take(int count) => _simpleInnerList.take(count);
+
+  @override
+  Iterable<double> takeWhile(Function test) => _simpleInnerList.takeWhile(test);
+
+  @override
+  List<double> toList({bool growable = false}) => _simpleInnerList.toList(growable: growable);
+
+  @override
+  Set<double> toSet() => _simpleInnerList.toSet();
+
+  @override
+  String toString() => _simpleInnerList.toString();
+
+  @override
+  Iterable<double> where(Function test) => _simpleInnerList.where(test);
 }
