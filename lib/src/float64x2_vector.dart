@@ -40,6 +40,9 @@ class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float6
   Float64x2List _createSIMDListFrom(List list) => new Float64x2List.fromList(list);
 
   @override
+  Float64List _createTypedList(int length) => new Float64List(length);
+
+  @override
   Float64List _createTypedListFrom(List<double> list) => new Float64List.fromList(list);
 
   @override
@@ -71,14 +74,4 @@ class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float6
 
   @override
   List<double> _SIMDValueToList(Float64x2 a) => [a.x, a.y];
-
-  @override
-  List<double> _getPartOfSIMDValueAsList(Float64x2 a, int lanesCount) {
-    switch (lanesCount) {
-      case 1:
-        return [a.x];
-      default:
-        return [a.x, a.y];
-    }
-  }
 }
