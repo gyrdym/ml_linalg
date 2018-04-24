@@ -52,7 +52,4 @@ abstract class Vector<T> {
 
   ///Returns sum of each components
   double sum();
-
-  ///Returns vector components as a list of type [T]
-  T asList();
 }

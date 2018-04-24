@@ -8,7 +8,7 @@ const int AMOUNT_OF_ELEMENTS = 10000000;
 Float32x4Vector vector;
 
 class VectorInitializationBenchmark extends BenchmarkBase {
-  const VectorInitializationBenchmark() : super('Vector initialization, $AMOUNT_OF_ELEMENTS elements');
+  const VectorInitializationBenchmark() : super('Vector initialization (from simple iterable), $AMOUNT_OF_ELEMENTS elements');
 
   static void main() {
     new VectorInitializationBenchmark().report();

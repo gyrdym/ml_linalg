@@ -40,6 +40,9 @@ class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float3
   Float32x4List _createSIMDListFrom(List list) => new Float32x4List.fromList(list);
 
   @override
+  Float32List _createTypedList(int length) => new Float32List(length);
+
+  @override
   Float32List _createTypedListFrom(List<double> list) => new Float32List.fromList(list);
 
   @override
@@ -72,19 +75,5 @@ class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float3
   double _SIMDValueSum(Float32x4 a) => a.x + a.y + a.z + a.w;
 
   @override
-  List<double> _SIMDValueToList(Float32x4 a) => [a.x, a.y, a.z, a.w];
-
-  @override
-  List<double> _getPartOfSIMDValueAsList(Float32x4 a, int lanesCount) {
-    switch (lanesCount) {
-      case 1:
-        return [a.x];
-      case 2:
-        return [a.x, a.y];
-      case 3:
-        return [a.x, a.y, a.z];
-      default:
-        return [a.x, a.y, a.z, a.w];
-    }
-  }
+  List<double> _SIMDValueToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
 }

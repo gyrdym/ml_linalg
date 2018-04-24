@@ -42,6 +42,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
   _SIMDVector.fromSIMDList(SIMDListType source, [int origLength]) {
     _length = origLength ?? source.length * _laneSize;
+    _simpleInnerList = _convertSIMDListToTyped(source);
     _innerList = source;
   }
 
@@ -63,10 +64,11 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
   _SIMDVector.randomFilled(int length, {int seed}) {
-    math.Random random = new math.Random(seed);
-    List<double> _list = new List<double>.generate(length, (_) => random.nextDouble());
+    final random = new math.Random(seed);
+    final source = new List<double>.generate(length, (_) => random.nextDouble());
     _length = length;
-    _innerList = _convertCollectionToSIMDList(_list);
+    _simpleInnerList = _createTypedListFrom(source);
+    _innerList = _convertCollectionToSIMDList(_simpleInnerList);
   }
 
   /// A number of vector elements
@@ -106,8 +108,6 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     int exp = _getExpForNorm(norm);
     return math.pow(intPow(exp).abs().sum(), 1 / exp);
   }
-
-  TypedListType asList() => _convertSIMDListToTyped(_innerList);
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
   int _getExpForNorm(Norm norm) {
@@ -180,20 +180,20 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   /// Returns special typed list (e.g. Float32List) as a result of converting SIMD [source]
   TypedListType _convertSIMDListToTyped(SIMDListType source) {
-    List<double> _list = [];
+    final _list = _createTypedList(_length);
 
-    if (source.length > 0) {
-      for (int i = 0; i < source.length - 1; i++) {
-        _list.addAll(_SIMDValueToList(source[i]));
+    for (int i = 0; i < source.length; i++) {
+      final laneAsList = _SIMDValueToList(source[i]);
+      for (int j = 0; j < laneAsList.length; j++) {
+        final idx = i * _laneSize + j;
+        if (idx == _length) {
+          break;
+        }
+        _list[idx] = laneAsList[j];
       }
-
-      int lengthRemainder = _length % _laneSize;
-      List<double> remainder = _getPartOfSIMDValueAsList(source.last, lengthRemainder);
-
-      _list.addAll(remainder);
     }
 
-    return _createTypedListFrom(_list);
+    return _list;
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation (e.g. vector addition)
@@ -240,9 +240,9 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   SIMDValueType _SIMDValueAbs(SIMDValueType a);
   double _SIMDValueSum(SIMDValueType a);
   List<double> _SIMDValueToList(SIMDValueType a);
-  List<double> _getPartOfSIMDValueAsList(SIMDValueType a, int lanesCount);
   SIMDListType _createSIMDList(int length);
   SIMDListType _createSIMDListFrom(List list);
+  TypedListType _createTypedList(int length);
   TypedListType _createTypedListFrom(List<double> list);
   SIMDVectorType _createVectorFromTypedList(SIMDListType list, int length);
 

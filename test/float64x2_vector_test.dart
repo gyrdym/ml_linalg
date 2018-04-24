@@ -24,19 +24,19 @@ void main() {
 
       Float64x2Vector vector1 = new Float64x2Vector.fromTypedList(typedList);
 
-      expect(vector1.asList(), equals([1.0, 2.0, 5.0, 6.0, 9.0, 10.0]));
+      expect(vector1.toList(), equals([1.0, 2.0, 5.0, 6.0, 9.0, 10.0]));
       expect(vector1.length, equals(6));
 
       Float64x2Vector vector2 = new Float64x2Vector.fromTypedList(typedList, 5);
 
-      expect(vector2.asList(), equals([1.0, 2.0, 5.0, 6.0, 9.0]));
+      expect(vector2.toList(), equals([1.0, 2.0, 5.0, 6.0, 9.0]));
       expect(vector2.length, equals(5));
     });
 
     test('`filled` constructor', () {
       Float64x2Vector vector = new Float64x2Vector.filled(10, 2.0);
 
-      expect(vector.asList(), equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
+      expect(vector.toList(), equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
       expect(vector.length, equals(10));
     });
   });
@@ -58,7 +58,7 @@ void main() {
     test('Addition', () {
       Float64x2Vector result = vector1 + vector2;
 
-      expect(result.asList(), equals([2.0, 4.0, 6.0, 8.0, 10.0]));
+      expect(result.toList(), equals([2.0, 4.0, 6.0, 8.0, 10.0]));
       expect(result.length, equals(5));
 
       Float64x2Vector vector3 = new Float64x2Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
@@ -70,7 +70,7 @@ void main() {
     test('Subtraction', () {
       Float64x2Vector result = vector1 - vector2;
 
-      expect(result.asList(), equals([0.0, 0.0, 0.0, 0.0, 0.0]));
+      expect(result.toList(), equals([0.0, 0.0, 0.0, 0.0, 0.0]));
       expect(result.length, equals(5));
 
       Float64x2Vector vector3 = new Float64x2Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
@@ -82,7 +82,7 @@ void main() {
     test('Multiplication', () {
       Float64x2Vector result = vector1 * vector2;
 
-      expect(result.asList(), equals([1.0, 4.0, 9.0, 16.0, 25.0]));
+      expect(result.toList(), equals([1.0, 4.0, 9.0, 16.0, 25.0]));
       expect(result.length, equals(5));
 
       Float64x2Vector vector3 = new Float64x2Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
@@ -94,7 +94,7 @@ void main() {
     test('Division', () {
       Float64x2Vector result = vector1 / vector2;
 
-      expect(result.asList(), equals([1.0, 1.0, 1.0, 1.0, 1.0]));
+      expect(result.toList(), equals([1.0, 1.0, 1.0, 1.0, 1.0]));
       expect(result.length, equals(5));
 
       Float64x2Vector vector3 = new Float64x2Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
@@ -108,7 +108,7 @@ void main() {
 
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
-      expect(result.asList(), equals([1.0, 8.0, 27.0, 64.0, 125.0]));
+      expect(result.toList(), equals([1.0, 8.0, 27.0, 64.0, 125.0]));
     });
 
     test('Dot product', () {
@@ -122,7 +122,7 @@ void main() {
 
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
-      expect(result.asList(), equals([2.0, 4.0, 6.0, 8.0, 10.0]));
+      expect(result.toList(), equals([2.0, 4.0, 6.0, 8.0, 10.0]));
     });
 
     test('Scalar division', () {
@@ -130,7 +130,7 @@ void main() {
 
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
-      expect(result.asList(), equals([0.5, 1.0, 1.5, 2.0, 2.5]));
+      expect(result.toList(), equals([0.5, 1.0, 1.5, 2.0, 2.5]));
     });
 
     test('Scalar addition', () {
@@ -138,7 +138,7 @@ void main() {
 
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
-      expect(result.asList(), equals([14.0, 15.0, 16.0, 17.0, 18.0]));
+      expect(result.toList(), equals([14.0, 15.0, 16.0, 17.0, 18.0]));
     });
 
     test('Scalar substruction', () {
@@ -147,7 +147,7 @@ void main() {
 
       expect(result != vector, isTrue);
       expect(result.length, equals(5));
-      expect(result.asList(), equals([-12.0, -11.0, -10.0, -9.0, -8.0]));
+      expect(result.toList(), equals([-12.0, -11.0, -10.0, -9.0, -8.0]));
     });
 
     test('Euclidean distance (from vector to the same vector)', () {
@@ -182,7 +182,7 @@ void main() {
       Float64x2Vector vector = new Float64x2Vector.from([-3.0, 4.5, -12.0, -23.5, 44.0]);
       Float64x2Vector result = vector.abs();
 
-      expect(result.asList(), equals([3.0, 4.5, 12.0, 23.5, 44.0]));
+      expect(result.toList(), equals([3.0, 4.5, 12.0, 23.5, 44.0]));
       expect(result, isNot(vector));
     });
 
@@ -190,7 +190,7 @@ void main() {
       Float64x2Vector vector = new Float64x2Vector.from([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
       Float64x2Vector tmp = vector.copy();
 
-      expect(tmp.asList(), equals([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]));
+      expect(tmp.toList(), equals([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]));
       expect(identical(tmp, vector), isFalse);
     });
   });
