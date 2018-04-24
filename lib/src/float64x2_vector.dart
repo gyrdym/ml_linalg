@@ -1,4 +1,4 @@
-part of 'typed_vector.dart';
+part of 'simd_vector.dart';
 
 /// A vector with SIMD (single instruction, multiple data) architecture support
 ///

@@ -20,10 +20,10 @@ part 'float64x2_vector.dart';
 abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
     implements Vector<TypedListType>, List<double> {
 
-  TypedListType _simpleInnerList;
+  TypedListType _typedList;
 
-  /// An efficient typed list
-  SIMDListType _innerList;
+  /// An efficient SIMD list
+  SIMDListType _simdList;
 
   /// A number of vector elements
   int _length;
@@ -35,31 +35,31 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a vector from collection
   _SIMDVector.from(Iterable<double> source) {
     _length = source.length;
-    _simpleInnerList = _createTypedListFrom(source);
-    _innerList = _convertCollectionToSIMDList(_simpleInnerList);
+    _typedList = _createTypedListFrom(source);
+    _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
   _SIMDVector.fromSIMDList(SIMDListType source, [int origLength]) {
     _length = origLength ?? source.length * _laneSize;
-    _simpleInnerList = _convertSIMDListToTyped(source);
-    _innerList = source;
+    _typedList = _convertSIMDListToTyped(source);
+    _simdList = source;
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
   _SIMDVector.filled(int length, double value) {
     _length = length;
     // @TODO: make a factory-method for filled typed list
-    _simpleInnerList = _createTypedListFrom(new List<double>.filled(length, value));
-    _innerList = _convertCollectionToSIMDList(_simpleInnerList);
+    _typedList = _createTypedListFrom(new List<double>.filled(length, value));
+    _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
   _SIMDVector.zero(int length) {
     _length = length;
     // @TODO: make a factory-method for filled typed list
-    _simpleInnerList = _createTypedListFrom(new List<double>.filled(length, 0.0));
-    _innerList = _convertCollectionToSIMDList(_simpleInnerList);
+    _typedList = _createTypedListFrom(new List<double>.filled(length, 0.0));
+    _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
@@ -67,8 +67,8 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     final random = new math.Random(seed);
     final source = new List<double>.generate(length, (_) => random.nextDouble());
     _length = length;
-    _simpleInnerList = _createTypedListFrom(source);
-    _innerList = _convertCollectionToSIMDList(_simpleInnerList);
+    _typedList = _createTypedListFrom(source);
+    _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
   /// A number of vector elements
@@ -96,7 +96,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   SIMDVectorType abs() => _abs();
 
-  SIMDVectorType copy() => _createVectorFromSIMDList(_innerList, _length);
+  SIMDVectorType copy() => _createVectorFromSIMDList(_simdList, _length);
 
   double dot(SIMDVectorType vector) => (this * vector).sum();
 
@@ -123,13 +123,13 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   /// Returns sum of all vector components
   double _summarize() {
-    SIMDValueType sum = _innerList.reduce((SIMDValueType sum, SIMDValueType item) => _SIMDValuesSum(item, sum));
+    SIMDValueType sum = _simdList.reduce((SIMDValueType sum, SIMDValueType item) => _SIMDValuesSum(item, sum));
     return _SIMDValueSum(sum);
   }
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   _SIMDVector _abs() {
-    SIMDListType list = _createSIMDListFrom(_innerList.map((SIMDValueType item) => _SIMDValueAbs(item))
+    SIMDListType list = _createSIMDListFrom(_simdList.map((SIMDValueType item) => _SIMDValueAbs(item))
                                                 .toList(growable: false));
 
     return _createVectorFromSIMDList(list, _length);
@@ -212,10 +212,10 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
       throw new UnsupportedError('Unsupported operand type (${value.runtimeType})');
     }
 
-    final _list = _createSIMDList(this._innerList.length);
+    final _list = _createSIMDList(this._simdList.length);
 
-    for (int i = 0; i < this._innerList.length; i++) {
-      _list[i] = operation(this._innerList[i], value is SIMDVectorType ? value._innerList[i] : _scalarValue);
+    for (int i = 0; i < this._simdList.length; i++) {
+      _list[i] = operation(this._simdList[i], value is SIMDVectorType ? value._simdList[i] : _scalarValue);
     }
 
     return _createVectorFromSIMDList(_list, _length);
@@ -223,10 +223,10 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
   SIMDVectorType _elementWisePow(int exp) {
-    SIMDListType _list = _createSIMDList(_innerList.length);
+    final _list = _createSIMDList(_simdList.length);
 
-    for (int i = 0; i < _innerList.length; i++) {
-      _list[i] = _laneIntPow(_innerList[i], exp);
+    for (int i = 0; i < _simdList.length; i++) {
+      _list[i] = _laneIntPow(_simdList[i], exp);
     }
 
     return _createVectorFromSIMDList(_list, _length);
@@ -250,7 +250,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   // `List` interface implementation
   @override
-  double operator [](int index) => _simpleInnerList[index];
+  double operator [](int index) => _typedList[index];
 
   @override
   void operator []=(int index, double element) {
@@ -258,7 +258,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  Iterable<double> get reversed => _simpleInnerList.reversed;
+  Iterable<double> get reversed => _typedList.reversed;
 
   @override
   void set length(int value) {
@@ -276,7 +276,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  Map<int, dynamic> asMap() => _simpleInnerList.asMap();
+  Map<int, dynamic> asMap() => _typedList.asMap();
 
   @override
   void clear() {
@@ -289,10 +289,10 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  Iterable<double> getRange(int start, int end) => _simpleInnerList.getRange(start, end);
+  Iterable<double> getRange(int start, int end) => _typedList.getRange(start, end);
 
   @override
-  int indexOf(double element, [int start = 0]) => _simpleInnerList.indexOf(element);
+  int indexOf(double element, [int start = 0]) => _typedList.indexOf(element);
 
   @override
   void insert(int index, double element) {
@@ -305,7 +305,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  int lastIndexOf(double element, [int start]) => _simpleInnerList.lastIndexOf(element, start);
+  int lastIndexOf(double element, [int start]) => _typedList.lastIndexOf(element, start);
 
   @override
   bool remove(double element) {
@@ -363,88 +363,88 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  Iterable<double> sublist(int start, [int double]) => _simpleInnerList.sublist(start, double);
+  Iterable<double> sublist(int start, [int double]) => _typedList.sublist(start, double);
 
   // `Iterable` interface implementation
 
   @override
-  double get first => _innerList.first;
+  double get first => _simdList.first;
 
   @override
-  bool get isEmpty => _innerList.isEmpty;
+  bool get isEmpty => _simdList.isEmpty;
 
   @override
-  bool get isNotEmpty => _innerList.isNotEmpty;
+  bool get isNotEmpty => _simdList.isNotEmpty;
 
   @override
-  Iterator<double> get iterator => _simpleInnerList.iterator;
+  Iterator<double> get iterator => _typedList.iterator;
 
   @override
-  double get last => _simpleInnerList.last;
+  double get last => _typedList.last;
 
   @override
-  double get single => _simpleInnerList.single;
+  double get single => _typedList.single;
 
   @override
-  bool any(Function test) => _simpleInnerList.any(test);
+  bool any(Function test) => _typedList.any(test);
 
   @override
-  bool contains(double value) => _simpleInnerList.contains(value);
+  bool contains(double value) => _typedList.contains(value);
 
   @override
-  double elementAt(int position) => _simpleInnerList.elementAt(position);
+  double elementAt(int position) => _typedList.elementAt(position);
 
   @override
-  bool every(Function test) => _simpleInnerList.every(test);
+  bool every(Function test) => _typedList.every(test);
 
   @override
-  Iterable<double> expand<double>(Function expander) => _simpleInnerList.expand(expander);
+  Iterable<double> expand<double>(Function expander) => _typedList.expand(expander);
 
   @override
-  double firstWhere(Function test, {Function orElse}) => _simpleInnerList.firstWhere(test, orElse: orElse);
+  double firstWhere(Function test, {Function orElse}) => _typedList.firstWhere(test, orElse: orElse);
 
   @override
-  double fold<double>(double initialValue, Function combine) => _simpleInnerList.fold(initialValue, combine);
+  double fold<double>(double initialValue, Function combine) => _typedList.fold(initialValue, combine);
 
   @override
-  void forEach(Function callback) => _simpleInnerList.forEach(callback);
+  void forEach(Function callback) => _typedList.forEach(callback);
 
   @override
-  String join([String separator]) => _simpleInnerList.join(separator);
+  String join([String separator]) => _typedList.join(separator);
 
   @override
-  double lastWhere<double>(Function callback, {Function orElse}) => _simpleInnerList.lastWhere(callback, orElse: orElse);
+  double lastWhere<double>(Function callback, {Function orElse}) => _typedList.lastWhere(callback, orElse: orElse);
 
   @override
-  Iterable<double> map<double>(Function mapper) => _simpleInnerList.map(mapper);
+  Iterable<double> map<double>(Function mapper) => _typedList.map(mapper);
 
   @override
-  double reduce(Function reducer) => _simpleInnerList.reduce(reducer);
+  double reduce(Function reducer) => _typedList.reduce(reducer);
 
   @override
-  double singleWhere(Function test) => _simpleInnerList.singleWhere(test);
+  double singleWhere(Function test) => _typedList.singleWhere(test);
 
   @override
-  Iterable<double> skip(int count) => _simpleInnerList.skip(count);
+  Iterable<double> skip(int count) => _typedList.skip(count);
 
   @override
-  Iterable<double> skipWhile(Function test) => _simpleInnerList.skipWhile(test);
+  Iterable<double> skipWhile(Function test) => _typedList.skipWhile(test);
 
   @override
-  Iterable<double> take(int count) => _simpleInnerList.take(count);
+  Iterable<double> take(int count) => _typedList.take(count);
 
   @override
-  Iterable<double> takeWhile(Function test) => _simpleInnerList.takeWhile(test);
+  Iterable<double> takeWhile(Function test) => _typedList.takeWhile(test);
 
   @override
-  List<double> toList({bool growable = false}) => _simpleInnerList.toList(growable: growable);
+  List<double> toList({bool growable = false}) => _typedList.toList(growable: growable);
 
   @override
-  Set<double> toSet() => _simpleInnerList.toSet();
+  Set<double> toSet() => _typedList.toSet();
 
   @override
-  String toString() => _simpleInnerList.toString();
+  String toString() => _typedList.toString();
 
   @override
-  Iterable<double> where(Function test) => _simpleInnerList.where(test);
+  Iterable<double> where(Function test) => _typedList.where(test);
 }
