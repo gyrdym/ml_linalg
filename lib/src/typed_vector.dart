@@ -18,7 +18,7 @@ part 'float64x2_vector.dart';
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
 /// simultaneously (in parallel)
 abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
-    implements Vector<TypedListType>, Iterable<double> {
+    implements Vector<TypedListType>, List<double> {
 
   TypedListType _simpleInnerList;
 
@@ -96,7 +96,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   SIMDVectorType abs() => _abs();
 
-  SIMDVectorType copy() => _createVectorFromTypedList(_innerList, _length);
+  SIMDVectorType copy() => _createVectorFromSIMDList(_innerList, _length);
 
   double dot(SIMDVectorType vector) => (this * vector).sum();
 
@@ -132,7 +132,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     SIMDListType list = _createSIMDListFrom(_innerList.map((SIMDValueType item) => _SIMDValueAbs(item))
                                                 .toList(growable: false));
 
-    return _createVectorFromTypedList(list, _length);
+    return _createVectorFromSIMDList(list, _length);
   }
 
   /// Returns lane (a single SIMD value) raised to the integer power
@@ -158,7 +158,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     final lanesNumber = (collection.length / _laneSize).ceil();
     final targetList = _createSIMDList(lanesNumber);
     final efficientSource = collection is TypedListType ?
-      (collection as TypedListType) : collection.toList(growable: false);
+      (collection as TypedListType) : _createTypedListFrom(collection);
 
     for (int i = 0; i < lanesNumber; i++) {
       final laneLimitIndex = (i + 1) * _laneSize;
@@ -182,14 +182,14 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   TypedListType _convertSIMDListToTyped(SIMDListType source) {
     final _list = _createTypedList(_length);
 
-    for (int i = 0; i < source.length; i++) {
-      final laneAsList = _SIMDValueToList(source[i]);
-      for (int j = 0; j < laneAsList.length; j++) {
-        final idx = i * _laneSize + j;
-        if (idx == _length) {
+    for (int laneIdx = 0; laneIdx < source.length; laneIdx++) {
+      final laneAsList = _SIMDValueToList(source[laneIdx]);
+      for (int lanePartIdx = 0; lanePartIdx < laneAsList.length; lanePartIdx++) {
+        final actualIdx = laneIdx * _laneSize + lanePartIdx;
+        if (actualIdx == _length) {
           break;
         }
-        _list[idx] = laneAsList[j];
+        _list[actualIdx] = laneAsList[lanePartIdx];
       }
     }
 
@@ -218,7 +218,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
       _list[i] = operation(this._innerList[i], value is SIMDVectorType ? value._innerList[i] : _scalarValue);
     }
 
-    return _createVectorFromTypedList(_list, _length);
+    return _createVectorFromSIMDList(_list, _length);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
@@ -229,7 +229,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
       _list[i] = _laneIntPow(_innerList[i], exp);
     }
 
-    return _createVectorFromTypedList(_list, _length);
+    return _createVectorFromSIMDList(_list, _length);
   }
 
   // Factory methods are below
@@ -244,9 +244,126 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   SIMDListType _createSIMDListFrom(List list);
   TypedListType _createTypedList(int length);
   TypedListType _createTypedListFrom(List<double> list);
-  SIMDVectorType _createVectorFromTypedList(SIMDListType list, int length);
+  SIMDVectorType _createVectorFromSIMDList(SIMDListType list, int length);
 
   RangeError _mismatchLengthError() => new RangeError('Vectors length must be equal');
+
+  // `List` interface implementation
+  @override
+  double operator [](int index) => _simpleInnerList[index];
+
+  @override
+  void operator []=(int index, double element) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  Iterable<double> get reversed => _simpleInnerList.reversed;
+
+  @override
+  void set length(int value) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void add(double value) {
+    throw new UnsupportedError('add');
+  }
+
+  @override
+  void addAll(Iterable<double> collection) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  Map<int, dynamic> asMap() => _simpleInnerList.asMap();
+
+  @override
+  void clear() {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void fillRange(int start, int end, [double fillValue]) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  Iterable<double> getRange(int start, int end) => _simpleInnerList.getRange(start, end);
+
+  @override
+  int indexOf(double element, [int start = 0]) => _simpleInnerList.indexOf(element);
+
+  @override
+  void insert(int index, double element) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void insertAll(int index, Iterable<double> iterable) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  int lastIndexOf(double element, [int start]) => _simpleInnerList.lastIndexOf(element, start);
+
+  @override
+  bool remove(double element) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  double removeAt(int index) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  double removeLast() {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void removeRange(int start, int end) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void removeWhere(Function test) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void replaceRange(int start, int end, Iterable<double> replacement) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void retainWhere(Function test) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void setAll(int index, Iterable<double> iterable) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void setRange(int start, int end, Iterable<double> iterable, [int skipCount]) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void shuffle([math.Random random]) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  void sort([Function sorter]) {
+    throw new UnsupportedError('');
+  }
+
+  @override
+  Iterable<double> sublist(int start, [int double]) => _simpleInnerList.sublist(start, double);
 
   // `Iterable` interface implementation
 
