@@ -1,7 +1,7 @@
 import 'norm.dart';
 
 ///An algebraic vector (ordered set of elements).
-abstract class Vector {
+abstract class Vector implements List<double> {
   ///Vector's dimension
   int get length;
 
