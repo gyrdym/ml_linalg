@@ -43,7 +43,7 @@ class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float3
   Float32List _createTypedList(int length) => new Float32List(length);
 
   @override
-  Float32List _createTypedListFrom(List<double> list) => new Float32List.fromList(list);
+  Float32List _createTypedListFromList(List<double> list) => new Float32List.fromList(list);
 
   @override
   Float32x4Vector _createVectorFromSIMDList(Float32x4List list, int length) => new Float32x4Vector

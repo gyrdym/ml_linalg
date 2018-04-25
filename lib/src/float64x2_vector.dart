@@ -43,7 +43,7 @@ class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float6
   Float64List _createTypedList(int length) => new Float64List(length);
 
   @override
-  Float64List _createTypedListFrom(List<double> list) => new Float64List.fromList(list);
+  Float64List _createTypedListFromList(List<double> list) => new Float64List.fromList(list);
 
   @override
   Float64x2Vector _createVectorFromSIMDList(Float64x2List list, int length) => new Float64x2Vector
