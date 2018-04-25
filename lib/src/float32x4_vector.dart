@@ -50,6 +50,9 @@ class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float3
       .fromSIMDList(list, length);
 
   @override
+  Float32x4Vector _createVectorFromList(List<double> source) => new Float32x4Vector.from(source);
+
+  @override
   Float32x4 _createSIMDValueFilled(double value) => new Float32x4.splat(value);
 
   @override

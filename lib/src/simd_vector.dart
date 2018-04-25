@@ -245,6 +245,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   TypedListType _createTypedList(int length);
   TypedListType _createTypedListFromList(List<double> list);
   SIMDVectorType _createVectorFromSIMDList(SIMDListType list, int length);
+  SIMDVectorType _createVectorFromList(List<double> list);
 
   RangeError _mismatchLengthError() => new RangeError('Vectors length must be equal');
 
@@ -363,7 +364,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  Iterable<double> sublist(int start, [int double]) => _typedList.sublist(start, double);
+  SIMDVectorType sublist(int start, [int double]) => _createVectorFromList(_typedList.sublist(start, double));
 
   // `Iterable` interface implementation
 
