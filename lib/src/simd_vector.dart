@@ -18,7 +18,7 @@ part 'float64x2_vector.dart';
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
 /// simultaneously (in parallel)
 abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
-    implements Vector, List<double> {
+    implements Vector {
 
   TypedListType _typedList;
 
