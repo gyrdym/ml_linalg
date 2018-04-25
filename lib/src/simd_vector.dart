@@ -35,7 +35,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a vector from collection
   _SIMDVector.from(Iterable<double> source) {
     _length = source.length;
-    _typedList = _createTypedListFrom(source);
+    _typedList = _createTypedListFromList(source.toList(growable: false));
     _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
@@ -50,7 +50,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   _SIMDVector.filled(int length, double value) {
     _length = length;
     // @TODO: make a factory-method for filled typed list
-    _typedList = _createTypedListFrom(new List<double>.filled(length, value));
+    _typedList = _createTypedListFromList(new List<double>.filled(length, value));
     _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
@@ -58,7 +58,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   _SIMDVector.zero(int length) {
     _length = length;
     // @TODO: make a factory-method for filled typed list
-    _typedList = _createTypedListFrom(new List<double>.filled(length, 0.0));
+    _typedList = _createTypedListFromList(new List<double>.filled(length, 0.0));
     _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
@@ -67,7 +67,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     final random = new math.Random(seed);
     final source = new List<double>.generate(length, (_) => random.nextDouble());
     _length = length;
-    _typedList = _createTypedListFrom(source);
+    _typedList = _createTypedListFromList(source);
     _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
@@ -158,7 +158,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     final lanesNumber = (collection.length / _laneSize).ceil();
     final targetList = _createSIMDList(lanesNumber);
     final efficientSource = collection is TypedListType ?
-      (collection as TypedListType) : _createTypedListFrom(collection);
+      (collection as TypedListType) : _createTypedListFromList(collection);
 
     for (int i = 0; i < lanesNumber; i++) {
       final laneLimitIndex = (i + 1) * _laneSize;
@@ -243,7 +243,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   SIMDListType _createSIMDList(int length);
   SIMDListType _createSIMDListFrom(List list);
   TypedListType _createTypedList(int length);
-  TypedListType _createTypedListFrom(List<double> list);
+  TypedListType _createTypedListFromList(List<double> list);
   SIMDVectorType _createVectorFromSIMDList(SIMDListType list, int length);
 
   RangeError _mismatchLengthError() => new RangeError('Vectors length must be equal');
