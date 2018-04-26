@@ -35,7 +35,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a vector from collection
   _SIMDVector.from(Iterable<double> source) {
     _length = source.length;
-    _typedList = _createTypedListFromList(source.toList(growable: false));
+    _typedList = _createTypedListFromList(source is List ? source : source.toList(growable: false));
     _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
@@ -230,6 +230,15 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     }
 
     return _createVectorFromSIMDList(_list, _length);
+  }
+
+  _SIMDVector query(Iterable<int> indexes) {
+    final list = _createTypedList(indexes.length);
+    int i = 0;
+    for (final idx in indexes) {
+      list[i++] = _typedList[idx];
+    }
+    return _createVectorFromList(list);
   }
 
   // Factory methods are below

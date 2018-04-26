@@ -215,5 +215,13 @@ void main() {
       expect(tmp, equals([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]));
       expect(identical(tmp, vector), isFalse);
     });
+
+    test('`query` method', () {
+      final vector = new Float32x4Vector.from([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
+      final query = vector.query([1, 1, 0, 3]);
+
+      expect(query, equals([3.0, 3.0, 10.0, 7.0]));
+      expect(() => vector.query([20, 0, 1]), throwsRangeError);
+    });
   });
 }
