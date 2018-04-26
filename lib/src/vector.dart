@@ -52,4 +52,7 @@ abstract class Vector implements List<double> {
 
   ///Returns sum of all elements
   double sum();
+
+  ///Returns a vector composed of elements which are located on the passed indexes
+  Vector query(Iterable<int> indexes);
 }
