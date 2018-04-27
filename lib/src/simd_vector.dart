@@ -35,7 +35,10 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a vector from collection
   _SIMDVector.from(Iterable<double> source) {
     _length = source.length;
-    _typedList = _createTypedListFromList(source is List ? source : source.toList(growable: false));
+    _typedList = source is TypedListType ?
+      source :
+      _createTypedListFromList(source is List ? source : source.toList(growable: false));
+
     _simdList = _convertCollectionToSIMDList(_typedList);
   }
 
@@ -49,7 +52,6 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
   _SIMDVector.filled(int length, double value) {
     _length = length;
-    // @TODO: make a factory-method for filled typed list
     _typedList = _createTypedListFromList(new List<double>.filled(length, value));
     _simdList = _convertCollectionToSIMDList(_typedList);
   }
@@ -57,7 +59,6 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
   _SIMDVector.zero(int length) {
     _length = length;
-    // @TODO: make a factory-method for filled typed list
     _typedList = _createTypedListFromList(new List<double>.filled(length, 0.0));
     _simdList = _convertCollectionToSIMDList(_typedList);
   }
@@ -82,7 +83,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   SIMDVectorType operator /(SIMDVectorType vector) => _elementWiseOperation(vector, (a, b) => a / b);
 
-  SIMDVectorType intPow(int exponent) => _elementWisePow(exponent);
+  SIMDVectorType toIntegerPower(int power) => _elementWisePow(power);
 
   SIMDVectorType scalarMul(double value) => _elementWiseOperation(value, (a, b) => a * b);
 
@@ -105,12 +106,12 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   double mean() => sum() / length;
 
   double norm([Norm norm = Norm.EUCLIDEAN]) {
-    int exp = _getExpForNorm(norm);
-    return math.pow(intPow(exp).abs().sum(), 1 / exp);
+    final power = _getPowerByNormType(norm);
+    return math.pow(toIntegerPower(power).abs().sum(), 1 / power);
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
-  int _getExpForNorm(Norm norm) {
+  int _getPowerByNormType(Norm norm) {
     switch(norm) {
       case Norm.EUCLIDEAN:
         return 2;
@@ -123,28 +124,28 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
 
   /// Returns sum of all vector components
   double _summarize() {
-    SIMDValueType sum = _simdList.reduce((SIMDValueType sum, SIMDValueType item) => _SIMDValuesSum(item, sum));
+    final sum = _simdList.reduce((final sum, final item) => _SIMDValuesSum(item, sum));
     return _SIMDValueSum(sum);
   }
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   _SIMDVector _abs() {
-    SIMDListType list = _createSIMDListFrom(_simdList.map((SIMDValueType item) => _SIMDValueAbs(item))
-                                                .toList(growable: false));
+    final list = _createSIMDListFrom(
+      _simdList.map((final item) => _SIMDValueAbs(item)).toList(growable: false));
 
     return _createVectorFromSIMDList(list, _length);
   }
 
   /// Returns lane (a single SIMD value) raised to the integer power
-  SIMDValueType _laneIntPow(SIMDValueType lane, int e) {
-    if (e == 0) {
+  SIMDValueType _laneToIntPow(SIMDValueType lane, int power) {
+    if (power == 0) {
       return _createSIMDValueFilled(1.0);
     }
 
-    SIMDValueType x = _laneIntPow(lane, e ~/ 2);
-    SIMDValueType sqrX = _SIMDValuesProduct(x, x);
+    final x = _laneToIntPow(lane, power ~/ 2);
+    final sqrX = _SIMDValuesProduct(x, x);
 
-    if (e % 2 == 0) {
+    if (power % 2 == 0) {
       return sqrX;
     }
 
@@ -226,7 +227,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     final _list = _createSIMDList(_simdList.length);
 
     for (int i = 0; i < _simdList.length; i++) {
-      _list[i] = _laneIntPow(_simdList[i], exp);
+      _list[i] = _laneToIntPow(_simdList[i], exp);
     }
 
     return _createVectorFromSIMDList(_list, _length);
@@ -268,7 +269,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  Iterable<double> get reversed => _typedList.reversed;
+  _SIMDVector get reversed => _createVectorFromList(_typedList.reversed);
 
   @override
   void set length(int value) {
@@ -299,7 +300,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  Iterable<double> getRange(int start, int end) => _typedList.getRange(start, end);
+  _SIMDVector getRange(int start, int end) => _createVectorFromList(_typedList.getRange(start, end));
 
   @override
   int indexOf(double element, [int start = 0]) => _typedList.indexOf(element);
@@ -435,16 +436,16 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   double singleWhere(Function test) => _typedList.singleWhere(test);
 
   @override
-  Iterable<double> skip(int count) => _typedList.skip(count);
+  _SIMDVector skip(int count) => _createVectorFromList(_typedList.skip(count));
 
   @override
-  Iterable<double> skipWhile(Function test) => _typedList.skipWhile(test);
+  _SIMDVector skipWhile(Function test) => _createVectorFromList(_typedList.skipWhile(test));
 
   @override
-  Iterable<double> take(int count) => _typedList.take(count);
+  _SIMDVector take(int count) => _createVectorFromList(_typedList.take(count));
 
   @override
-  Iterable<double> takeWhile(Function test) => _typedList.takeWhile(test);
+  _SIMDVector takeWhile(Function test) => _createVectorFromList(_typedList.takeWhile(test));
 
   @override
   List<double> toList({bool growable = false}) => _typedList.toList(growable: growable);
@@ -456,5 +457,5 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   String toString() => _typedList.toString();
 
   @override
-  Iterable<double> where(Function test) => _typedList.where(test);
+  _SIMDVector where(Function test) => _createVectorFromList(_typedList.where(test));
 }
