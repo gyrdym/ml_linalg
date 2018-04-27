@@ -18,7 +18,7 @@ abstract class Vector implements List<double> {
   Vector operator /(Vector vector);
 
   ///Raises each element of a vector to the integer power equals [power]
-  Vector intPow(int power);
+  Vector toIntegerPower(int power);
 
   ///Performs a vector and a scalar multiplication (each component of a vector is multiplied by [value])
   Vector scalarMul(double value);

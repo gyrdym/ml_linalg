@@ -128,7 +128,7 @@ void main() {
     });
 
     test('Power', () {
-      final result = vector1.intPow(3);
+      final result = vector1.toIntegerPower(3);
 
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
