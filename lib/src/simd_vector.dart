@@ -6,16 +6,16 @@ import 'vector.dart';
 part 'float32x4_vector.dart';
 part 'float64x2_vector.dart';
 
-/// A vector with SIMD (single instruction, multiple data) architecture support
+/// Vector with SIMD (single instruction, multiple data) architecture support
 ///
-/// An entity, that extends this class, may has potentially infinite length (in terms of vector algebra - number of
-/// dimensions). Vector components are contained in special typed data structure, that allow to perform vector operations
+/// An entity, that extends this class, may have potentially infinite length (in terms of vector algebra - number of
+/// dimensions). Vector components are contained in a special typed data structure, that allow to perform vector operations
 /// extremely fast due to hardware assisted computations.
 ///
 /// Let's assume some considerations:
-/// - High performance of vector operations is provided by SIMD types of dart language
-/// - Each SIMD-typed value is a "cell", that contains several floating point values (at the present moment - 2 or 4).
-/// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
+/// - High performance of vector operations is provided by SIMD types of Dart language
+/// - Each SIMD-typed value is a "cell", that contains several floating point values (2 or 4).
+/// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel)
 abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
     implements Vector {
