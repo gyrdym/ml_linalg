@@ -1,20 +1,20 @@
-part of 'typed_vector.dart';
+part of 'simd_vector.dart';
 
-/// A vector with SIMD (single instruction, multiple data) architecture support
+/// Vector with SIMD (single instruction, multiple data) architecture support
 ///
-/// This vector may has potentially infinite length (in terms of vector algebra - number of
+/// This vector may have potentially infinite length (in terms of vector algebra - number of
 /// dimensions). Vector components are contained in [Float64x2List] data structure, that allow to perform vector operations
 /// extremely fast due to hardware assisted computations.
 ///
 /// Let's assume some considerations:
 /// - High performance of vector operations is provided by SIMD types of dart language
 /// - Each SIMD-typed value is a "cell", that contains (in case of [Float64x2Vector]) two 64-digit floating point values.
-/// Type of this values is [Float64x2]
-/// - Sequence of SIMD-values forms a "computation lane", where computations are performed on an each floating point element
+/// Type of these values is [Float64x2]
+/// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel, in this case - in two threads)
 class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float64List, Float64x2> {
   @override
-  int get _laneLength => 2;
+  int get _laneSize => 2;
 
   /// Creates a [Float64x2Vector] vector from collection
   Float64x2Vector.from(Iterable<double> source) : super.from(source);
@@ -40,17 +40,23 @@ class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float6
   Float64x2List _createSIMDListFrom(List list) => new Float64x2List.fromList(list);
 
   @override
-  Float64List _createTypedListFrom(List<double> list) => new Float64List.fromList(list);
+  Float64List _createTypedList(int length) => new Float64List(length);
 
   @override
-  Float64x2Vector _createVectorFromTypedList(Float64x2List list, int length) => new Float64x2Vector
+  Float64List _createTypedListFromList(List<double> list) => new Float64List.fromList(list);
+
+  @override
+  Float64x2Vector _createVectorFromSIMDList(Float64x2List list, int length) => new Float64x2Vector
       .fromTypedList(list, length);
+
+  @override
+  Float64x2Vector _createVectorFromList(List<double> source) => new Float64x2Vector.from(source);
 
   @override
   Float64x2 _createSIMDValueFilled(double value) => new Float64x2.splat(value);
 
   @override
-  Float64x2 _createSIMDValueFromList(List<double> list) {
+  Float64x2 _createSIMDValueFromSimpleList(List<double> list) {
     double x = list[0] ?? 0.0;
     double y = list[1] ?? 0.0;
 
@@ -71,14 +77,4 @@ class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float6
 
   @override
   List<double> _SIMDValueToList(Float64x2 a) => [a.x, a.y];
-
-  @override
-  List<double> _getPartOfSIMDValueAsList(Float64x2 a, int lanesCount) {
-    switch (lanesCount) {
-      case 1:
-        return [a.x];
-      default:
-        return [a.x, a.y];
-    }
-  }
 }
