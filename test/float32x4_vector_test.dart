@@ -223,5 +223,15 @@ void main() {
       expect(query, equals([3.0, 3.0, 10.0, 7.0]));
       expect(() => vector.query([20, 0, 1]), throwsRangeError);
     });
+
+    test('`max` method', () {
+      final vector = new Float32x4Vector.from([10.0, 12.0, 4.0, 7.0, 9.0, 12.0]);
+      expect(vector.max(), 12.0);
+    });
+
+    test('`max` method', () {
+      final vector = new Float32x4Vector.from([10.0, 1.0, 4.0, 7.0, 9.0, 1.0]);
+      expect(vector.min(), 1.0);
+    });
   });
 }
