@@ -110,6 +110,12 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     return math.pow(toIntegerPower(power).abs().sum(), 1 / power);
   }
 
+  double max() => _typedList.reduce(
+    (double combine, double value) => value > (combine ?? double.NEGATIVE_INFINITY) ? value : combine);
+
+  double min() => _typedList.reduce(
+    (double combine, double value) => value < (combine ?? double.INFINITY) ? value : combine);
+
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
   int _getPowerByNormType(Norm norm) {
     switch(norm) {
