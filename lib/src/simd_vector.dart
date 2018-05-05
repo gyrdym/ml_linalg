@@ -248,6 +248,16 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
     return _createVectorFromList(list);
   }
 
+  _SIMDVector unique() {
+    final unique = <double>[];
+    for (final el in _typedList) {
+      if (!unique.contains(el)) {
+        unique.add(el);
+      }
+    }
+    return _createVectorFromList(unique);
+  }
+
   // Factory methods are below
   SIMDValueType _createSIMDValueFilled(double value);
   SIMDValueType _createSIMDValueFromSimpleList(List<double> list);

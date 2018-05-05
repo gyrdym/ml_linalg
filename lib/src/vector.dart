@@ -61,4 +61,7 @@ abstract class Vector implements List<double> {
 
   ///Returns a vector composed of elements which are located on the passed indexes
   Vector query(Iterable<int> indexes);
+
+  ///Returns a vector composed of unique vector's elements
+  Vector unique();
 }
