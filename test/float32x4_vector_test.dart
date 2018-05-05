@@ -224,12 +224,18 @@ void main() {
       expect(() => vector.query([20, 0, 1]), throwsRangeError);
     });
 
+    test('`unique` method', () {
+      final vector = new Float32x4Vector.from([10.0, 3.0, 4.0, 0.0, 7.0, 4.0, 12.0, 3.0, 12.0, 9.0, 0.0, 12.0, 10.0, 3.0]);
+      final unique = vector.unique();
+      expect(unique, equals([10.0, 3.0, 4.0, 0.0, 7.0, 12.0, 9.0]));
+    });
+
     test('`max` method', () {
       final vector = new Float32x4Vector.from([10.0, 12.0, 4.0, 7.0, 9.0, 12.0]);
       expect(vector.max(), 12.0);
     });
 
-    test('`max` method', () {
+    test('`min` method', () {
       final vector = new Float32x4Vector.from([10.0, 1.0, 4.0, 7.0, 9.0, 1.0]);
       expect(vector.min(), 1.0);
     });
