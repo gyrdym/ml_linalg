@@ -17,7 +17,7 @@ part 'float64x2_vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel)
-abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType extends List, TypedListType extends List, SIMDValueType>
+abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List, SIMDValueType>
     implements Vector {
 
   TypedListType _typedList;
@@ -31,6 +31,16 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// Computation lane width (lane supports 2 or 4 elements to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
   int get _laneSize;
+
+  /// Creates a vector with both empty simd and typed inner lists
+  _SIMDVector(int length) {
+    _length = length;
+    _simdList = _createSIMDList(length);
+    _typedList = _createTypedList((length / _laneSize).ceil());
+  }
+
+  /// Creates a vector with both preset simd and typed inner lists
+  _SIMDVector.preset(this._simdList, this._typedList) : _length = _typedList.length;
 
   /// Creates a vector from collection
   _SIMDVector.from(Iterable<double> source) {
@@ -75,33 +85,33 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   /// A number of vector elements
   int get length => _length;
 
-  SIMDVectorType operator +(SIMDVectorType vector) => _elementWiseOperation(vector, (a, b) => a + b);
+  _SIMDVector operator +(_SIMDVector vector) => _elementWiseOperation(vector, (a, b) => a + b);
 
-  SIMDVectorType operator -(SIMDVectorType vector) => _elementWiseOperation(vector, (a, b) => a - b);
+  _SIMDVector operator -(_SIMDVector vector) => _elementWiseOperation(vector, (a, b) => a - b);
 
-  SIMDVectorType operator *(SIMDVectorType vector) => _elementWiseOperation(vector, (a, b) => a * b);
+  _SIMDVector operator *(_SIMDVector vector) => _elementWiseOperation(vector, (a, b) => a * b);
 
-  SIMDVectorType operator /(SIMDVectorType vector) => _elementWiseOperation(vector, (a, b) => a / b);
+  _SIMDVector operator /(_SIMDVector vector) => _elementWiseOperation(vector, (a, b) => a / b);
 
-  SIMDVectorType toIntegerPower(int power) => _elementWisePow(power);
+  _SIMDVector toIntegerPower(int power) => _elementWisePow(power);
 
-  SIMDVectorType scalarMul(double value) => _elementWiseOperation(value, (a, b) => a * b);
+  _SIMDVector scalarMul(double value) => _elementWiseOperation(value, (a, b) => a * b);
 
-  SIMDVectorType scalarDiv(double value) => _elementWiseOperation(value, (a, b) => a / b);
+  _SIMDVector scalarDiv(double value) => _elementWiseOperation(value, (a, b) => a / b);
 
-  SIMDVectorType scalarAdd(double value) => _elementWiseOperation(value, (a, b) => a + b);
+  _SIMDVector scalarAdd(double value) => _elementWiseOperation(value, (a, b) => a + b);
 
-  SIMDVectorType scalarSub(double value) => _elementWiseOperation(value, (a, b) => a - b);
+  _SIMDVector scalarSub(double value) => _elementWiseOperation(value, (a, b) => a - b);
 
   double sum() => _summarize();
 
-  SIMDVectorType abs() => _abs();
+  _SIMDVector abs() => _abs();
 
-  SIMDVectorType copy() => _createVectorFromSIMDList(_simdList, _length);
+  _SIMDVector copy() => _createVectorFromSIMDList(_simdList, _length);
 
-  double dot(SIMDVectorType vector) => (this * vector).sum();
+  double dot(_SIMDVector vector) => (this * vector).sum();
 
-  double distanceTo(SIMDVectorType vector, [Norm norm = Norm.EUCLIDEAN]) => (this - vector).norm(norm);
+  double distanceTo(_SIMDVector vector, [Norm norm = Norm.EUCLIDEAN]) => (this - vector).norm(norm);
 
   double mean() => sum() / length;
 
@@ -204,14 +214,14 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation (e.g. vector addition)
-  SIMDVectorType _elementWiseOperation(Object value, operation(SIMDValueType a, SIMDValueType b)) {
-    if (value is SIMDVectorType && value.length != this.length) {
+  _SIMDVector _elementWiseOperation(Object value, SIMDValueType operation(SIMDValueType a, SIMDValueType b)) {
+    if (value is _SIMDVector && value.length != this.length) {
       throw _mismatchLengthError();
     }
 
     SIMDValueType _scalarValue;
 
-    if (value is SIMDVectorType) {
+    if (value is _SIMDVector) {
       //do nothing
     } else if (value is double) {
       _scalarValue = _createSIMDValueFilled(value);
@@ -219,17 +229,27 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
       throw new UnsupportedError('Unsupported operand type (${value.runtimeType})');
     }
 
-    final _list = _createSIMDList(this._simdList.length);
+    final _simdList = _createSIMDList(this._simdList.length);
+    final _typedList = _createTypedList(_length);
 
     for (int i = 0; i < this._simdList.length; i++) {
-      _list[i] = operation(this._simdList[i], value is SIMDVectorType ? value._simdList[i] : _scalarValue);
+      _simdList[i] = operation(this._simdList[i], value is _SIMDVector ? value._simdList[i] : _scalarValue);
+      final laneAsList = _SIMDValueToList(_simdList[i]);
+
+      for (int lanePartIdx = 0; lanePartIdx < laneAsList.length; lanePartIdx++) {
+        final actualIdx = i * _laneSize + lanePartIdx;
+        if (actualIdx == _length) {
+          break;
+        }
+        _typedList[actualIdx] = laneAsList[lanePartIdx];
+      }
     }
 
-    return _createVectorFromSIMDList(_list, _length);
+    return _createVectorWithPresetData(_simdList, _typedList);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
-  SIMDVectorType _elementWisePow(int exp) {
+  _SIMDVector _elementWisePow(int exp) {
     final _list = _createSIMDList(_simdList.length);
 
     for (int i = 0; i < _simdList.length; i++) {
@@ -270,8 +290,9 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   SIMDListType _createSIMDListFrom(List list);
   TypedListType _createTypedList(int length);
   TypedListType _createTypedListFromList(List<double> list);
-  SIMDVectorType _createVectorFromSIMDList(SIMDListType list, int length);
-  SIMDVectorType _createVectorFromList(List<double> list);
+  _SIMDVector _createVectorFromSIMDList(SIMDListType list, int length);
+  _SIMDVector _createVectorFromList(List<double> list);
+  _SIMDVector _createVectorWithPresetData(SIMDListType simd, TypedListType typed);
 
   RangeError _mismatchLengthError() => new RangeError('Vectors length must be equal');
 
@@ -390,7 +411,7 @@ abstract class _SIMDVector<SIMDVectorType extends _SIMDVector, SIMDListType exte
   }
 
   @override
-  SIMDVectorType sublist(int start, [int double]) => _createVectorFromList(_typedList.sublist(start, double));
+  _SIMDVector sublist(int start, [int double]) => _createVectorFromList(_typedList.sublist(start, double));
 
   // `Iterable` interface implementation
 

@@ -1,5 +1,5 @@
 // Performance test of vector (10 000 000 elements in vector) addition operation
-// It takes approximately 2.7 second
+// It takes approximately 2.4 second
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:simd_vector/vector.dart';
