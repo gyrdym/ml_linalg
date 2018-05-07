@@ -12,9 +12,15 @@ part of 'simd_vector.dart';
 /// Type of these values is [Float32x4]
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel, in this case - in four threads)
-class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float32List, Float32x4> {
+class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4> {
   @override
   int get _laneSize => 4;
+
+  /// Creates a [Float32x4Vector] with both empty simd and typed inner lists
+  Float32x4Vector(int length) : super(length);
+
+  /// Creates a [Float32x4Vector] with both preset simd and typed inner lists
+  Float32x4Vector._preset(Float32x4List simdList, Float32List typedList) : super.preset(simdList, typedList);
 
   /// Creates a [Float32x4Vector] vector from collection
   Float32x4Vector.from(Iterable<double> source) : super.from(source);
@@ -50,6 +56,10 @@ class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float3
       .fromSIMDList(list, length);
 
   @override
+  Float32x4Vector _createVectorWithPresetData(Float32x4List simd, Float32List typed) =>
+      new Float32x4Vector._preset(simd, typed);
+
+  @override
   Float32x4Vector _createVectorFromList(List<double> source) => new Float32x4Vector.from(source);
 
   @override
@@ -57,10 +67,10 @@ class Float32x4Vector extends _SIMDVector<Float32x4Vector, Float32x4List, Float3
 
   @override
   Float32x4 _createSIMDValueFromSimpleList(List<double> list) {
-    double x = list[0] ?? 0.0;
-    double y = list[1] ?? 0.0;
-    double z = list[2] ?? 0.0;
-    double w = list[3] ?? 0.0;
+    final x = list[0] ?? 0.0;
+    final y = list[1] ?? 0.0;
+    final z = list[2] ?? 0.0;
+    final w = list[3] ?? 0.0;
 
     return new Float32x4(x, y, z, w);
   }

@@ -12,9 +12,15 @@ part of 'simd_vector.dart';
 /// Type of these values is [Float64x2]
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel, in this case - in two threads)
-class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float64List, Float64x2> {
+class Float64x2Vector extends _SIMDVector<Float64x2List, Float64List, Float64x2> {
   @override
   int get _laneSize => 2;
+
+  /// Creates a [Float64x2Vector] with both empty simd and typed inner lists
+  Float64x2Vector(int length) : super(length);
+
+  /// Creates a [Float64x2Vector] with both preset simd and typed inner lists
+  Float64x2Vector._preset(Float64x2List simdList, Float64List typedList) : super.preset(simdList, typedList);
 
   /// Creates a [Float64x2Vector] vector from collection
   Float64x2Vector.from(Iterable<double> source) : super.from(source);
@@ -48,6 +54,10 @@ class Float64x2Vector extends _SIMDVector<Float64x2Vector, Float64x2List, Float6
   @override
   Float64x2Vector _createVectorFromSIMDList(Float64x2List list, int length) => new Float64x2Vector
       .fromTypedList(list, length);
+
+  @override
+  Float64x2Vector _createVectorWithPresetData(Float64x2List simd, Float64List typed) =>
+      new Float64x2Vector._preset(simd, typed);
 
   @override
   Float64x2Vector _createVectorFromList(List<double> source) => new Float64x2Vector.from(source);
