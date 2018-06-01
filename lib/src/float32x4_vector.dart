@@ -85,7 +85,8 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
   Float32x4 _SIMDValueAbs(Float32x4 a) => a.abs();
 
   @override
-  double _SIMDValueSum(Float32x4 a) => a.x + a.y + a.z + a.w;
+  double _SIMDValueSum(Float32x4 a) => (a.x.isNaN ? 0.0 : a.x) + (a.y.isNaN ? 0.0 : a.y) + (a.z.isNaN ? 0.0 : a.z) +
+    (a.w.isNaN ? 0.0 : a.w);
 
   @override
   List<double> _SIMDValueToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
