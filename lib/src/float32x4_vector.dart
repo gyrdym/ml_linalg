@@ -90,4 +90,23 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
 
   @override
   List<double> _SIMDValueToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+
+  @override
+  double _getScalarByOffsetIndex(Float32x4 value, int offset) {
+    switch (offset) {
+      case 0:
+        return value.x;
+      case 1:
+        return value.y;
+      case 2:
+        return value.z;
+      case 3:
+        return value.w;
+      default:
+        throw new RangeError('wrong offset');
+    }
+  }
+
+  @override
+  Float32x4 _getReversedValue(Float32x4 value) => new Float32x4(value.w, value.z, value.y, value.x);
 }
