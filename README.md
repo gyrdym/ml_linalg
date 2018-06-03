@@ -1,5 +1,4 @@
-# simd_vector
-Algebraic vector with SIMD support and potentially infinite length.
+# linalg
 
 All vector operations are supported by SIMD computation architecture, so this library presents two high performance SIMD 
 vector classes: `Float32x4Vector` and `Float64x2Vector`. Operations in the first one are performed in a lane with four "threads"
