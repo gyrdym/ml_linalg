@@ -239,5 +239,77 @@ void main() {
       final vector = new Float32x4Vector.from([10.0, 1.0, 4.0, 7.0, 9.0, 1.0]);
       expect(vector.min(), 1.0);
     });
+
+    test('[] operator, case 1', () {
+      final vector = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      expect(vector[0], 1.0);
+      expect(vector[1], 2.0);
+      expect(vector[2], 3.0);
+      expect(vector[3], 4.0);
+      expect(vector[4], 5.0);
+      expect(() => vector[-1], throwsRangeError);
+      expect(() => vector[5], throwsRangeError);
+      expect(() => vector[100], throwsRangeError);
+    });
+
+    test('[] operator, case 2', () {
+      final vector = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0]);
+      expect(vector[0], 1.0);
+      expect(vector[1], 2.0);
+      expect(vector[2], 3.0);
+      expect(vector[3], 4.0);
+      expect(() => vector[-1], throwsRangeError);
+      expect(() => vector[4], throwsRangeError);
+      expect(() => vector[100], throwsRangeError);
+    });
+
+    test('[] operator, case 3', () {
+      final vector = new Float32x4Vector.from([1.0, 2.0, 3.0]);
+      expect(vector[0], 1.0);
+      expect(vector[1], 2.0);
+      expect(vector[2], 3.0);
+      expect(() => vector[-1], throwsRangeError);
+      expect(() => vector[3], throwsRangeError);
+      expect(() => vector[100], throwsRangeError);
+    });
+
+    test('[] operator, case 4', () {
+      final vector = new Float32x4Vector.from([1.0, 2.0]);
+      expect(vector[0], 1.0);
+      expect(vector[1], 2.0);
+      expect(() => vector[-1], throwsRangeError);
+      expect(() => vector[2], throwsRangeError);
+      expect(() => vector[100], throwsRangeError);
+    });
+
+    test('[] operator, case 5', () {
+      final vector = new Float32x4Vector.from([1.0]);
+      expect(vector[0], 1.0);
+      expect(() => vector[-1], throwsRangeError);
+      expect(() => vector[1], throwsRangeError);
+      expect(() => vector[100], throwsRangeError);
+    });
+
+    test('`reversed` method', () {
+      final vector1 = new Float32x4Vector.from([1.0]);
+      final vector2 = new Float32x4Vector.from([1.0, 2.0]);
+      final vector3 = new Float32x4Vector.from([1.0, 2.0, 3.0]);
+      final vector4 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0]);
+      final vector5 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector6 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      final vector7 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]);
+      final vector8 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+      final vector9 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]);
+
+      expect(vector1.reversed, equals([1.0]));
+      expect(vector2.reversed, equals([2.0, 1.0]));
+      expect(vector3.reversed, equals([3.0, 2.0, 1.0]));
+      expect(vector4.reversed, equals([4.0, 3.0, 2.0, 1.0]));
+      expect(vector5.reversed, equals([5.0, 4.0, 3.0, 2.0, 1.0]));
+      expect(vector6.reversed, equals([6.0, 5.0, 4.0, 3.0, 2.0, 1.0]));
+      expect(vector7.reversed, equals([7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0]));
+      expect(vector8.reversed, equals([8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0]));
+      expect(vector9.reversed, equals([9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0]));
+    });
   });
 }

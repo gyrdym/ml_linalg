@@ -293,34 +293,89 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
   _SIMDVector _createVectorFromSIMDList(SIMDListType list, int length);
   _SIMDVector _createVectorFromList(List<double> list);
   _SIMDVector _createVectorWithPresetData(SIMDListType simd, TypedListType typed);
+  double _getScalarByOffsetIndex(SIMDValueType value, int offset);
+  SIMDValueType _getReversedValue(SIMDValueType value);
 
   RangeError _mismatchLengthError() => new RangeError('Vectors length must be equal');
 
   // `List` interface implementation
   @override
-  double operator [](int index) => _typedList[index];
-
-  @override
-  void operator []=(int index, double element) {
-    throw new UnsupportedError('');
+  double operator [](int index) {
+    if (index >= _length) throw new RangeError.index(index, this);
+    final base = (index / _laneSize).floor();
+    final offset = index - base * _laneSize;
+    return _getScalarByOffsetIndex(_simdList[base], offset);
   }
 
   @override
-  _SIMDVector get reversed => _createVectorFromList(_typedList.reversed);
+  void operator []=(int index, double element) {
+    throw new UnsupportedError('`[]=` operator is unsupported');
+  }
+
+  @override
+  _SIMDVector get reversed {
+    final shiftCount = _simdList.length * _laneSize - _length;
+
+    if (shiftCount > 0) {
+      return _shiftedReverse();
+    } else {
+      return _simpleReverse();
+    }
+  }
+
+  _SIMDVector _shiftedReverse() {
+    final reversed = _createSIMDList(_simdList.length);
+    final shiftCount = _simdList.length * _laneSize - _length;
+    final head = new List<double>(_laneSize - shiftCount);
+    final tail = new List<double>(_laneSize - head.length);
+    final lastAsList = _SIMDValueToList(_getReversedValue(_simdList.last));
+    head.setRange(0, head.length, lastAsList.getRange(shiftCount, lastAsList.length));
+
+    for (
+      int idx = 0, revIdx = _simdList.length - 2;
+      idx < _simdList.length && revIdx >= 0;
+      idx++, revIdx--
+    ) {
+      final asList = _SIMDValueToList(_getReversedValue(_simdList[revIdx]));
+      tail.setRange(0, tail.length, asList.getRange(0, tail.length));
+      reversed[idx] = _createSIMDValueFromSimpleList([]..addAll(head)..addAll(tail));
+      head.setRange(0, head.length, asList.getRange(tail.length, asList.length));
+    }
+
+    reversed[reversed.length - 1] = _createSIMDValueFromSimpleList(
+      []
+        ..addAll(head)
+        ..addAll(new List.filled(_laneSize - head.length, 0.0))
+      );
+
+    return _createVectorFromSIMDList(reversed, _length);
+  }
+
+  _SIMDVector _simpleReverse() {
+    final reversed = _createSIMDList(_simdList.length);
+    for (
+      int idx = 0, revIdx = _simdList.length - 1;
+      idx < _simdList.length;
+      idx++, revIdx--
+    ) {
+      reversed[idx] = _getReversedValue(_simdList[revIdx]);
+    }
+    return _createVectorFromSIMDList(reversed, _length);
+  }
 
   @override
   void set length(int value) {
-    throw new UnsupportedError('');
+    throw new UnsupportedError('length setting is unsupported');
   }
 
   @override
   void add(double value) {
-    throw new UnsupportedError('add');
+    throw new UnsupportedError('`add` method is unsupported');
   }
 
   @override
   void addAll(Iterable<double> collection) {
-    throw new UnsupportedError('');
+    throw new UnsupportedError('`addAll` method is unsupported');
   }
 
   @override
@@ -328,7 +383,7 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
 
   @override
   void clear() {
-    throw new UnsupportedError('');
+    throw new UnsupportedError('`clear` method is unsupported');
   }
 
   @override
