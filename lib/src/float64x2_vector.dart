@@ -14,7 +14,7 @@ part of 'simd_vector.dart';
 /// simultaneously (in parallel, in this case - in two threads)
 class Float64x2Vector extends _SIMDVector<Float64x2List, Float64List, Float64x2> {
   @override
-  int get _laneSize => 2;
+  int get _bucketSize => 2;
 
   /// Creates a [Float64x2Vector] with both empty simd and typed inner lists
   Float64x2Vector(int length) : super(length);
