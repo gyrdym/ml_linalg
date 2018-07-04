@@ -14,13 +14,10 @@ part of 'simd_vector.dart';
 /// simultaneously (in parallel, in this case - in four threads)
 class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4> {
   @override
-  int get _laneSize => 4;
+  int get _bucketSize => 4;
 
   /// Creates a [Float32x4Vector] with both empty simd and typed inner lists
   Float32x4Vector(int length) : super(length);
-
-  /// Creates a [Float32x4Vector] with both preset simd and typed inner lists
-  Float32x4Vector._preset(Float32x4List simdList, Float32List typedList) : super.preset(simdList, typedList);
 
   /// Creates a [Float32x4Vector] vector from collection
   Float32x4Vector.from(Iterable<double> source) : super.from(source);
@@ -56,10 +53,6 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
       .fromSIMDList(list, length);
 
   @override
-  Float32x4Vector _createVectorWithPresetData(Float32x4List simd, Float32List typed) =>
-      new Float32x4Vector._preset(simd, typed);
-
-  @override
   Float32x4Vector _createVectorFromList(List<double> source) => new Float32x4Vector.from(source);
 
   @override
@@ -67,10 +60,10 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
 
   @override
   Float32x4 _createSIMDValueFromSimpleList(List<double> list) {
-    final x = list[0] ?? 0.0;
-    final y = list[1] ?? 0.0;
-    final z = list[2] ?? 0.0;
-    final w = list[3] ?? 0.0;
+    final x = list.length > 0 ? list[0] ?? 0.0 : 0.0;
+    final y = list.length > 1 ? list[1] ?? 0.0 : 0.0;
+    final z = list.length > 2 ? list[2] ?? 0.0 : 0.0;
+    final w = list.length > 3 ? list[3] ?? 0.0 : 0.0;
 
     return new Float32x4(x, y, z, w);
   }
@@ -89,9 +82,6 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
     (a.w.isNaN ? 0.0 : a.w);
 
   @override
-  List<double> _SIMDValueToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
-
-  @override
   double _getScalarByOffsetIndex(Float32x4 value, int offset) {
     switch (offset) {
       case 0:
@@ -108,5 +98,20 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
   }
 
   @override
-  Float32x4 _getReversedValue(Float32x4 value) => new Float32x4(value.w, value.z, value.y, value.x);
+  Float32x4 _selectMax(Float32x4 a, Float32x4 b) => a.max(b);
+
+  @override
+  double _getMaxLane(Float32x4 a) => math.max(math.max(a.x, a.y), math.max(a.z, a.w));
+
+  @override
+  Float32x4 _selectMin(Float32x4 a, Float32x4 b) => a.min(b);
+
+  @override
+  double _getMinLane(Float32x4 a) {
+    print('${a.x} ${a.y}, ${a.z} ${a.w}');
+    return math.min(math.min(a.x, a.y), math.min(a.z, a.w));
+  }
+
+  @override
+  List<double> SIMDValueToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
 }
