@@ -232,8 +232,6 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
       _simdList[i] = operation(this._innerList[i], value is _SIMDVector ? value._innerList[i] : _scalarValue);
     }
 
-
-
     return _createVectorFromSIMDList(_simdList, _length);
   }
 
