@@ -56,10 +56,10 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
   Float32x4Vector _createVectorFromList(List<double> source) => new Float32x4Vector.from(source);
 
   @override
-  Float32x4 _createSIMDValueFilled(double value) => new Float32x4.splat(value);
+  Float32x4 _createSIMDFilled(double value) => new Float32x4.splat(value);
 
   @override
-  Float32x4 _createSIMDValueFromSimpleList(List<double> list) {
+  Float32x4 _createSIMDFromSimpleList(List<double> list) {
     final x = list.length > 0 ? list[0] ?? 0.0 : 0.0;
     final y = list.length > 1 ? list[1] ?? 0.0 : 0.0;
     final z = list.length > 2 ? list[2] ?? 0.0 : 0.0;
@@ -69,16 +69,16 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
   }
 
   @override
-  Float32x4 _SIMDValuesProduct(Float32x4 a, Float32x4 b) => a * b;
+  Float32x4 _SIMDProduct(Float32x4 a, Float32x4 b) => a * b;
 
   @override
-  Float32x4 _SIMDValuesSum(Float32x4 a, Float32x4 b) => a + b;
+  Float32x4 _SIMDSum(Float32x4 a, Float32x4 b) => a + b;
 
   @override
-  Float32x4 _SIMDValueAbs(Float32x4 a) => a.abs();
+  Float32x4 _SIMDAbs(Float32x4 a) => a.abs();
 
   @override
-  double _SIMDValueSum(Float32x4 a) => (a.x.isNaN ? 0.0 : a.x) + (a.y.isNaN ? 0.0 : a.y) + (a.z.isNaN ? 0.0 : a.z) +
+  double _singleSIMDSum(Float32x4 a) => (a.x.isNaN ? 0.0 : a.x) + (a.y.isNaN ? 0.0 : a.y) + (a.z.isNaN ? 0.0 : a.z) +
     (a.w.isNaN ? 0.0 : a.w);
 
   @override
@@ -113,5 +113,5 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
   }
 
   @override
-  List<double> SIMDValueToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+  List<double> _SIMDToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
 }

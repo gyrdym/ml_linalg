@@ -63,10 +63,10 @@ class Float64x2Vector extends _SIMDVector<Float64x2List, Float64List, Float64x2>
   Float64x2Vector _createVectorFromList(List<double> source) => new Float64x2Vector.from(source);
 
   @override
-  Float64x2 _createSIMDValueFilled(double value) => new Float64x2.splat(value);
+  Float64x2 _createSIMDFilled(double value) => new Float64x2.splat(value);
 
   @override
-  Float64x2 _createSIMDValueFromSimpleList(List<double> list) {
+  Float64x2 _createSIMDFromSimpleList(List<double> list) {
     double x = list[0] ?? 0.0;
     double y = list[1] ?? 0.0;
 
@@ -74,16 +74,16 @@ class Float64x2Vector extends _SIMDVector<Float64x2List, Float64List, Float64x2>
   }
 
   @override
-  Float64x2 _SIMDValuesProduct(Float64x2 a, Float64x2 b) => a * b;
+  Float64x2 _SIMDProduct(Float64x2 a, Float64x2 b) => a * b;
 
   @override
-  Float64x2 _SIMDValuesSum(Float64x2 a, Float64x2 b) => a + b;
+  Float64x2 _SIMDSum(Float64x2 a, Float64x2 b) => a + b;
 
   @override
-  Float64x2 _SIMDValueAbs(Float64x2 a) => a.abs();
+  Float64x2 _SIMDAbs(Float64x2 a) => a.abs();
 
   @override
-  double _SIMDValueSum(Float64x2 a) => a.x + a.y;
+  double _singleSIMDSum(Float64x2 a) => a.x + a.y;
 
   @override
   List<double> _SIMDValueToList(Float64x2 a) => [a.x, a.y];
