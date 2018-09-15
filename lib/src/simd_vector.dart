@@ -47,13 +47,13 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
     final _source = source is List ? source : source.toList(growable: false);
     _length = _source.length;
     _innerList = _convertCollectionToSIMDList(_source);
-    _residualBucket = _getResidualBucket(_source);
+    _residualBucket = _cutResidualBucket(_source);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
   _SIMDVector.fromSIMDList(SIMDListType source, [int origLength]) {
     _length = origLength ?? source.length * _bucketSize;
-    _residualBucket = _getResidualBucket(source);
+    _residualBucket = _cutResidualBucket(source);
     _innerList = _residualBucket == null ? source : source.sublist(0, source.length - 1);
   }
 
@@ -62,7 +62,7 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
     final source = new List<double>.filled(length, value);
     _length = length;
     _innerList = _convertCollectionToSIMDList(source);
-    _residualBucket = _getResidualBucket(source);
+    _residualBucket = _cutResidualBucket(source);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
@@ -70,7 +70,7 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
     final source = new List<double>.filled(length, 0.0);
     _length = length;
     _innerList = _convertCollectionToSIMDList(source);
-    _residualBucket = _getResidualBucket(source);
+    _residualBucket = _cutResidualBucket(source);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
@@ -79,7 +79,7 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
     final source = new List<double>.generate(length, (_) => random.nextDouble());
     _length = length;
     _innerList = _convertCollectionToSIMDList(source);
-    _residualBucket = _getResidualBucket(source);
+    _residualBucket = _cutResidualBucket(source);
   }
 
   /// A number of vector elements
@@ -217,7 +217,7 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
     return target;
   }
 
-  SIMDValueType _getResidualBucket(List collection) {
+  SIMDValueType _cutResidualBucket(List collection) {
     if (collection is SIMDListType) {
       if (collection.length % _bucketSize > 0) {
         return collection.last;
