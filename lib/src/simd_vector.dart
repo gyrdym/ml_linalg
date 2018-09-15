@@ -113,42 +113,24 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
   @override
   _SIMDVector scalarSub(double value) => _elementWiseScalarOperation(value, (a, b) => a - b);
 
+  /// Returns a vector filled with absolute values of an each component of [this] vector
+  @override
+  _SIMDVector abs() => _elementWiseSelfOperation((SIMDValueType value) => _SIMDAbs(value));
+
+  @override
+  _SIMDVector copy() => _elementWiseSelfOperation((SIMDValueType value) => value);
+
+  @override
+  double dot(_SIMDVector vector) => (this * vector).sum();
+
   /// Returns sum of all vector components
   @override
   double sum() {
     final sum = _residualBucket == null
-      ? _innerList.reduce((final sum, final item) => _SIMDSum(item, sum))
-      : _innerList.fold(_residualBucket, (final sum, final item) => _SIMDSum(item, sum));
+      ? _innerList.reduce((SIMDValueType sum, SIMDValueType item) => _SIMDSum(item, sum))
+      : _innerList.fold(_residualBucket, (SIMDValueType sum, SIMDValueType item) => _SIMDSum(item, sum));
     return _singleSIMDSum(sum);
   }
-
-  /// Returns a vector filled with absolute values of an each component of [this] vector
-  @override
-  _SIMDVector abs() {
-    final list = _createSIMDList(_bucketsNumber);
-    for (int i = 0; i < _innerList.length; i++) {
-      list[i] = _SIMDAbs(_innerList[i]);
-    }
-    if (_residualBucket != null) {
-      list[list.length - 1] = _SIMDAbs(_residualBucket);
-    }
-    return _createVectorFromSIMDList(list, _length);
-  }
-
-  @override
-  _SIMDVector copy() {
-    final list = _createSIMDList(_bucketsNumber);
-    for (int i = 0; i < _innerList.length; i++) {
-      list[i] = _innerList[i];
-    }
-    if (_residualBucket != null) {
-      list[list.length - 1] = _residualBucket;
-    }
-    return _createVectorFromSIMDList(list, _length);
-  }
-
-  @override
-  double dot(_SIMDVector vector) => (this * vector).sum();
 
   @override
   double distanceTo(_SIMDVector vector, [Norm norm = Norm.EUCLIDEAN]) => (this - vector).norm(norm);
@@ -171,7 +153,7 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
     if (_residualBucket != null) {
       return _SIMDToList(_residualBucket)
           .take(_length % _bucketSize)
-          .fold(max, (max, val) => math.max(max, val));
+          .fold(max, (double max, double val) => math.max(max, val));
     } else {
       return max;
     }
@@ -183,7 +165,7 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
     if (_residualBucket != null) {
       return _SIMDToList(_residualBucket)
           .take(_length % _bucketSize)
-          .fold(min, (min, val) => math.min(min, val));
+          .fold(min, (double min, double val) => math.min(min, val));
     } else {
       return min;
     }
@@ -273,6 +255,17 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
     }
     if (_residualBucket != null) {
       list[list.length - 1] = operation(_residualBucket, vector._residualBucket);
+    }
+    return _createVectorFromSIMDList(list, _length);
+  }
+
+  _SIMDVector _elementWiseSelfOperation(SIMDValueType operation(SIMDValueType a)) {
+    final list = _createSIMDList(_bucketsNumber);
+    for (int i = 0; i < _innerList.length; i++) {
+      list[i] = operation(_innerList[i]);
+    }
+    if (_residualBucket != null) {
+      list[list.length - 1] = operation(_residualBucket);
     }
     return _createVectorFromSIMDList(list, _length);
   }
