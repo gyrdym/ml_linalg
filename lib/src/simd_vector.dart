@@ -85,31 +85,31 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
   int get length => _length;
 
   @override
-  _SIMDVector operator +(_SIMDVector vector) => _elementWiseOperation(vector, (a, b) => a + b);
+  _SIMDVector operator +(_SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a + b);
 
   @override
-  _SIMDVector operator -(_SIMDVector vector) => _elementWiseOperation(vector, (a, b) => a - b);
+  _SIMDVector operator -(_SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a - b);
 
   @override
-  _SIMDVector operator *(_SIMDVector vector) => _elementWiseOperation(vector, (a, b) => a * b);
+  _SIMDVector operator *(_SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a * b);
 
   @override
-  _SIMDVector operator /(_SIMDVector vector) => _elementWiseOperation(vector, (a, b) => a / b);
+  _SIMDVector operator /(_SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a / b);
 
   @override
   _SIMDVector toIntegerPower(int power) => _elementWisePow(power);
 
   @override
-  _SIMDVector scalarMul(double value) => _elementWiseOperation(value, (a, b) => a * b);
+  _SIMDVector scalarMul(double value) => _elementWiseScalarOperation(value, (a, b) => a * b);
 
   @override
-  _SIMDVector scalarDiv(double value) => _elementWiseOperation(value, (a, b) => a / b);
+  _SIMDVector scalarDiv(double value) => _elementWiseScalarOperation(value, (a, b) => a / b);
 
   @override
-  _SIMDVector scalarAdd(double value) => _elementWiseOperation(value, (a, b) => a + b);
+  _SIMDVector scalarAdd(double value) => _elementWiseScalarOperation(value, (a, b) => a + b);
 
   @override
-  _SIMDVector scalarSub(double value) => _elementWiseOperation(value, (a, b) => a - b);
+  _SIMDVector scalarSub(double value) => _elementWiseScalarOperation(value, (a, b) => a - b);
 
   /// Returns sum of all vector components
   @override
@@ -182,57 +182,61 @@ abstract class _SIMDVector<SIMDListType extends List, TypedListType extends List
   /// All sequence of [collection] elements splits into groups with [_bucketSize] length
   SIMDListType _convertCollectionToSIMDList(Iterable<double> collection) {
     final numOfBuckets = collection.length ~/ _bucketSize;
-    final result = _createSIMDList(numOfBuckets);
-    final efficientSource = collection is TypedListType ? collection : _createTypedListFromList(collection);
+    final source = collection is TypedListType ? collection : _createTypedListFromList(collection);
+    final target = _createSIMDList(numOfBuckets);
 
     for (int i = 0; i < numOfBuckets; i++) {
       final start = i * _bucketSize;
       final end = start + _bucketSize;
-      final bucketAsList = efficientSource.sublist(start, end);
-      result[i] = _createSIMDValueFromSimpleList(bucketAsList);
+      final bucketAsList = source.sublist(start, end);
+      target[i] = _createSIMDValueFromSimpleList(bucketAsList);
     }
 
-    return result;
+    return target;
   }
 
   SIMDValueType _getResidualBucket(List collection) {
     if (collection is SIMDListType) {
       if (collection.length % _bucketSize > 0) {
         return collection.last;
+      } else {
+        return null;
       }
-      return null;
     }
 
     final length = collection.length;
     final numOfBuckets = length ~/ _bucketSize;
     final exceeded = length % _bucketSize;
-    final source = new List<double>.generate(exceeded, (int idx) => collection[numOfBuckets * _bucketSize + idx]);
-    return _createSIMDValueFromSimpleList(source);
+    final residue = new List<double>.generate(exceeded, (int idx) => collection[numOfBuckets * _bucketSize + idx]);
+    return _createSIMDValueFromSimpleList(residue);
   }
 
-  /// Returns a vector as a result of applying to [this] any element-wise operation (e.g. vector addition)
-  _SIMDVector _elementWiseOperation(Object value, SIMDValueType operation(SIMDValueType a, SIMDValueType b)) {
-    if (value is _SIMDVector && value.length != this.length) {
-      throw _mismatchLengthError();
-    }
-
-    SIMDValueType _scalarValue;
-
-    if (value is _SIMDVector) {
-      //do nothing
-    } else if (value is double) {
-      _scalarValue = _createSIMDValueFilled(value);
-    } else {
-      throw new UnsupportedError('Unsupported operand type (${value.runtimeType})');
-    }
-
-    final _simdList = _createSIMDList(this._innerList.length);
-
+  /// Returns a vector as a result of applying to [this] any element-wise operation with a scalar (e.g. vector addition)
+  _SIMDVector _elementWiseScalarOperation(double value, SIMDValueType operation(SIMDValueType a, SIMDValueType b)) {
+    final scalar = _createSIMDValueFilled(value);
+    final length = _innerList.length + (_residualBucket != null ? 1 : 0);
+    final list = _createSIMDList(length);
     for (int i = 0; i < this._innerList.length; i++) {
-      _simdList[i] = operation(this._innerList[i], value is _SIMDVector ? value._innerList[i] : _scalarValue);
+      list[i] = operation(this._innerList[i], scalar);
     }
+    if (this._residualBucket != null) {
+      list[list.length - 1] = operation(_residualBucket, vector._residualBucket);
+    }
+    return _createVectorFromSIMDList(list, _length);
+  }
 
-    return _createVectorFromSIMDList(_simdList, _length);
+  /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
+  _SIMDVector _elementWiseVectorOperation(_SIMDVector vector, SIMDValueType operation(SIMDValueType a, SIMDValueType b)) {
+    if (vector.length != this.length) throw _mismatchLengthError();
+    final length = _innerList.length + (_residualBucket != null ? 1 : 0);
+    final list = _createSIMDList(length);
+    for (int i = 0; i < _innerList.length; i++) {
+      list[i] = operation(_innerList[i], vector._innerList[i]);
+    }
+    if (this._residualBucket != null) {
+      list[list.length - 1] = operation(_residualBucket, vector._residualBucket);
+    }
+    return _createVectorFromSIMDList(list, _length);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
