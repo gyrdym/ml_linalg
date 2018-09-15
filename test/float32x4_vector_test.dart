@@ -129,7 +129,6 @@ void main() {
 
     test('Power', () {
       final result = vector1.toIntegerPower(3);
-
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
       expect(result.toList(), equals([1.0, 8.0, 27.0, 64.0, 125.0]));
