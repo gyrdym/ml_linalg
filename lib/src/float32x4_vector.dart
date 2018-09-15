@@ -40,9 +40,6 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
   Float32x4List _createSIMDList(int length) => new Float32x4List(length);
 
   @override
-  Float32x4List _createSIMDListFrom(List list) => new Float32x4List.fromList(list);
-
-  @override
   Float32List _createTypedList(int length) => new Float32List(length);
 
   @override
@@ -64,7 +61,6 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
     final y = list.length > 1 ? list[1] ?? 0.0 : 0.0;
     final z = list.length > 2 ? list[2] ?? 0.0 : 0.0;
     final w = list.length > 3 ? list[3] ?? 0.0 : 0.0;
-
     return new Float32x4(x, y, z, w);
   }
 
@@ -107,10 +103,7 @@ class Float32x4Vector extends _SIMDVector<Float32x4List, Float32List, Float32x4>
   Float32x4 _selectMin(Float32x4 a, Float32x4 b) => a.min(b);
 
   @override
-  double _getMinLane(Float32x4 a) {
-    print('${a.x} ${a.y}, ${a.z} ${a.w}');
-    return math.min(math.min(a.x, a.y), math.min(a.z, a.w));
-  }
+  double _getMinLane(Float32x4 a) => math.min(math.min(a.x, a.y), math.min(a.z, a.w));
 
   @override
   List<double> _SIMDToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
