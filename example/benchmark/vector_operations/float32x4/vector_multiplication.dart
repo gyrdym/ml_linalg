@@ -3,7 +3,7 @@
 
 import 'dart:math' as math;
 
-import 'package:simd_vector/vector.dart';
+import 'package:linalg/vector.dart';
 import 'package:benchmark_harness/benchmark_harness.dart';
 
 const amountOfElements = 10000000;
