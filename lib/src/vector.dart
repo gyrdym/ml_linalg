@@ -48,13 +48,13 @@ abstract class Vector {
   double dot(Vector vector);
 
   /// Returns a distance between [this] and [vector] with vector norm type considering
-  double distanceTo(Vector vector, [Norm norm = Norm.EUCLIDEAN]);
+  double distanceTo(Vector vector, [Norm norm = Norm.euclidean]);
 
   /// Returns a mean value of [this] vector
   double mean();
 
   /// Calculates vector norm (magnitude)
-  double norm([Norm norm = Norm.EUCLIDEAN]);
+  double norm([Norm norm = Norm.euclidean]);
 
   /// Returns sum of all elements
   double sum();
