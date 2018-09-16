@@ -146,14 +146,14 @@ void main() {
     test('Vector distance', () {
       final vector1 = new Float64x2Vector.from([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
       final vector2 = new Float64x2Vector.from([1.0, 3.0, 2.0, 11.5, 10.0, 15.5]);
-      expect(vector1.distanceTo(vector2, Norm.EUCLIDEAN), equals(10.88577052853862), reason: 'Wrong vector distance calculation');
-      expect(vector1.distanceTo(vector2, Norm.MANHATTAN), equals(20.0), reason: 'Wrong vector distance calculation');
+      expect(vector1.distanceTo(vector2, Norm.euclidean), equals(10.88577052853862), reason: 'Wrong vector distance calculation');
+      expect(vector1.distanceTo(vector2, Norm.manhattan), equals(20.0), reason: 'Wrong vector distance calculation');
     });
 
     test('Vector norm', () {
       final vector = new Float64x2Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector.norm(Norm.EUCLIDEAN), equals(7.416198487095663), reason: 'Wrong norm calculation');
-      expect(vector.norm(Norm.MANHATTAN), equals(15.0), reason: 'Wrong norm calculation');
+      expect(vector.norm(Norm.euclidean), equals(7.416198487095663), reason: 'Wrong norm calculation');
+      expect(vector.norm(Norm.manhattan), equals(15.0), reason: 'Wrong norm calculation');
     });
 
     test('Vector elements sum', () {

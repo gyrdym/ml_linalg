@@ -55,7 +55,7 @@ void euclideanNorm() {
 
 void manhattanNorm() {
   final vector1 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.norm(Norm.MANHATTAN);
+  final result = vector1.norm(Norm.manhattan);
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0
 }
 
@@ -116,6 +116,6 @@ void euclideanDistanceBetweenVectors() {
 void manhattanDistanceBetweenVectors() {
   final vector1 = new Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = new Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.distanceTo(vector2, Norm.MANHATTAN);
+  final result = vector1.distanceTo(vector2, Norm.manhattan);
   print(result); // 5.0
 }

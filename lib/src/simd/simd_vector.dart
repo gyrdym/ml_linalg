@@ -128,13 +128,13 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
   }
 
   @override
-  double distanceTo(SIMDVector vector, [Norm norm = Norm.EUCLIDEAN]) => (this - vector).norm(norm);
+  double distanceTo(SIMDVector vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
 
   @override
   double mean() => sum() / length;
 
   @override
-  double norm([Norm norm = Norm.EUCLIDEAN]) {
+  double norm([Norm norm = Norm.euclidean]) {
     final power = _getPowerByNormType(norm);
     if (power == 1) {
       return this.abs().sum();
@@ -169,9 +169,9 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
   int _getPowerByNormType(Norm norm) {
     switch(norm) {
-      case Norm.EUCLIDEAN:
+      case Norm.euclidean:
         return 2;
-      case Norm.MANHATTAN:
+      case Norm.manhattan:
         return 1;
       default:
         throw new UnsupportedError('Unsupported norm type!');
