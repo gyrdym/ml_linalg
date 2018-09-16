@@ -1,26 +1,26 @@
 import 'package:linalg/src/vector.dart';
 
-abstract class SIMDHelper<SIMDListType extends List, SIMDValueType, TypedListType extends List> {
+abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
   int get bucketSize;
-  SIMDValueType createSIMDFilled(double value);
-  SIMDValueType createSIMDFromSimpleList(List<double> list);
-  SIMDValueType SIMDSum(SIMDValueType a, SIMDValueType b);
-  SIMDValueType SIMDSub(SIMDValueType a, SIMDValueType b);
-  SIMDValueType SIMDMul(SIMDValueType a, SIMDValueType b);
-  SIMDValueType SIMDDiv(SIMDValueType a, SIMDValueType b);
-  SIMDValueType SIMDAbs(SIMDValueType a);
-  double singleSIMDSum(SIMDValueType a);
-  SIMDListType createSIMDList(int length);
-  TypedListType createTypedList(int length);
-  TypedListType createTypedListFromList(List<double> list);
-  Vector createVectorFromSIMDList(SIMDListType list, int length);
+  E createSIMDFilled(double value);
+  E createSIMDFromSimpleList(List<double> list);
+  E simdSum(E a, E b);
+  E simdSub(E a, E b);
+  E simdMul(E a, E b);
+  E simdDiv(E a, E b);
+  E simdAbs(E a);
+  double singleSIMDSum(E a);
+  S createSIMDList(int length);
+  T createTypedList(int length);
+  T createTypedListFromList(List<double> list);
+  Vector createVectorFromSIMDList(S list, int length);
   Vector createVectorFromList(List<double> list);
-  double getScalarByOffsetIndex(SIMDValueType value, int offset);
-  SIMDValueType selectMax(SIMDValueType a, SIMDValueType b);
-  double getMaxLane(SIMDValueType a);
-  SIMDValueType selectMin(SIMDValueType a, SIMDValueType b);
-  double getMinLane(SIMDValueType a);
-  List<double> SIMDToList(SIMDValueType a);
+  double getScalarByOffsetIndex(E value, int offset);
+  E selectMax(E a, E b);
+  double getMaxLane(E a);
+  E selectMin(E a, E b);
+  double getMinLane(E a);
+  List<double> simdToList(E a);
 }
