@@ -12,7 +12,7 @@ part of 'simd_vector.dart';
 /// Type of these values is [Float64x2]
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel, in this case - in two threads)
-class Float64x2Vector extends _SIMDVector<Float64x2List, Float64List, Float64x2> {
+class Float64x2Vector extends SIMDVector<Float64x2List, Float64List, Float64x2> {
   @override
   int get _bucketSize => 2;
 
