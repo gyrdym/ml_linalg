@@ -2,7 +2,7 @@
 // It takes approximately 2.4 second
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:linalg/vector.dart';
+import 'package:linalg/src/simd/float32x4_vector.dart';
 
 const amountOfElements = 10000000;
 
