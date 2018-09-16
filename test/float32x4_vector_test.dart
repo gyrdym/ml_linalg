@@ -1,7 +1,9 @@
 import 'dart:typed_data';
+
+import 'package:linalg/src/simd/float32x4_vector.dart';
 import 'package:linalg/vector.dart';
-import 'package:test/test.dart';
 import 'package:matcher/matcher.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Float32x4Vector constructors.', () {
