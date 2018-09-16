@@ -18,9 +18,13 @@ class Float32x4Helper implements SIMDHelper<Float32x4List, Float32x4, Float32Lis
     return new Float32x4(x, y, z, w);
   }
 
-  Float32x4 SIMDProduct(Float32x4 a, Float32x4 b) => a * b;
-
   Float32x4 SIMDSum(Float32x4 a, Float32x4 b) => a + b;
+
+  Float32x4 SIMDSub(Float32x4 a, Float32x4 b) => a - b;
+
+  Float32x4 SIMDMul(Float32x4 a, Float32x4 b) => a * b;
+
+  Float32x4 SIMDDiv(Float32x4 a, Float32x4 b) => a / b;
 
   Float32x4 SIMDAbs(Float32x4 a) => a.abs();
 

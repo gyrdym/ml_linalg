@@ -39,7 +39,7 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
 
   /// Creates a vector from collection
   SIMDVector.from(Iterable<double> source, this._SIMDHelper) {
-    final _source = source is List ? source : source.toList(growable: false);
+    final List<double> _source = source is List ? source : source.toList(growable: false);
     _length = _source.length;
     _innerList = _convertCollectionToSIMDList(_source);
     _residualBucket = _cutResidualBucket(_source);
@@ -82,31 +82,39 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
   int get length => _length;
 
   @override
-  SIMDVector operator +(SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a + b);
+  SIMDVector operator +(covariant SIMDVector vector) =>
+      _elementWiseVectorOperation(vector, (final a, final b) => _SIMDHelper.SIMDSum(a, b));
 
   @override
-  SIMDVector operator -(SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a - b);
+  SIMDVector operator -(covariant SIMDVector vector) =>
+      _elementWiseVectorOperation(vector, (final a, final b) => _SIMDHelper.SIMDSub(a, b));
 
   @override
-  SIMDVector operator *(SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a * b);
+  SIMDVector operator *(covariant SIMDVector vector) =>
+      _elementWiseVectorOperation(vector, (final a, final b) => _SIMDHelper.SIMDMul(a, b));
 
   @override
-  SIMDVector operator /(SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a / b);
+  SIMDVector operator /(covariant SIMDVector vector) =>
+      _elementWiseVectorOperation(vector, (final a, final b) => _SIMDHelper.SIMDDiv(a, b));
 
   @override
   SIMDVector toIntegerPower(int power) => _elementWisePow(power);
 
   @override
-  SIMDVector scalarMul(double value) => _elementWiseScalarOperation(value, (a, b) => a * b);
+  SIMDVector scalarMul(double value) =>
+      _elementWiseScalarOperation(value, (final a, final b) => _SIMDHelper.SIMDMul(a, b));
 
   @override
-  SIMDVector scalarDiv(double value) => _elementWiseScalarOperation(value, (a, b) => a / b);
+  SIMDVector scalarDiv(double value) =>
+      _elementWiseScalarOperation(value, (final a, final b) => _SIMDHelper.SIMDDiv(a, b));
 
   @override
-  SIMDVector scalarAdd(double value) => _elementWiseScalarOperation(value, (a, b) => a + b);
+  SIMDVector scalarAdd(double value) =>
+      _elementWiseScalarOperation(value, (final a, final b) => _SIMDHelper.SIMDSum(a, b));
 
   @override
-  SIMDVector scalarSub(double value) => _elementWiseScalarOperation(value, (a, b) => a - b);
+  SIMDVector scalarSub(double value) =>
+      _elementWiseScalarOperation(value, (final a, final b) => _SIMDHelper.SIMDSub(a, b));
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   @override
@@ -116,19 +124,19 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
   SIMDVector copy() => _elementWiseSelfOperation((SIMDValueType value) => value);
 
   @override
-  double dot(SIMDVector vector) => (this * vector).sum();
+  double dot(covariant SIMDVector vector) => (this * vector).sum();
 
   /// Returns sum of all vector components
   @override
   double sum() {
     final sum = _residualBucket == null
-      ? _innerList.reduce((SIMDValueType sum, SIMDValueType item) => _SIMDHelper.SIMDSum(item, sum))
-      : _innerList.fold(_residualBucket, (SIMDValueType sum, SIMDValueType item) => _SIMDHelper.SIMDSum(item, sum));
+      ? _innerList.reduce((final sum, final item) => _SIMDHelper.SIMDSum(item, sum))
+      : _innerList.fold(_residualBucket, (final sum, final item) => _SIMDHelper.SIMDSum(item, sum));
     return _SIMDHelper.singleSIMDSum(sum);
   }
 
   @override
-  double distanceTo(SIMDVector vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
+  double distanceTo(covariant SIMDVector vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
 
   @override
   double mean() => sum() / length;
@@ -185,13 +193,13 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
     }
 
     final x = _simdToIntPow(lane, power ~/ 2);
-    final sqrX = _SIMDHelper.SIMDProduct(x, x);
+    final sqrX = _SIMDHelper.SIMDMul(x, x);
 
     if (power % 2 == 0) {
       return sqrX;
     }
 
-    return _SIMDHelper.SIMDProduct(lane, sqrX);
+    return _SIMDHelper.SIMDMul(lane, sqrX);
   }
 
   /// Returns SIMD list (e.g. Float32x4List) as a result of converting iterable source
@@ -199,7 +207,9 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
   /// All sequence of [collection] elements splits into groups with [_bucketSize] length
   SIMDListType _convertCollectionToSIMDList(Iterable<double> collection) {
     final numOfBuckets = collection.length ~/ _SIMDHelper.bucketSize;
-    final source = collection is TypedListType ? collection : _SIMDHelper.createTypedListFromList(collection);
+    final TypedListType source = collection is TypedListType
+      ? collection
+      : _SIMDHelper.createTypedListFromList(collection);
     final target = _SIMDHelper.createSIMDList(numOfBuckets);
 
     for (int i = 0; i < numOfBuckets; i++) {
