@@ -1,7 +1,7 @@
 // Performance test of vector (10 000 000 elements in vector) addition operation
 // It takes approximately 4.7 second
 
-import 'package:linalg/vector.dart';
+import 'package:linalg/src/simd/float64x2_vector.dart';
 import 'package:benchmark_harness/benchmark_harness.dart';
 
 const int AMOUNT_OF_ELEMENTS = 10000000;
