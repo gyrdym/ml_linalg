@@ -6,8 +6,10 @@ abstract class SIMDHelper<SIMDListType extends List, SIMDValueType, TypedListTyp
   int get bucketSize;
   SIMDValueType createSIMDFilled(double value);
   SIMDValueType createSIMDFromSimpleList(List<double> list);
-  SIMDValueType SIMDProduct(SIMDValueType a, SIMDValueType b);
   SIMDValueType SIMDSum(SIMDValueType a, SIMDValueType b);
+  SIMDValueType SIMDSub(SIMDValueType a, SIMDValueType b);
+  SIMDValueType SIMDMul(SIMDValueType a, SIMDValueType b);
+  SIMDValueType SIMDDiv(SIMDValueType a, SIMDValueType b);
   SIMDValueType SIMDAbs(SIMDValueType a);
   double singleSIMDSum(SIMDValueType a);
   SIMDListType createSIMDList(int length);

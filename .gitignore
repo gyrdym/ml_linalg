@@ -5,3 +5,4 @@ pubspec.lock
 build/
 doc/api/
 
+/.dart_tool/

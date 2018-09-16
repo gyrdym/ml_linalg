@@ -16,9 +16,13 @@ class Float64x2Helper implements SIMDHelper<Float64x2List, Float64x2, Float64Lis
     return new Float64x2(x, y);
   }
 
-  Float64x2 SIMDProduct(Float64x2 a, Float64x2 b) => a * b;
-
   Float64x2 SIMDSum(Float64x2 a, Float64x2 b) => a + b;
+
+  Float64x2 SIMDSub(Float64x2 a, Float64x2 b) => a - b;
+
+  Float64x2 SIMDMul(Float64x2 a, Float64x2 b) => a * b;
+
+  Float64x2 SIMDDiv(Float64x2 a, Float64x2 b) => a / b;
 
   Float64x2 SIMDAbs(Float64x2 a) => a.abs();
 
