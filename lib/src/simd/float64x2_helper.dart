@@ -1,13 +1,14 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:linalg/src/simd/float64x2_vector.dart';
 import 'package:linalg/src/simd/simd_helper.dart';
 
 class Float64x2Helper implements SIMDHelper<Float64x2List, Float64List, Float64x2> {
 
   @override
   final bucketSize = 2;
+
+  const Float64x2Helper();
 
   @override
   Float64x2 createSIMDFilled(double value) => Float64x2.splat(value);
@@ -45,13 +46,6 @@ class Float64x2Helper implements SIMDHelper<Float64x2List, Float64List, Float64x
 
   @override
   Float64List createTypedListFromList(List<double> list) => Float64List.fromList(list);
-
-  @override
-  Float64x2Vector createVectorFromSIMDList(Float64x2List list, int length) => Float64x2Vector
-      .fromSIMDList(list, length);
-
-  @override
-  Float64x2Vector createVectorFromList(List<double> source) => Float64x2Vector.from(source);
 
   @override
   double getScalarByOffsetIndex(Float64x2 value, int offset) {

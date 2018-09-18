@@ -5,16 +5,17 @@ import 'dart:math' as math;
 
 import 'package:linalg/src/simd/float32x4_vector.dart';
 import 'package:benchmark_harness/benchmark_harness.dart';
+import 'package:linalg/src/simd/simd_vector.dart';
 
 const amountOfElements = 10000;
 
-Float32x4Vector vector;
+SIMDVector vector;
 
 class VectorUniqueBenchmark extends BenchmarkBase {
   const VectorUniqueBenchmark() : super('Vector unnique elements obtaining, $amountOfElements elements');
 
   static void main() {
-    new VectorUniqueBenchmark().report();
+    const VectorUniqueBenchmark().report();
   }
 
   void run() {
@@ -22,8 +23,8 @@ class VectorUniqueBenchmark extends BenchmarkBase {
   }
 
   void setup() {
-    final generator = new math.Random(new DateTime.now().millisecondsSinceEpoch);
-    vector = new Float32x4Vector.from(new List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
+    final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
+    vector = Float32x4VectorFactory.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
   }
 
   void tearDown() {

@@ -5,27 +5,31 @@ import 'dart:math' as math;
 
 import 'package:linalg/src/simd/float32x4_vector.dart';
 import 'package:benchmark_harness/benchmark_harness.dart';
+import 'package:linalg/src/simd/simd_vector.dart';
 
 const amountOfElements = 10000000;
 
-Float32x4Vector vector1;
-Float32x4Vector vector2;
+SIMDVector vector1;
+SIMDVector vector2;
 
-class VectorMultBenchmark extends BenchmarkBase {
-  const VectorMultBenchmark() : super('Vectors multiplication, $amountOfElements elements');
+class VectorMulBenchmark extends BenchmarkBase {
+  const VectorMulBenchmark() : super('Vectors multiplication, $amountOfElements elements');
 
   static void main() {
-    new VectorMultBenchmark().report();
+    const VectorMulBenchmark().report();
   }
 
+  @override
   void run() {
+    // ignore: unnecessary_statements
     vector1 * vector2;
   }
 
+  @override
   void setup() {
-    final generator = new math.Random(new DateTime.now().millisecondsSinceEpoch);
-    vector1 = new Float32x4Vector.from(new List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
-    vector2 = new Float32x4Vector.from(new List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
+    final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
+    vector1 = Float32x4VectorFactory.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
+    vector2 = Float32x4VectorFactory.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
   }
 
   void tearDown() {
@@ -35,5 +39,5 @@ class VectorMultBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  VectorMultBenchmark.main();
+  VectorMulBenchmark.main();
 }

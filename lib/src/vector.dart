@@ -1,7 +1,7 @@
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
-abstract class Vector {
+abstract class Vector<E> {
   /// Vector's dimension
   int get length;
 
@@ -73,4 +73,7 @@ abstract class Vector {
 
   /// Creates a [List] containing the element of this [Vector]
   List<double> toList();
+
+  ///
+  Vector vectorizedMap(E mapper(E element));
 }
