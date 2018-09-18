@@ -1,4 +1,4 @@
-import 'package:linalg/src/vector.dart';
+import 'package:linalg/src/simd/simd_vector.dart';
 
 abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
@@ -39,10 +39,10 @@ abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   T createTypedListFromList(List<double> list);
 
   /// returns a vector created using simd [list] as a source (length of [list] and value [length] differ)
-  Vector createVectorFromSIMDList(S list, int length);
+  SIMDVector<S, T, E> createVectorFromSIMDList(S list, int length);
 
   /// returns a vector created using regular [list] as a source
-  Vector createVectorFromList(List<double> list);
+  SIMDVector<S, T, E> createVectorFromList(List<double> list);
 
   /// returns particular component (lane) of simd value [value] by offset
   double getScalarByOffsetIndex(E value, int offset);
