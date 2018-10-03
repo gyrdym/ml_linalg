@@ -30,6 +30,9 @@ abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   /// returns a typed simd list of length equals [length]
   S createSIMDList(int length);
 
+  /// returns a typed simd list with
+  S createSIMDListFromView();
+
   /// returns a typed list (e.g. Float32List) of length equals [length]
   T createTypedList(int length);
 

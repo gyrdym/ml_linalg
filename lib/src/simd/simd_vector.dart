@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:linalg/src/norm.dart';
 import 'package:linalg/src/simd/simd_helper.dart';
@@ -21,8 +22,6 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
 
   /// An efficient SIMD list
   S _innerList;
-
-  E _headingBucket;
 
   /// If a [SIMDVector] is created from a list whose length % [_bucketSize] != 0, residual stores here
   E _trailingBucket;
@@ -220,7 +219,14 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   SIMDVector<S, T, E> vectorizedMap(E mapper(E el)) => _elementWiseSelfOperation(mapper);
 
   SIMDVector<S, T, E> subVector(int start, [int end]) {
-
+    E residualBucket;
+    final protrusion = (end ?? _length) - _innerList.length * _simdHelper.bucketSize;
+    if (protrusion > 0) {
+      residualBucket = _simdHelper.takeFirstNLanes(protrusion);
+    }
+    final byteData = (_innerList as TypedData).buffer.asByteData(start * 8, residualBucket != null ? _length : end - start);
+    final newSimdLst = Float32x4List.view(byteData.buffer);
+    return SIMDVector.fromSIMDList(newSimdLst, _simdHelper, residualBucket);
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
