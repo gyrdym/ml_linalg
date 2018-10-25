@@ -51,6 +51,10 @@ class Float32x4Helper implements SIMDHelper<Float32x4List, Float32List, Float32x
   Float32List createTypedListFromList(List<double> list) => Float32List.fromList(list);
 
   @override
+  Float32x4List createSIMDListFromByteData(ByteData data) =>
+      Float32x4List.view(data.buffer);
+
+  @override
   double getScalarByOffsetIndex(Float32x4 value, int offset) {
     switch (offset) {
       case 0:
@@ -80,4 +84,17 @@ class Float32x4Helper implements SIMDHelper<Float32x4List, Float32List, Float32x
 
   @override
   List<double> simdToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+
+  @override
+  List<double> takeFirstNLanes(Float32x4 a, int n) => simdToList(a)
+      .take(n)
+      .toList();
+
+  @override
+  ByteData addDataToByteData(ByteData byteData, List<double> data) {
+    for (double value in data) {
+      byteData.setFloat32(byteData.elementSizeInBytes, value);
+    }
+    return byteData;
+  }
 }
