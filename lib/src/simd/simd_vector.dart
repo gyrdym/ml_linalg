@@ -219,14 +219,17 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   SIMDVector<S, T, E> vectorizedMap(E mapper(E el)) => _elementWiseSelfOperation(mapper);
 
   SIMDVector<S, T, E> subVector(int start, [int end]) {
-    E residualBucket;
-    final protrusion = (end ?? _length) - _innerList.length * _simdHelper.bucketSize;
-    if (protrusion > 0) {
-      residualBucket = _simdHelper.takeFirstNLanes(protrusion);
+    final protrusion = ((end ?? _length) - _innerList.length * _simdHelper.bucketSize)
+        .abs();
+    var byteData = (_innerList as TypedData)
+        .buffer
+        .asByteData(start * 8, (protrusion > 0 ? _length : end) - start);
+    if (protrusion > 0 && _trailingBucket != null) {
+      final residualBucket = _simdHelper.takeFirstNLanes(_trailingBucket, protrusion);
+      byteData = _simdHelper.addDataToByteData(byteData, residualBucket);
     }
-    final byteData = (_innerList as TypedData).buffer.asByteData(start * 8, residualBucket != null ? _length : end - start);
-    final newSimdLst = Float32x4List.view(byteData.buffer);
-    return SIMDVector.fromSIMDList(newSimdLst, _simdHelper, residualBucket);
+    final newSimdLst = _simdHelper.createSIMDListFromByteData(byteData);
+    return SIMDVector.fromSIMDList(newSimdLst, _simdHelper, (end - start).abs());
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)

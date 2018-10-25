@@ -1,3 +1,5 @@
+import 'dart:typed_data' show ByteData;
+
 abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
@@ -31,7 +33,7 @@ abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   S createSIMDList(int length);
 
   /// returns a typed simd list with
-  S createSIMDListFromView();
+  S createSIMDListFromByteData(ByteData data);
 
   /// returns a typed list (e.g. Float32List) of length equals [length]
   T createTypedList(int length);
@@ -56,4 +58,8 @@ abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
 
   /// converts simd value [a] to regular list
   List<double> simdToList(E a);
+
+  List<double> takeFirstNLanes(E a, int n);
+
+  ByteData addDataToByteData(ByteData byteData, List<double> data);
 }

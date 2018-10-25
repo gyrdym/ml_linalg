@@ -269,5 +269,12 @@ void main() {
       expect(() => vector[1], throwsRangeError);
       expect(() => vector[100], throwsRangeError);
     });
+
+    test('`subVector` method', () {
+      final vector = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subVector(1, 5).toList();
+      final expected = [2.0, 3.0, 4.0, 5.0];
+      expect(actual, expected);
+    });
   });
 }
