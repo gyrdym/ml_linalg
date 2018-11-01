@@ -71,6 +71,8 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
 
   bool get _isLastBucketNotFull => _innerList.length % _simdHelper.bucketSize > 0;
 
+  S get _innerListWithoutLastBucket => _simdHelper.sublist(_innerList, 0, _innerList.length - 1);
+
   /// A number of vector elements
   @override
   int get length => _length;
@@ -140,13 +142,23 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   }
 
   @override
-  double max() => _simdHelper.getMaxLane(_innerList.reduce(_simdHelper.selectMax));
+  double max() {
+    if (_isLastBucketNotFull) {
+      final fullBucketList = _innerListWithoutLastBucket;
+      final max = _simdHelper.getMaxLane(fullBucketList.reduce(_simdHelper.selectMax));
+      return _simdHelper.simdToList(_innerList.last)
+          .take(_length % _simdHelper.bucketSize)
+          .fold(max, math.max);
+    } else {
+      return _simdHelper.getMaxLane(_innerList.reduce(_simdHelper.selectMax));
+    }
+  }
 
   @override
   double min() {
     if (_isLastBucketNotFull) {
-      final listWithoutLastBucket = _simdHelper.sublist(_innerList, 0, _innerList.length - 1);
-      final min = _simdHelper.getMinLane(listWithoutLastBucket.reduce(_simdHelper.selectMin));
+      final fullBucketList = _innerListWithoutLastBucket;
+      final min = _simdHelper.getMinLane(fullBucketList.reduce(_simdHelper.selectMin));
       return _simdHelper.simdToList(_innerList.last)
           .take(_length % _simdHelper.bucketSize)
           .fold(min, math.min);
@@ -202,11 +214,7 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
     final byteData = (_innerList as TypedData)
         .buffer
         .asByteData(start * 8, (protrusion > 0 ? _length : end) - start);
-    final residualBucket = (protrusion > 0)
-        ? _simdHelper.takeFirstNLanes(_innerList.last, protrusion)
-        : null;
-
-    final collection = _simdHelper.createTypedListFromByteBuffer(byteData.buffer, residualBucket);
+    final collection = _simdHelper.createTypedListFromByteBuffer(byteData.buffer);
     return SIMDVector.from(collection, _simdHelper);
   }
 
