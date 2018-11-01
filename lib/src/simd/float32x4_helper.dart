@@ -1,43 +1,59 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:linalg/src/simd/float32x4_vector.dart';
 import 'package:linalg/src/simd/simd_helper.dart';
 
-class Float32x4Helper implements SIMDHelper<Float32x4List, Float32x4, Float32List> {
+class Float32x4Helper implements SIMDHelper<Float32x4List, Float32List, Float32x4> {
 
+  @override
   final bucketSize = 4;
 
-  Float32x4 createSIMDFilled(double value) => new Float32x4.splat(value);
+  const Float32x4Helper();
 
+  @override
+  Float32x4 createSIMDFilled(double value) => Float32x4.splat(value);
+
+  @override
   Float32x4 createSIMDFromSimpleList(List<double> list) {
-    final x = list.length > 0 ? list[0] ?? 0.0 : 0.0;
+    final x = list.isNotEmpty ? list[0] ?? 0.0 : 0.0;
     final y = list.length > 1 ? list[1] ?? 0.0 : 0.0;
     final z = list.length > 2 ? list[2] ?? 0.0 : 0.0;
     final w = list.length > 3 ? list[3] ?? 0.0 : 0.0;
-    return new Float32x4(x, y, z, w);
+    return Float32x4(x, y, z, w);
   }
 
-  Float32x4 SIMDProduct(Float32x4 a, Float32x4 b) => a * b;
+  @override
+  Float32x4 simdSum(Float32x4 a, Float32x4 b) => a + b;
 
-  Float32x4 SIMDSum(Float32x4 a, Float32x4 b) => a + b;
+  @override
+  Float32x4 simdSub(Float32x4 a, Float32x4 b) => a - b;
 
-  Float32x4 SIMDAbs(Float32x4 a) => a.abs();
+  @override
+  Float32x4 simdMul(Float32x4 a, Float32x4 b) => a * b;
 
+  @override
+  Float32x4 simdDiv(Float32x4 a, Float32x4 b) => a / b;
+
+  @override
+  Float32x4 simdAbs(Float32x4 a) => a.abs();
+
+  @override
   double singleSIMDSum(Float32x4 a) => (a.x.isNaN ? 0.0 : a.x) + (a.y.isNaN ? 0.0 : a.y) + (a.z.isNaN ? 0.0 : a.z) +
     (a.w.isNaN ? 0.0 : a.w);
 
-  Float32x4List createSIMDList(int length) => new Float32x4List(length);
+  @override
+  Float32x4List createSIMDList(int length) => Float32x4List(length);
 
-  Float32List createTypedList(int length) => new Float32List(length);
+  @override
+  Float32List createTypedList(int length) => Float32List(length);
 
-  Float32List createTypedListFromList(List<double> list) => new Float32List.fromList(list);
+  @override
+  Float32List createTypedListFromList(List<double> list) => Float32List.fromList(list);
 
-  Float32x4Vector createVectorFromSIMDList(Float32x4List list, int length) => new Float32x4Vector
-      .fromSIMDList(list, length);
+  @override
+  Float32List createTypedListFromByteBuffer(ByteBuffer buffer) => Float32List.view(buffer);
 
-  Float32x4Vector createVectorFromList(List<double> source) => new Float32x4Vector.from(source);
-
+  @override
   double getScalarByOffsetIndex(Float32x4 value, int offset) {
     switch (offset) {
       case 0:
@@ -49,17 +65,35 @@ class Float32x4Helper implements SIMDHelper<Float32x4List, Float32x4, Float32Lis
       case 3:
         return value.w;
       default:
-        throw new RangeError('wrong offset');
+        throw RangeError('wrong offset');
     }
   }
 
+  @override
   Float32x4 selectMax(Float32x4 a, Float32x4 b) => a.max(b);
 
+  @override
   double getMaxLane(Float32x4 a) => math.max(math.max(a.x, a.y), math.max(a.z, a.w));
 
+  @override
   Float32x4 selectMin(Float32x4 a, Float32x4 b) => a.min(b);
 
+  @override
   double getMinLane(Float32x4 a) => math.min(math.min(a.x, a.y), math.min(a.z, a.w));
 
-  List<double> SIMDToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+  @override
+  List<double> simdToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+
+  @override
+  List<double> takeFirstNLanes(Float32x4 a, int n) => simdToList(a)
+      .take(n)
+      .toList();
+
+  @override
+  Float32x4List sublist(Float32x4List list, int start, [int end]) =>
+      list.buffer.asFloat32x4List(start * Float32x4List.bytesPerElement, end);
+
+  @override
+  Float32List bufferAsTypedList(ByteBuffer buffer, int start, int length) =>
+      buffer.asFloat32List(start * Float32List.bytesPerElement, length);
 }
