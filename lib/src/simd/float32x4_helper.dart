@@ -91,5 +91,9 @@ class Float32x4Helper implements SIMDHelper<Float32x4List, Float32List, Float32x
 
   @override
   Float32x4List sublist(Float32x4List list, int start, [int end]) =>
-      list.buffer.asFloat32x4List(start, end);
+      list.buffer.asFloat32x4List(start * Float32x4List.bytesPerElement, end);
+
+  @override
+  Float32List bufferAsTypedList(ByteBuffer buffer, int start, int length) =>
+      buffer.asFloat32List(start * Float32List.bytesPerElement, length);
 }

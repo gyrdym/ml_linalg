@@ -1,5 +1,5 @@
 // Performance test of vector (10 000 elements in vector) multiplication operation
-// It takes approximately 1 second
+// It takes approximately 0.9 second (MacBook Air 2017)
 
 import 'dart:math' as math;
 
@@ -18,10 +18,12 @@ class VectorUniqueBenchmark extends BenchmarkBase {
     const VectorUniqueBenchmark().report();
   }
 
+  @override
   void run() {
     vector.unique();
   }
 
+  @override
   void setup() {
     final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
     vector = Float32x4VectorFactory.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));

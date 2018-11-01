@@ -209,12 +209,8 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   SIMDVector<S, T, E> vectorizedMap(E mapper(E el)) => _elementWiseSelfOperation(mapper);
 
   SIMDVector<S, T, E> subVector(int start, [int end]) {
-    final protrusion = ((end ?? _length) - _innerList.length * _simdHelper.bucketSize)
-        .abs();
-    final byteData = (_innerList as TypedData)
-        .buffer
-        .asByteData(start * 8, (protrusion > 0 ? _length : end) - start);
-    final collection = _simdHelper.createTypedListFromByteBuffer(byteData.buffer);
+    final collection = _simdHelper.bufferAsTypedList(
+        (_innerList as TypedData).buffer, start, (end > _length ? _length : end) - start);
     return SIMDVector.from(collection, _simdHelper);
   }
 

@@ -62,4 +62,6 @@ abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   List<double> takeFirstNLanes(E a, int n);
 
   S sublist(S list, int start, [int end]);
+
+  T bufferAsTypedList(ByteBuffer buffer, int start, int length);
 }
