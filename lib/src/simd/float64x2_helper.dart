@@ -48,8 +48,7 @@ class Float64x2Helper implements SIMDHelper<Float64x2List, Float64List, Float64x
   Float64List createTypedListFromList(List<double> list) => Float64List.fromList(list);
 
   @override
-  Float64List createTypedListFromByteBuffer(ByteBuffer buffer, [List<double> residuals]) =>
-      Float64List.view(buffer);
+  Float64List createTypedListFromByteBuffer(ByteBuffer buffer) => Float64List.view(buffer);
 
   @override
   double getScalarByOffsetIndex(Float64x2 value, int offset) {
@@ -82,14 +81,6 @@ class Float64x2Helper implements SIMDHelper<Float64x2List, Float64List, Float64x
   List<double> takeFirstNLanes(Float64x2 a, int n) => simdToList(a)
       .take(n)
       .toList();
-
-  @override
-  ByteData addDataToByteData(ByteData byteData, List<double> data) {
-    for (double value in data) {
-      byteData.setFloat64(byteData.elementSizeInBytes, value);
-    }
-    return byteData;
-  }
 
   @override
   Float64x2List sublist(Float64x2List list, int start, [int end]) =>

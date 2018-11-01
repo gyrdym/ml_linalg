@@ -275,6 +275,6 @@ void main() {
       final actual = vector.subVector(1, 5).toList();
       final expected = [2.0, 3.0, 4.0, 5.0];
       expect(actual, expected);
-    }, skip: true);
+    });
   });
 }

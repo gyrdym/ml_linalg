@@ -33,7 +33,7 @@ abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   S createSIMDList(int length);
 
   /// returns a typed list with
-  T createTypedListFromByteBuffer(ByteBuffer data, [List<double> residuals]);
+  T createTypedListFromByteBuffer(ByteBuffer data);
 
   /// returns a typed list (e.g. Float32List) of length equals [length]
   T createTypedList(int length);
@@ -60,8 +60,6 @@ abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
   List<double> simdToList(E a);
 
   List<double> takeFirstNLanes(E a, int n);
-
-  ByteData addDataToByteData(ByteData byteData, List<double> data);
 
   S sublist(S list, int start, [int end]);
 }
