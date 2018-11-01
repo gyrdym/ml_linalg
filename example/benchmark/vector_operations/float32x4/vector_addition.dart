@@ -1,28 +1,32 @@
 // Performance test of vector (10 000 000 elements in vector) addition operation
-// It takes approximately 2.4 second
+// It takes approximately 1.3 second (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:linalg/src/simd/float32x4_vector.dart';
+import 'package:linalg/src/simd/simd_vector.dart';
 
 const amountOfElements = 10000000;
 
-Float32x4Vector vector1;
-Float32x4Vector vector2;
+SIMDVector vector1;
+SIMDVector vector2;
 
 class VectorAdditionBenchmark extends BenchmarkBase {
   const VectorAdditionBenchmark() : super('Vectors addition, $amountOfElements elements');
 
   static void main() {
-    new VectorAdditionBenchmark().report();
+    const VectorAdditionBenchmark().report();
   }
 
+  @override
   void run() {
+    // ignore: unnecessary_statements
     vector1 + vector2;
   }
 
+  @override
   void setup() {
-    vector1 = new Float32x4Vector.randomFilled(amountOfElements);
-    vector2 = new Float32x4Vector.randomFilled(amountOfElements);
+    vector1 = Float32x4VectorFactory.randomFilled(amountOfElements);
+    vector2 = Float32x4VectorFactory.randomFilled(amountOfElements);
   }
 
   void tearDown() {

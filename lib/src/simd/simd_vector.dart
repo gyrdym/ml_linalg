@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:linalg/src/norm.dart';
 import 'package:linalg/src/simd/simd_helper.dart';
@@ -15,120 +16,118 @@ import 'package:linalg/src/vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel)
-abstract class SIMDVector<SIMDListType extends List, TypedListType extends List, SIMDValueType>
-    implements Vector {
+class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector<E> {
 
-  final SIMDHelper _SIMDHelper;
+  final SIMDHelper<S, T, E> _simdHelper;
 
   /// An efficient SIMD list
-  SIMDListType _innerList;
-
-  /// If a [SIMDVector] is created from a list whose length % [_bucketSize] != 0, residual stores here
-  SIMDValueType _residualBucket;
+  S _innerList;
 
   /// A number of vector elements
   int _length;
 
-  int get _bucketsNumber => _innerList.length + (_residualBucket != null ? 1 : 0);
-
   /// Creates a vector with both empty simd and typed inner lists
-  SIMDVector(int length, this._SIMDHelper) {
+  SIMDVector(int length, this._simdHelper) {
     _length = length;
-    _innerList = _SIMDHelper.createSIMDList(length);
+    _innerList = _simdHelper.createSIMDList(length);
   }
 
   /// Creates a vector from collection
-  SIMDVector.from(Iterable<double> source, this._SIMDHelper) {
-    final _source = source is List ? source : source.toList(growable: false);
+  SIMDVector.from(Iterable<double> source, this._simdHelper) {
+    final List<double> _source = source is List ? source : source.toList(growable: false);
     _length = _source.length;
     _innerList = _convertCollectionToSIMDList(_source);
-    _residualBucket = _cutResidualBucket(_source);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
-  SIMDVector.fromSIMDList(SIMDListType source, this._SIMDHelper, [int origLength]) {
-    _length = origLength ?? source.length * _SIMDHelper.bucketSize;
-    _residualBucket = _cutResidualBucket(source);
-    _innerList = _residualBucket == null ? source : source.sublist(0, source.length - 1);
+  SIMDVector.fromSIMDList(S source, this._simdHelper, [int origLength]) {
+    _length = origLength ?? source.length * _simdHelper.bucketSize;
+    _innerList = source.sublist(0, source.length) as S;
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
-  SIMDVector.filled(int length, double value, this._SIMDHelper) {
-    final source = new List<double>.filled(length, value);
+  SIMDVector.filled(int length, double value, this._simdHelper) {
+    final source = List<double>.filled(length, value);
     _length = length;
     _innerList = _convertCollectionToSIMDList(source);
-    _residualBucket = _cutResidualBucket(source);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
-  SIMDVector.zero(int length, this._SIMDHelper) {
-    final source = new List<double>.filled(length, 0.0);
+  SIMDVector.zero(int length, this._simdHelper) {
+    final source = List<double>.filled(length, 0.0);
     _length = length;
     _innerList = _convertCollectionToSIMDList(source);
-    _residualBucket = _cutResidualBucket(source);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
-  SIMDVector.randomFilled(int length, this._SIMDHelper, {int seed}) {
-    final random = new math.Random(seed);
-    final source = new List<double>.generate(length, (_) => random.nextDouble());
+  SIMDVector.randomFilled(int length, this._simdHelper, {int seed}) {
+    final random = math.Random(seed);
+    final source = List<double>.generate(length, (_) => random.nextDouble());
     _length = length;
     _innerList = _convertCollectionToSIMDList(source);
-    _residualBucket = _cutResidualBucket(source);
   }
+
+  int get _bucketsNumber => _innerList.length;
+
+  bool get _isLastBucketNotFull => _innerList.length % _simdHelper.bucketSize > 0;
+
+  S get _innerListWithoutLastBucket => _simdHelper.sublist(_innerList, 0, _innerList.length - 1);
 
   /// A number of vector elements
   @override
   int get length => _length;
 
   @override
-  SIMDVector operator +(SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a + b);
+  SIMDVector<S, T, E> operator +(covariant SIMDVector<S, T, E> vector) =>
+      _elementWiseVectorOperation(vector, _simdHelper.simdSum);
 
   @override
-  SIMDVector operator -(SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a - b);
+  SIMDVector<S, T, E> operator -(covariant SIMDVector<S, T, E> vector) =>
+      _elementWiseVectorOperation(vector, _simdHelper.simdSub);
 
   @override
-  SIMDVector operator *(SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a * b);
+  SIMDVector<S, T, E> operator *(covariant SIMDVector<S, T, E> vector) =>
+      _elementWiseVectorOperation(vector, _simdHelper.simdMul);
 
   @override
-  SIMDVector operator /(SIMDVector vector) => _elementWiseVectorOperation(vector, (a, b) => a / b);
+  SIMDVector<S, T, E> operator /(covariant SIMDVector<S, T, E> vector) =>
+      _elementWiseVectorOperation(vector, _simdHelper.simdDiv);
 
   @override
-  SIMDVector toIntegerPower(int power) => _elementWisePow(power);
+  SIMDVector<S, T, E> toIntegerPower(int power) => _elementWisePow(power);
 
   @override
-  SIMDVector scalarMul(double value) => _elementWiseScalarOperation(value, (a, b) => a * b);
+  SIMDVector<S, T, E> scalarMul(double value) =>
+      _elementWiseScalarOperation(value, _simdHelper.simdMul);
 
   @override
-  SIMDVector scalarDiv(double value) => _elementWiseScalarOperation(value, (a, b) => a / b);
+  SIMDVector<S, T, E> scalarDiv(double value) =>
+      _elementWiseScalarOperation(value, _simdHelper.simdDiv);
 
   @override
-  SIMDVector scalarAdd(double value) => _elementWiseScalarOperation(value, (a, b) => a + b);
+  SIMDVector<S, T, E> scalarAdd(double value) =>
+      _elementWiseScalarOperation(value, _simdHelper.simdSum);
 
   @override
-  SIMDVector scalarSub(double value) => _elementWiseScalarOperation(value, (a, b) => a - b);
+  SIMDVector<S, T, E> scalarSub(double value) =>
+      _elementWiseScalarOperation(value, _simdHelper.simdSub);
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   @override
-  SIMDVector abs() => _elementWiseSelfOperation((SIMDValueType value) => _SIMDHelper.SIMDAbs(value));
+  SIMDVector<S, T, E> abs() => _elementWiseSelfOperation(_simdHelper.simdAbs);
 
   @override
-  SIMDVector copy() => _elementWiseSelfOperation((SIMDValueType value) => value);
+  SIMDVector<S, T, E> copy() => _elementWiseSelfOperation((E value) => value);
 
   @override
-  double dot(SIMDVector vector) => (this * vector).sum();
+  double dot(covariant SIMDVector<S, T, E> vector) => (this * vector).sum();
 
   /// Returns sum of all vector components
   @override
-  double sum() {
-    final sum = _residualBucket == null
-      ? _innerList.reduce((SIMDValueType sum, SIMDValueType item) => _SIMDHelper.SIMDSum(item, sum))
-      : _innerList.fold(_residualBucket, (SIMDValueType sum, SIMDValueType item) => _SIMDHelper.SIMDSum(item, sum));
-    return _SIMDHelper.singleSIMDSum(sum);
-  }
+  double sum() => _simdHelper.singleSIMDSum(_innerList.reduce(_simdHelper.simdSum));
 
   @override
-  double distanceTo(SIMDVector vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
+  double distanceTo(covariant SIMDVector<S, T, E> vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
 
   @override
   double mean() => sum() / length;
@@ -137,33 +136,82 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
   double norm([Norm norm = Norm.euclidean]) {
     final power = _getPowerByNormType(norm);
     if (power == 1) {
-      return this.abs().sum();
+      return abs().sum();
     }
-    return math.pow(toIntegerPower(power).sum(), 1 / power);
+    return math.pow(toIntegerPower(power).sum(), 1 / power) as double;
   }
 
   @override
   double max() {
-    final max = _SIMDHelper.getMaxLane(_innerList.reduce(_SIMDHelper.selectMax));
-    if (_residualBucket != null) {
-      return _SIMDHelper.SIMDToList(_residualBucket)
-          .take(_length % _SIMDHelper.bucketSize)
-          .fold(max, (double max, double val) => math.max(max, val));
+    if (_isLastBucketNotFull) {
+      final fullBucketList = _innerListWithoutLastBucket;
+      final max = _simdHelper.getMaxLane(fullBucketList.reduce(_simdHelper.selectMax));
+      return _simdHelper.simdToList(_innerList.last)
+          .take(_length % _simdHelper.bucketSize)
+          .fold(max, math.max);
     } else {
-      return max;
+      return _simdHelper.getMaxLane(_innerList.reduce(_simdHelper.selectMax));
     }
   }
 
   @override
   double min() {
-    final min = _SIMDHelper.getMinLane(_innerList.reduce(_SIMDHelper.selectMin));
-    if (_residualBucket != null) {
-      return _SIMDHelper.SIMDToList(_residualBucket)
-          .take(_length % _SIMDHelper.bucketSize)
-          .fold(min, (double min, double val) => math.min(min, val));
+    if (_isLastBucketNotFull) {
+      final fullBucketList = _innerListWithoutLastBucket;
+      final min = _simdHelper.getMinLane(fullBucketList.reduce(_simdHelper.selectMin));
+      return _simdHelper.simdToList(_innerList.last)
+          .take(_length % _simdHelper.bucketSize)
+          .fold(min, math.min);
     } else {
-      return min;
+      return _simdHelper.getMinLane(_innerList.reduce(_simdHelper.selectMin));
     }
+  }
+
+  @override
+  SIMDVector<S, T, E> query(Iterable<int> indexes) {
+    final list = _simdHelper.createTypedList(indexes.length);
+    int i = 0;
+    for (final idx in indexes) {
+      list[i++] = this[idx];
+    }
+    return SIMDVector<S, T, E>.from(list, _simdHelper);
+  }
+
+  @override
+  SIMDVector<S, T, E> unique() {
+    final unique = <double>[];
+    for (int i = 0; i < _length; i++) {
+      final el = this[i];
+      if (!unique.contains(el)) {
+        unique.add(el);
+      }
+    }
+    return SIMDVector<S, T, E>.from(unique, _simdHelper);
+  }
+
+  @override
+  double operator [](int index) {
+    if (index >= _length) throw RangeError.index(index, this);
+    final base = (index / _simdHelper.bucketSize).floor();
+    final offset = index - base * _simdHelper.bucketSize;
+    return _simdHelper.getScalarByOffsetIndex(_innerList[base], offset);
+  }
+
+  @override
+  void operator []=(int index, double element) {
+    throw UnsupportedError('`[]=` operator is unsupported');
+  }
+
+  @override
+  List<double> toList() => List<double>.generate(_length, (int idx) => this[idx]);
+
+  @override
+  SIMDVector<S, T, E> vectorizedMap(E mapper(E el)) => _elementWiseSelfOperation(mapper);
+
+  SIMDVector<S, T, E> subVector(int start, [int end]) {
+    final collection = _simdHelper.bufferAsTypedList(
+        (_innerList as TypedData).buffer, start, (end > _length ? _length : end) - start);
+    return SIMDVector.from(collection, _simdHelper);
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
@@ -174,146 +222,82 @@ abstract class SIMDVector<SIMDListType extends List, TypedListType extends List,
       case Norm.manhattan:
         return 1;
       default:
-        throw new UnsupportedError('Unsupported norm type!');
+        throw UnsupportedError('Unsupported norm type!');
     }
   }
 
   /// Returns a SIMD value raised to the integer power
-  SIMDValueType _simdToIntPow(SIMDValueType lane, int power) {
+  E _simdToIntPow(E lane, int power) {
     if (power == 0) {
-      return _SIMDHelper.createSIMDFilled(1.0);
+      return _simdHelper.createSIMDFilled(1.0);
     }
 
     final x = _simdToIntPow(lane, power ~/ 2);
-    final sqrX = _SIMDHelper.SIMDProduct(x, x);
+    final sqrX = _simdHelper.simdMul(x, x);
 
     if (power % 2 == 0) {
       return sqrX;
     }
 
-    return _SIMDHelper.SIMDProduct(lane, sqrX);
+    return _simdHelper.simdMul(lane, sqrX);
   }
 
   /// Returns SIMD list (e.g. Float32x4List) as a result of converting iterable source
   ///
   /// All sequence of [collection] elements splits into groups with [_bucketSize] length
-  SIMDListType _convertCollectionToSIMDList(Iterable<double> collection) {
-    final numOfBuckets = collection.length ~/ _SIMDHelper.bucketSize;
-    final source = collection is TypedListType ? collection : _SIMDHelper.createTypedListFromList(collection);
-    final target = _SIMDHelper.createSIMDList(numOfBuckets);
+  S _convertCollectionToSIMDList(List<double> collection) {
+    final numOfBuckets = (collection.length / _simdHelper.bucketSize).ceil();
+    final T source = collection is T
+      ? collection
+      : _simdHelper.createTypedListFromList(collection);
+    final S target = _simdHelper.createSIMDList(numOfBuckets);
 
     for (int i = 0; i < numOfBuckets; i++) {
-      final start = i * _SIMDHelper.bucketSize;
-      final end = start + _SIMDHelper.bucketSize;
-      final bucketAsList = source.sublist(start, end);
-      target[i] = _SIMDHelper.createSIMDFromSimpleList(bucketAsList);
+      final start = i * _simdHelper.bucketSize;
+      final end = start + _simdHelper.bucketSize;
+      final bucketAsList = source.sublist(start, math.min(end, source.length));
+      target[i] = _simdHelper.createSIMDFromSimpleList(bucketAsList);
     }
 
     return target;
   }
 
-  SIMDValueType _cutResidualBucket(List collection) {
-    if (collection is SIMDListType) {
-      if (collection.length % _SIMDHelper.bucketSize > 0) {
-        return collection.last;
-      } else {
-        return null;
-      }
-    }
-
-    final length = collection.length;
-    final numOfBuckets = length ~/ _SIMDHelper.bucketSize;
-    final exceeded = length % _SIMDHelper.bucketSize;
-    final residue = new List<double>
-        .generate(exceeded, (int idx) => collection[numOfBuckets * _SIMDHelper.bucketSize + idx]);
-    return _SIMDHelper.createSIMDFromSimpleList(residue);
-  }
-
   /// Returns a vector as a result of applying to [this] any element-wise operation with a scalar (e.g. vector addition)
-  SIMDVector _elementWiseScalarOperation(double value, SIMDValueType operation(SIMDValueType a, SIMDValueType b)) {
-    final scalar = _SIMDHelper.createSIMDFilled(value);
-    final list = _SIMDHelper.createSIMDList(_bucketsNumber);
+  SIMDVector<S, T, E> _elementWiseScalarOperation(double value, E operation(E a, E b)) {
+    final scalar = _simdHelper.createSIMDFilled(value);
+    final list = _simdHelper.createSIMDList(_bucketsNumber);
     for (int i = 0; i < _innerList.length; i++) {
       list[i] = operation(_innerList[i], scalar);
     }
-    if (this._residualBucket != null) {
-      list[list.length - 1] = operation(_residualBucket, scalar);
-    }
-    return _SIMDHelper.createVectorFromSIMDList(list, _length);
+    return SIMDVector.fromSIMDList(list, _simdHelper, _length);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
-  SIMDVector _elementWiseVectorOperation(SIMDVector vector, SIMDValueType operation(SIMDValueType a, SIMDValueType b)) {
+  SIMDVector<S, T, E> _elementWiseVectorOperation(SIMDVector vector, E operation(E a, E b)) {
     if (vector.length != length) throw _mismatchLengthError();
-    final list = _SIMDHelper.createSIMDList(_bucketsNumber);
+    final list = _simdHelper.createSIMDList(_bucketsNumber);
     for (int i = 0; i < _innerList.length; i++) {
-      list[i] = operation(_innerList[i], vector._innerList[i]);
+      list[i] = operation(_innerList[i], vector._innerList[i] as E);
     }
-    if (_residualBucket != null) {
-      list[list.length - 1] = operation(_residualBucket, vector._residualBucket);
-    }
-    return _SIMDHelper.createVectorFromSIMDList(list, _length);
+    return SIMDVector.fromSIMDList(list, _simdHelper, _length);
   }
 
-  SIMDVector _elementWiseSelfOperation(SIMDValueType operation(SIMDValueType a)) {
-    final list = _SIMDHelper.createSIMDList(_bucketsNumber);
+  SIMDVector<S, T, E> _elementWiseSelfOperation(E operation(E element)) {
+    final list = _simdHelper.createSIMDList(_bucketsNumber);
     for (int i = 0; i < _innerList.length; i++) {
       list[i] = operation(_innerList[i]);
     }
-    if (_residualBucket != null) {
-      list[list.length - 1] = operation(_residualBucket);
-    }
-    return _SIMDHelper.createVectorFromSIMDList(list, _length);
+    return SIMDVector.fromSIMDList(list, _simdHelper, _length);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
-  SIMDVector _elementWisePow(int exp) {
-    final list = _SIMDHelper.createSIMDList(_bucketsNumber);
+  SIMDVector<S, T, E> _elementWisePow(int exp) {
+    final list = _simdHelper.createSIMDList(_bucketsNumber);
     for (int i = 0; i < _innerList.length; i++) {
       list[i] = _simdToIntPow(_innerList[i], exp);
     }
-    if (_residualBucket != null) {
-      list[list.length - 1] = _simdToIntPow(_residualBucket, exp);
-    }
-    return _SIMDHelper.createVectorFromSIMDList(list, _length);
+    return SIMDVector.fromSIMDList(list, _simdHelper, _length);
   }
 
-  SIMDVector query(Iterable<int> indexes) {
-    final list = _SIMDHelper.createTypedList(indexes.length);
-    int i = 0;
-    for (final idx in indexes) {
-      list[i++] = this[idx];
-    }
-    return _SIMDHelper.createVectorFromList(list);
-  }
-
-  SIMDVector unique() {
-    final unique = <double>[];
-    for (int i = 0; i < _length; i++) {
-      final el = this[i];
-      if (!unique.contains(el)) {
-        unique.add(el);
-      }
-    }
-    return _SIMDHelper.createVectorFromList(unique);
-  }
-
-  double operator [](int index) {
-    if (index >= _length) throw new RangeError.index(index, this);
-    final base = (index / _SIMDHelper.bucketSize).floor();
-    final offset = index - base * _SIMDHelper.bucketSize;
-    if (index >= _innerList.length * _SIMDHelper.bucketSize) {
-      return _SIMDHelper.getScalarByOffsetIndex(_residualBucket, offset);
-    }
-    return _SIMDHelper.getScalarByOffsetIndex(_innerList[base], offset);
-  }
-
-  void operator []=(int index, double element) {
-    throw new UnsupportedError('`[]=` operator is unsupported');
-  }
-
-  @override
-  List<double> toList() => new List<double>.generate(_length, (int idx) => this[idx]);
-
-  RangeError _mismatchLengthError() => new RangeError('Vectors length must be equal');
+  RangeError _mismatchLengthError() => RangeError('Vectors length must be equal');
 }
