@@ -84,5 +84,9 @@ class Float64x2Helper implements SIMDHelper<Float64x2List, Float64List, Float64x
 
   @override
   Float64x2List sublist(Float64x2List list, int start, [int end]) =>
-      list.buffer.asFloat64x2List(start, end);
+      list.buffer.asFloat64x2List(start * Float64x2List.bytesPerElement, end);
+
+  @override
+  Float64List bufferAsTypedList(ByteBuffer buffer, int start, int length) =>
+      buffer.asFloat64List(start * Float64List.bytesPerElement, length);
 }
