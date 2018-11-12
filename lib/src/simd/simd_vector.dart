@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -16,7 +17,7 @@ import 'package:linalg/src/vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel)
-class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector<E> {
+class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector<E>, Iterable<double> {
 
   final SIMDHelper<S, T, E> _simdHelper;
 
@@ -203,7 +204,7 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   }
 
   @override
-  List<double> toList() => List<double>.generate(_length, (int idx) => this[idx]);
+  List<double> toList({bool growable = false}) => List<double>.generate(_length, (int idx) => this[idx]);
 
   @override
   SIMDVector<S, T, E> vectorizedMap(E mapper(E el)) => _elementWiseSelfOperation(mapper);
@@ -300,4 +301,91 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   }
 
   RangeError _mismatchLengthError() => RangeError('Vectors length must be equal');
+
+  @override
+  bool any(bool Function(double element) test) => toList().any(test);
+
+  @override
+  Iterable<R> cast<R>() => toList().cast<R>();
+
+  @override
+  bool contains(Object element) => toList().contains(element);
+
+  @override
+  double elementAt(int index) => toList().elementAt(index);
+
+  @override
+  bool every(bool Function(double element) test) => toList().every(test);
+
+  @override
+  Iterable<T> expand<T>(Iterable<T> Function(double element) f) => toList().expand<T>(f);
+
+  @override
+  double get first => toList().first;
+
+  @override
+  double firstWhere(bool Function(double element) test, {double Function() orElse}) => toList().firstWhere(test);
+
+  @override
+  T fold<T>(T initialValue, T Function(T previousValue, double element) combine) =>
+      toList().fold<T>(initialValue, combine);
+
+  @override
+  Iterable<double> followedBy(Iterable<double> other) => toList().followedBy(other);
+
+  @override
+  void forEach(void Function(double element) f) => toList().forEach(f);
+
+  @override
+  bool get isEmpty => _length == 0;
+
+  @override
+  bool get isNotEmpty => _length > 0;
+
+  @override
+  Iterator<double> get iterator => toList().iterator;
+
+  @override
+  String join([String separator = '']) => toList().join(separator);
+
+  @override
+  double get last => toList().last;
+
+  @override
+  double lastWhere(bool Function(double element) test, {double Function() orElse}) =>
+      toList().lastWhere(test, orElse: orElse);
+
+  @override
+  Iterable<T> map<T>(T Function(double e) f) => toList().map<T>(f);
+
+  @override
+  double reduce(double Function(double value, double element) combine) => toList().reduce(combine);
+
+  @override
+  double get single => toList().single;
+
+  @override
+  double singleWhere(bool Function(double element) test, {double Function() orElse}) =>
+      toList().singleWhere(test, orElse: orElse);
+
+  @override
+  Iterable<double> skip(int count) => toList().skip(count);
+
+  @override
+  Iterable<double> skipWhile(bool Function(double value) test) => toList().skipWhile(test);
+
+  @override
+  Iterable<double> take(int count) => toList().take(count);
+
+  @override
+  Iterable<double> takeWhile(bool Function(double value) test) => toList().takeWhile(test);
+
+  @override
+  Set<double> toSet() => toList().toSet();
+
+  @override
+  Iterable<double> where(bool Function(double element) test) => toList().where(test);
+
+  @override
+  Iterable<T> whereType<T>() => toList().whereType<T>();
 }
