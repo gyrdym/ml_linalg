@@ -210,13 +210,33 @@ void main() {
       expect(unique.toList(), equals([10.0, 3.0, 4.0, 0.0, 7.0, 12.0, 9.0]));
     });
 
-    test('`max` method', () {
+    test('`max` method, more than four elements', () {
       final vector = Float32x4VectorFactory.from([10.0, 12.0, 4.0, 7.0, 9.0, 12.0]);
       expect(vector.max(), 12.0);
     });
 
-    test('`min` method', () {
+    test('`max` method, four elements', () {
+      final vector = Float32x4VectorFactory.from([10.0, 11.0, -4.0, 0.0]);
+      expect(vector.max(), 11.0);
+    });
+
+    test('`max` method, less than four elements', () {
+      final vector = Float32x4VectorFactory.from([7.0, -4.0, 0.0]);
+      expect(vector.max(), 7.0);
+    });
+
+    test('`min` method, more than four elements', () {
       final vector = Float32x4VectorFactory.from([10.0, 1.0, 4.0, 7.0, 9.0, 1.0]);
+      expect(vector.min(), 1.0);
+    });
+
+    test('`min` method, four elements', () {
+      final vector = Float32x4VectorFactory.from([10.0, 0.0, 4.0, 7.0]);
+      expect(vector.min(), 0.0);
+    });
+
+    test('`min` method, less than four elements', () {
+      final vector = Float32x4VectorFactory.from([10.0, 1.0, 4.0]);
       expect(vector.min(), 1.0);
     });
 
