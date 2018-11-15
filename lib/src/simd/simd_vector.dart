@@ -70,7 +70,7 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
 
   int get _bucketsNumber => _innerList.length;
 
-  bool get _isLastBucketNotFull => _innerList.length % _simdHelper.bucketSize > 0;
+  bool get _isLastBucketNotFull => _length % _simdHelper.bucketSize > 0;
 
   S get _innerListWithoutLastBucket => _simdHelper.sublist(_innerList, 0, _innerList.length - 1);
 
@@ -145,8 +145,11 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   @override
   double max() {
     if (_isLastBucketNotFull) {
-      final fullBucketList = _innerListWithoutLastBucket;
-      final max = _simdHelper.getMaxLane(fullBucketList.reduce(_simdHelper.selectMax));
+      var max = -double.infinity;
+      final listOnlyWithFullBuckets = _innerListWithoutLastBucket;
+      if (listOnlyWithFullBuckets.isNotEmpty) {
+        max = _simdHelper.getMaxLane(listOnlyWithFullBuckets.reduce(_simdHelper.selectMax));
+      }
       return _simdHelper.simdToList(_innerList.last)
           .take(_length % _simdHelper.bucketSize)
           .fold(max, math.max);
@@ -158,8 +161,11 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   @override
   double min() {
     if (_isLastBucketNotFull) {
-      final fullBucketList = _innerListWithoutLastBucket;
-      final min = _simdHelper.getMinLane(fullBucketList.reduce(_simdHelper.selectMin));
+      var min = double.infinity;
+      final listOnlyWithFullBuckets = _innerListWithoutLastBucket;
+      if (listOnlyWithFullBuckets.isNotEmpty) {
+        min = _simdHelper.getMinLane(listOnlyWithFullBuckets.reduce(_simdHelper.selectMin));
+      }
       return _simdHelper.simdToList(_innerList.last)
           .take(_length % _simdHelper.bucketSize)
           .fold(min, math.min);
