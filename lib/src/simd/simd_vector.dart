@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:linalg/src/norm.dart';
-import 'package:linalg/src/simd/simd_helper.dart';
+import 'package:linalg/src/simd/float32x4_helper.dart';
 import 'package:linalg/src/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
@@ -17,51 +17,51 @@ import 'package:linalg/src/vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel)
-class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector<E>, Iterable<double> {
+class SIMDVector implements Vector<Float32x4>, Iterable<double> {
 
-  final SIMDHelper<S, T, E> _simdHelper;
+  final _simdHelper = const Float32x4Helper();
 
   /// An efficient SIMD list
-  S _innerList;
+  Float32x4List _innerList;
 
   /// A number of vector elements
   int _length;
 
   /// Creates a vector with both empty simd and typed inner lists
-  SIMDVector(int length, this._simdHelper) {
+  SIMDVector(int length) {
     _length = length;
     _innerList = _simdHelper.createSIMDList(length);
   }
 
   /// Creates a vector from collection
-  SIMDVector.from(Iterable<double> source, this._simdHelper) {
+  SIMDVector.from(Iterable<double> source) {
     final List<double> _source = source is List ? source : source.toList(growable: false);
     _length = _source.length;
     _innerList = _convertCollectionToSIMDList(_source);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
-  SIMDVector.fromSIMDList(S source, this._simdHelper, [int origLength]) {
+  SIMDVector.fromSIMDList(Float32x4List source, [int origLength]) {
     _length = origLength ?? source.length * _simdHelper.bucketSize;
-    _innerList = source.sublist(0, source.length) as S;
+    _innerList = Float32x4List.fromList(source.sublist(0, source.length));
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
-  SIMDVector.filled(int length, double value, this._simdHelper) {
+  SIMDVector.filled(int length, double value) {
     final source = List<double>.filled(length, value);
     _length = length;
     _innerList = _convertCollectionToSIMDList(source);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
-  SIMDVector.zero(int length, this._simdHelper) {
+  SIMDVector.zero(int length) {
     final source = List<double>.filled(length, 0.0);
     _length = length;
     _innerList = _convertCollectionToSIMDList(source);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
-  SIMDVector.randomFilled(int length, this._simdHelper, {int seed}) {
+  SIMDVector.randomFilled(int length, {int seed}) {
     final random = math.Random(seed);
     final source = List<double>.generate(length, (_) => random.nextDouble());
     _length = length;
@@ -72,63 +72,64 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
 
   bool get _isLastBucketNotFull => _length % _simdHelper.bucketSize > 0;
 
-  S get _innerListWithoutLastBucket => _simdHelper.sublist(_innerList, 0, _innerList.length - 1);
+  Float32x4List get _innerListWithoutLastBucket =>
+      _simdHelper.sublist(_innerList, 0, _innerList.length - 1);
 
   /// A number of vector elements
   @override
   int get length => _length;
 
   @override
-  SIMDVector<S, T, E> operator +(covariant SIMDVector<S, T, E> vector) =>
+  SIMDVector operator +(covariant SIMDVector vector) =>
       _elementWiseVectorOperation(vector, _simdHelper.simdSum);
 
   @override
-  SIMDVector<S, T, E> operator -(covariant SIMDVector<S, T, E> vector) =>
+  SIMDVector operator -(covariant SIMDVector vector) =>
       _elementWiseVectorOperation(vector, _simdHelper.simdSub);
 
   @override
-  SIMDVector<S, T, E> operator *(covariant SIMDVector<S, T, E> vector) =>
+  SIMDVector operator *(covariant SIMDVector vector) =>
       _elementWiseVectorOperation(vector, _simdHelper.simdMul);
 
   @override
-  SIMDVector<S, T, E> operator /(covariant SIMDVector<S, T, E> vector) =>
+  SIMDVector operator /(covariant SIMDVector vector) =>
       _elementWiseVectorOperation(vector, _simdHelper.simdDiv);
 
   @override
-  SIMDVector<S, T, E> toIntegerPower(int power) => _elementWisePow(power);
+  SIMDVector toIntegerPower(int power) => _elementWisePow(power);
 
   @override
-  SIMDVector<S, T, E> scalarMul(double value) =>
+  SIMDVector scalarMul(double value) =>
       _elementWiseScalarOperation(value, _simdHelper.simdMul);
 
   @override
-  SIMDVector<S, T, E> scalarDiv(double value) =>
+  SIMDVector scalarDiv(double value) =>
       _elementWiseScalarOperation(value, _simdHelper.simdDiv);
 
   @override
-  SIMDVector<S, T, E> scalarAdd(double value) =>
+  SIMDVector scalarAdd(double value) =>
       _elementWiseScalarOperation(value, _simdHelper.simdSum);
 
   @override
-  SIMDVector<S, T, E> scalarSub(double value) =>
+  SIMDVector scalarSub(double value) =>
       _elementWiseScalarOperation(value, _simdHelper.simdSub);
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   @override
-  SIMDVector<S, T, E> abs() => _elementWiseSelfOperation(_simdHelper.simdAbs);
+  SIMDVector abs() => _elementWiseSelfOperation(_simdHelper.simdAbs);
 
   @override
-  SIMDVector<S, T, E> copy() => _elementWiseSelfOperation((E value) => value);
+  SIMDVector copy() => _elementWiseSelfOperation((Float32x4 value) => value);
 
   @override
-  double dot(covariant SIMDVector<S, T, E> vector) => (this * vector).sum();
+  double dot(covariant SIMDVector vector) => (this * vector).sum();
 
   /// Returns sum of all vector components
   @override
   double sum() => _simdHelper.singleSIMDSum(_innerList.reduce(_simdHelper.simdSum));
 
   @override
-  double distanceTo(covariant SIMDVector<S, T, E> vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
+  double distanceTo(covariant SIMDVector vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
 
   @override
   double mean() => sum() / length;
@@ -175,17 +176,17 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   }
 
   @override
-  SIMDVector<S, T, E> query(Iterable<int> indexes) {
+  SIMDVector query(Iterable<int> indexes) {
     final list = _simdHelper.createTypedList(indexes.length);
     int i = 0;
     for (final idx in indexes) {
       list[i++] = this[idx];
     }
-    return SIMDVector<S, T, E>.from(list, _simdHelper);
+    return SIMDVector.from(list);
   }
 
   @override
-  SIMDVector<S, T, E> unique() {
+  SIMDVector unique() {
     final unique = <double>[];
     for (int i = 0; i < _length; i++) {
       final el = this[i];
@@ -193,7 +194,7 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
         unique.add(el);
       }
     }
-    return SIMDVector<S, T, E>.from(unique, _simdHelper);
+    return SIMDVector.from(unique);
   }
 
   @override
@@ -213,12 +214,12 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   List<double> toList({bool growable = false}) => List<double>.generate(_length, (int idx) => this[idx]);
 
   @override
-  SIMDVector<S, T, E> vectorizedMap(E mapper(E el)) => _elementWiseSelfOperation(mapper);
+  SIMDVector vectorizedMap(Float32x4 mapper(Float32x4 el)) => _elementWiseSelfOperation(mapper);
 
-  SIMDVector<S, T, E> subVector(int start, [int end]) {
+  SIMDVector subVector(int start, [int end]) {
     final collection = _simdHelper.bufferAsTypedList(
-        (_innerList as TypedData).buffer, start, (end > _length ? _length : end) - start);
-    return SIMDVector.from(collection, _simdHelper);
+        _innerList.buffer, start, (end > _length ? _length : end) - start);
+    return SIMDVector.from(collection);
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
@@ -234,7 +235,7 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   }
 
   /// Returns a SIMD value raised to the integer power
-  E _simdToIntPow(E lane, int power) {
+  Float32x4 _simdToIntPow(Float32x4 lane, int power) {
     if (power == 0) {
       return _simdHelper.createSIMDFilled(1.0);
     }
@@ -252,12 +253,12 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   /// Returns SIMD list (e.g. Float32x4List) as a result of converting iterable source
   ///
   /// All sequence of [collection] elements splits into groups with [_bucketSize] length
-  S _convertCollectionToSIMDList(List<double> collection) {
+  Float32x4List _convertCollectionToSIMDList(List<double> collection) {
     final numOfBuckets = (collection.length / _simdHelper.bucketSize).ceil();
-    final T source = collection is T
+    final source = collection is Float32List
       ? collection
       : _simdHelper.createTypedListFromList(collection);
-    final S target = _simdHelper.createSIMDList(numOfBuckets);
+    final target = _simdHelper.createSIMDList(numOfBuckets);
 
     for (int i = 0; i < numOfBuckets; i++) {
       final start = i * _simdHelper.bucketSize;
@@ -270,40 +271,40 @@ class SIMDVector<S extends List<E>, T extends List<double>, E> implements Vector
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a scalar (e.g. vector addition)
-  SIMDVector<S, T, E> _elementWiseScalarOperation(double value, E operation(E a, E b)) {
+  SIMDVector _elementWiseScalarOperation(double value, Float32x4 operation(Float32x4 a, Float32x4 b)) {
     final scalar = _simdHelper.createSIMDFilled(value);
     final list = _simdHelper.createSIMDList(_bucketsNumber);
     for (int i = 0; i < _innerList.length; i++) {
       list[i] = operation(_innerList[i], scalar);
     }
-    return SIMDVector.fromSIMDList(list, _simdHelper, _length);
+    return SIMDVector.fromSIMDList(list, _length);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
-  SIMDVector<S, T, E> _elementWiseVectorOperation(SIMDVector vector, E operation(E a, E b)) {
+  SIMDVector _elementWiseVectorOperation(SIMDVector vector, Float32x4 operation(Float32x4 a, Float32x4 b)) {
     if (vector.length != length) throw _mismatchLengthError();
     final list = _simdHelper.createSIMDList(_bucketsNumber);
     for (int i = 0; i < _innerList.length; i++) {
-      list[i] = operation(_innerList[i], vector._innerList[i] as E);
+      list[i] = operation(_innerList[i], vector._innerList[i]);
     }
-    return SIMDVector.fromSIMDList(list, _simdHelper, _length);
+    return SIMDVector.fromSIMDList(list, _length);
   }
 
-  SIMDVector<S, T, E> _elementWiseSelfOperation(E operation(E element)) {
+  SIMDVector _elementWiseSelfOperation(Float32x4 operation(Float32x4 element)) {
     final list = _simdHelper.createSIMDList(_bucketsNumber);
     for (int i = 0; i < _innerList.length; i++) {
       list[i] = operation(_innerList[i]);
     }
-    return SIMDVector.fromSIMDList(list, _simdHelper, _length);
+    return SIMDVector.fromSIMDList(list, _length);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
-  SIMDVector<S, T, E> _elementWisePow(int exp) {
+  SIMDVector _elementWisePow(int exp) {
     final list = _simdHelper.createSIMDList(_bucketsNumber);
     for (int i = 0; i < _innerList.length; i++) {
       list[i] = _simdToIntPow(_innerList[i], exp);
     }
-    return SIMDVector.fromSIMDList(list, _simdHelper, _length);
+    return SIMDVector.fromSIMDList(list, _length);
   }
 
   RangeError _mismatchLengthError() => RangeError('Vectors length must be equal');
