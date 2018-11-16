@@ -2,7 +2,6 @@
 // It takes approximately 1.3 second (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:linalg/src/simd/float32x4_vector.dart';
 import 'package:linalg/src/simd/simd_vector.dart';
 
 const amountOfElements = 10000000;
@@ -25,8 +24,8 @@ class VectorAdditionBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector1 = Float32x4VectorFactory.randomFilled(amountOfElements);
-    vector2 = Float32x4VectorFactory.randomFilled(amountOfElements);
+    vector1 = SIMDVector.randomFilled(amountOfElements);
+    vector2 = SIMDVector.randomFilled(amountOfElements);
   }
 
   void tearDown() {

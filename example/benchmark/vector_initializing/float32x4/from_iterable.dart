@@ -1,7 +1,6 @@
 // Performance test of vector (10 000 000 elements in vector) initializing via `from`-constructor
 // It takes approximately 3.5 second (MacBook Air mid 2017)
 
-import 'package:linalg/src/simd/float32x4_vector.dart';
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:linalg/vector.dart';
 
@@ -18,7 +17,7 @@ class VectorInitializationBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector = Float32x4VectorFactory.from(List<double>.filled(amountOfElements, 1.0));
+    vector = SIMDVector.from(List<double>.filled(amountOfElements, 1.0));
   }
 
   void tearDown() {

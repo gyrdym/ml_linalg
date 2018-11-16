@@ -3,7 +3,6 @@
 
 import 'dart:math' as math;
 
-import 'package:linalg/src/simd/float32x4_vector.dart';
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:linalg/src/simd/simd_vector.dart';
 
@@ -26,7 +25,7 @@ class VectorUniqueBenchmark extends BenchmarkBase {
   @override
   void setup() {
     final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
-    vector = Float32x4VectorFactory.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
+    vector = SIMDVector.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
   }
 
   void tearDown() {
