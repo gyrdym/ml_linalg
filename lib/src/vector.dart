@@ -1,7 +1,7 @@
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
-abstract class Vector<E> {
+abstract class Vector<E> implements Iterable<double> {
   /// Vector's dimension
   int get length;
 
@@ -71,9 +71,9 @@ abstract class Vector<E> {
   /// Returns a vector composed of unique vector's elements
   Vector<E> unique();
 
-  /// Creates a [List] containing the element of this [Vector]
-  List<double> toList();
-
   /// Applies mapper function throughout simd list
   Vector<E> vectorizedMap(E mapper(E element));
+
+  /// cuts out a part of the vector
+  Vector<E> subVector(int start, [int end]);
 }

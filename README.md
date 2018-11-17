@@ -5,9 +5,10 @@ Linear algebra with Dart.
 Currently, the library presents just vectors and vector operations.
 
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
-computation architecture, so this library presents a high performance SIMD vector class: `SIMDVector`. Operations in 
-the class are performed in four "threads". This kind of concurrency is reached by special 128-bit processor registers, 
-which are used directly by program code.  
+computation architecture, so this library presents a high performance SIMD vector class, based on `Float32x4` - `Float32x4Vector`. 
+However, you cannot use it directly in your project. To create an instance of the vector, just import `Float32xrVectorFactory` 
+and instantiate a vector via the factory. Most of operations in the vector are performed in four "threads". This kind 
+of concurrency is reached by special 128-bit processor registers, which are used directly by program code.  
 
 At the present moment most common vector operations are implemented:
 
