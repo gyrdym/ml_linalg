@@ -1,7 +1,7 @@
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
-abstract class Vector<E> {
+abstract class Vector<E> implements Iterable<double> {
   /// Vector's dimension
   int get length;
 
@@ -12,43 +12,43 @@ abstract class Vector<E> {
   void operator []=(int index, double value);
 
   /// Vector addition (element-wise operation)
-  Vector operator +(Vector vector);
+  Vector<E> operator +(Vector<E> vector);
 
   /// Vector subtraction (element-wise operation)
-  Vector operator -(Vector vector);
+  Vector<E> operator -(Vector<E> vector);
 
   /// Vector multiplication (element-wise operation)
-  Vector operator *(Vector vector);
+  Vector<E> operator *(Vector<E> vector);
 
   /// Element-wise division
-  Vector operator /(Vector vector);
+  Vector<E> operator /(Vector<E> vector);
 
   /// Creates a new [Vector] containing elements of this [Vector] raised to the integer [power]
-  Vector toIntegerPower(int power);
+  Vector<E> toIntegerPower(int power);
 
   /// Performs a vector and a scalar multiplication (each component of a vector is multiplied by [value])
-  Vector scalarMul(double value);
+  Vector<E> scalarMul(double value);
 
   /// Performs a division of a vector by a scalar (each component of a vector is divided by [value])
-  Vector scalarDiv(double value);
+  Vector<E> scalarDiv(double value);
 
   /// Performs a vector and a scalar addition ([value] is added to each component of a vector)
-  Vector scalarAdd(double value);
+  Vector<E> scalarAdd(double value);
 
   /// Performs subtraction of a vector and a scalar ([value] is subtracted from an each component of a vector )
-  Vector scalarSub(double value);
+  Vector<E> scalarSub(double value);
 
   /// Returns a vector with absolute value of each vector element
-  Vector abs();
+  Vector<E> abs();
 
   /// Returns a copy of a vector
-  Vector copy();
+  Vector<E> copy();
 
   /// Returns a dot (inner) product of [this] and [vector]
-  double dot(Vector vector);
+  double dot(Vector<E> vector);
 
   /// Returns a distance between [this] and [vector] with vector norm type considering
-  double distanceTo(Vector vector, [Norm norm = Norm.euclidean]);
+  double distanceTo(Vector<E> vector, [Norm norm = Norm.euclidean]);
 
   /// Returns a mean value of [this] vector
   double mean();
@@ -66,14 +66,14 @@ abstract class Vector<E> {
   double min();
 
   /// Returns a vector composed of elements which are located on the passed indexes
-  Vector query(Iterable<int> indexes);
+  Vector<E> query(Iterable<int> indexes);
 
   /// Returns a vector composed of unique vector's elements
-  Vector unique();
+  Vector<E> unique();
 
-  /// Creates a [List] containing the element of this [Vector]
-  List<double> toList();
+  /// Applies mapper function throughout simd list
+  Vector<E> vectorizedMap(E mapper(E element));
 
-  ///
-  Vector vectorizedMap(E mapper(E element));
+  /// cuts out a part of the vector
+  Vector<E> subVector(int start, [int end]);
 }
