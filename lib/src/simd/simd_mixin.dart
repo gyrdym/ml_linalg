@@ -1,6 +1,6 @@
 import 'dart:typed_data' show ByteBuffer, ByteData;
 
-abstract class SIMDHelper<S extends List<E>, T extends List<double>, E> {
+abstract class SIMDMixin<S extends List<E>, T extends List<double>, E> {
   /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
   int get bucketSize;

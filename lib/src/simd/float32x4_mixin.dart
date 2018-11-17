@@ -1,14 +1,11 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:linalg/src/simd/simd_helper.dart';
+import 'package:linalg/src/simd/simd_mixin.dart';
 
-class Float32x4Helper implements SIMDHelper<Float32x4List, Float32List, Float32x4> {
-
+class Float32x4Mixin implements SIMDMixin<Float32x4List, Float32List, Float32x4> {
   @override
   final bucketSize = 4;
-
-  const Float32x4Helper();
 
   @override
   Float32x4 createSIMDFilled(double value) => Float32x4.splat(value);
