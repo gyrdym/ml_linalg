@@ -17,7 +17,7 @@ import 'package:linalg/src/vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel)
-class Float32x4Vector extends Object with Float32x4Mixin implements Vector<Float32x4>, Iterable<double> {
+class Float32x4Vector extends Object with Float32x4Mixin implements Vector<Float32x4> {
 
   /// An efficient SIMD list
   Float32x4List _innerList;

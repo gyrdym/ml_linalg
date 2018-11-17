@@ -6,61 +6,79 @@ import 'package:matcher/matcher.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Float32x4Vector constructors.', () {
-    test('`from` constructor', () {
-      //from dynamic-length list
-      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(vector1.toList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
-      expect(vector1.length, equals(6));
+  group('Float32x4Vector', () {
+    group('`from` constructor', () {
+      test('should create a vector from dynamic-length list, length is greater than 4', () {
+        final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+        expect(vector1.toList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+        expect(vector1.length, equals(6));
+      });
 
-      final vector2 = Float32x4Vector.from([1.0, 2.0]);
-      expect(vector2.toList(), equals([1.0, 2.0]));
-      expect(vector2.length, equals(2));
+      test('should create a vector from dynamic-length list, length is less than 4', () {
+        final vector = Float32x4Vector.from([1.0, 2.0]);
+        expect(vector.toList(), equals([1.0, 2.0]));
+        expect(vector.length, equals(2));
+      });
 
-      //from fixed-length list
-      final vector3 = Float32x4Vector.from(List.filled(11, 1.0));
-      expect(vector3.toList(), equals([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]));
-      expect(vector3.length, 11);
+      test('should create a vector from fixed-length list, length is greater than 4', () {
+        final vector = Float32x4Vector.from(List.filled(11, 1.0));
+        expect(vector.toList(), equals([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]));
+        expect(vector.length, 11);
+      });
 
-      final vector4 = Float32x4Vector.from(List.filled(1, 2.0));
-      expect(vector4.toList(), equals([2.0]));
-      expect(vector4.length, 1);
+      test('should create a vector from fixed-length list, length is less than 4', () {
+        final vector = Float32x4Vector.from(List.filled(1, 2.0));
+        expect(vector.toList(), equals([2.0]));
+        expect(vector.length, 1);
+      });
     });
 
-    test('`fromSIMDList` constructor', () {
+    group('`fromSIMDList` constructor', () {
       final typedList = Float32x4List.fromList([
         Float32x4(1.0, 2.0, 3.0, 4.0),
         Float32x4(5.0, 6.0, 7.0, 8.0),
         Float32x4(9.0, 10.0, 0.0, 0.0)
       ]);
 
-      final vector1 = Float32x4Vector.fromSIMDList(typedList);
-      expect(vector1.toList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 0.0, 0.0]));
-      expect(vector1.length, equals(12));
+      test('should create a vector with length equal to the length of the source', () {
+        final vector = Float32x4Vector.fromSIMDList(typedList);
+        expect(vector.toList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 0.0, 0.0]));
+        expect(vector.length, equals(12));
+      });
 
-      final vector2 = Float32x4Vector.fromSIMDList(typedList, 10);
-      expect(vector2.toList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
-      expect(vector2.length, equals(10));
+      test('should create a vector and limit its length if argument `length` is passed', () {
+        final vector = Float32x4Vector.fromSIMDList(typedList, 10);
+        expect(vector.toList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
+        expect(vector.length, equals(10));
+      });
     });
 
-    test('`filled` constructor', () {
-      final vector = Float32x4Vector.filled(10, 2.0);
-      expect(vector.toList(), equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
-      expect(vector.length, equals(10));
+    group('`filled` constructor', () {
+      test('should create a vector filled with the passed value', () {
+        final vector = Float32x4Vector.filled(10, 2.0);
+        expect(vector.toList(), equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
+        expect(vector.length, equals(10));
+      });
     });
 
-    test('`zero` constructor', () {
-      final vector1 = Float32x4Vector.zero(10);
-      expect(vector1.toList(), equals([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]));
-      expect(vector1.length, equals(10));
+    group('`zero` constructor', () {
+      test('should fill a newly created vector with zeroes, case 1', () {
+        final vector = Float32x4Vector.zero(10);
+        expect(vector.toList(), equals([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]));
+        expect(vector.length, equals(10));
+      });
 
-      final vector2 = Float32x4Vector.zero(1);
-      expect(vector2.toList(), equals([0.0]));
-      expect(vector2.length, equals(1));
+      test('should fill a newly created vector with zeroes, case 1', () {
+        final vector = Float32x4Vector.zero(1);
+        expect(vector.toList(), equals([0.0]));
+        expect(vector.length, equals(1));
+      });
 
-      final vector3 = Float32x4Vector.zero(2);
-      expect(vector3.toList(), equals([0.0, 0.0]));
-      expect(vector3.length, equals(2));
+      test('should fill a newly created vector with zeroes, case 1', () {
+        final vector = Float32x4Vector.zero(2);
+        expect(vector.toList(), equals([0.0, 0.0]));
+        expect(vector.length, equals(2));
+      });
     });
   });
 
