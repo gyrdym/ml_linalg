@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:linalg/src/simd/simd_mixin.dart';
+import 'package:linalg/src/simd/simd_data_helper.dart';
 
-class Float32x4Mixin implements SIMDMixin<Float32x4List, Float32List, Float32x4> {
+class Float32x4Mixin implements SIMDDataHelper<Float32x4List, Float32x4> {
   @override
   final bucketSize = 4;
 
@@ -40,15 +40,6 @@ class Float32x4Mixin implements SIMDMixin<Float32x4List, Float32List, Float32x4>
 
   @override
   Float32x4List createSIMDList(int length) => Float32x4List(length);
-
-  @override
-  Float32List createTypedList(int length) => Float32List(length);
-
-  @override
-  Float32List createTypedListFromList(List<double> list) => Float32List.fromList(list);
-
-  @override
-  Float32List createTypedListFromByteBuffer(ByteBuffer buffer) => Float32List.view(buffer);
 
   @override
   double getScalarByOffsetIndex(Float32x4 value, int offset) {
@@ -89,8 +80,4 @@ class Float32x4Mixin implements SIMDMixin<Float32x4List, Float32List, Float32x4>
   @override
   Float32x4List sublist(Float32x4List list, int start, [int end]) =>
       list.buffer.asFloat32x4List(start * Float32x4List.bytesPerElement, end);
-
-  @override
-  Float32List bufferAsTypedList(ByteBuffer buffer, int start, int length) =>
-      buffer.asFloat32List(start * Float32List.bytesPerElement, length);
 }
