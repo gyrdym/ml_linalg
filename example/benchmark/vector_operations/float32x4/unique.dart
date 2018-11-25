@@ -4,7 +4,7 @@
 import 'dart:math' as math;
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:linalg/src/simd/float32x4_vector.dart';
+import 'package:linalg/src/simd/vector/float32/float32x4_vector.dart';
 
 const amountOfElements = 10000;
 

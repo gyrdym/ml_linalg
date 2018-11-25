@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:linalg/src/matrix.dart';
+import 'package:linalg/src/simd/matrix/float32/float32_matrix_iterator.dart';
 
 class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implements Matrix, Iterable<Iterable<double>> {
   @override
@@ -12,13 +13,14 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   final int columns;
 
   final ByteData _data;
-  final Iterator<Iterable<double>> _iterator;
+
+  Iterator<Iterable<double>> _iterator;
 
   Float32x4Matrix.from(Iterable<Iterable<double>> source) :
         rows = source.length,
         columns = source.first.length,
-        _data = ByteData(source.length * source.first.length),
-        _iterator = source.iterator {
+        _data = ByteData(source.length * source.first.length * Float32List.bytesPerElement) {
+    _iterator = Float32MatrixIterator(_data, columns);
     _fillData(source);
   }
 
@@ -32,10 +34,15 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   Iterator<Iterable<double>> get iterator => _iterator;
 
   void _fillData(Iterable<Iterable<double>> source) {
+    int i = 0;
+    int j = 0;
     for (final row in source) {
       for (final value in row) {
-        _data.setFloat32(_data.lengthInBytes * Float32List.bytesPerElement, value);
+        _data.setFloat32((i * columns + j) * Float32List.bytesPerElement, value);
+        j++;
       }
+      j = 0;
+      i++;
     }
   }
 }
