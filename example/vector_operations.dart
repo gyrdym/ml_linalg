@@ -1,4 +1,4 @@
-import 'package:linalg/src/simd/float32x4_vector.dart';
+import 'package:linalg/src/simd/vector/float32/float32x4_vector.dart';
 import 'package:linalg/vector.dart';
 
 void main() {

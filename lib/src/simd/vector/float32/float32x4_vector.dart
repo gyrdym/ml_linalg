@@ -4,9 +4,9 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:linalg/src/norm.dart';
-import 'package:linalg/src/simd/float32_mixin.dart';
-import 'package:linalg/src/simd/float32x4_data_store_mixin.dart';
-import 'package:linalg/src/simd/float32x4_mixin.dart';
+import 'package:linalg/src/simd/vector/float32/mixin/float32_mixin.dart';
+import 'package:linalg/src/simd/vector/float32/mixin/float32x4_data_store_mixin.dart';
+import 'package:linalg/src/simd/vector/float32/mixin/float32x4_mixin.dart';
 import 'package:linalg/src/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
@@ -20,8 +20,12 @@ import 'package:linalg/src/vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel)
-class Float32x4Vector extends Object with IterableMixin<double>, Float32x4Mixin, Float32Mixin, Float32x4DataStoreMixin
-    implements Vector<Float32x4> {
+class Float32x4Vector extends Object with
+    IterableMixin<double>,
+    Float32x4Mixin,
+    Float32Mixin,
+    Float32x4DataStoreMixin implements
+        Vector<Float32x4> {
 
   Iterator<double> _iterator;
 

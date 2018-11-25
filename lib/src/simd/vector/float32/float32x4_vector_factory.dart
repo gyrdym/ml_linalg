@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:linalg/src/simd/float32x4_vector.dart';
+import 'package:linalg/src/simd/vector/float32/float32x4_vector.dart';
 import 'package:linalg/src/vector.dart';
 
 abstract class Float32x4VectorFactory {

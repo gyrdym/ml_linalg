@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:linalg/src/simd/data_store.dart';
 
-class Float32x4DataStoreMixin implements DataStore<Float32x4List> {
+class Float32x4DataStoreMixin implements DataStore<Float32x4List, Float32x4> {
   @override
   Float32x4List data;
 
