@@ -15,12 +15,6 @@ void main() {
         ];
         expect(actual, equals(expected));
       });
-
-      test('should create a new iterator for newly createdmatrix', () {
-        final iterable = [[1.0, 2.0, 3.0, 4.0, 5.0]];
-        final matrix = Float32x4Matrix.from(iterable);
-        expect(identical(matrix.iterator, iterable.iterator), isFalse);
-      });
     });
   });
 }

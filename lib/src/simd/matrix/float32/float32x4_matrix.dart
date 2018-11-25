@@ -14,13 +14,10 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
 
   final ByteData _data;
 
-  Iterator<Iterable<double>> _iterator;
-
   Float32x4Matrix.from(Iterable<Iterable<double>> source) :
         rows = source.length,
         columns = source.first.length,
         _data = ByteData(source.length * source.first.length * Float32List.bytesPerElement) {
-    _iterator = Float32MatrixIterator(_data, columns);
     _fillData(source);
   }
 
@@ -31,7 +28,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   }
 
   @override
-  Iterator<Iterable<double>> get iterator => _iterator;
+  Iterator<Iterable<double>> get iterator => Float32MatrixIterator(_data, columns);
 
   void _fillData(Iterable<Iterable<double>> source) {
     int i = 0;
