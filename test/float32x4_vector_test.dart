@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:linalg/src/simd/vector/float32/float32x4_vector.dart';
+import 'package:linalg/src/vector/float32x4_vector.dart';
 import 'package:linalg/vector.dart';
 import 'package:matcher/matcher.dart';
 import 'package:test/test.dart';
