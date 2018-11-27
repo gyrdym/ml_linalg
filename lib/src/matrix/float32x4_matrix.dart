@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:linalg/src/matrix/matrix.dart';
 import 'package:linalg/src/matrix/float32_matrix_iterator.dart';
+import 'package:linalg/src/matrix/range.dart';
 import 'package:linalg/src/vector/float32x4_vector.dart';
 
 class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implements
@@ -26,7 +27,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
         _rowsCache = List<Float32x4Vector>(source.length),
         _columnsCache = List<Float32x4Vector>(source.first.length) {
 
-    final flattened = _flatten2x2List(source);
+    final flattened = _flatten2dimList(source);
     _data.buffer.asFloat32List().setAll(0, flattened);
   }
 
@@ -55,7 +56,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   @override
   Iterator<Iterable<double>> get iterator => Float32MatrixIterator(_data, columnsNum);
 
-  List<double> _flatten2x2List(List<List<double>> source) {
+  List<double> _flatten2dimList(List<List<double>> source) {
     final flattened = List<double>(columnsNum * rowsNum);
     for (int i = 0; i < source.length; i++) {
       for (int j = 0; j < source[i].length; j++) {
@@ -63,6 +64,18 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
       }
     }
     return flattened;
+  }
+
+  @override
+  Matrix<Float32x4, Float32x4Vector> submatrix(Range rowsRange, Range columnsRange) {
+    final rowsNumber = rowsRange.end - rowsRange.start + (rowsRange.endInclusive ? 1 : 0);
+    final matrixSource = List<List<double>>(rowsNumber);
+    final rowEndIdx = rowsRange.endInclusive ? rowsRange.end + 1 : rowsRange.end;
+    final columnsLength = columnsRange.end - columnsRange.start + (columnsRange.endInclusive ? 1 : 0);
+    for (int i = rowsRange.start; i < rowEndIdx; i++) {
+      matrixSource[i - rowsRange.start] = _query(i * columnsNum + columnsRange.start, columnsLength);
+    }
+    return Float32x4Matrix.from(matrixSource);
   }
 
   Float32List _query(int index, int length) =>
