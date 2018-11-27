@@ -77,7 +77,7 @@ void main() {
           [21.0, 22.0, 23.0, 24.0],
           [24.0, 32.0, 53.0, 74.0],
         ]);
-        final submatrix = matrix.submatrix(Range(1, 3), Range(1, 2));
+        final submatrix = matrix.submatrix(rows: Range(1, 3), columns: Range(1, 2));
         final expected = [
           [16.0],
           [22.0],
@@ -92,7 +92,8 @@ void main() {
           [21.0, 22.0, 23.0, 24.0],
           [24.0, 32.0, 53.0, 74.0],
         ]);
-        final submatrix = matrix.submatrix(Range(1, 3, endInclusive: true), Range(1, 2, endInclusive: true));
+        final submatrix = matrix.submatrix(rows: Range(1, 3, endInclusive: true),
+            columns: Range(1, 2, endInclusive: true));
         final expected = [
           [16.0, 17.0],
           [22.0, 23.0],
@@ -108,7 +109,8 @@ void main() {
           [21.0, 22.0, 23.0, 24.0],
           [24.0, 32.0, 53.0, 74.0],
         ]);
-        final submatrix = matrix.submatrix(Range(1, 3, endInclusive: true), Range(1, 2, endInclusive: false));
+        final submatrix = matrix.submatrix(rows: Range(1, 3, endInclusive: true),
+            columns: Range(1, 2, endInclusive: false));
         final expected = [
           [16.0],
           [22.0],
@@ -124,10 +126,60 @@ void main() {
           [21.0, 22.0, 23.0, 24.0],
           [24.0, 32.0, 53.0, 74.0],
         ]);
-        final submatrix = matrix.submatrix(Range(1, 3, endInclusive: false), Range(1, 2, endInclusive: true));
+        final submatrix = matrix.submatrix(rows: Range(1, 3, endInclusive: false),
+            columns: Range(1, 2, endInclusive: true));
         final expected = [
           [16.0, 17.0],
           [22.0, 23.0],
+        ];
+        expect(submatrix, expected);
+      });
+
+      test('should cut out a submatrix with respect to given intervals, both rows and columns ranges are unspecified', () {
+        final matrix = Float32x4Matrix.from([
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
+          [21.0, 22.0, 23.0, 24.0],
+          [24.0, 32.0, 53.0, 74.0],
+        ]);
+        final submatrix = matrix.submatrix();
+        final expected = [
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
+          [21.0, 22.0, 23.0, 24.0],
+          [24.0, 32.0, 53.0, 74.0],
+        ];
+        expect(submatrix, expected);
+      });
+
+      test('should cut out a submatrix with respect to given intervals, rows range is unspecified', () {
+        final matrix = Float32x4Matrix.from([
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
+          [21.0, 22.0, 23.0, 24.0],
+          [24.0, 32.0, 53.0, 74.0],
+        ]);
+        final submatrix = matrix.submatrix(columns: Range(0, 2));
+        final expected = [
+          [11.0, 12.0],
+          [15.0, 16.0],
+          [21.0, 22.0],
+          [24.0, 32.0],
+        ];
+        expect(submatrix, expected);
+      });
+
+      test('should cut out a submatrix with respect to given intervals, columns range is unspecified', () {
+        final matrix = Float32x4Matrix.from([
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
+          [21.0, 22.0, 23.0, 24.0],
+          [24.0, 32.0, 53.0, 74.0],
+        ]);
+        final submatrix = matrix.submatrix(rows: Range(0, 2));
+        final expected = [
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
         ];
         expect(submatrix, expected);
       });

@@ -67,13 +67,16 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   }
 
   @override
-  Matrix<Float32x4, Float32x4Vector> submatrix(Range rowsRange, Range columnsRange) {
-    final rowsNumber = rowsRange.end - rowsRange.start + (rowsRange.endInclusive ? 1 : 0);
+  Matrix<Float32x4, Float32x4Vector> submatrix({Range rows, Range columns}) {
+    rows ??= Range(0, columnsNum);
+    columns ??= Range(0, rowsNum);
+
+    final rowsNumber = rows.end - rows.start + (rows.endInclusive ? 1 : 0);
     final matrixSource = List<List<double>>(rowsNumber);
-    final rowEndIdx = rowsRange.endInclusive ? rowsRange.end + 1 : rowsRange.end;
-    final columnsLength = columnsRange.end - columnsRange.start + (columnsRange.endInclusive ? 1 : 0);
-    for (int i = rowsRange.start; i < rowEndIdx; i++) {
-      matrixSource[i - rowsRange.start] = _query(i * columnsNum + columnsRange.start, columnsLength);
+    final rowEndIdx = rows.endInclusive ? rows.end + 1 : rows.end;
+    final columnsLength = columns.end - columns.start + (columns.endInclusive ? 1 : 0);
+    for (int i = rows.start; i < rowEndIdx; i++) {
+      matrixSource[i - rows.start] = _query(i * columnsNum + columns.start, columnsLength);
     }
     return Float32x4Matrix.from(matrixSource);
   }
