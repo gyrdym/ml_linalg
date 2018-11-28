@@ -1,5 +1,6 @@
 import 'package:linalg/src/matrix/float32x4_matrix.dart';
 import 'package:linalg/src/matrix/range.dart';
+import 'package:linalg/src/vector/float32x4_vector.dart';
 import 'package:linalg/src/vector/vector.dart';
 import 'package:test/test.dart';
 
@@ -182,6 +183,52 @@ void main() {
           [15.0, 16.0, 17.0, 18.0],
         ];
         expect(submatrix, expected);
+      });
+
+      test('should reduce all the matrix rows into a single vector, without initial reducer value', () {
+        final matrix = Float32x4Matrix.from([
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
+          [21.0, 22.0, 23.0, 24.0],
+        ]);
+        final actual = matrix.reduceRows((combine, vector) => combine + vector);
+        final expected = [47, 50, 53, 56];
+        expect(actual, equals(expected));
+      });
+
+      test('should reduce all the matrix rows into a single vector, with initial reducer value', () {
+        final matrix = Float32x4Matrix.from([
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
+          [21.0, 22.0, 23.0, 24.0],
+        ]);
+        final actual = matrix.reduceRows((combine, vector) => combine + vector,
+            initValue: Float32x4Vector.from([2.0, 3.0, 4.0, 5.0]));
+        final expected = [49, 53, 57, 61];
+        expect(actual, equals(expected));
+      });
+
+      test('should reduce all the matrix columns into a single vector, without initial reducer value', () {
+        final matrix = Float32x4Matrix.from([
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
+          [21.0, 22.0, 23.0, 24.0],
+        ]);
+        final actual = matrix.reduceColumns((combine, vector) => combine + vector);
+        final expected = [50, 66, 90];
+        expect(actual, equals(expected));
+      });
+
+      test('should reduce all the matrix columns into a single vector, with initial reducer value', () {
+        final matrix = Float32x4Matrix.from([
+          [11.0, 12.0, 13.0, 14.0],
+          [15.0, 16.0, 17.0, 18.0],
+          [21.0, 22.0, 23.0, 24.0],
+        ]);
+        final actual = matrix.reduceColumns((combine, vector) => combine + vector,
+            initValue: Float32x4Vector.from([2.0, 3.0, 4.0]));
+        final expected = [52, 69, 94];
+        expect(actual, equals(expected));
       });
     });
   });
