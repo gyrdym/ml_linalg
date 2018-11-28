@@ -2,13 +2,14 @@ import 'dart:collection';
 import 'dart:core';
 import 'dart:typed_data';
 
+import 'package:linalg/linalg.dart';
 import 'package:linalg/src/matrix/matrix.dart';
 import 'package:linalg/src/matrix/float32_matrix_iterator.dart';
 import 'package:linalg/src/matrix/range.dart';
 import 'package:linalg/src/vector/float32x4_vector.dart';
 
 class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implements
-    Matrix<Float32x4, Float32x4Vector>, Iterable<Iterable<double>> {
+    Matrix<Float32x4, Vector<Float32x4>>, Iterable<Iterable<double>> {
 
   @override
   final int rowsNum;
@@ -17,15 +18,15 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   final int columnsNum;
 
   final ByteData _data;
-  final List<Float32x4Vector> _columnsCache;
-  final List<Float32x4Vector> _rowsCache;
+  final List<Vector<Float32x4>> _columnsCache;
+  final List<Vector<Float32x4>> _rowsCache;
 
   Float32x4Matrix.from(List<List<double>> source) :
         rowsNum = source.length,
         columnsNum = source.first.length,
         _data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
-        _rowsCache = List<Float32x4Vector>(source.length),
-        _columnsCache = List<Float32x4Vector>(source.first.length) {
+        _rowsCache = List<Vector<Float32x4>>(source.length),
+        _columnsCache = List<Vector<Float32x4>>(source.first.length) {
 
     final flattened = _flatten2dimList(source);
     _data.buffer.asFloat32List().setAll(0, flattened);
@@ -35,13 +36,13 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   List<double> operator [](int index) => _query(index * columnsNum, columnsNum);
 
   @override
-  Float32x4Vector getRowVector(int index) {
+  Vector<Float32x4> getRowVector(int index) {
     _rowsCache[index] ??= Float32x4Vector.from(this[index]);
     return _rowsCache[index];
   }
 
   @override
-  Float32x4Vector getColumnVector(int index) {
+  Vector<Float32x4> getColumnVector(int index) {
     if (_columnsCache[index] == null) {
       final result = List<double>(rowsNum);
       for (int i = 0; i < rowsNum; i++) {
@@ -67,7 +68,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   }
 
   @override
-  Matrix<Float32x4, Float32x4Vector> submatrix({Range rows, Range columns}) {
+  Matrix<Float32x4, Vector<Float32x4>> submatrix({Range rows, Range columns}) {
     rows ??= Range(0, rowsNum);
     columns ??= Range(0, columnsNum);
 
@@ -82,15 +83,16 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   }
 
   @override
-  Float32x4Vector reduceColumns(Float32x4Vector Function(Float32x4Vector combine, Float32x4Vector vector) combiner,
-      {Float32x4Vector initValue}) => _reduce(combiner, columnsNum, getColumnVector, initValue: initValue);
+  Vector<Float32x4> reduceColumns(
+      Vector<Float32x4> Function(Vector<Float32x4> combine, Vector<Float32x4> vector) combiner,
+      {Vector<Float32x4> initValue}) => _reduce(combiner, columnsNum, getColumnVector, initValue: initValue);
 
   @override
-  Float32x4Vector reduceRows(Float32x4Vector Function(Float32x4Vector combine, Float32x4Vector vector) combiner,
-    {Float32x4Vector initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
+  Vector<Float32x4> reduceRows(Vector<Float32x4> Function(Vector<Float32x4> combine, Vector<Float32x4> vector) combiner,
+    {Vector<Float32x4> initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
 
-  Float32x4Vector _reduce(Float32x4Vector Function(Float32x4Vector combine, Float32x4Vector vector) combiner,
-      int length, Float32x4Vector Function(int index) getVector, {Float32x4Vector initValue}) {
+  Vector<Float32x4> _reduce(Vector<Float32x4> Function(Vector<Float32x4> combine, Vector<Float32x4> vector) combiner,
+      int length, Vector<Float32x4> Function(int index) getVector, {Vector<Float32x4> initValue}) {
 
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
