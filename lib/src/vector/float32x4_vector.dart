@@ -27,13 +27,10 @@ class Float32x4Vector extends Object with
     Float32x4DataStoreMixin implements
         Vector<Float32x4> {
 
-  Iterator<double> _iterator;
-
   /// Creates a vector with both empty simd and typed inner lists
   Float32x4Vector(int length) {
     this.length = length;
     data = createSIMDList(length);
-    _iterator = getIterator(data.buffer, length);
   }
 
   /// Creates a vector from collection
@@ -41,14 +38,12 @@ class Float32x4Vector extends Object with
     length = source.length;
     final List<double> _source = source is List ? source : source.toList(growable: false);
     data = _convertCollectionToSIMDList(_source);
-    _iterator = getIterator(data.buffer, length);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
   Float32x4Vector.fromSIMDList(Float32x4List source, [int origLength]) {
     length = origLength ?? source.length * bucketSize;
     data = Float32x4List.fromList(source.sublist(0, source.length));
-    _iterator = getIterator(data.buffer, length);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
@@ -56,7 +51,6 @@ class Float32x4Vector extends Object with
     this.length = length;
     final source = List<double>.filled(length, value);
     data = _convertCollectionToSIMDList(source);
-    _iterator = getIterator(data.buffer, length);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
@@ -64,7 +58,6 @@ class Float32x4Vector extends Object with
     this.length = length;
     final source = List<double>.filled(length, 0.0);
     data = _convertCollectionToSIMDList(source);
-    _iterator = getIterator(data.buffer, length);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
@@ -73,7 +66,6 @@ class Float32x4Vector extends Object with
     final random = math.Random(seed);
     final source = List<double>.generate(length, (_) => random.nextDouble());
     data = _convertCollectionToSIMDList(source);
-    _iterator = getIterator(data.buffer, length);
   }
 
   int get _bucketsNumber => data.length;
@@ -312,5 +304,5 @@ class Float32x4Vector extends Object with
   RangeError _mismatchLengthError() => RangeError('Vectors length must be equal');
 
   @override
-  Iterator<double> get iterator => _iterator;
+  Iterator<double> get iterator => getIterator(data.buffer, length);
 }
