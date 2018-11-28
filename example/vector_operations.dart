@@ -1,5 +1,5 @@
-import 'package:linalg/src/simd/float32x4_vector.dart';
-import 'package:linalg/vector.dart';
+import 'package:linalg/src/vector/float32x4_vector.dart';
+import 'package:linalg/linalg.dart';
 
 void main() {
   addition();
@@ -23,28 +23,28 @@ void addition() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1 + vector2;
-  print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
+  print(result); // [3.0, 5.0, 7.0, 9.0, 11.0]
 }
 
 void subtraction() {
   final vector1 = Float32x4Vector.from([4.0, 5.0, 6.0, 7.0, 8.0]);
   final vector2 = Float32x4Vector.from([2.0, 3.0, 2.0, 3.0, 2.0]);
   final result = vector1 - vector2;
-  print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
+  print(result); // [2.0, 2.0, 4.0, 4.0, 6.0]
 }
 
 void multiplication() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1 * vector2;
-  print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
+  print(result); // [2.0, 6.0, 12.0, 20.0, 30.0]
 }
 
 void division() {
   final vector1 = Float32x4Vector.from([6.0, 12.0, 24.0, 48.0, 96.0]);
   final vector2 = Float32x4Vector.from([3.0, 4.0, 6.0, 8.0, 12.0]);
   final result = vector1 / vector2;
-  print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
+  print(result); // [2.0, 3.0, 4.0, 6.0, 8.0]
 }
 
 void euclideanNorm() {
@@ -82,28 +82,28 @@ void scalarAddition() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
   final result = vector1.scalarAdd(scalar);
-  print(result.toList()); // [6.0, 7.0, 8.0, 9.0, 10.0]
+  print(result); // [6.0, 7.0, 8.0, 9.0, 10.0]
 }
 
 void scalarSubtraction() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
   final result = vector1.scalarSub(scalar);
-  print(result.toList()); // [-4.0, -3.0, -2.0, -1.0, 0.0]
+  print(result); // [-4.0, -3.0, -2.0, -1.0, 0.0]
 }
 
 void scalarMultiplication() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
   final result = vector1.scalarMul(scalar);
-  print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
+  print(result); // [5.0, 10.0, 15.0, 20.0, 25.0]
 }
 
 void scalarDivision() {
   final vector1 = Float32x4Vector.from([25.0, 50.0, 75.0, 100.0, 125.0]);
   final scalar = 5.0;
   final result = vector1.scalarDiv(scalar);
-  print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
+  print(result); // [5.0, 10.0, 15.0, 20.0, 25.0]
 }
 
 void euclideanDistanceBetweenVectors() {

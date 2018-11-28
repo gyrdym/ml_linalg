@@ -2,8 +2,6 @@
 
 Linear algebra with Dart.
 
-Currently, the library presents just vectors and vector operations.
-
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
 computation architecture, so this library presents a high performance SIMD vector class, based on `Float32x4` - `Float32x4Vector`. 
 However, you cannot use it directly in your project. To create an instance of the vector, just import `Float32xrVectorFactory` 
@@ -156,4 +154,17 @@ At the present moment most common vector operations are implemented:
   final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.distanceTo(vector2, Norm.MANHATTAN);
   print(result); // 5.0
+````
+
+Also, a class for matrix is available, but it does not support mathematical operations yet and serves just as a data 
+organizer. A simple example of a matrix usage:
+````Dart
+  import 'package:linalg/vector.dart';
+
+  final matrix = Float32x4MatrixFactory.from([
+    [1.0, 2.0, 3.0, 4.0],
+    [5.0, 6.0, 7.0, 8.0],
+  ]); 
+  final reduced = matrix.reduceRows((combine, row) => combine + row);
+  print(reduced); // [6.0, 8.0, 10.0, 12.0]
 ````
