@@ -8,4 +8,6 @@ abstract class Matrix<E, T extends Vector<E>> {
   Matrix<E, T> submatrix({Range rows, Range columns});
   T getColumnVector(int index);
   T getRowVector(int index);
+  T reduceColumns(T combiner(T combine, T vector), {T initValue});
+  T reduceRows(T combiner(T combine, T vector), {T initValue});
 }

@@ -81,6 +81,25 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
     return Float32x4Matrix.from(matrixSource);
   }
 
+  @override
+  Float32x4Vector reduceColumns(Float32x4Vector Function(Float32x4Vector combine, Float32x4Vector vector) combiner,
+      {Float32x4Vector initValue}) => _reduce(combiner, columnsNum, getColumnVector, initValue: initValue);
+
+  @override
+  Float32x4Vector reduceRows(Float32x4Vector Function(Float32x4Vector combine, Float32x4Vector vector) combiner,
+    {Float32x4Vector initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
+
+  Float32x4Vector _reduce(Float32x4Vector Function(Float32x4Vector combine, Float32x4Vector vector) combiner,
+      int length, Float32x4Vector Function(int index) getVector, {Float32x4Vector initValue}) {
+
+    var reduced = initValue ?? getVector(0);
+    final startIndex = initValue != null ? 0 : 1;
+    for (int i = startIndex; i < length; i++) {
+      reduced = combiner(reduced, getVector(i));
+    }
+    return reduced;
+  }
+
   Float32List _query(int index, int length) =>
       _data.buffer.asFloat32List(index * Float32List.bytesPerElement, length);
 }
