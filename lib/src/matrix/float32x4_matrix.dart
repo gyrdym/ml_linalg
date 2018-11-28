@@ -68,8 +68,8 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
 
   @override
   Matrix<Float32x4, Float32x4Vector> submatrix({Range rows, Range columns}) {
-    rows ??= Range(0, columnsNum);
-    columns ??= Range(0, rowsNum);
+    rows ??= Range(0, rowsNum);
+    columns ??= Range(0, columnsNum);
 
     final rowsNumber = rows.end - rows.start + (rows.endInclusive ? 1 : 0);
     final matrixSource = List<List<double>>(rowsNumber);
