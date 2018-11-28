@@ -1,6 +1,4 @@
-import 'dart:typed_data' show ByteBuffer, ByteData;
-
-abstract class SIMDMixin<S extends List<E>, T extends List<double>, E> {
+abstract class SIMDDataHelper<S extends List<E>, E> {
   /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
   int get bucketSize;
@@ -32,15 +30,6 @@ abstract class SIMDMixin<S extends List<E>, T extends List<double>, E> {
   /// returns a typed simd list of length equals [length]
   S createSIMDList(int length);
 
-  /// returns a typed list with
-  T createTypedListFromByteBuffer(ByteBuffer data);
-
-  /// returns a typed list (e.g. Float32List) of length equals [length]
-  T createTypedList(int length);
-
-  /// returns a typed list (e.g. Float32List) created using [list] as a source
-  T createTypedListFromList(List<double> list);
-
   /// returns particular component (lane) of simd value [value] by offset
   double getScalarByOffsetIndex(E value, int offset);
 
@@ -62,6 +51,4 @@ abstract class SIMDMixin<S extends List<E>, T extends List<double>, E> {
   List<double> takeFirstNLanes(E a, int n);
 
   S sublist(S list, int start, [int end]);
-
-  T bufferAsTypedList(ByteBuffer buffer, int start, int length);
 }
