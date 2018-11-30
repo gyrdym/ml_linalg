@@ -96,10 +96,11 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   @override
   List<double> operator [](int index) => _query(index * columnsNum, columnsNum);
 
-//  @override
-//  Matrix<Float32x4, Vector<Float32x4>> transpose() {
-//
-//  }
+  @override
+  Matrix<Float32x4, Vector<Float32x4>> transpose() {
+    final source = List<Vector<Float32x4>>.generate(rowsNum, getRowVector);
+    return Float32x4Matrix.columns(source);
+  }
 
   @override
   Vector<Float32x4> getRowVector(int index) {
