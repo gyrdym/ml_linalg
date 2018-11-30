@@ -210,7 +210,7 @@ class Float32x4Vector extends Object with
   Float32x4Vector vectorizedMap(Float32x4 mapper(Float32x4 el)) => _elementWiseSelfOperation(mapper);
 
   @override
-  Float32x4Vector subVector(int start, [int end]) {
+  Float32x4Vector subvector(int start, [int end]) {
     final collection = bufferAsTypedList(
         data.buffer, start, (end > length ? length : end) - start);
     return Float32x4Vector.from(collection);
