@@ -28,7 +28,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
         _rowsCache = List<Vector<Float32x4>>(source.length),
         _columnsCache = List<Vector<Float32x4>>(source.first.length) {
 
-    final flattened = _flatten2dimList(source);
+    final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
     _data.buffer.asFloat32List().setAll(0, flattened);
   }
 
@@ -40,7 +40,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
         _rowsCache = source.toList(growable: false),
         _columnsCache = List<Vector<Float32x4>>(source.first.length) {
 
-    final flattened = _flatten2dimList(source);
+    final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
     _data.buffer.asFloat32List().setAll(0, flattened);
   }
 
@@ -63,7 +63,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
         _rowsCache = List<Vector<Float32x4>>(source.first.length),
         _columnsCache = source.toList(growable: false) {
 
-    final flattened = _flatten2dimList(source);
+    final flattened = _flatten2dimList(source, (i, j) => j * columnsNum + i);
     _data.buffer.asFloat32List().setAll(0, flattened);
   }
 
@@ -84,10 +84,10 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   @override
   List<double> operator [](int index) => _query(index * columnsNum, columnsNum);
 
-  @override
-  Matrix<Float32x4, Vector<Float32x4>> transpose() {
-
-  }
+//  @override
+//  Matrix<Float32x4, Vector<Float32x4>> transpose() {
+//
+//  }
 
   @override
   Vector<Float32x4> getRowVector(int index) {
@@ -135,13 +135,13 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   Vector<Float32x4> reduceRows(Vector<Float32x4> Function(Vector<Float32x4> combine, Vector<Float32x4> vector) combiner,
     {Vector<Float32x4> initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
 
-  List<double> _flatten2dimList(Iterable<Iterable<double>> source) {
+  List<double> _flatten2dimList(Iterable<Iterable<double>> rows, int Function(int i, int j) accessor) {
     int i = 0;
     int j = 0;
     final flattened = List<double>(columnsNum * rowsNum);
-    for (final row in source) {
+    for (final row in rows) {
       for (final value in row) {
-        flattened[i * columnsNum + j] = value;
+        flattened[accessor(i, j)] = value;
         j++;
       }
       j = 0;
@@ -171,7 +171,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   }
 
   Matrix<Float32x4, Vector<Float32x4>> _matrix2matrixMul(Matrix<Float32x4, Vector<Float32x4>> matrix) {
-
+    throw UnimplementedError();
   }
 
   Float32List _query(int index, int length) =>
