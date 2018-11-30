@@ -67,12 +67,24 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
     _data.buffer.asFloat32List().setAll(0, flattened);
   }
 
+  Float32x4Matrix.flattened(Iterable<double> source, this.rowsNum, this.columnsNum) :
+        _data = ByteData(rowsNum * columnsNum * Float32List.bytesPerElement),
+        _rowsCache = List<Vector<Float32x4>>(rowsNum),
+        _columnsCache = List<Vector<Float32x4>>(columnsNum) {
+    if (source.length != rowsNum * columnsNum) {
+      throw Exception('Invalid number of rows and columns are provided');
+    }
+    _data.buffer.asFloat32List().setAll(0, source);
+  }
+
   /// Mathematical matrix multiplication
-  /// The main rule: let M be a number of rows, N - a number of columns, so the multiplication is available only for
-  /// MxN * N*M matrices
+  /// The main rule: let N be a number of columns, so the multiplication is available only for
+  /// XxN * NxY matrices, that causes XxY matrix
   @override
   Matrix<Float32x4, Vector<Float32x4>> operator *(Object value) {
     if (value is Vector<Float32x4>) {
+      // by default any passed vector is considered column-vector, so its dimension must be equal to the matrix columns
+      // number
       return _vector2MatrixMul(value);
     } else if (value is Matrix<Float32x4, Vector<Float32x4>>) {
       return _matrix2matrixMul(value);
@@ -161,8 +173,8 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   }
 
   Matrix<Float32x4, Vector<Float32x4>> _vector2MatrixMul(Vector<Float32x4> vector) {
-    if (vector.length != rowsNum) {
-      throw Exception('The dimensions of the vector ${vector} and the matrix ${this} mismatch');
+    if (vector.length != columnsNum) {
+      throw Exception('The dimension of the vector ${vector} and the columns number of matrix ${this} mismatch');
     }
     final generateElementFn = (int i) => vector.dot(getRowVector(i));
     final source = List<double>.generate(rowsNum, generateElementFn);
@@ -171,7 +183,17 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
   }
 
   Matrix<Float32x4, Vector<Float32x4>> _matrix2matrixMul(Matrix<Float32x4, Vector<Float32x4>> matrix) {
-    throw UnimplementedError();
+    if (columnsNum != matrix.rowsNum) {
+      throw Exception('Columns numbers of the matrices mismatch: $columnsNum is not equal to ${matrix.rowsNum}');
+    }
+    final source = List<double>(rowsNum * matrix.columnsNum);
+    for (int i = 0; i < rowsNum; i++) {
+      for (int j = 0; j < matrix.columnsNum; j++) {
+        final element = getRowVector(i).dot(matrix.getColumnVector(j));
+        source[i * matrix.columnsNum + j] = element;
+      }
+    }
+    return Float32x4Matrix.flattened(source, rowsNum, matrix.columnsNum);
   }
 
   Float32List _query(int index, int length) =>
