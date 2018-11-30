@@ -6,7 +6,7 @@ abstract class Matrix<E, T extends Vector<E>> {
   int get columnsNum;
   Matrix<E, T> operator *(Object value);
   Iterable<double> operator [](int index);
-//  Matrix<E, T> transpose();
+  Matrix<E, T> transpose();
   Matrix<E, T> submatrix({Range rows, Range columns});
   T getColumnVector(int index);
   T getRowVector(int index);

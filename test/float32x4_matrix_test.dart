@@ -343,5 +343,23 @@ void main() {
       ]);
       expect(() => matrix1 * matrix2, throwsException);
     });
+
+    test('should transpose a matrix', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final actual = matrix.transpose();
+      final expected = [
+        [1.0, 5.0, 9.0],
+        [2.0, 6.0, .0],
+        [3.0, 7.0, -2.0],
+        [4.0, 8.0, -3.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 4);
+      expect(actual.columnsNum, 3);
+    });
   });
 }
