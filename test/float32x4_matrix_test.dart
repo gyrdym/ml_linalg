@@ -15,9 +15,9 @@ void main() {
         [1.0, 2.0, 3.0, 4.0, 5.0],
         [6.0, 7.0, 8.0, 9.0, 0.0],
       ];
+      expect(actual, equals(expected));
       expect(actual.rowsNum, 2);
       expect(actual.columnsNum, 5);
-      expect(actual, equals(expected));
     });
 
     test('should create an instance with predefined vectors as matrix rows', () {
@@ -29,9 +29,9 @@ void main() {
         [1.0, 2.0, 3.0, 4.0, 5.0],
         [6.0, 7.0, 8.0, 9.0, 0.0],
       ];
+      expect(actual, equals(expected));
       expect(actual.rowsNum, 2);
       expect(actual.columnsNum, 5);
-      expect(actual, equals(expected));
     });
 
     test('should create an instance with predefined vectors as matrix columns', () {
@@ -46,9 +46,25 @@ void main() {
         [4.0, 9.0],
         [5.0, 0.0],
       ];
+      expect(actual, equals(expected));
       expect(actual.rowsNum, 5);
       expect(actual.columnsNum, 2);
+    });
+
+    test('should create an instance from flattened collection', () {
+      final actual = Float32x4Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
+      final expected = [
+        [1.0, 2.0, 3.0],
+        [4.0, 5.0, 6.0],
+      ];
+      expect(actual.rowsNum, 2);
+      expect(actual.columnsNum, 3);
       expect(actual, equals(expected));
+    });
+
+    test('should throw an error if one tries to create a matrix from flattened collection and with unproper specified '
+        'dimensions', () {
+      expect(() => Float32x4Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0], 2, 3), throwsException);
     });
 
     test('should provide indexed access to its elements', () {
@@ -261,6 +277,71 @@ void main() {
           initValue: Float32x4Vector.from([2.0, 3.0, 4.0]));
       final expected = [52, 69, 94];
       expect(actual, equals(expected));
+    });
+
+    test('should perform multiplication with a Vector instance', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0]);
+      final actual = matrix * vector;
+      final expected = [
+        [40],
+        [96],
+        [-5],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 3);
+      expect(actual.columnsNum, 1);
+    });
+
+    test('should throw an error if one tries to mult a matrix with a vector of unproper length', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 7.0]);
+      expect(() => matrix * vector, throwsException);
+    });
+
+    test('should perform multiplication of a matrix and another matrix', () {
+      final matrix1 = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final matrix2 = Float32x4Matrix.from([
+        [1.0, 2.0],
+        [5.0, 6.0],
+        [9.0, .0],
+        [-9.0, 1.0],
+      ]);
+      final actual = matrix1 * matrix2;
+      final expected = [
+        [2.0, 18.0],
+        [26.0, 54.0],
+        [18.0, 15.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 3);
+      expect(actual.columnsNum, 2);
+    });
+
+    test('should throw an error if one tries to mult a matrix with another matrix of unproper dimensions', () {
+      final matrix1 = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final matrix2 = Float32x4Matrix.from([
+        [1.0, 2.0],
+        [5.0, 6.0],
+        [9.0, .0],
+      ]);
+      expect(() => matrix1 * matrix2, throwsException);
     });
   });
 }
