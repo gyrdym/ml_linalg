@@ -2,6 +2,8 @@
 
 Linear algebra with Dart.
 
+### Vectors
+
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
 computation architecture, so this library presents a high performance SIMD vector class, based on `Float32x4` - `Float32x4Vector`. 
 However, you cannot use it directly in your project. To create an instance of the vector, just import `Float32xrVectorFactory` 
@@ -156,8 +158,73 @@ At the present moment most common vector operations are implemented:
   print(result); // 5.0
 ````
 
-Also, a class for matrix is available, but it does not support mathematical operations yet and serves just as a data 
-organizer. A simple example of a matrix usage:
+### Matrices
+
+Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vector types. Below are supported operations:
+
+- A matrix and a vector multiplication:
+````Dart
+  import 'package:linalg/vector.dart';
+
+  final matrix = Float32x4Matrix.from([
+    [1.0, 2.0, 3.0, 4.0],
+    [5.0, 6.0, 7.0, 8.0],
+    [9.0, .0, -2.0, -3.0],
+  ]);
+  final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0]);
+  final result = matrix * vector;
+  print(result); 
+  // a vector-column [
+  //  [40],
+  //  [96],
+  //  [-5],
+  //]
+````
+
+- A matrix and another matrix multiplication:
+````Dart
+  import 'package:linalg/vector.dart';
+
+  final matrix1 = Float32x4Matrix.from([
+    [1.0, 2.0, 3.0, 4.0],
+    [5.0, 6.0, 7.0, 8.0],
+    [9.0, .0, -2.0, -3.0],
+  ]);
+  final matrix2 = Float32x4Matrix.from([
+    [1.0, 2.0],
+    [5.0, 6.0],
+    [9.0, .0],
+    [-9.0, 1.0],
+  ]);
+  final result = matrix1 * matrix2;
+  print(result);
+  //[
+  // [2.0, 18.0],
+  // [26.0, 54.0],
+  // [18.0, 15.0],
+  //]
+````
+
+- Matrix transposition
+````Dart
+  import 'package:linalg/vector.dart';
+  
+  final matrix = Float32x4Matrix.from([
+    [1.0, 2.0, 3.0, 4.0],
+    [5.0, 6.0, 7.0, 8.0],
+    [9.0, .0, -2.0, -3.0],
+  ]);
+  final result = matrix.transpose();
+  print(result);
+  //[
+  // [1.0, 5.0, 9.0],
+  // [2.0, 6.0, .0],
+  // [3.0, 7.0, -2.0],
+  // [4.0, 8.0, -3.0],
+  //]
+````
+ 
+ - Matrix row-wise reduce:
 ````Dart
   import 'package:linalg/vector.dart';
 
@@ -167,4 +234,35 @@ organizer. A simple example of a matrix usage:
   ]); 
   final reduced = matrix.reduceRows((combine, row) => combine + row);
   print(reduced); // [6.0, 8.0, 10.0, 12.0]
+````
+
+- Matrix column-wise reduce:
+````Dart
+  import 'package:linalg/vector.dart';
+
+  final matrix = Float32x4Matrix.from([
+    [11.0, 12.0, 13.0, 14.0],
+    [15.0, 16.0, 17.0, 18.0],
+    [21.0, 22.0, 23.0, 24.0],
+  ]);
+  final result = matrix.reduceColumns((combine, vector) => combine + vector);
+  print(result); // [50, 66, 90]
+````
+
+- Submatrix (taking a lower dimension matrix of the current matrix):
+````Dart
+  import 'package:linalg/vector.dart';
+
+  final matrix = Float32x4Matrix.from([
+    [11.0, 12.0, 13.0, 14.0],
+    [15.0, 16.0, 17.0, 18.0],
+    [21.0, 22.0, 23.0, 24.0],
+    [24.0, 32.0, 53.0, 74.0],
+  ]);
+  final submatrix = matrix.submatrix(rows: Range(0, 2));
+  print(submatrix);
+  // [
+  //  [11.0, 12.0, 13.0, 14.0],
+  //  [15.0, 16.0, 17.0, 18.0],
+  //];
 ````
