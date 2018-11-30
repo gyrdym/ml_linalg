@@ -2,9 +2,6 @@ import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
 abstract class Vector<E> implements Iterable<double> {
-  /// Vector's dimension
-  int get length;
-
   /// Indexed access to a vector's element
   double operator [](int index);
 
@@ -75,5 +72,5 @@ abstract class Vector<E> implements Iterable<double> {
   Vector<E> vectorizedMap(E mapper(E element));
 
   /// cuts out a part of the vector
-  Vector<E> subVector(int start, [int end]);
+  Vector<E> subvector(int start, [int end]);
 }
