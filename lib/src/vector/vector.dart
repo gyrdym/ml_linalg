@@ -15,7 +15,7 @@ abstract class Vector<E> implements Iterable<double> {
   Vector<E> operator -(Vector<E> vector);
 
   /// Vector multiplication (element-wise operation)
-  Vector<E> operator *(Vector<E> vector);
+  Vector<E> operator *(Object vector);
 
   /// Element-wise division
   Vector<E> operator /(Vector<E> vector);
@@ -23,15 +23,19 @@ abstract class Vector<E> implements Iterable<double> {
   /// Creates a new [Vector] containing elements of this [Vector] raised to the integer [power]
   Vector<E> toIntegerPower(int power);
 
+  @deprecated
   /// Performs a vector and a scalar multiplication (each component of a vector is multiplied by [value])
   Vector<E> scalarMul(double value);
 
+  @deprecated
   /// Performs a division of a vector by a scalar (each component of a vector is divided by [value])
   Vector<E> scalarDiv(double value);
 
+  @deprecated
   /// Performs a vector and a scalar addition ([value] is added to each component of a vector)
   Vector<E> scalarAdd(double value);
 
+  @deprecated
   /// Performs subtraction of a vector and a scalar ([value] is subtracted from an each component of a vector )
   Vector<E> scalarSub(double value);
 
