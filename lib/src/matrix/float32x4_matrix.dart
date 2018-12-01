@@ -88,6 +88,8 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
       return _vector2MatrixMul(value);
     } else if (value is Matrix<Float32x4, Vector<Float32x4>>) {
       return _matrix2matrixMul(value);
+    } else if (value is num) {
+      return _matrix2scalarMul(value.toDouble());
     } else {
       throw UnsupportedError('Cannot multiple a ${runtimeType} and a ${value.runtimeType}');
     }
@@ -195,6 +197,12 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
       }
     }
     return Float32x4Matrix.flattened(source, rowsNum, matrix.columnsNum);
+  }
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrix2scalarMul(double scalar) {
+    final elementGenFn = (int i) => getRowVector(i) * scalar;
+    final source = List<Vector<Float32x4>>.generate(rowsNum, elementGenFn);
+    return Float32x4Matrix.rows(source);
   }
 
   Float32List _query(int index, int length) =>

@@ -149,7 +149,7 @@ void main() {
     });
 
     test('Scalar multiplication', () {
-      final result = vector1.scalarMul(2.0);
+      final result = vector1 * 2.0;
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
       expect(result, equals([2.0, 4.0, 6.0, 8.0, 10.0]));

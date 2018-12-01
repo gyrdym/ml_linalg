@@ -18,6 +18,9 @@ abstract class SIMDDataHelper<S extends List<E>, E> {
   /// performs multiplication of two simd values
   E simdMul(E a, E b);
 
+  /// performs a simd value scaling
+  E simdScale(E a, double scalar);
+
   /// performs division of two simd values
   E simdDiv(E a, E b);
 
