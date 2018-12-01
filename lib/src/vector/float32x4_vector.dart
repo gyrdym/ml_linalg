@@ -80,19 +80,22 @@ class Float32x4Vector extends Object with
       _elementWiseVectorOperation(vector, simdSum);
 
   @override
-  Float32x4Vector operator -(covariant Float32x4Vector vector) =>
-      _elementWiseVectorOperation(vector, simdSub);
+  Float32x4Vector operator -(Object value) {
+    if (value is Float32x4Vector) {
+      return _elementWiseVectorOperation(value, simdSub);
+    } else if (value is num) {
+      return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSub);
+    }
+    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+  }
 
   @override
   Float32x4Vector operator *(Object value) {
     if (value is Float32x4Vector) {
       return _elementWiseVectorOperation(value, simdMul);
-    }
-
-    if (value is num) {
+    } else if (value is num) {
       return _elementWiseFloatScalarOperation(value.toDouble(), simdScale);
     }
-
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
 

@@ -93,7 +93,18 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
     } else {
       throw UnsupportedError('Cannot multiple a ${runtimeType} and a ${value.runtimeType}');
     }
-   }
+  }
+
+  @override
+  Matrix<Float32x4, Vector<Float32x4>> operator -(Object value) {
+    if (value is Matrix<Float32x4, Vector<Float32x4>>) {
+      return _matrixSub(value);
+    } else if (value is num) {
+      return _matrixScalarSub(value.toDouble());
+    } else {
+      throw UnsupportedError('Cannot subtract a ${value.runtimeType} from a ${runtimeType}');
+    }
+  }
 
   @override
   List<double> operator [](int index) => _query(index * columnsNum, columnsNum);
@@ -201,6 +212,22 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
 
   Matrix<Float32x4, Vector<Float32x4>> _matrix2scalarMul(double scalar) {
     final elementGenFn = (int i) => getRowVector(i) * scalar;
+    final source = List<Vector<Float32x4>>.generate(rowsNum, elementGenFn);
+    return Float32x4Matrix.rows(source);
+  }
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrixSub(Matrix<Float32x4, Vector<Float32x4>> matrix) {
+    if (rowsNum != matrix.rowsNum || columnsNum != matrix.columnsNum) {
+      throw Exception('Cannot perform matrix subtraction: the matrices are of the different dimensions - '
+          '(${rowsNum} x ${columnsNum}) and (${matrix.rowsNum} x ${matrix.columnsNum})');
+    }
+    final elementGenFn = (int i) => getRowVector(i) - matrix.getRowVector(i);
+    final source = List<Vector<Float32x4>>.generate(rowsNum, elementGenFn);
+    return Float32x4Matrix.rows(source);
+  }
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrixScalarSub(double scalar) {
+    final elementGenFn = (int i) => getRowVector(i) - scalar;
     final source = List<Vector<Float32x4>>.generate(rowsNum, elementGenFn);
     return Float32x4Matrix.rows(source);
   }

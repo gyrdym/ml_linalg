@@ -12,7 +12,7 @@ abstract class Vector<E> implements Iterable<double> {
   Vector<E> operator +(Vector<E> vector);
 
   /// Vector subtraction (element-wise operation)
-  Vector<E> operator -(Vector<E> vector);
+  Vector<E> operator -(Object vector);
 
   /// Vector multiplication (element-wise operation)
   Vector<E> operator *(Object vector);
