@@ -76,8 +76,14 @@ class Float32x4Vector extends Object with
       sublist(data, 0, data.length - 1);
 
   @override
-  Float32x4Vector operator +(covariant Float32x4Vector vector) =>
-      _elementWiseVectorOperation(vector, simdSum);
+  Float32x4Vector operator +(Object value) {
+    if (value is Float32x4Vector) {
+      return _elementWiseVectorOperation(value, simdSum);
+    } else if (value is num) {
+      return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSum);
+    }
+    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+  }
 
   @override
   Float32x4Vector operator -(Object value) {
