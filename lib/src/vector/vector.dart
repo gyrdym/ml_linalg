@@ -9,16 +9,16 @@ abstract class Vector<E> implements Iterable<double> {
   void operator []=(int index, double value);
 
   /// Vector addition (element-wise operation)
-  Vector<E> operator +(Vector<E> vector);
+  Vector<E> operator +(Object value);
 
   /// Vector subtraction (element-wise operation)
-  Vector<E> operator -(Object vector);
+  Vector<E> operator -(Object value);
 
   /// Vector multiplication (element-wise operation)
-  Vector<E> operator *(Object vector);
+  Vector<E> operator *(Object value);
 
   /// Element-wise division
-  Vector<E> operator /(Vector<E> vector);
+  Vector<E> operator /(Vector<E> value);
 
   /// Creates a new [Vector] containing elements of this [Vector] raised to the integer [power]
   Vector<E> toIntegerPower(int power);
