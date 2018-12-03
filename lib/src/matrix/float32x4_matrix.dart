@@ -110,7 +110,7 @@ class Float32x4Matrix extends Object with
     if (value is Vector<Float32x4>) {
       // by default any passed vector is considered column-vector, so its dimension must be equal to the matrix columns
       // number
-      return _vector2MatrixMul(value);
+      return _matrixVectorMul(value);
     } else if (value is Matrix<Float32x4, Vector<Float32x4>>) {
       return _matrixMul(value);
     } else if (value is num) {
@@ -200,7 +200,7 @@ class Float32x4Matrix extends Object with
     return reduced;
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _vector2MatrixMul(Vector<Float32x4> vector) {
+  Matrix<Float32x4, Vector<Float32x4>> _matrixVectorMul(Vector<Float32x4> vector) {
     if (vector.length != columnsNum) {
       throw Exception('The dimension of the vector ${vector} and the columns number of matrix ${this} mismatch');
     }
