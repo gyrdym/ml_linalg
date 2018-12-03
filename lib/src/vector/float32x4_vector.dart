@@ -76,16 +76,34 @@ class Float32x4Vector extends Object with
       sublist(data, 0, data.length - 1);
 
   @override
-  Float32x4Vector operator +(covariant Float32x4Vector vector) =>
-      _elementWiseVectorOperation(vector, simdSum);
+  Float32x4Vector operator +(Object value) {
+    if (value is Float32x4Vector) {
+      return _elementWiseVectorOperation(value, simdSum);
+    } else if (value is num) {
+      return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSum);
+    }
+    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+  }
 
   @override
-  Float32x4Vector operator -(covariant Float32x4Vector vector) =>
-      _elementWiseVectorOperation(vector, simdSub);
+  Float32x4Vector operator -(Object value) {
+    if (value is Float32x4Vector) {
+      return _elementWiseVectorOperation(value, simdSub);
+    } else if (value is num) {
+      return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSub);
+    }
+    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+  }
 
   @override
-  Float32x4Vector operator *(covariant Float32x4Vector vector) =>
-      _elementWiseVectorOperation(vector, simdMul);
+  Float32x4Vector operator *(Object value) {
+    if (value is Float32x4Vector) {
+      return _elementWiseVectorOperation(value, simdMul);
+    } else if (value is num) {
+      return _elementWiseFloatScalarOperation(value.toDouble(), simdScale);
+    }
+    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+  }
 
   @override
   Float32x4Vector operator /(covariant Float32x4Vector vector) =>
@@ -96,19 +114,19 @@ class Float32x4Vector extends Object with
 
   @override
   Float32x4Vector scalarMul(double value) =>
-      _elementWiseScalarOperation(value, simdMul);
+      _elementWiseFloatScalarOperation(value, simdScale);
 
   @override
   Float32x4Vector scalarDiv(double value) =>
-      _elementWiseScalarOperation(value, simdDiv);
+      _elementWiseFloatScalarOperation(1 / value, simdScale);
 
   @override
   Float32x4Vector scalarAdd(double value) =>
-      _elementWiseScalarOperation(value, simdSum);
+      _elementWiseSimdScalarOperation(createSIMDFilled(value), simdSum);
 
   @override
   Float32x4Vector scalarSub(double value) =>
-      _elementWiseScalarOperation(value, simdSub);
+      _elementWiseSimdScalarOperation(createSIMDFilled(value), simdSub);
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   @override
@@ -264,12 +282,20 @@ class Float32x4Vector extends Object with
     return target;
   }
 
-  /// Returns a vector as a result of applying to [this] any element-wise operation with a scalar (e.g. vector addition)
-  Float32x4Vector _elementWiseScalarOperation(double value, Float32x4 operation(Float32x4 a, Float32x4 b)) {
-    final scalar = createSIMDFilled(value);
+  /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
+  Float32x4Vector _elementWiseFloatScalarOperation(double scalar, Float32x4 operation(Float32x4 a, double b)) {
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], scalar);
+    }
+    return Float32x4Vector.fromSIMDList(list, length);
+  }
+
+  /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
+  Float32x4Vector _elementWiseSimdScalarOperation(Float32x4 simdVal, Float32x4 operation(Float32x4 a, Float32x4 b)) {
+    final list = createSIMDList(_bucketsNumber);
+    for (int i = 0; i < data.length; i++) {
+      list[i] = operation(data[i], simdVal);
     }
     return Float32x4Vector.fromSIMDList(list, length);
   }

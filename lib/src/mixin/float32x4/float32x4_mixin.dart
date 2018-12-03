@@ -29,6 +29,9 @@ class Float32x4Mixin implements SIMDDataHelper<Float32x4List, Float32x4> {
   Float32x4 simdMul(Float32x4 a, Float32x4 b) => a * b;
 
   @override
+  Float32x4 simdScale(Float32x4 a, double scalar) => a.scale(scalar);
+
+  @override
   Float32x4 simdDiv(Float32x4 a, Float32x4 b) => a / b;
 
   @override
