@@ -5,7 +5,7 @@
 + [Vectors](#vectors)
 	- [A couple of words about the underlying vector architecture](#vectors_introduction_)
 	+ [Vector operations example](#vector_operations_examples)
-	    - [Vector addition](#vector_addition)
+	    - [Vectors sum](#vector_addition)
 	    - [Vector subtraction](#vector_subtraction)
 	    - [Element wise vector by vector multiplication](#vector_element_wise_mult)
 	    - [Element wise vector by vector division](#vector_element_wise_div)
@@ -14,7 +14,7 @@
 	    - [Mean value](#mean_value)
 	    - [Sum of all vector elements](#vector_sum)
 	    - [Dot product](#vector_dot_product)
-	    - [Addition of a vector and a scalar](#vector_scalar_add)
+	    - [Sum of a vector and a scalar](#vector_scalar_add)
 	    - [Subtraction of a scalar from a vector](#vector_scalar_sub)
 	    - [Multiplication (scaling) of a vector by a scalar](#vector_scalar_mul)
 	    - [Division (scaling) of a vector by a scalar value](#vector_scalar_div)
@@ -22,8 +22,12 @@
 	    - [Manhattan distance between two vectors](#vector_manhattan_dist)
 + [Matrices](#matrices)
 	+ [Matrix operations examples](#matrix_operations_examples)
+        - [Sum of a matrix and another matrix](#matrix_matrix_add)
+        - [Sum of a matrix and a scalar](#matrix_scalar_add)
         - [Multiplication of a matrix and a vector](#matrix_vector_mul)
         - [Multiplication of a matrix and another matrix](#matrix_matrix_mul)
+        - [Multiplication of a matrix and a scalar](#matrix_scalar_mul)
+        - [Element wise matrices subtraction](#matrix_matrix_sub)
         - [Matrix transposition](#matrix_transpose)
         - [Matrix row wise reduce](#matrix_row_reduce)
         - [Matrix column wise reduce](#matrix_col_reduce)
@@ -45,7 +49,7 @@ of concurrency is reached by special 128-bit processor registers, which are used
 At the present moment most common vector operations are implemented:
 
 <a name="vector_addition"></a>
-##### Vector addition
+##### Vectors sum
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -139,7 +143,7 @@ At the present moment most common vector operations are implemented:
 ````
 
 <a name="vector_scalar_add"></a>
-##### Addition of a vector and a scalar
+##### Sum of a vector and a scalar
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -212,6 +216,43 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
 <a name="matrix_operations_examples"></a>
 #### Matrix operations examples
 
+<a name="matrix_matrix_add"></a>
+##### Sum of a matrix and another matrix
+````Dart
+final matrix1 = Float32x4Matrix.from([
+  [1.0, 2.0, 3.0, 4.0],
+  [5.0, 6.0, 7.0, 8.0],
+  [9.0, .0, -2.0, -3.0],
+]);
+final matrix2 = Float32x4Matrix.from([
+  [10.0, 20.0, 30.0, 40.0],
+  [-5.0, 16.0, 2.0, 18.0],
+  [2.0, -1.0, -2.0, -7.0],
+]);
+print(matrix1 + matrix2);
+// [
+//  [11.0, 22.0, 33.0, 44.0],
+//  [0.0, 22.0, 9.0, 26.0],
+//  [11.0, -1.0, -4.0, -10.0],
+// ];
+````
+
+<a name="matrix_scalar_add"></a>
+##### Sum of a matrix and a scalar
+````Dart
+final matrix = Float32x4Matrix.from([
+  [1.0, 2.0, 3.0, 4.0],
+  [5.0, 6.0, 7.0, 8.0],
+  [9.0, .0, -2.0, -3.0],
+]);
+print(matrix + 7);
+//  [
+//    [8.0, 9.0, 10.0, 11.0],
+//    [12.0, 13.0, 14.0, 15.0],
+//    [16.0, 7.0, 5.0, 4.0],
+//  ];
+````
+
 <a name="matrix_vector_mul"></a>
 ##### Multiplication of a matrix and a vector
 ````Dart
@@ -255,6 +296,43 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
   // [26.0, 54.0],
   // [18.0, 15.0],
   //]
+````
+
+<a name="matrix_scalar_mul"></a>
+##### Multiplication of a matrix and a scalar
+````Dart
+final matrix = Float32x4Matrix.from([
+  [1.0, 2.0, 3.0, 4.0],
+  [5.0, 6.0, 7.0, 8.0],
+  [9.0, .0, -2.0, -3.0],
+]);
+print(matrix * 3);
+// [
+//   [3.0, 6.0, 9.0, 12.0],
+//   [15.0, 18.0, 21.0, 24.0],
+//   [27.0, .0, -6.0, -9.0],
+// ];
+````
+
+<a name="matrix_matrix_sub"></a>
+##### Element wise matrices subtraction
+````Dart
+  final matrix1 = Float32x4Matrix.from([
+    [1.0, 2.0, 3.0, 4.0],
+    [5.0, 6.0, 7.0, 8.0],
+    [9.0, .0, -2.0, -3.0],
+  ]);
+  final matrix2 = Float32x4Matrix.from([
+    [10.0, 20.0, 30.0, 40.0],
+    [-5.0, 16.0, 2.0, 18.0],
+    [2.0, -1.0, -2.0, -7.0],
+  ]);
+  print(matrix1 - matrix2);
+  // [
+  //   [-9.0, -18.0, -27.0, -36.0],
+  //   [10.0, -10.0, 5.0, -10.0],
+  //   [7.0, 1.0, .0, 4.0],
+  // ];
 ````
 
 <a name="matrix_transpose"></a>
