@@ -279,7 +279,7 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should perform multiplication with a Vector instance', () {
+    test('should perform multiplication by a vector', () {
       final matrix = Float32x4Matrix.from([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
@@ -395,6 +395,45 @@ void main() {
         [-9.0, -18.0, -27.0, -36.0],
         [10.0, -10.0, 5.0, -10.0],
         [7.0, 1.0, .0, 4.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 3);
+      expect(actual.columnsNum, 4);
+    });
+
+    test('should perform addition of a matrix', () {
+      final matrix1 = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final matrix2 = Float32x4Matrix.from([
+        [10.0, 20.0, 30.0, 40.0],
+        [-5.0, 16.0, 2.0, 18.0],
+        [2.0, -1.0, -2.0, -7.0],
+      ]);
+      final actual = matrix1 + matrix2;
+      final expected = [
+        [11.0, 22.0, 33.0, 44.0],
+        [0.0, 22.0, 9.0, 26.0],
+        [11.0, -1.0, -4.0, -10.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 3);
+      expect(actual.columnsNum, 4);
+    });
+
+    test('should perform addition of a scalar', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final actual = matrix + 7;
+      final expected = [
+        [8.0, 9.0, 10.0, 11.0],
+        [12.0, 13.0, 14.0, 15.0],
+        [16.0, 7.0, 5.0, 4.0],
       ];
       expect(actual, equals(expected));
       expect(actual.rowsNum, 3);
