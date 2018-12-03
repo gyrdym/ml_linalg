@@ -2,10 +2,16 @@
 
 **Table of contents**
 
-{{TOC}}
-
++ [Vectors](#vectors)
+	- [A couple of words about the underlying vector architecture](#vectors_introduction_)
+	- [Vector operations example](#vector_operations_examples)
++ [Matrices](#matrices)
+	- [Matrix operations examples](#matrix_operations_examples)
+	
+<a name="vectors"></a>
 ### Vectors
 
+<a name="vectors_introduction"></a>
 #### A couple of words about the underlying vector architecture
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
 computation architecture, so this library presents a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart). 
@@ -13,6 +19,7 @@ However, you cannot use it directly in your project. To create an instance of th
 and instantiate a vector via the factory. Most of operations in the vector are performed in four "threads". This kind 
 of concurrency is reached by special 128-bit processor registers, which are used directly by program code.  For better understanding of the topic please read the [article](https://www.dartlang.org/articles/dart-vm/simd).
 
+<a name="vector_operations_examples"></a>
 #### Vector operations examples
 At the present moment most common vector operations are implemented:
 
@@ -162,10 +169,12 @@ At the present moment most common vector operations are implemented:
   print(result); // 5.0
 ````
 
+<a name="matrices"></a>
 ### Matrices
 
 Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vector types.
 
+<a name="matrix_operations_examples"></a>
 #### Matrix operations examples
 
  ##### Multiplication of a matrix and a vector
