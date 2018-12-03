@@ -1,7 +1,7 @@
 import 'package:linalg/src/matrix/float32x4_matrix.dart';
-import 'package:linalg/src/matrix/range.dart';
+import 'package:linalg/range.dart';
 import 'package:linalg/src/vector/float32x4_vector.dart';
-import 'package:linalg/src/vector/vector.dart';
+import 'package:linalg/vector.dart';
 import 'package:test/test.dart';
 
 void main() {

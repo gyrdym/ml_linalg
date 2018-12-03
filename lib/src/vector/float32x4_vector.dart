@@ -3,11 +3,11 @@ import 'dart:core';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:linalg/src/vector/norm.dart';
+import 'package:linalg/norm.dart';
 import 'package:linalg/src/vector/float32_mixin.dart';
 import 'package:linalg/src/vector/float32x4_data_store_mixin.dart';
 import 'package:linalg/src/vector/float32x4_mixin.dart';
-import 'package:linalg/src/vector/vector.dart';
+import 'package:linalg/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
 ///
@@ -217,11 +217,6 @@ class Float32x4Vector extends Object with
     final base = (index / bucketSize).floor();
     final offset = index - base * bucketSize;
     return getScalarByOffsetIndex(data[base], offset);
-  }
-
-  @override
-  void operator []=(int index, double element) {
-    throw UnsupportedError('`[]=` operator is unsupported');
   }
 
   @override

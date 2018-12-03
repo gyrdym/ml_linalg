@@ -3,10 +3,10 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:linalg/linalg.dart';
-import 'package:linalg/src/matrix/matrix.dart';
+import 'package:linalg/matrix.dart';
 import 'package:linalg/src/matrix/float32_matrix_iterator.dart';
 import 'package:linalg/src/matrix/matrix_validation_mixin.dart';
-import 'package:linalg/src/matrix/range.dart';
+import 'package:linalg/range.dart';
 import 'package:linalg/src/vector/float32x4_vector.dart';
 
 class Float32x4Matrix extends Object with

@@ -1,6 +1,6 @@
 name: linalg
-description: linear algebra with dart
-version: 2.2.4
+description: Linear algebra with dart
+version: 1.0.0
 author: Ilia Gyrdymov <ilgyrd@gmail.com>
 
 environment:

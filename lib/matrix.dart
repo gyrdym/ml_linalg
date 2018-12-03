@@ -1,5 +1,5 @@
-import 'package:linalg/src/matrix/range.dart';
-import 'package:linalg/src/vector/vector.dart';
+import 'package:linalg/range.dart';
+import 'package:linalg/vector.dart';
 
 abstract class Matrix<E, T extends Vector<E>> {
   int get rowsNum;
