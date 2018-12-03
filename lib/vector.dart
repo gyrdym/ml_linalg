@@ -5,9 +5,6 @@ abstract class Vector<E> implements Iterable<double> {
   /// Indexed access to a vector's element
   double operator [](int index);
 
-  /// Indexed assignment of a value to a vector's element
-  void operator []=(int index, double value);
-
   /// Vector addition (element-wise operation)
   Vector<E> operator +(Object value);
 

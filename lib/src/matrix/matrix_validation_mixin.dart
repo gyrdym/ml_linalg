@@ -1,5 +1,5 @@
-import 'package:linalg/src/matrix/matrix.dart';
-import 'package:linalg/src/vector/vector.dart';
+import 'package:linalg/matrix.dart';
+import 'package:linalg/vector.dart';
 
 abstract class MatrixValidationMixin<E, T extends Vector<E>> {
   void checkDimensions(Matrix<E, T> first, Matrix<E, T> second,
