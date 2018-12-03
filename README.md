@@ -21,8 +21,14 @@
 	    - [Euclidean distance between two vectors](#vector_euclidean_dist)
 	    - [Manhattan distance between two vectors](#vector_manhattan_dist)
 + [Matrices](#matrices)
-	- [Matrix operations examples](#matrix_operations_examples)
-	
+	+ [Matrix operations examples](#matrix_operations_examples)
+        - [Multiplication of a matrix and a vector](#matrix_vector_mul)
+        - [Multiplication of a matrix and another matrix](#matrix_matrix_mul)
+        - [Matrix transposition](#matrix_transpose)
+        - [Matrix row wise reduce](#matrix_row_reduce)
+        - [Matrix column wise reduce](#matrix_col_reduce)
+        - [Submatrix](#matrix_submatrix)
+
 <a name="vectors"></a>
 ### Vectors
 
@@ -206,7 +212,8 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
 <a name="matrix_operations_examples"></a>
 #### Matrix operations examples
 
- ##### Multiplication of a matrix and a vector
+<a name="matrix_vector_mul"></a>
+##### Multiplication of a matrix and a vector
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -225,6 +232,7 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
   //]
 ````
 
+<a name="matrix_matrix_mul"></a>
 ##### Multiplication of a matrix and another matrix
 ````Dart
   import 'package:linalg/linalg.dart';
@@ -249,6 +257,7 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
   //]
 ````
 
+<a name="matrix_transpose"></a>
 ##### Matrix transposition
 ````Dart
   import 'package:linalg/linalg.dart';
@@ -268,7 +277,8 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
   //]
 ````
  
-##### Matrix row-wise reduce
+<a name="matrix_row_reduce"></a>
+##### Matrix row wise reduce
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -280,7 +290,8 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
   print(reduced); // [6.0, 8.0, 10.0, 12.0]
 ````
 
-##### Matrix column-wise reduce
+<a name="matrix_col_reduce"></a>
+##### Matrix column wise reduce
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -293,6 +304,7 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
   print(result); // [50, 66, 90]
 ````
 
+<a name="matrix_submatrix"></a>
 ##### Submatrix (taking a lower dimension matrix of the current matrix)
 ````Dart
   import 'package:linalg/linalg.dart';
