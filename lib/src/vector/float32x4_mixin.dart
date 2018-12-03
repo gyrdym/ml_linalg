@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:linalg/src/vector/simd_data_helper.dart';
+import 'package:ml_linalg/src/vector/simd_data_helper.dart';
 
 class Float32x4Mixin implements SIMDDataHelper<Float32x4List, Float32x4> {
   @override

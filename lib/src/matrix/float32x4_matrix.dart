@@ -2,17 +2,17 @@ import 'dart:collection';
 import 'dart:core';
 import 'dart:typed_data';
 
-import 'package:linalg/linalg.dart';
-import 'package:linalg/src/matrix/matrix.dart';
-import 'package:linalg/src/matrix/float32_matrix_iterator.dart';
-import 'package:linalg/src/matrix/matrix_validation_mixin.dart';
-import 'package:linalg/src/matrix/range.dart';
-import 'package:linalg/src/vector/float32x4_vector.dart';
+import 'package:ml_linalg/matrix.dart';
+import 'package:ml_linalg/range.dart';
+import 'package:ml_linalg/src/matrix/float32_matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/matrix_validation_mixin.dart';
+import 'package:ml_linalg/src/vector/float32x4_vector.dart';
+import 'package:ml_linalg/vector.dart';
 
 class Float32x4Matrix extends Object with
     IterableMixin<Iterable<double>>,
-    MatrixValidationMixin<Float32x4, Vector<Float32x4>> implements
-    Matrix<Float32x4, Vector<Float32x4>>, Iterable<Iterable<double>> {
+    MatrixValidationMixin<Float32x4, MLVector<Float32x4>> implements
+    MLMatrix<Float32x4, MLVector<Float32x4>>, Iterable<Iterable<double>> {
 
   @override
   final int rowsNum;
@@ -21,27 +21,27 @@ class Float32x4Matrix extends Object with
   final int columnsNum;
 
   final ByteData _data;
-  final List<Vector<Float32x4>> _columnsCache;
-  final List<Vector<Float32x4>> _rowsCache;
+  final List<MLVector<Float32x4>> _columnsCache;
+  final List<MLVector<Float32x4>> _rowsCache;
 
   Float32x4Matrix.from(Iterable<Iterable<double>> source) :
         rowsNum = source.length,
         columnsNum = source.first.length,
         _data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
-        _rowsCache = List<Vector<Float32x4>>(source.length),
-        _columnsCache = List<Vector<Float32x4>>(source.first.length) {
+        _rowsCache = List<MLVector<Float32x4>>(source.length),
+        _columnsCache = List<MLVector<Float32x4>>(source.first.length) {
 
     final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
     _data.buffer.asFloat32List().setAll(0, flattened);
   }
 
   /// vectors from [source] will serve as rows of the matrix
-  Float32x4Matrix.rows(Iterable<Vector<Float32x4>> source) :
+  Float32x4Matrix.rows(Iterable<MLVector<Float32x4>> source) :
         rowsNum = source.length,
         columnsNum = source.first.length,
         _data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
         _rowsCache = source.toList(growable: false),
-        _columnsCache = List<Vector<Float32x4>>(source.first.length) {
+        _columnsCache = List<MLVector<Float32x4>>(source.first.length) {
 
     final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
     _data.buffer.asFloat32List().setAll(0, flattened);
@@ -59,11 +59,11 @@ class Float32x4Matrix extends Object with
   ///   {a2} {b2} {c2}
   ///   {a3} {b3} {c3}
   ///   {a4} {b4} {c4}
-  Float32x4Matrix.columns(Iterable<Vector<Float32x4>> source) :
+  Float32x4Matrix.columns(Iterable<MLVector<Float32x4>> source) :
         rowsNum = source.first.length,
         columnsNum = source.length,
         _data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
-        _rowsCache = List<Vector<Float32x4>>(source.first.length),
+        _rowsCache = List<MLVector<Float32x4>>(source.first.length),
         _columnsCache = source.toList(growable: false) {
 
     final flattened = _flatten2dimList(source, (i, j) => j * columnsNum + i);
@@ -72,8 +72,8 @@ class Float32x4Matrix extends Object with
 
   Float32x4Matrix.flattened(Iterable<double> source, this.rowsNum, this.columnsNum) :
         _data = ByteData(rowsNum * columnsNum * Float32List.bytesPerElement),
-        _rowsCache = List<Vector<Float32x4>>(rowsNum),
-        _columnsCache = List<Vector<Float32x4>>(columnsNum) {
+        _rowsCache = List<MLVector<Float32x4>>(rowsNum),
+        _columnsCache = List<MLVector<Float32x4>>(columnsNum) {
     if (source.length != rowsNum * columnsNum) {
       throw Exception('Invalid number of rows and columns are provided');
     }
@@ -81,8 +81,8 @@ class Float32x4Matrix extends Object with
   }
 
   @override
-  Matrix<Float32x4, Vector<Float32x4>> operator +(Object value) {
-    if (value is Matrix<Float32x4, Vector<Float32x4>>) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> operator +(Object value) {
+    if (value is MLMatrix<Float32x4, MLVector<Float32x4>>) {
       return _matrixAdd(value);
     } else if (value is num) {
       return _matrixScalarAdd(value.toDouble());
@@ -92,8 +92,8 @@ class Float32x4Matrix extends Object with
   }
 
   @override
-  Matrix<Float32x4, Vector<Float32x4>> operator -(Object value) {
-    if (value is Matrix<Float32x4, Vector<Float32x4>>) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> operator -(Object value) {
+    if (value is MLMatrix<Float32x4, MLVector<Float32x4>>) {
       return _matrixSub(value);
     } else if (value is num) {
       return _matrixScalarSub(value.toDouble());
@@ -106,12 +106,12 @@ class Float32x4Matrix extends Object with
   /// The main rule: let N be a number of columns, so the multiplication is available only for
   /// XxN * NxY matrices, that causes XxY matrix
   @override
-  Matrix<Float32x4, Vector<Float32x4>> operator *(Object value) {
-    if (value is Vector<Float32x4>) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> operator *(Object value) {
+    if (value is MLVector<Float32x4>) {
       // by default any passed vector is considered column-vector, so its dimension must be equal to the matrix columns
       // number
       return _matrixVectorMul(value);
-    } else if (value is Matrix<Float32x4, Vector<Float32x4>>) {
+    } else if (value is MLMatrix<Float32x4, MLVector<Float32x4>>) {
       return _matrixMul(value);
     } else if (value is num) {
       return _matrixScalarMul(value.toDouble());
@@ -124,19 +124,19 @@ class Float32x4Matrix extends Object with
   List<double> operator [](int index) => _query(index * columnsNum, columnsNum);
 
   @override
-  Matrix<Float32x4, Vector<Float32x4>> transpose() {
-    final source = List<Vector<Float32x4>>.generate(rowsNum, getRowVector);
+  MLMatrix<Float32x4, MLVector<Float32x4>> transpose() {
+    final source = List<MLVector<Float32x4>>.generate(rowsNum, getRowVector);
     return Float32x4Matrix.columns(source);
   }
 
   @override
-  Vector<Float32x4> getRowVector(int index) {
+  MLVector<Float32x4> getRowVector(int index) {
     _rowsCache[index] ??= Float32x4Vector.from(this[index]);
     return _rowsCache[index];
   }
 
   @override
-  Vector<Float32x4> getColumnVector(int index) {
+  MLVector<Float32x4> getColumnVector(int index) {
     if (_columnsCache[index] == null) {
       final result = List<double>(rowsNum);
       for (int i = 0; i < rowsNum; i++) {
@@ -152,7 +152,7 @@ class Float32x4Matrix extends Object with
   Iterator<Iterable<double>> get iterator => Float32MatrixIterator(_data, columnsNum);
 
   @override
-  Matrix<Float32x4, Vector<Float32x4>> submatrix({Range rows, Range columns}) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> submatrix({Range rows, Range columns}) {
     rows ??= Range(0, rowsNum);
     columns ??= Range(0, columnsNum);
 
@@ -167,13 +167,13 @@ class Float32x4Matrix extends Object with
   }
 
   @override
-  Vector<Float32x4> reduceColumns(
-      Vector<Float32x4> Function(Vector<Float32x4> combine, Vector<Float32x4> vector) combiner,
-      {Vector<Float32x4> initValue}) => _reduce(combiner, columnsNum, getColumnVector, initValue: initValue);
+  MLVector<Float32x4> reduceColumns(
+      MLVector<Float32x4> Function(MLVector<Float32x4> combine, MLVector<Float32x4> vector) combiner,
+      {MLVector<Float32x4> initValue}) => _reduce(combiner, columnsNum, getColumnVector, initValue: initValue);
 
   @override
-  Vector<Float32x4> reduceRows(Vector<Float32x4> Function(Vector<Float32x4> combine, Vector<Float32x4> vector) combiner,
-    {Vector<Float32x4> initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
+  MLVector<Float32x4> reduceRows(MLVector<Float32x4> Function(MLVector<Float32x4> combine, MLVector<Float32x4> vector) combiner,
+    {MLVector<Float32x4> initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
 
   List<double> _flatten2dimList(Iterable<Iterable<double>> rows, int Function(int i, int j) accessor) {
     int i = 0;
@@ -190,8 +190,8 @@ class Float32x4Matrix extends Object with
     return flattened;
   }
 
-  Vector<Float32x4> _reduce(Vector<Float32x4> Function(Vector<Float32x4> combine, Vector<Float32x4> vector) combiner,
-      int length, Vector<Float32x4> Function(int index) getVector, {Vector<Float32x4> initValue}) {
+  MLVector<Float32x4> _reduce(MLVector<Float32x4> Function(MLVector<Float32x4> combine, MLVector<Float32x4> vector) combiner,
+      int length, MLVector<Float32x4> Function(int index) getVector, {MLVector<Float32x4> initValue}) {
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
     for (int i = startIndex; i < length; i++) {
@@ -200,7 +200,7 @@ class Float32x4Matrix extends Object with
     return reduced;
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrixVectorMul(Vector<Float32x4> vector) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrixVectorMul(MLVector<Float32x4> vector) {
     if (vector.length != columnsNum) {
       throw Exception('The dimension of the vector ${vector} and the columns number of matrix ${this} mismatch');
     }
@@ -210,7 +210,7 @@ class Float32x4Matrix extends Object with
     return Float32x4Matrix.columns([vectorColumn]);
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrixMul(Matrix<Float32x4, Vector<Float32x4>> matrix) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrixMul(MLMatrix<Float32x4, MLVector<Float32x4>> matrix) {
     checkColumnsAndRowsNumber(this, matrix);
     final source = List<double>(rowsNum * matrix.columnsNum);
     for (int i = 0; i < rowsNum; i++) {
@@ -222,36 +222,36 @@ class Float32x4Matrix extends Object with
     return Float32x4Matrix.flattened(source, rowsNum, matrix.columnsNum);
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrixAdd(Matrix<Float32x4, Vector<Float32x4>> matrix) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrixAdd(MLMatrix<Float32x4, MLVector<Float32x4>> matrix) {
     checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix addition');
-    return _matrix2matrixOperation(matrix, (Vector<Float32x4> first, Vector<Float32x4> second) => first + second);
+    return _matrix2matrixOperation(matrix, (MLVector<Float32x4> first, MLVector<Float32x4> second) => first + second);
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrixSub(Matrix<Float32x4, Vector<Float32x4>> matrix) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrixSub(MLMatrix<Float32x4, MLVector<Float32x4>> matrix) {
     checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix subtraction');
-    return _matrix2matrixOperation(matrix, (Vector<Float32x4> first, Vector<Float32x4> second) => first - second);
+    return _matrix2matrixOperation(matrix, (MLVector<Float32x4> first, MLVector<Float32x4> second) => first - second);
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrixScalarAdd(double scalar) =>
-      _matrix2scalarOperation(scalar, (double val, Vector<Float32x4> vector) => vector + val);
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrixScalarAdd(double scalar) =>
+      _matrix2scalarOperation(scalar, (double val, MLVector<Float32x4> vector) => vector + val);
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrixScalarSub(double scalar) =>
-    _matrix2scalarOperation(scalar, (double val, Vector<Float32x4> vector) => vector - val);
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrixScalarSub(double scalar) =>
+    _matrix2scalarOperation(scalar, (double val, MLVector<Float32x4> vector) => vector - val);
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrixScalarMul(double scalar) =>
-      _matrix2scalarOperation(scalar, (double val, Vector<Float32x4> vector) => vector * val);
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrixScalarMul(double scalar) =>
+      _matrix2scalarOperation(scalar, (double val, MLVector<Float32x4> vector) => vector * val);
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrix2matrixOperation(Matrix<Float32x4, Vector<Float32x4>> matrix,
-      Vector<Float32x4> operation(Vector<Float32x4> first, Vector<Float32x4> second)) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrix2matrixOperation(MLMatrix<Float32x4, MLVector<Float32x4>> matrix,
+      MLVector<Float32x4> operation(MLVector<Float32x4> first, MLVector<Float32x4> second)) {
     final elementGenFn = (int i) => operation(getRowVector(i), matrix.getRowVector(i));
-    final source = List<Vector<Float32x4>>.generate(rowsNum, elementGenFn);
+    final source = List<MLVector<Float32x4>>.generate(rowsNum, elementGenFn);
     return Float32x4Matrix.rows(source);
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrix2scalarOperation(double scalar,
-      Vector<Float32x4> operation(double scalar, Vector<Float32x4> vector)) {
+  MLMatrix<Float32x4, MLVector<Float32x4>> _matrix2scalarOperation(double scalar,
+      MLVector<Float32x4> operation(double scalar, MLVector<Float32x4> vector)) {
     final elementGenFn = (int i) => operation(scalar, getRowVector(i));
-    final source = List<Vector<Float32x4>>.generate(rowsNum, elementGenFn);
+    final source = List<MLVector<Float32x4>>.generate(rowsNum, elementGenFn);
     return Float32x4Matrix.rows(source);
   }
 

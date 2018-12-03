@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:linalg/src/vector/data_store.dart';
+import 'package:ml_linalg/src/vector/data_store.dart';
 
 class Float32x4DataStoreMixin implements DataStore<Float32x4List, Float32x4> {
   @override
