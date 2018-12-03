@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:linalg/src/matrix/float32_matrix_iterator.dart';
 import 'package:test/test.dart';
 
-import 'helpers/float_iterable_almost_equal_to.dart';
+import 'unit_test_helpers/float_iterable_almost_equal_to.dart';
 
 ByteData createByteData(Float32List source) => ByteData.view(source.buffer, 0, source.length);
 
