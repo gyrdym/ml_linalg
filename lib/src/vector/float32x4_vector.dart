@@ -4,9 +4,9 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:linalg/src/vector/norm.dart';
-import 'package:linalg/src/mixin/float32/float32_mixin.dart';
-import 'package:linalg/src/mixin/data_store/float32x4_data_store_mixin.dart';
-import 'package:linalg/src/mixin/float32x4/float32x4_mixin.dart';
+import 'package:linalg/src/vector/float32_mixin.dart';
+import 'package:linalg/src/vector/float32x4_data_store_mixin.dart';
+import 'package:linalg/src/vector/float32x4_mixin.dart';
 import 'package:linalg/src/vector/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
