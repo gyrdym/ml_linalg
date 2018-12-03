@@ -5,10 +5,13 @@ import 'dart:typed_data';
 import 'package:linalg/linalg.dart';
 import 'package:linalg/src/matrix/matrix.dart';
 import 'package:linalg/src/matrix/float32_matrix_iterator.dart';
+import 'package:linalg/src/matrix/matrix_validation_mixin.dart';
 import 'package:linalg/src/matrix/range.dart';
 import 'package:linalg/src/vector/float32x4_vector.dart';
 
-class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implements
+class Float32x4Matrix extends Object with
+    IterableMixin<Iterable<double>>,
+    MatrixValidationMixin<Float32x4, Vector<Float32x4>> implements
     Matrix<Float32x4, Vector<Float32x4>>, Iterable<Iterable<double>> {
 
   @override
@@ -77,6 +80,28 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
     _data.buffer.asFloat32List().setAll(0, source);
   }
 
+  @override
+  Matrix<Float32x4, Vector<Float32x4>> operator +(Object value) {
+    if (value is Matrix<Float32x4, Vector<Float32x4>>) {
+      return _matrixAdd(value);
+    } else if (value is num) {
+      return _matrixScalarAdd(value.toDouble());
+    } else {
+      throw UnsupportedError('Cannot add a ${value.runtimeType} to a ${runtimeType}');
+    }
+  }
+
+  @override
+  Matrix<Float32x4, Vector<Float32x4>> operator -(Object value) {
+    if (value is Matrix<Float32x4, Vector<Float32x4>>) {
+      return _matrixSub(value);
+    } else if (value is num) {
+      return _matrixScalarSub(value.toDouble());
+    } else {
+      throw UnsupportedError('Cannot subtract a ${value.runtimeType} from a ${runtimeType}');
+    }
+  }
+
   /// Mathematical matrix multiplication
   /// The main rule: let N be a number of columns, so the multiplication is available only for
   /// XxN * NxY matrices, that causes XxY matrix
@@ -85,13 +110,15 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
     if (value is Vector<Float32x4>) {
       // by default any passed vector is considered column-vector, so its dimension must be equal to the matrix columns
       // number
-      return _vector2MatrixMul(value);
+      return _matrixVectorMul(value);
     } else if (value is Matrix<Float32x4, Vector<Float32x4>>) {
-      return _matrix2matrixMul(value);
+      return _matrixMul(value);
+    } else if (value is num) {
+      return _matrixScalarMul(value.toDouble());
     } else {
       throw UnsupportedError('Cannot multiple a ${runtimeType} and a ${value.runtimeType}');
     }
-   }
+  }
 
   @override
   List<double> operator [](int index) => _query(index * columnsNum, columnsNum);
@@ -173,7 +200,7 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
     return reduced;
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _vector2MatrixMul(Vector<Float32x4> vector) {
+  Matrix<Float32x4, Vector<Float32x4>> _matrixVectorMul(Vector<Float32x4> vector) {
     if (vector.length != columnsNum) {
       throw Exception('The dimension of the vector ${vector} and the columns number of matrix ${this} mismatch');
     }
@@ -183,10 +210,8 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
     return Float32x4Matrix.columns([vectorColumn]);
   }
 
-  Matrix<Float32x4, Vector<Float32x4>> _matrix2matrixMul(Matrix<Float32x4, Vector<Float32x4>> matrix) {
-    if (columnsNum != matrix.rowsNum) {
-      throw Exception('Columns numbers of the matrices mismatch: $columnsNum is not equal to ${matrix.rowsNum}');
-    }
+  Matrix<Float32x4, Vector<Float32x4>> _matrixMul(Matrix<Float32x4, Vector<Float32x4>> matrix) {
+    checkColumnsAndRowsNumber(this, matrix);
     final source = List<double>(rowsNum * matrix.columnsNum);
     for (int i = 0; i < rowsNum; i++) {
       for (int j = 0; j < matrix.columnsNum; j++) {
@@ -195,6 +220,39 @@ class Float32x4Matrix extends Object with IterableMixin<Iterable<double>> implem
       }
     }
     return Float32x4Matrix.flattened(source, rowsNum, matrix.columnsNum);
+  }
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrixAdd(Matrix<Float32x4, Vector<Float32x4>> matrix) {
+    checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix addition');
+    return _matrix2matrixOperation(matrix, (Vector<Float32x4> first, Vector<Float32x4> second) => first + second);
+  }
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrixSub(Matrix<Float32x4, Vector<Float32x4>> matrix) {
+    checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix subtraction');
+    return _matrix2matrixOperation(matrix, (Vector<Float32x4> first, Vector<Float32x4> second) => first - second);
+  }
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrixScalarAdd(double scalar) =>
+      _matrix2scalarOperation(scalar, (double val, Vector<Float32x4> vector) => vector + val);
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrixScalarSub(double scalar) =>
+    _matrix2scalarOperation(scalar, (double val, Vector<Float32x4> vector) => vector - val);
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrixScalarMul(double scalar) =>
+      _matrix2scalarOperation(scalar, (double val, Vector<Float32x4> vector) => vector * val);
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrix2matrixOperation(Matrix<Float32x4, Vector<Float32x4>> matrix,
+      Vector<Float32x4> operation(Vector<Float32x4> first, Vector<Float32x4> second)) {
+    final elementGenFn = (int i) => operation(getRowVector(i), matrix.getRowVector(i));
+    final source = List<Vector<Float32x4>>.generate(rowsNum, elementGenFn);
+    return Float32x4Matrix.rows(source);
+  }
+
+  Matrix<Float32x4, Vector<Float32x4>> _matrix2scalarOperation(double scalar,
+      Vector<Float32x4> operation(double scalar, Vector<Float32x4> vector)) {
+    final elementGenFn = (int i) => operation(scalar, getRowVector(i));
+    final source = List<Vector<Float32x4>>.generate(rowsNum, elementGenFn);
+    return Float32x4Matrix.rows(source);
   }
 
   Float32List _query(int index, int length) =>

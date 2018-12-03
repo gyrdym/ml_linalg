@@ -149,7 +149,7 @@ void main() {
     });
 
     test('Scalar multiplication', () {
-      final result = vector1.scalarMul(2.0);
+      final result = vector1 * 2.0;
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
       expect(result, equals([2.0, 4.0, 6.0, 8.0, 10.0]));
@@ -171,7 +171,7 @@ void main() {
 
     test('Scalar substruction', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final result = vector.scalarSub(13.0);
+      final result = vector - 13.0;
       expect(result != vector, isTrue);
       expect(result.length, equals(5));
       expect(result, equals([-12.0, -11.0, -10.0, -9.0, -8.0]));

@@ -361,5 +361,44 @@ void main() {
       expect(actual.rowsNum, 4);
       expect(actual.columnsNum, 3);
     });
+
+    test('should perform multiplication of a matrix and a scalar', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final actual = matrix * 3;
+      final expected = [
+        [3.0, 6.0, 9.0, 12.0],
+        [15.0, 18.0, 21.0, 24.0],
+        [27.0, .0, -6.0, -9.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 3);
+      expect(actual.columnsNum, 4);
+    });
+
+    test('should perform matricies subtraction', () {
+      final matrix1 = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final matrix2 = Float32x4Matrix.from([
+        [10.0, 20.0, 30.0, 40.0],
+        [-5.0, 16.0, 2.0, 18.0],
+        [2.0, -1.0, -2.0, -7.0],
+      ]);
+      final actual = matrix1 - matrix2;
+      final expected = [
+        [-9.0, -18.0, -27.0, -36.0],
+        [10.0, -10.0, 5.0, -10.0],
+        [7.0, 1.0, .0, 4.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 3);
+      expect(actual.columnsNum, 4);
+    });
   });
 }
