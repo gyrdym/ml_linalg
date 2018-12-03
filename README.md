@@ -1,4 +1,4 @@
-**Linear algebra with Dart**
+**Linear algebra with Dart for machine learning**
 
 **Table of contents**
 
