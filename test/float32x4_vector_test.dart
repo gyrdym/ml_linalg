@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_linalg/linalg.dart';
-import 'package:matcher/matcher.dart';
 import 'package:test/test.dart';
 
 void main() {
