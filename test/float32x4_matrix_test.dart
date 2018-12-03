@@ -1,7 +1,7 @@
-import 'package:linalg/src/matrix/float32x4_matrix.dart';
-import 'package:linalg/src/matrix/range.dart';
-import 'package:linalg/src/vector/float32x4_vector.dart';
-import 'package:linalg/src/vector/vector.dart';
+import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
+import 'package:ml_linalg/range.dart';
+import 'package:ml_linalg/src/vector/float32x4_vector.dart';
+import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -88,10 +88,10 @@ void main() {
       final column1 = matrix.getRowVector(0);
       final column2 = matrix.getRowVector(1);
 
-      expect(column1 is Vector, isTrue);
+      expect(column1 is MLVector, isTrue);
       expect(column1, [11.0, 12.0, 13.0, 14.0]);
 
-      expect(column2 is Vector, isTrue);
+      expect(column2 is MLVector, isTrue);
       expect(column2, [15.0, 16.0, 17.0, 18.0]);
     });
 
@@ -106,16 +106,16 @@ void main() {
       final row3 = matrix.getColumnVector(2);
       final row4 = matrix.getColumnVector(3);
 
-      expect(row1 is Vector, isTrue);
+      expect(row1 is MLVector, isTrue);
       expect(row1, [11.0, 15.0, 21.0]);
 
-      expect(row2 is Vector, isTrue);
+      expect(row2 is MLVector, isTrue);
       expect(row2, [12.0, 16.0, 22.0]);
 
-      expect(row3 is Vector, isTrue);
+      expect(row3 is MLVector, isTrue);
       expect(row3, [13.0, 17.0, 23.0]);
 
-      expect(row4 is Vector, isTrue);
+      expect(row4 is MLVector, isTrue);
       expect(row4, [14.0, 18.0, 24.0]);
     });
 
