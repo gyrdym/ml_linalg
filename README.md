@@ -4,7 +4,22 @@
 
 + [Vectors](#vectors)
 	- [A couple of words about the underlying vector architecture](#vectors_introduction_)
-	- [Vector operations example](#vector_operations_examples)
+	+ [Vector operations example](#vector_operations_examples)
+	    - [Vector addition](#vector_addition)
+	    - [Vector subtraction](#vector_subtraction)
+	    - [Element wise vector by vector multiplication](#vector_element_wise_mult)
+	    - [Element wise vector by vector division](#vector_element_wise_div)
+	    - [Euclidean norm](#euclidean_norm)
+	    - [Manhattan norm](#manhattan_norm)
+	    - [Mean value](#mean_value)
+	    - [Sum of all vector elements](#vector_sum)
+	    - [Dot product](#vector_dot_product)
+	    - [Addition of a vector and a scalar](#vector_scalar_add)
+	    - [Subtraction of a scalar from a vector](#vector_scalar_sub)
+	    - [Multiplication (scaling) of a vector by a scalar](#vector_scalar_mul)
+	    - [Division (scaling) of a vector by a scalar value](#vector_scalar_div)
+	    - [Euclidean distance between two vectors](#vector_euclidean_dist)
+	    - [Manhattan distance between two vectors](#vector_manhattan_dist)
 + [Matrices](#matrices)
 	- [Matrix operations examples](#matrix_operations_examples)
 	
@@ -15,7 +30,7 @@
 #### A couple of words about the underlying vector architecture
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
 computation architecture, so this library presents a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart). 
-However, you cannot use it directly in your project. To create an instance of the vector, just import [Float32xrVectorFactory](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector_factory.dart)
+However, you cannot use it directly in your project. To create an instance of the vector, just import [Float32x4VectorFactory](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector_factory.dart)
 and instantiate a vector via the factory. Most of operations in the vector are performed in four "threads". This kind 
 of concurrency is reached by special 128-bit processor registers, which are used directly by program code.  For better understanding of the topic please read the [article](https://www.dartlang.org/articles/dart-vm/simd).
 
@@ -23,7 +38,8 @@ of concurrency is reached by special 128-bit processor registers, which are used
 #### Vector operations examples
 At the present moment most common vector operations are implemented:
 
- ##### Vector addition
+<a name="vector_addition"></a>
+##### Vector addition
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -33,7 +49,8 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
- ##### Vector subtraction
+<a name="vector_subtraction"></a>
+##### Vector subtraction
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -42,8 +59,8 @@ At the present moment most common vector operations are implemented:
   final result = vector1 - vector2;
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
-
- ##### Element wise vector by vector multiplication
+<a name="vector_element_wise_mult"></a>
+##### Element wise vector by vector multiplication
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -53,7 +70,8 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
- ##### Element wise vector by vector division
+<a name="vector_element_wise_div"></a>
+##### Element wise vector by vector division
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -63,7 +81,8 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
 ````
 
- ##### Euclidean norm
+<a name="euclidean_norm"></a>
+##### Euclidean norm
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -72,7 +91,8 @@ At the present moment most common vector operations are implemented:
   print(result); // sqrt(2^2 + 3^2 + 4^2 + 5^2 + 6^2) = sqrt(90) ~~ 9.48
 ````
 
- ##### Manhattan norm
+<a name="manhattan_norm"></a>
+##### Manhattan norm
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -81,7 +101,8 @@ At the present moment most common vector operations are implemented:
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0
 ````
 
- ##### Mean value
+<a name="mean_value"></a>
+##### Mean value
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -90,7 +111,8 @@ At the present moment most common vector operations are implemented:
   print(result); // (2 + 3 + 4 + 5 + 6) / 5 = 4.0
 ````
 
- ##### Sum of all vector elements
+<a name="vector_sum"></a>
+##### Sum of all vector elements
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -99,7 +121,8 @@ At the present moment most common vector operations are implemented:
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0 (equivalent to Manhattan norm)
 ````
 
- ##### Dot product of two vectors
+<a name="vector_dot_product"></a>
+##### Dot product of two vectors
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -109,7 +132,8 @@ At the present moment most common vector operations are implemented:
   print(result); // 1.0 * 2.0 + 2.0 * 3.0 + 3.0 * 4.0 + 4.0 * 5.0 + 5.0 * 6.0 = 70.0
 ````
 
- ##### Addition of a vector and a scalar
+<a name="vector_scalar_add"></a>
+##### Addition of a vector and a scalar
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -119,7 +143,8 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [6.0, 7.0, 8.0, 9.0, 10.0]
 ````
 
- ##### Subtraction of a scalar value from a vector
+<a name="vector_scalar_sub"></a>
+##### Subtraction of a scalar from a vector
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -129,7 +154,8 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [-4.0, -3.0, -2.0, -1.0, 0.0]
 ````
 
- ##### Multiplication (scaling) of a vector by a scalar
+<a name="vector_scalar_mul"></a>
+##### Multiplication (scaling) of a vector by a scalar
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -139,7 +165,8 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
- ##### Division (scaling) of a vector by a scalar value
+<a name="vector_scalar_div"></a>
+##### Division (scaling) of a vector by a scalar value
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -149,7 +176,8 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
- ##### Euclidean distance between two vectors
+<a name="vector_euclidean_dist"></a>
+##### Euclidean distance between two vectors
 ````Dart
   import 'package:linalg/linalg.dart';
 
@@ -159,7 +187,8 @@ At the present moment most common vector operations are implemented:
   print(result); // ~~2.23
 ````
 
- ##### Manhattan distance between two vectors
+<a name="vector_manhattan_dist"></a>
+##### Manhattan distance between two vectors
 ````Dart
   import 'package:linalg/linalg.dart';
 
