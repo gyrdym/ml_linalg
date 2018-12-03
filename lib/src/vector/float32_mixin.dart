@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:linalg/src/vector/typed_data_helper.dart';
+import 'package:ml_linalg/src/vector/typed_data_helper.dart';
 
 class Float32Mixin implements TypedDataHelper<Float32List> {
   @override

@@ -1,5 +1,5 @@
-import 'package:linalg/src/vector/float32x4_vector.dart';
-import 'package:linalg/linalg.dart';
+import 'package:ml_linalg/src/vector/float32x4_vector.dart';
+import 'package:ml_linalg/linalg.dart';
 
 void main() {
   addition();

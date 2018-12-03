@@ -1,52 +1,52 @@
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
-abstract class Vector<E> implements Iterable<double> {
+abstract class MLVector<E> implements Iterable<double> {
   /// Indexed access to a vector's element
   double operator [](int index);
 
   /// Vector addition (element-wise operation)
-  Vector<E> operator +(Object value);
+  MLVector<E> operator +(Object value);
 
   /// Vector subtraction (element-wise operation)
-  Vector<E> operator -(Object value);
+  MLVector<E> operator -(Object value);
 
   /// Vector multiplication (element-wise operation)
-  Vector<E> operator *(Object value);
+  MLVector<E> operator *(Object value);
 
   /// Element-wise division
-  Vector<E> operator /(Vector<E> value);
+  MLVector<E> operator /(MLVector<E> value);
 
-  /// Creates a new [Vector] containing elements of this [Vector] raised to the integer [power]
-  Vector<E> toIntegerPower(int power);
+  /// Creates a new [MLVector] containing elements of this [MLVector] raised to the integer [power]
+  MLVector<E> toIntegerPower(int power);
 
   @deprecated
   /// Performs a vector and a scalar multiplication (each component of a vector is multiplied by [value])
-  Vector<E> scalarMul(double value);
+  MLVector<E> scalarMul(double value);
 
   @deprecated
   /// Performs a division of a vector by a scalar (each component of a vector is divided by [value])
-  Vector<E> scalarDiv(double value);
+  MLVector<E> scalarDiv(double value);
 
   @deprecated
   /// Performs a vector and a scalar addition ([value] is added to each component of a vector)
-  Vector<E> scalarAdd(double value);
+  MLVector<E> scalarAdd(double value);
 
   @deprecated
   /// Performs subtraction of a vector and a scalar ([value] is subtracted from an each component of a vector )
-  Vector<E> scalarSub(double value);
+  MLVector<E> scalarSub(double value);
 
   /// Returns a vector with absolute value of each vector element
-  Vector<E> abs();
+  MLVector<E> abs();
 
   /// Returns a copy of a vector
-  Vector<E> copy();
+  MLVector<E> copy();
 
   /// Returns a dot (inner) product of [this] and [vector]
-  double dot(Vector<E> vector);
+  double dot(MLVector<E> vector);
 
   /// Returns a distance between [this] and [vector] with vector norm type considering
-  double distanceTo(Vector<E> vector, [Norm norm = Norm.euclidean]);
+  double distanceTo(MLVector<E> vector, [Norm norm = Norm.euclidean]);
 
   /// Returns a mean value of [this] vector
   double mean();
@@ -64,14 +64,14 @@ abstract class Vector<E> implements Iterable<double> {
   double min();
 
   /// Returns a vector composed of elements which are located on the passed indexes
-  Vector<E> query(Iterable<int> indexes);
+  MLVector<E> query(Iterable<int> indexes);
 
   /// Returns a vector composed of unique vector's elements
-  Vector<E> unique();
+  MLVector<E> unique();
 
   /// Applies mapper function throughout simd list
-  Vector<E> vectorizedMap(E mapper(E element));
+  MLVector<E> vectorizedMap(E mapper(E element));
 
   /// cuts out a part of the vector
-  Vector<E> subvector(int start, [int end]);
+  MLVector<E> subvector(int start, [int end]);
 }

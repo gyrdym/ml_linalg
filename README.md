@@ -51,7 +51,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_addition"></a>
 ##### Vectors sum
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -62,7 +62,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_subtraction"></a>
 ##### Vector subtraction
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([4.0, 5.0, 6.0, 7.0, 8.0]);
   final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 2.0, 3.0, 2.0]);
@@ -72,7 +72,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_element_wise_mult"></a>
 ##### Element wise vector by vector multiplication
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -83,7 +83,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_element_wise_div"></a>
 ##### Element wise vector by vector division
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([6.0, 12.0, 24.0, 48.0, 96.0]);
   final vector2 = Float32x4VectorFactory.from([3.0, 4.0, 6.0, 8.0, 12.0]);
@@ -94,7 +94,7 @@ At the present moment most common vector operations are implemented:
 <a name="euclidean_norm"></a>
 ##### Euclidean norm
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.norm();
@@ -104,7 +104,7 @@ At the present moment most common vector operations are implemented:
 <a name="manhattan_norm"></a>
 ##### Manhattan norm
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.norm(Norm.manhattan);
@@ -114,7 +114,7 @@ At the present moment most common vector operations are implemented:
 <a name="mean_value"></a>
 ##### Mean value
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:linalg/ml_linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.mean();
@@ -124,7 +124,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_sum"></a>
 ##### Sum of all vector elements
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.sum();
@@ -134,7 +134,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_dot_product"></a>
 ##### Dot product of two vectors
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -145,7 +145,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_scalar_add"></a>
 ##### Sum of a vector and a scalar
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:linalg/ml_linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
@@ -156,7 +156,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_scalar_sub"></a>
 ##### Subtraction of a scalar from a vector
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
@@ -167,7 +167,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_scalar_mul"></a>
 ##### Multiplication (scaling) of a vector by a scalar
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
@@ -178,7 +178,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_scalar_div"></a>
 ##### Division (scaling) of a vector by a scalar value
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([25.0, 50.0, 75.0, 100.0, 125.0]);
   final scalar = 5.0;
@@ -189,7 +189,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_euclidean_dist"></a>
 ##### Euclidean distance between two vectors
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -200,7 +200,7 @@ At the present moment most common vector operations are implemented:
 <a name="vector_manhattan_dist"></a>
 ##### Manhattan distance between two vectors
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -256,7 +256,7 @@ print(matrix + 7);
 <a name="matrix_vector_mul"></a>
 ##### Multiplication of a matrix and a vector
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:linalg/ml_linalg.dart';
 
   final matrix = Float32x4Matrix.from([
     [1.0, 2.0, 3.0, 4.0],
@@ -276,7 +276,7 @@ print(matrix + 7);
 <a name="matrix_matrix_mul"></a>
 ##### Multiplication of a matrix and another matrix
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final matrix1 = Float32x4Matrix.from([
     [1.0, 2.0, 3.0, 4.0],
@@ -338,7 +338,7 @@ print(matrix * 3);
 <a name="matrix_transpose"></a>
 ##### Matrix transposition
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
   
   final matrix = Float32x4Matrix.from([
     [1.0, 2.0, 3.0, 4.0],
@@ -358,7 +358,7 @@ print(matrix * 3);
 <a name="matrix_row_reduce"></a>
 ##### Matrix row wise reduce
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final matrix = Float32x4MatrixFactory.from([
     [1.0, 2.0, 3.0, 4.0],
@@ -371,7 +371,7 @@ print(matrix * 3);
 <a name="matrix_col_reduce"></a>
 ##### Matrix column wise reduce
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final matrix = Float32x4Matrix.from([
     [11.0, 12.0, 13.0, 14.0],
@@ -385,7 +385,7 @@ print(matrix * 3);
 <a name="matrix_submatrix"></a>
 ##### Submatrix (taking a lower dimension matrix of the current matrix)
 ````Dart
-  import 'package:linalg/linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final matrix = Float32x4Matrix.from([
     [11.0, 12.0, 13.0, 14.0],
