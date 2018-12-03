@@ -1,5 +1,5 @@
-name: linalg
-description: Linear algebra with dart
+name: ml_linalg
+description: SIMD-based linear algebra with dart for machine learning purposes
 version: 1.0.0
 author: Ilia Gyrdymov <ilgyrd@gmail.com>
 

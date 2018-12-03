@@ -3,11 +3,11 @@ import 'dart:core';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:linalg/norm.dart';
-import 'package:linalg/src/vector/float32_mixin.dart';
-import 'package:linalg/src/vector/float32x4_data_store_mixin.dart';
-import 'package:linalg/src/vector/float32x4_mixin.dart';
-import 'package:linalg/vector.dart';
+import 'package:ml_linalg/norm.dart';
+import 'package:ml_linalg/src/vector/float32_mixin.dart';
+import 'package:ml_linalg/src/vector/float32x4_data_store_mixin.dart';
+import 'package:ml_linalg/src/vector/float32x4_mixin.dart';
+import 'package:ml_linalg/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
 ///
@@ -25,7 +25,7 @@ class Float32x4Vector extends Object with
     Float32x4Mixin,
     Float32Mixin,
     Float32x4DataStoreMixin implements
-        Vector<Float32x4> {
+        MLVector<Float32x4> {
 
   /// Creates a vector with both empty simd and typed inner lists
   Float32x4Vector(int length) {
