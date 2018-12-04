@@ -33,23 +33,19 @@
         - [Matrix column wise reduce](#matrix_col_reduce)
         - [Submatrix](#matrix_submatrix)
 
-<a name="vectors"></a>
-### Vectors
+### <a name="vectors"></a>Vectors
 
-<a name="vectors_introduction"></a>
-#### A couple of words about the underlying vector architecture
+#### <a name="vectors_introduction"></a>A couple of words about the underlying vector architecture
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
 computation architecture, so this library presents a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart). 
 However, you cannot use it directly in your project. To create an instance of the vector, just import [Float32x4VectorFactory](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector_factory.dart)
 and instantiate a vector via the factory. Most of operations in the vector are performed in four "threads". This kind 
 of concurrency is reached by special 128-bit processor registers, which are used directly by program code.  For better understanding of the topic please read the [article](https://www.dartlang.org/articles/dart-vm/simd).
 
-<a name="vector_operations_examples"></a>
-#### Vector operations examples
+#### <a name="vector_operations_examples"></a>Vector operations examples
 At the present moment most common vector operations are implemented:
 
-<a name="vector_addition"></a>
-##### Vectors sum
+##### <a name="vector_addition"></a>Vectors sum
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -59,8 +55,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
-<a name="vector_subtraction"></a>
-##### Vector subtraction
+##### <a name="vector_subtraction"></a>Vector subtraction
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -69,8 +64,8 @@ At the present moment most common vector operations are implemented:
   final result = vector1 - vector2;
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
-<a name="vector_element_wise_mult"></a>
-##### Element wise vector by vector multiplication
+
+##### <a name="vector_element_wise_mult"></a>Element wise vector by vector multiplication
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -80,8 +75,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
-<a name="vector_element_wise_div"></a>
-##### Element wise vector by vector division
+##### <a name="vector_element_wise_div"></a>Element wise vector by vector division
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -91,8 +85,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
 ````
 
-<a name="euclidean_norm"></a>
-##### Euclidean norm
+##### <a name="euclidean_norm"></a>Euclidean norm
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -101,8 +94,7 @@ At the present moment most common vector operations are implemented:
   print(result); // sqrt(2^2 + 3^2 + 4^2 + 5^2 + 6^2) = sqrt(90) ~~ 9.48
 ````
 
-<a name="manhattan_norm"></a>
-##### Manhattan norm
+##### <a name="manhattan_norm"></a>Manhattan norm
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -121,8 +113,7 @@ At the present moment most common vector operations are implemented:
   print(result); // (2 + 3 + 4 + 5 + 6) / 5 = 4.0
 ````
 
-<a name="vector_sum"></a>
-##### Sum of all vector elements
+##### <a name="vector_sum"></a>Sum of all vector elements
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -131,8 +122,7 @@ At the present moment most common vector operations are implemented:
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0 (equivalent to Manhattan norm)
 ````
 
-<a name="vector_dot_product"></a>
-##### Dot product of two vectors
+##### <a name="vector_dot_product"></a>Dot product of two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -142,8 +132,7 @@ At the present moment most common vector operations are implemented:
   print(result); // 1.0 * 2.0 + 2.0 * 3.0 + 3.0 * 4.0 + 4.0 * 5.0 + 5.0 * 6.0 = 70.0
 ````
 
-<a name="vector_scalar_add"></a>
-##### Sum of a vector and a scalar
+##### <a name="vector_scalar_add"></a>Sum of a vector and a scalar
 ````Dart
   import 'package:linalg/ml_linalg.dart';
 
@@ -153,8 +142,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [6.0, 7.0, 8.0, 9.0, 10.0]
 ````
 
-<a name="vector_scalar_sub"></a>
-##### Subtraction of a scalar from a vector
+##### <a name="vector_scalar_sub"></a>Subtraction of a scalar from a vector
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -164,8 +152,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [-4.0, -3.0, -2.0, -1.0, 0.0]
 ````
 
-<a name="vector_scalar_mul"></a>
-##### Multiplication (scaling) of a vector by a scalar
+##### <a name="vector_scalar_mul"></a>Multiplication (scaling) of a vector by a scalar
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -175,8 +162,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
-<a name="vector_scalar_div"></a>
-##### Division (scaling) of a vector by a scalar value
+##### <a name="vector_scalar_div"></a>Division (scaling) of a vector by a scalar value
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -186,8 +172,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
-<a name="vector_euclidean_dist"></a>
-##### Euclidean distance between two vectors
+##### <a name="vector_euclidean_dist"></a>Euclidean distance between two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -197,8 +182,7 @@ At the present moment most common vector operations are implemented:
   print(result); // ~~2.23
 ````
 
-<a name="vector_manhattan_dist"></a>
-##### Manhattan distance between two vectors
+##### <a name="vector_manhattan_dist"></a>Manhattan distance between two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -208,17 +192,16 @@ At the present moment most common vector operations are implemented:
   print(result); // 5.0
 ````
 
-<a name="matrices"></a>
-### Matrices
+### <a name="matrices"></a>Matrices
 
 Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vector types.
 
-<a name="matrix_operations_examples"></a>
-#### Matrix operations examples
+#### <a name="matrix_operations_examples"></a>Matrix operations examples
 
-<a name="matrix_matrix_add"></a>
-##### Sum of a matrix and another matrix
+##### <a name="matrix_matrix_add"></a>Sum of a matrix and another matrix
 ````Dart
+import 'package:ml_linalg/linalg.dart';
+
 final matrix1 = Float32x4Matrix.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
@@ -237,9 +220,10 @@ print(matrix1 + matrix2);
 // ];
 ````
 
-<a name="matrix_scalar_add"></a>
-##### Sum of a matrix and a scalar
+##### <a name="matrix_scalar_add"></a>Sum of a matrix and a scalar
 ````Dart
+import 'package:ml_linalg/linalg.dart';
+
 final matrix = Float32x4Matrix.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
@@ -253,10 +237,9 @@ print(matrix + 7);
 //  ];
 ````
 
-<a name="matrix_vector_mul"></a>
-##### Multiplication of a matrix and a vector
+##### <a name="matrix_vector_mul"></a>Multiplication of a matrix and a vector
 ````Dart
-  import 'package:linalg/ml_linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final matrix = Float32x4Matrix.from([
     [1.0, 2.0, 3.0, 4.0],
@@ -273,8 +256,7 @@ print(matrix + 7);
   //]
 ````
 
-<a name="matrix_matrix_mul"></a>
-##### Multiplication of a matrix and another matrix
+##### <a name="matrix_matrix_mul"></a>Multiplication of a matrix and another matrix
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -298,9 +280,10 @@ print(matrix + 7);
   //]
 ````
 
-<a name="matrix_scalar_mul"></a>
-##### Multiplication of a matrix and a scalar
+##### <a name="matrix_scalar_mul"></a>Multiplication of a matrix and a scalar
 ````Dart
+import 'package:ml_linalg/linalg.dart';
+
 final matrix = Float32x4Matrix.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
@@ -314,29 +297,29 @@ print(matrix * 3);
 // ];
 ````
 
-<a name="matrix_matrix_sub"></a>
-##### Element wise matrices subtraction
+##### <a name="matrix_matrix_sub"></a>Element wise matrices subtraction
 ````Dart
-  final matrix1 = Float32x4Matrix.from([
-    [1.0, 2.0, 3.0, 4.0],
-    [5.0, 6.0, 7.0, 8.0],
-    [9.0, .0, -2.0, -3.0],
-  ]);
-  final matrix2 = Float32x4Matrix.from([
-    [10.0, 20.0, 30.0, 40.0],
-    [-5.0, 16.0, 2.0, 18.0],
-    [2.0, -1.0, -2.0, -7.0],
-  ]);
-  print(matrix1 - matrix2);
-  // [
-  //   [-9.0, -18.0, -27.0, -36.0],
-  //   [10.0, -10.0, 5.0, -10.0],
-  //   [7.0, 1.0, .0, 4.0],
-  // ];
+import 'package:ml_linalg/linalg.dart';
+
+final matrix1 = Float32x4Matrix.from([
+  [1.0, 2.0, 3.0, 4.0],
+  [5.0, 6.0, 7.0, 8.0],
+  [9.0, .0, -2.0, -3.0],
+]);
+final matrix2 = Float32x4Matrix.from([
+  [10.0, 20.0, 30.0, 40.0],
+  [-5.0, 16.0, 2.0, 18.0],
+  [2.0, -1.0, -2.0, -7.0],
+]);
+print(matrix1 - matrix2);
+// [
+//   [-9.0, -18.0, -27.0, -36.0],
+//   [10.0, -10.0, 5.0, -10.0],
+//   [7.0, 1.0, .0, 4.0],
+// ];
 ````
 
-<a name="matrix_transpose"></a>
-##### Matrix transposition
+##### <a name="matrix_transpose"></a>Matrix transposition
 ````Dart
   import 'package:ml_linalg/linalg.dart';
   
@@ -355,8 +338,7 @@ print(matrix * 3);
   //]
 ````
  
-<a name="matrix_row_reduce"></a>
-##### Matrix row wise reduce
+##### <a name="matrix_row_reduce"></a>Matrix row wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -368,8 +350,7 @@ print(matrix * 3);
   print(reduced); // [6.0, 8.0, 10.0, 12.0]
 ````
 
-<a name="matrix_col_reduce"></a>
-##### Matrix column wise reduce
+##### <a name="matrix_col_reduce"></a>Matrix column wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -382,8 +363,7 @@ print(matrix * 3);
   print(result); // [50, 66, 90]
 ````
 
-<a name="matrix_submatrix"></a>
-##### Submatrix (taking a lower dimension matrix of the current matrix)
+##### <a name="matrix_submatrix"></a>Submatrix (taking a lower dimension matrix of the current matrix)
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
