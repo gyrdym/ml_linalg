@@ -14,4 +14,6 @@ abstract class MLMatrix<E, T extends MLVector<E>> {
   T getRowVector(int index);
   T reduceColumns(T combiner(T combine, T vector), {T initValue});
   T reduceRows(T combiner(T combine, T vector), {T initValue});
+  MLMatrix<E, T> mapColumns(E mapper(E columnElement));
+  MLMatrix<E, T> mapRows(E mapper(E rowElement));
 }

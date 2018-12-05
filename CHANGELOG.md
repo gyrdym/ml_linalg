@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.0
+- Map functions added to matrix
+
 ## 1.1.0
 - `Float32x4MatrixFactory` extended
 
