@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
@@ -434,6 +436,40 @@ void main() {
         [8.0, 9.0, 10.0, 11.0],
         [12.0, 13.0, 14.0, 15.0],
         [16.0, 7.0, 5.0, 4.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 3);
+      expect(actual.columnsNum, 4);
+    });
+
+    test('should map column wise its elements to a new matrix', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final actual = matrix.mapColumns((Float32x4 element) => element.scale(2.0));
+      final expected = [
+        [2.0, 4.0, 6.0, 8.0],
+        [10.0, 12.0, 14.0, 16.0],
+        [18.0, .0, -4.0, -6.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 3);
+      expect(actual.columnsNum, 4);
+    });
+
+    test('should map row wise its elements to a new matrix', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final actual = matrix.mapRows((Float32x4 element) => element.scale(4.0));
+      final expected = [
+        [4.0, 8.0, 12.0, 16.0],
+        [20.0, 24.0, 28.0, 32.0],
+        [36.0, .0, -8.0, -12.0],
       ];
       expect(actual, equals(expected));
       expect(actual.rowsNum, 3);
