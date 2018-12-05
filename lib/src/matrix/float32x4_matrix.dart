@@ -175,6 +175,18 @@ class Float32x4Matrix extends Object with
   MLVector<Float32x4> reduceRows(MLVector<Float32x4> Function(MLVector<Float32x4> combine, MLVector<Float32x4> vector) combiner,
     {MLVector<Float32x4> initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
 
+  @override
+  MLMatrix<Float32x4, MLVector<Float32x4>> mapColumns(Float32x4 mapper(Float32x4 element)) {
+    final source = List<MLVector<Float32x4>>.generate(columnsNum, (int i) => getColumnVector(i).vectorizedMap(mapper));
+    return Float32x4Matrix.columns(source);
+  }
+
+  @override
+  MLMatrix<Float32x4, MLVector<Float32x4>> mapRows(Float32x4 mapper(Float32x4 element)) {
+    final source = List<MLVector<Float32x4>>.generate(rowsNum, (int i) => getRowVector(i).vectorizedMap(mapper));
+    return Float32x4Matrix.rows(source);
+  }
+
   List<double> _flatten2dimList(Iterable<Iterable<double>> rows, int Function(int i, int j) accessor) {
     int i = 0;
     int j = 0;
