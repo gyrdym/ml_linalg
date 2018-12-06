@@ -81,28 +81,28 @@ void dot() {
 void scalarAddition() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
-  final result = vector1.scalarAdd(scalar);
+  final result = vector1 + scalar;
   print(result); // [6.0, 7.0, 8.0, 9.0, 10.0]
 }
 
 void scalarSubtraction() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
-  final result = vector1.scalarSub(scalar);
+  final result = vector1 / scalar;
   print(result); // [-4.0, -3.0, -2.0, -1.0, 0.0]
 }
 
 void scalarMultiplication() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
-  final result = vector1.scalarMul(scalar);
+  final result = vector1 * scalar;
   print(result); // [5.0, 10.0, 15.0, 20.0, 25.0]
 }
 
 void scalarDivision() {
   final vector1 = Float32x4Vector.from([25.0, 50.0, 75.0, 100.0, 125.0]);
   final scalar = 5.0;
-  final result = vector1.scalarDiv(scalar);
+  final result = vector1 / scalar;
   print(result); // [5.0, 10.0, 15.0, 20.0, 25.0]
 }
 
