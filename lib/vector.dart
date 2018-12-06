@@ -15,26 +15,10 @@ abstract class MLVector<E> implements Iterable<double> {
   MLVector<E> operator *(Object value);
 
   /// Element-wise division
-  MLVector<E> operator /(MLVector<E> value);
+  MLVector<E> operator /(Object value);
 
   /// Creates a new [MLVector] containing elements of this [MLVector] raised to the integer [power]
   MLVector<E> toIntegerPower(int power);
-
-  @deprecated
-  /// Performs a vector and a scalar multiplication (each component of a vector is multiplied by [value])
-  MLVector<E> scalarMul(double value);
-
-  @deprecated
-  /// Performs a division of a vector by a scalar (each component of a vector is divided by [value])
-  MLVector<E> scalarDiv(double value);
-
-  @deprecated
-  /// Performs a vector and a scalar addition ([value] is added to each component of a vector)
-  MLVector<E> scalarAdd(double value);
-
-  @deprecated
-  /// Performs subtraction of a vector and a scalar ([value] is subtracted from an each component of a vector )
-  MLVector<E> scalarSub(double value);
 
   /// Returns a vector with absolute value of each vector element
   MLVector<E> abs();
