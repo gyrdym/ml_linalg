@@ -155,14 +155,14 @@ void main() {
     });
 
     test('Scalar division', () {
-      final result = vector1.scalarDiv(2.0);
+      final result = vector1 / 2.0;
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
       expect(result, equals([0.5, 1.0, 1.5, 2.0, 2.5]));
     });
 
     test('Scalar addition', () {
-      final result = vector1.scalarAdd(13.0);
+      final result = vector1 + 13.0;
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
       expect(result, equals([14.0, 15.0, 16.0, 17.0, 18.0]));

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.0
+- `MLVectorMixin` added, benchmark directory reorganized 
+
 ## 1.2.0
 - Map functions added to matrix
 
