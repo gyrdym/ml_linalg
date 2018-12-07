@@ -4,6 +4,7 @@ import 'package:ml_linalg/src/matrix/float32/float32x4_matrix.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 import 'package:ml_linalg/vector.dart';
+import 'package:ml_linalg/vector_type.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -293,7 +294,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0]);
+      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0], MLVectorType.column);
       final actual = matrix * vector;
       final expected = [
         [40],
@@ -305,13 +306,23 @@ void main() {
       expect(actual.columnsNum, 1);
     });
 
-    test('should throw an error if one tries to mult a matrix with a vector of unproper length', () {
+    test('should throw an error if one tries to multile by a row vector', () {
       final matrix = Float32x4Matrix.from([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 7.0]);
+      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0], MLVectorType.row);
+      expect(() => matrix * vector, throwsException);
+    });
+
+    test('should throw an error if one tries to multiple by a vector of unproper length', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 7.0], MLVectorType.column);
       expect(() => matrix * vector, throwsException);
     });
 
