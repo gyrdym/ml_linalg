@@ -3,14 +3,14 @@ import 'dart:typed_data';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_validatior.dart';
-import 'package:ml_linalg/src/matrix/ml_matrix_cache_service.dart';
+import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_factory.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
 abstract class MLMatrixMixin<S extends List<E>, E>  implements
     Iterable<Iterable<double>>,
-    MLMatrixCacheService<E>,
+    MLMatrixDataStore<E>,
     MLMatrixFactory<E>,
     MLVectorFactory<S, E>,
     MLMatrixValidator<E>,
