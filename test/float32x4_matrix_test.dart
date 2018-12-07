@@ -492,5 +492,36 @@ void main() {
       expect(actual.rowsNum, 3);
       expect(actual.columnsNum, 4);
     });
+
+    test('should convert itself to a vector column', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0],
+        [5.0],
+        [9.0],
+      ]);
+      final actual = matrix.toVector();
+      expect(actual is MLVector<Float32x4>, isTrue);
+      expect(actual.isColumn, true);
+      expect(actual, equals([1.0, 5.0, 9.0]));
+    });
+
+    test('should convert itself to a vector row', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0],
+      ]);
+      final actual = matrix.toVector();
+      expect(actual is MLVector<Float32x4>, isTrue);
+      expect(actual.isRow, true);
+      expect(actual, equals([4.0, 8.0, 12.0, 16.0]));
+    });
+
+    test('should throw an error if one tries to convert it into vector if its dimension is inappropriate', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0],
+        [20.0, 24.0, 28.0, 32.0],
+        [36.0, .0, -8.0, -12.0],
+      ]);
+      expect(() => matrix.toVector(), throwsException);
+    });
   });
 }
