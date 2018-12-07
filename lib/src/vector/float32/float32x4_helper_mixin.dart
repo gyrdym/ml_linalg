@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/src/vector/simd_data_helper.dart';
 
-class Float32x4Mixin implements SIMDDataHelper<Float32x4List, Float32x4> {
+class Float32x4HelperMixin implements SIMDDataHelper<Float32x4List, Float32x4> {
   @override
   final bucketSize = 4;
 
