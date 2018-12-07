@@ -3,12 +3,12 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
-import 'package:ml_linalg/src/matrix/float32_matrix_iterator.dart';
-import 'package:ml_linalg/src/matrix/float32x4_matrix_factory_mixin.dart';
+import 'package:ml_linalg/src/matrix/float32/float32_matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/float32/float32x4_matrix_factory_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_validator_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_cache_service.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_mixin.dart';
-import 'package:ml_linalg/src/vector/float32x4_vector_factory_mixin.dart';
+import 'package:ml_linalg/src/vector/float32/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
 class Float32x4Matrix extends Object with
