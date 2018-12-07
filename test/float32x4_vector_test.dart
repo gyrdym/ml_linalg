@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/vector_type.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -29,6 +30,18 @@ void main() {
         final vector = Float32x4Vector.from(List.filled(1, 2.0));
         expect(vector, equals([2.0]));
         expect(vector.length, 1);
+      });
+
+      test('should create a column vector', () {
+        final vector = Float32x4Vector.from(List.filled(1, 2.0), MLVectorType.column);
+        expect(vector.isColumn, isTrue);
+        expect(vector.isRow, isFalse);
+      });
+
+      test('should create a row vector', () {
+        final vector = Float32x4Vector.from(List.filled(1, 2.0), MLVectorType.row);
+        expect(vector.isRow, isTrue);
+        expect(vector.isColumn, isFalse);
       });
     });
 
