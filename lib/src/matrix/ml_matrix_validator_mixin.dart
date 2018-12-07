@@ -1,6 +1,8 @@
 import 'package:ml_linalg/matrix.dart';
+import 'package:ml_linalg/src/matrix/ml_matrix_validatior.dart';
 
-abstract class MatrixValidationMixin<E> {
+abstract class MLMatrixValidatorMixin<E> implements MLMatrixValidator<E> {
+  @override
   void checkDimensions(MLMatrix<E> first, MLMatrix<E> second,
       {String errorTitle = 'Cannot perform the operation'}) {
     if (first.rowsNum != second.rowsNum || first.columnsNum != second.columnsNum) {
@@ -9,6 +11,7 @@ abstract class MatrixValidationMixin<E> {
     }
   }
 
+  @override
   void checkColumnsAndRowsNumber(MLMatrix<E> first, MLMatrix<E> second,
       {String errorTitle = 'Cannot perform the operation'}) {
     if (first.columnsNum != second.rowsNum) {

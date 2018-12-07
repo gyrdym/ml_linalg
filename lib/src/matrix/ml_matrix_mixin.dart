@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/range.dart';
-import 'package:ml_linalg/src/matrix/matrix_validation_mixin.dart';
+import 'package:ml_linalg/src/matrix/ml_matrix_validatior.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_cache_service.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_factory.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
@@ -13,7 +13,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
     MLMatrixCacheService<E>,
     MLMatrixFactory<E>,
     MLVectorFactory<S, E>,
-    MatrixValidationMixin<E>,
+    MLMatrixValidator<E>,
     MLMatrix<E> {
 
   @override
@@ -62,12 +62,12 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   @override
   MLMatrix<E> transpose() {
     final source = List<MLVector<E>>.generate(rowsNum, getRowVector);
-    return fromColumns(source);
+    return matrixColumns(source);
   }
 
   @override
   MLVector<E> getRowVector(int index) {
-    rowsCache[index] ??= from(this[index]);
+    rowsCache[index] ??= vectorFrom(this[index]);
     return rowsCache[index];
   }
 
@@ -79,7 +79,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
         //@TODO: find a more efficient way to get the single value
         result[i] = _query(i * columnsNum + index, 1)[0];
       }
-      columnsCache[index] = from(result);
+      columnsCache[index] = vectorFrom(result);
     }
     return columnsCache[index];
   }
@@ -96,7 +96,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
     for (int i = rows.start; i < rowEndIdx; i++) {
       matrixSource[i - rows.start] = _query(i * columnsNum + columns.start, columnsLength);
     }
-    return fromIterable(matrixSource);
+    return matrixFrom(matrixSource);
   }
 
   @override
@@ -111,13 +111,13 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   @override
   MLMatrix<E> mapColumns(E mapper(E element)) {
     final source = List<MLVector<E>>.generate(columnsNum, (int i) => getColumnVector(i).vectorizedMap(mapper));
-    return fromColumns(source);
+    return matrixColumns(source);
   }
 
   @override
   MLMatrix<E> mapRows(E mapper(E element)) {
     final source = List<MLVector<E>>.generate(rowsNum, (int i) => getRowVector(i).vectorizedMap(mapper));
-    return fromRows(source);
+    return matrixRows(source);
   }
 
   List<double> flatten2dimList(Iterable<Iterable<double>> rows, int Function(int i, int j) accessor) {
@@ -151,8 +151,8 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
     }
     final generateElementFn = (int i) => vector.dot(getRowVector(i));
     final source = List<double>.generate(rowsNum, generateElementFn);
-    final vectorColumn = from(source);
-    return fromColumns([vectorColumn]);
+    final vectorColumn = vectorFrom(source);
+    return matrixColumns([vectorColumn]);
   }
 
   MLMatrix<E> _matrixMul(MLMatrix<E> matrix) {
@@ -164,7 +164,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
         source[i * matrix.columnsNum + j] = element;
       }
     }
-    return fromFlattenedIterable(source, rowsNum, matrix.columnsNum);
+    return matrixFlattened(source, rowsNum, matrix.columnsNum);
   }
 
   MLMatrix<E> _matrixAdd(MLMatrix<E> matrix) {
@@ -190,14 +190,14 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
       MLVector<E> operation(MLVector<E> first, MLVector<E> second)) {
     final elementGenFn = (int i) => operation(getRowVector(i), matrix.getRowVector(i));
     final source = List<MLVector<E>>.generate(rowsNum, elementGenFn);
-    return fromRows(source);
+    return matrixRows(source);
   }
 
   MLMatrix<E> _matrix2scalarOperation(double scalar,
       MLVector<E> operation(double scalar, MLVector<E> vector)) {
     final elementGenFn = (int i) => operation(scalar, getRowVector(i));
     final source = List<MLVector<E>>.generate(rowsNum, elementGenFn);
-    return fromRows(source);
+    return matrixRows(source);
   }
 
   Float32List _query(int index, int length) =>

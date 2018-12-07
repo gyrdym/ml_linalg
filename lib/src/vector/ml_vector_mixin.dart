@@ -137,7 +137,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (final idx in indexes) {
       list[i++] = this[idx];
     }
-    return from(list);
+    return vectorFrom(list);
   }
 
   @override
@@ -149,7 +149,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
         unique.add(el);
       }
     }
-    return from(unique);
+    return vectorFrom(unique);
   }
 
   @override
@@ -167,7 +167,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   MLVector<E> subvector(int start, [int end]) {
     final collection = bufferAsTypedList(
         (data as TypedData).buffer, start, (end > length ? length : end) - start);
-    return from(collection);
+    return vectorFrom(collection);
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
@@ -224,7 +224,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], scalar);
     }
-    return fromSIMDList(list, length);
+    return vectorFromSIMDList(list, length);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
@@ -233,7 +233,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], simdVal);
     }
-    return fromSIMDList(list, length);
+    return vectorFromSIMDList(list, length);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
@@ -243,7 +243,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], (vector as DataStore<S, E>).data[i]);
     }
-    return fromSIMDList(list, length);
+    return vectorFromSIMDList(list, length);
   }
 
   MLVector<E> _elementWiseSelfOperation(E operation(E element)) {
@@ -251,7 +251,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i]);
     }
-    return fromSIMDList(list, length);
+    return vectorFromSIMDList(list, length);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
@@ -260,7 +260,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = _simdToIntPow(data[i], exp);
     }
-    return fromSIMDList(list, length);
+    return vectorFromSIMDList(list, length);
   }
 
   RangeError _mismatchLengthError() => RangeError('Vectors length must be equal');
