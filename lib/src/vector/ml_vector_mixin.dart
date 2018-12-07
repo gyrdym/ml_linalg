@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:ml_linalg/norm.dart';
-import 'package:ml_linalg/src/vector/data_store.dart';
+import 'package:ml_linalg/src/vector/ml_vector_data_store.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
 import 'package:ml_linalg/src/vector/simd_data_helper.dart';
 import 'package:ml_linalg/src/vector/typed_data_helper.dart';
@@ -13,7 +13,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     IterableMixin<double>,
     SIMDDataHelper<S, E>,
     TypedDataHelper<T>,
-    DataStore<S, E>,
+    MLVectorDataStore<S, E>,
     MLVectorFactory<S, E>,
     MLVector<E> {
 
@@ -241,7 +241,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     if (vector.length != length) throw _mismatchLengthError();
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i], (vector as DataStore<S, E>).data[i]);
+      list[i] = operation(data[i], (vector as MLVectorDataStore<S, E>).data[i]);
     }
     return vectorFromSIMDList(list, length);
   }
