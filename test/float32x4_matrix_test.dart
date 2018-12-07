@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32/float32x4_matrix.dart';
 import 'package:ml_linalg/range.dart';
-import 'package:ml_linalg/src/vector/float32x4_vector.dart';
+import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 

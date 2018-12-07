@@ -3,10 +3,10 @@ import 'dart:core';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/float32_mixin.dart';
-import 'package:ml_linalg/src/vector/float32x4_data_store_mixin.dart';
-import 'package:ml_linalg/src/vector/float32x4_mixin.dart';
-import 'package:ml_linalg/src/vector/float32x4_vector_factory_mixin.dart';
+import 'package:ml_linalg/src/vector/float32/float32_mixin.dart';
+import 'package:ml_linalg/src/vector/float32/float32x4_data_store_mixin.dart';
+import 'package:ml_linalg/src/vector/float32/float32x4_mixin.dart';
+import 'package:ml_linalg/src/vector/float32/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/src/vector/ml_vector_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
