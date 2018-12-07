@@ -1,4 +1,4 @@
-import 'dart:typed_data' show ByteBuffer, ByteData;
+import 'dart:typed_data' show ByteBuffer;
 
 abstract class TypedDataHelper<T extends List<double>> {
   /// returns a typed list with
