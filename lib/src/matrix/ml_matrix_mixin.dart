@@ -7,6 +7,7 @@ import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_factory.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
+import 'package:ml_linalg/vector_type.dart';
 
 abstract class MLMatrixMixin<S extends List<E>, E>  implements
     Iterable<Iterable<double>>,
@@ -44,8 +45,6 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   @override
   MLMatrix<E> operator *(Object value) {
     if (value is MLVector<E>) {
-      // by default any passed vector is considered column-vector, so its dimension must be equal to the matrix columns
-      // number
       return _matrixVectorMul(value);
     } else if (value is MLMatrix<E>) {
       return _matrixMul(value);
@@ -67,7 +66,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
 
   @override
   MLVector<E> getRowVector(int index) {
-    rowsCache[index] ??= vectorFrom(this[index]);
+    rowsCache[index] ??= vectorFrom(this[index], MLVectorType.row);
     return rowsCache[index];
   }
 
@@ -79,7 +78,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
         //@TODO: find a more efficient way to get the single value
         result[i] = _query(i * columnsNum + index, 1)[0];
       }
-      columnsCache[index] = vectorFrom(result);
+      columnsCache[index] = vectorFrom(result, MLVectorType.column);
     }
     return columnsCache[index];
   }
@@ -135,6 +134,16 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
     return flattened;
   }
 
+  @override
+  MLVector<E> toVector() {
+    if (columnsNum == 1) {
+      return getColumnVector(0);
+    } else if (rowsNum == 1) {
+      return getRowVector(0);
+    }
+    throw Exception('Cannot convert a ${rowsNum}x${columnsNum} matrix into a vector');
+  }
+
   MLVector<E> _reduce(MLVector<E> Function(MLVector<E> combine, MLVector<E> vector) combiner,
       int length, MLVector<E> Function(int index) getVector, {MLVector<E> initValue}) {
     var reduced = initValue ?? getVector(0);
@@ -146,6 +155,9 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   }
 
   MLMatrix<E> _matrixVectorMul(MLVector<E> vector) {
+    if (vector.isRow) {
+      throw Exception('Cannot multiple the matrix ${this} by the row vector ${vector}');
+    }
     if (vector.length != columnsNum) {
       throw Exception('The dimension of the vector ${vector} and the columns number of matrix ${this} mismatch');
     }

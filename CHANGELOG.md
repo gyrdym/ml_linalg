@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.0
+- Column and row vectors added
+
 ## 2.0.0
 - Unnecessary generic type argument removed from `MLMatrix` class
 - Matrix logic split into separate mixins 

@@ -8,6 +8,7 @@ import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
 import 'package:ml_linalg/src/vector/simd_data_helper.dart';
 import 'package:ml_linalg/src/vector/typed_data_helper.dart';
 import 'package:ml_linalg/vector.dart';
+import 'package:ml_linalg/vector_type.dart';
 
 abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> implements
     IterableMixin<double>,
@@ -16,6 +17,12 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     MLVectorDataStore<S, E>,
     MLVectorFactory<S, E>,
     MLVector<E> {
+
+  @override
+  bool get isColumn => type == MLVectorType.column;
+
+  @override
+  bool get isRow => type == MLVectorType.row;
 
   S get dataWithoutLastBucket => sublist(data, 0, data.length - 1);
 
