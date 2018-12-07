@@ -4,6 +4,7 @@ import 'package:ml_linalg/src/matrix/float32/float32x4_matrix.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 import 'package:ml_linalg/vector.dart';
+import 'package:ml_linalg/vector_type.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -87,14 +88,16 @@ void main() {
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
       ]);
-      final column1 = matrix.getRowVector(0);
-      final column2 = matrix.getRowVector(1);
+      final row1 = matrix.getRowVector(0);
+      final row2 = matrix.getRowVector(1);
 
-      expect(column1 is MLVector, isTrue);
-      expect(column1, [11.0, 12.0, 13.0, 14.0]);
+      expect(row1 is MLVector, isTrue);
+      expect(row1.isRow, isTrue);
+      expect(row1, [11.0, 12.0, 13.0, 14.0]);
 
-      expect(column2 is MLVector, isTrue);
-      expect(column2, [15.0, 16.0, 17.0, 18.0]);
+      expect(row2 is MLVector, isTrue);
+      expect(row2.isRow, isTrue);
+      expect(row2, [15.0, 16.0, 17.0, 18.0]);
     });
 
     test('should return required column as a vector', () {
@@ -103,22 +106,26 @@ void main() {
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
       ]);
-      final row1 = matrix.getColumnVector(0);
-      final row2 = matrix.getColumnVector(1);
-      final row3 = matrix.getColumnVector(2);
-      final row4 = matrix.getColumnVector(3);
+      final column1 = matrix.getColumnVector(0);
+      final column2 = matrix.getColumnVector(1);
+      final column3 = matrix.getColumnVector(2);
+      final column4 = matrix.getColumnVector(3);
 
-      expect(row1 is MLVector, isTrue);
-      expect(row1, [11.0, 15.0, 21.0]);
+      expect(column1 is MLVector, isTrue);
+      expect(column1.isColumn, isTrue);
+      expect(column1, [11.0, 15.0, 21.0]);
 
-      expect(row2 is MLVector, isTrue);
-      expect(row2, [12.0, 16.0, 22.0]);
+      expect(column2 is MLVector, isTrue);
+      expect(column2.isColumn, isTrue);
+      expect(column2, [12.0, 16.0, 22.0]);
 
-      expect(row3 is MLVector, isTrue);
-      expect(row3, [13.0, 17.0, 23.0]);
+      expect(column3 is MLVector, isTrue);
+      expect(column3.isColumn, isTrue);
+      expect(column3, [13.0, 17.0, 23.0]);
 
-      expect(row4 is MLVector, isTrue);
-      expect(row4, [14.0, 18.0, 24.0]);
+      expect(column4 is MLVector, isTrue);
+      expect(column4.isColumn, isTrue);
+      expect(column4, [14.0, 18.0, 24.0]);
     });
 
     test('should cut out a submatrix with respect to given intervals, rows and columns range ends are excluded', () {
@@ -287,7 +294,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0]);
+      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0], MLVectorType.column);
       final actual = matrix * vector;
       final expected = [
         [40],
@@ -299,13 +306,23 @@ void main() {
       expect(actual.columnsNum, 1);
     });
 
-    test('should throw an error if one tries to mult a matrix with a vector of unproper length', () {
+    test('should throw an error if one tries to multile by a row vector', () {
       final matrix = Float32x4Matrix.from([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 7.0]);
+      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0], MLVectorType.row);
+      expect(() => matrix * vector, throwsException);
+    });
+
+    test('should throw an error if one tries to multiple by a vector of unproper length', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final vector = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 7.0], MLVectorType.column);
       expect(() => matrix * vector, throwsException);
     });
 
@@ -474,6 +491,37 @@ void main() {
       expect(actual, equals(expected));
       expect(actual.rowsNum, 3);
       expect(actual.columnsNum, 4);
+    });
+
+    test('should convert itself to a vector column', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0],
+        [5.0],
+        [9.0],
+      ]);
+      final actual = matrix.toVector();
+      expect(actual is MLVector<Float32x4>, isTrue);
+      expect(actual.isColumn, true);
+      expect(actual, equals([1.0, 5.0, 9.0]));
+    });
+
+    test('should convert itself to a vector row', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0],
+      ]);
+      final actual = matrix.toVector();
+      expect(actual is MLVector<Float32x4>, isTrue);
+      expect(actual.isRow, true);
+      expect(actual, equals([4.0, 8.0, 12.0, 16.0]));
+    });
+
+    test('should throw an error if one tries to convert it into vector if its dimension is inappropriate', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0],
+        [20.0, 24.0, 28.0, 32.0],
+        [36.0, .0, -8.0, -12.0],
+      ]);
+      expect(() => matrix.toVector(), throwsException);
     });
   });
 }
