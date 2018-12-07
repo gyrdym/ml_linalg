@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32/float32x4_matrix.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/vector.dart';
 
