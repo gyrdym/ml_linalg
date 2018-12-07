@@ -6,8 +6,9 @@ import 'package:ml_linalg/vector.dart';
 
 abstract class Float32x4VectorFactoryMixin implements MLVectorFactory<Float32x4List, Float32x4> {
   @override
-  MLVector<Float32x4> from(Iterable<double> source) => Float32x4Vector.from(source);
+  MLVector<Float32x4> vectorFrom(Iterable<double> source) => Float32x4Vector.from(source);
 
   @override
-  MLVector<Float32x4> fromSIMDList(Float32x4List source, [int length]) => Float32x4Vector.fromSIMDList(source, length);
+  MLVector<Float32x4> vectorFromSIMDList(Float32x4List source, [int length]) =>
+      Float32x4Vector.fromSIMDList(source, length);
 }
