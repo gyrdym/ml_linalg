@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/vector/ml_vector_data_store.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
@@ -36,7 +37,13 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   @override
   MLVector<E> operator +(Object value) {
     if (value is MLVector<E>) {
-      return _elementWiseVectorOperation(value, simdSum);
+      return _elementWiseVectorOperation(value, simdSum, type);
+    } else if (value is MLMatrix<E>) {
+      final other = value.toVector();
+      if (other.type != type) {
+        throw Exception('Cannot sum matrix $value from vector $this');
+      }
+      return _elementWiseVectorOperation(other, simdSum, type);
     } else if (value is num) {
       return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSum);
     }
@@ -46,7 +53,13 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   @override
   MLVector<E> operator -(Object value) {
     if (value is MLVector<E>) {
-      return _elementWiseVectorOperation(value, simdSub);
+      return _elementWiseVectorOperation(value, simdSub, type);
+    } else if (value is MLMatrix<E>) {
+      final other = value.toVector();
+      if (other.type != type) {
+        throw Exception('Cannot subtract matrix $value from vector $this');
+      }
+      return _elementWiseVectorOperation(other, simdSub, type);
     } else if (value is num) {
       return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSub);
     }
@@ -57,6 +70,8 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   MLVector<E> operator *(Object value) {
     if (value is MLVector<E>) {
       return _elementWiseVectorOperation(value, simdMul);
+    } else if (value is MLMatrix<E>) {
+      return _matrixMul(value);
     } else if (value is num) {
       return _elementWiseFloatScalarOperation(value.toDouble(), simdScale);
     }
@@ -244,13 +259,14 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
-  MLVector<E> _elementWiseVectorOperation(MLVector<E> vector, E operation(E a, E b)) {
+  MLVector<E> _elementWiseVectorOperation(MLVector<E> vector, E operation(E a, E b),
+      [MLVectorType direction = MLVectorType.column]) {
     if (vector.length != length) throw _mismatchLengthError();
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], (vector as MLVectorDataStore<S, E>).data[i]);
     }
-    return vectorFromSIMDList(list, length);
+    return vectorFromSIMDList(list, length, direction);
   }
 
   MLVector<E> _elementWiseSelfOperation(E operation(E element)) {
@@ -268,6 +284,18 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
       list[i] = _simdToIntPow(data[i], exp);
     }
     return vectorFromSIMDList(list, length);
+  }
+
+  MLVector<E> _matrixMul(MLMatrix<E> matrix) {
+    if (isColumn) {
+      throw Exception('Multiplication by matrix is not defined for column vector');
+    }
+    if (length != matrix.rowsNum) {
+      throw Exception('Multiplication by a matrix with diffrent number of rows than the vector length is not allowed:'
+          'vector length: $length, matrix row number: ${matrix.rowsNum}');
+    }
+    final source = List<double>.generate(matrix.columnsNum, (int i) => dot(matrix.getColumnVector(i)));
+    return vectorFrom(source, MLVectorType.row);
   }
 
   RangeError _mismatchLengthError() => RangeError('Vectors length must be equal');
