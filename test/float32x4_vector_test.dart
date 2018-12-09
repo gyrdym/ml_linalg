@@ -302,14 +302,18 @@ void main() {
       expect(actual, throwsException);
     });
 
-    test('Division', () {
-      final result = vector1 / vector2;
-      expect(result, equals([1.0, 1.0, 1.0, 1.0, 1.0]));
-      expect(result.length, equals(5));
+    test('should perform division by another vector', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector1 / vector2;
+      expect(actual, equals([1.0, 1.0, 1.0, 1.0, 1.0]));
+      expect(actual.length, equals(5));
+    });
 
-      final vector3 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector4 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector3 / vector4, throwsRangeError);
+    test('should throw an error if one tries to divide it by a vector of different length', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      expect(() => vector1 / vector2, throwsRangeError);
     });
 
     test('Power', () {
