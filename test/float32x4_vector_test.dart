@@ -63,6 +63,24 @@ void main() {
         expect(vector, equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
         expect(vector.length, equals(10));
       });
+
+      test('should create a column vector', () {
+        final vector = Float32x4Vector.fromSIMDList(typedList, 10, MLVectorType.column);
+        expect(vector.isColumn, isTrue);
+        expect(vector.isRow, isFalse);
+      });
+
+      test('should create a row vector', () {
+        final vector = Float32x4Vector.fromSIMDList(typedList, 10, MLVectorType.row);
+        expect(vector.isRow, isTrue);
+        expect(vector.isColumn, isFalse);
+      });
+
+      test('should create a column vector if there is no `length` argument', () {
+        final vector = Float32x4Vector.fromSIMDList(typedList, null, MLVectorType.column);
+        expect(vector.isRow, isFalse);
+        expect(vector.isColumn, isTrue);
+      });
     });
 
     group('`filled` constructor', () {
@@ -70,6 +88,18 @@ void main() {
         final vector = Float32x4Vector.filled(10, 2.0);
         expect(vector, equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
         expect(vector.length, equals(10));
+      });
+
+      test('should create a column vector', () {
+        final vector = Float32x4Vector.filled(10, 2.0, MLVectorType.column);
+        expect(vector.isColumn, isTrue);
+        expect(vector.isRow, isFalse);
+      });
+
+      test('should create a row vector', () {
+        final vector = Float32x4Vector.filled(10, 3.0, MLVectorType.row);
+        expect(vector.isRow, isTrue);
+        expect(vector.isColumn, isFalse);
       });
     });
 
@@ -91,10 +121,22 @@ void main() {
         expect(vector, equals([0.0, 0.0]));
         expect(vector.length, equals(2));
       });
+
+      test('should create a column vector', () {
+        final vector = Float32x4Vector.zero(10, MLVectorType.column);
+        expect(vector.isColumn, isTrue);
+        expect(vector.isRow, isFalse);
+      });
+
+      test('should create a row vector', () {
+        final vector = Float32x4Vector.zero(10, MLVectorType.row);
+        expect(vector.isRow, isTrue);
+        expect(vector.isColumn, isFalse);
+      });
     });
   });
 
-  group('Float32x4Vector operations.', () {
+  group('Float32x4Vector', () {
     Float32x4Vector vector1;
     Float32x4Vector vector2;
 
@@ -108,44 +150,170 @@ void main() {
       vector2 = null;
     });
 
-    test('Addition', () {
-      final result = vector1 + vector2;
-      expect(result, equals([2.0, 4.0, 6.0, 8.0, 10.0]));
-      expect(result.length, equals(5));
-
-      final vector3 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector4 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector3 + vector4, throwsRangeError);
+    test('should perform addition of another vector', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector1 + vector2;
+      final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
+      expect(actual, equals(expected));
+      expect(actual.length, equals(5));
     });
 
-    test('Subtraction', () {
+    test('should throw an exception if one tries to sum vectors of different lengths', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      expect(() => vector1 + vector2, throwsRangeError);
+    });
+
+    test('should perform addition of a column matrix', () {
+      final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final matrix = Float32x4MatrixFactory.from([
+        [1.0],
+        [2.0],
+        [3.0],
+        [4.0],
+        [5.0],
+      ]);
+      final actual = vector + matrix;
+      final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
+      expect(actual, equals(expected));
+      expect(actual.isColumn, isTrue);
+      expect(actual.length, equals(5));
+    });
+
+    test('should perform addition of a rows matrix', () {
+      final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], MLVectorType.row);
+      final matrix = Float32x4MatrixFactory.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+      final actual = vector + matrix;
+      final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
+      expect(actual, equals(expected));
+      expect(actual.isRow, isTrue);
+      expect(actual.length, equals(5));
+    });
+
+    test('should throw an exception if one tries to add a matrix of inappropriate dimension', () {
+      final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], MLVectorType.column);
+      final matrix = Float32x4MatrixFactory.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+      final actual = () => vector + matrix;
+      expect(actual, throwsException);
+    });
+
+    test('should perform a subtraction of another vector', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final result = vector1 - vector2;
       expect(result, equals([0.0, 0.0, 0.0, 0.0, 0.0]));
       expect(result.length, equals(5));
-
-      final vector3 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector4 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector3 - vector4, throwsRangeError);
     });
 
-    test('Multiplication', () {
-      final result = vector1 * vector2;
-      expect(result, equals([1.0, 4.0, 9.0, 16.0, 25.0]));
-      expect(result.length, equals(5));
-
-      final vector3 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector4 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector3 * vector4, throwsRangeError);
+    test('should throw an exception if one tries to subtract a vector of different length', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      expect(() => vector1 - vector2, throwsRangeError);
     });
 
-    test('Division', () {
-      final result = vector1 / vector2;
-      expect(result, equals([1.0, 1.0, 1.0, 1.0, 1.0]));
-      expect(result.length, equals(5));
+    test('should perform subtraction of a column matrix', () {
+      final vector = Float32x4Vector.from([2.0, 6.0, 12.0, 15.0, 18.0], MLVectorType.column);
+      final matrix = Float32x4MatrixFactory.from([
+        [1.0],
+        [2.0],
+        [3.0],
+        [4.0],
+        [5.0],
+      ]);
+      final actual = vector - matrix;
+      final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
+      expect(actual, equals(expected));
+      expect(actual.isColumn, isTrue);
+      expect(actual.length, equals(5));
+    });
 
-      final vector3 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector4 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector3 / vector4, throwsRangeError);
+    test('should perform subtraction of a row matrix', () {
+      final vector = Float32x4Vector.from([2.0, 6.0, 12.0, 15.0, 18.0], MLVectorType.row);
+      final matrix = Float32x4MatrixFactory.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+      final actual = vector - matrix;
+      final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
+      expect(actual, equals(expected));
+      expect(actual.isRow, isTrue);
+      expect(actual.length, equals(5));
+    });
+
+    test('should perform subtraction of a row matrix', () {
+      final vector = Float32x4Vector.from([2.0, 6.0, 12.0, 15.0, 18.0], MLVectorType.row);
+      final matrix = Float32x4MatrixFactory.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+      final actual = vector - matrix;
+      final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
+      expect(actual, equals(expected));
+      expect(actual.isRow, isTrue);
+      expect(actual.length, equals(5));
+    });
+
+    test('should throw an exception if one tries to subtract a matrix of inappropriate dimension', () {
+      final vector = Float32x4Vector.from([2.0, 6.0, 12.0, 15.0, 18.0], MLVectorType.column);
+      final matrix = Float32x4MatrixFactory.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+      final actual = () => vector - matrix;
+      expect(actual, throwsException);
+    });
+
+    test('should perform multiplication by another vector', () {
+      final actual = vector1 * vector2;
+      expect(actual, equals([1.0, 4.0, 9.0, 16.0, 25.0]));
+      expect(actual.length, equals(5));
+    });
+
+    test('should throw an error if one tries to multiple by a vector of different length', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      expect(() => vector1 * vector2, throwsRangeError);
+    });
+
+    test('should perform multiplication by a matrix', () {
+      final vector = Float32x4Vector.from([1.0, 2.0, 3.0], MLVectorType.row);
+      final matrix = Float32x4MatrixFactory.from([
+        [2.0, 3.0],
+        [4.0, 5.0],
+        [6.0, 7.0],
+      ]);
+      final actual = vector * matrix;
+      final expected = [28.0, 34.0];
+      expect(actual, equals(expected));
+      expect(actual.isRow, isTrue);
+      expect(actual.length, equals(2));
+    });
+
+    test('should throw an exception if one tries to multiple by an inappropriate matrix', () {
+      final vector = Float32x4Vector.from([1.0, 2.0, 3.0], MLVectorType.row);
+      final matrix = Float32x4MatrixFactory.from([
+        [2.0, 3.0],
+        [4.0, 5.0],
+      ]);
+      final actual = () => vector * matrix;
+      expect(actual, throwsException, reason: 'the matrix has different row number than the vector');
+    });
+
+    test('should throw an exception if it is a column vector and it is being multiplied by a matrix', () {
+      final vector = Float32x4Vector.from([1.0, 2.0, 3.0], MLVectorType.column);
+      final matrix = Float32x4MatrixFactory.from([
+        [2.0, 3.0],
+        [4.0, 5.0],
+        [14.0, 15.0],
+      ]);
+      final actual = () => vector * matrix;
+      expect(actual, throwsException);
+    });
+
+    test('should perform division by another vector', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector1 / vector2;
+      expect(actual, equals([1.0, 1.0, 1.0, 1.0, 1.0]));
+      expect(actual.length, equals(5));
+    });
+
+    test('should throw an error if one tries to divide it by a vector of different length', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      expect(() => vector1 / vector2, throwsRangeError);
     });
 
     test('Power', () {

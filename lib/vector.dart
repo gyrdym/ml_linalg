@@ -1,3 +1,4 @@
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/vector_type.dart';
 
 import 'norm.dart';
