@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.0
+- Support matrices in vector operations
+
 ## 2.1.0
 - Column and row vectors added
 
