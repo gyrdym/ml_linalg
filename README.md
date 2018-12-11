@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/gyrdym/ml_linalg.svg?branch=master)](https://travis-ci.com/gyrdym/ml_linalg)
+
 **Linear algebra with Dart for machine learning**
 
 **Table of contents**
