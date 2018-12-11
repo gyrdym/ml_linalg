@@ -1,5 +1,8 @@
 # Changelog
 
+# 2.2.1
+- Travis integration added
+
 ## 2.2.0
 - Support matrices in vector operations
 
