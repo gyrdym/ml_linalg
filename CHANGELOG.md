@@ -1,5 +1,8 @@
 # Changelog
 
+# 2.2.2
+- README.md updated (table of content)
+
 # 2.2.1
 - Travis integration added
 
