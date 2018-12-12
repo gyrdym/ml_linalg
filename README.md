@@ -5,49 +5,49 @@
 **Table of contents**
 
 + [Vectors](#vectors)
-	- [A couple of words about the underlying vector architecture](#vectors_introduction_)
-	+ [Vector operations example](#vector_operations_examples)
-	    - [Vectors sum](#vector_addition)
-	    - [Vector subtraction](#vector_subtraction)
-	    - [Element wise vector by vector multiplication](#vector_element_wise_mult)
-	    - [Element wise vector by vector division](#vector_element_wise_div)
-	    - [Euclidean norm](#euclidean_norm)
-	    - [Manhattan norm](#manhattan_norm)
-	    - [Mean value](#mean_value)
-	    - [Sum of all vector elements](#vector_sum)
-	    - [Dot product](#vector_dot_product)
-	    - [Sum of a vector and a scalar](#vector_scalar_add)
-	    - [Subtraction of a scalar from a vector](#vector_scalar_sub)
-	    - [Multiplication (scaling) of a vector by a scalar](#vector_scalar_mul)
-	    - [Division (scaling) of a vector by a scalar value](#vector_scalar_div)
-	    - [Euclidean distance between two vectors](#vector_euclidean_dist)
-	    - [Manhattan distance between two vectors](#vector_manhattan_dist)
+	- [A couple of words about the underlying vector architecture](#a-couple-of-words-about-the-underlying-vector-architecture)
+	+ [Vector operations examples](#vector-operations-examples)
+	    - [Vectors sum](#vectors-sum)
+	    - [Vectors subtraction](#vectors-subtraction)
+	    - [Element wise vector by vector multiplication](#element-wise-vector-by-vector-multiplication)
+	    - [Element wise vector by vector division](#element-wise-vector-by-vector-division)
+	    - [Euclidean norm](#euclidean-norm)
+	    - [Manhattan norm](#manhattan-norm)
+	    - [Mean value](#mean-value)
+	    - [Sum of all vector elements](#sum-of-all-vector-elements)
+	    - [Dot product](#dot-product-of-two-vectors)
+	    - [Sum of a vector and a scalar](#sum-of-a-vector-and-a-scalar)
+	    - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
+	    - [Multiplication (scaling) of a vector by a scalar](#multiplication-scaling-of-a-vector-by-a-scalar)
+	    - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
+	    - [Euclidean distance between two vectors](#euclidean distance between two vectors)
+	    - [Manhattan distance between two vectors](#manhattan distance between two vectors)
 + [Matrices](#matrices)
-	+ [Matrix operations examples](#matrix_operations_examples)
-        - [Sum of a matrix and another matrix](#matrix_matrix_add)
-        - [Sum of a matrix and a scalar](#matrix_scalar_add)
-        - [Multiplication of a matrix and a vector](#matrix_vector_mul)
-        - [Multiplication of a matrix and another matrix](#matrix_matrix_mul)
-        - [Multiplication of a matrix and a scalar](#matrix_scalar_mul)
-        - [Element wise matrices subtraction](#matrix_matrix_sub)
-        - [Matrix transposition](#matrix_transpose)
-        - [Matrix row wise reduce](#matrix_row_reduce)
-        - [Matrix column wise reduce](#matrix_col_reduce)
-        - [Submatrix](#matrix_submatrix)
+	+ [Matrix operations examples](#matrix operations examples)
+        - [Sum of a matrix and another matrix](#sum of a matrix and another matrix)
+        - [Sum of a matrix and a scalar](#sum of a matrix and a scalar)
+        - [Multiplication of a matrix and a vector](#multiplication of a matrix and a vector)
+        - [Multiplication of a matrix and another matrix](#multiplication of a matrix and another matrix)
+        - [Multiplication of a matrix and a scalar](#multiplication of a matrix and a scalar)
+        - [Element wise matrices subtraction](#element wise matrices subtraction)
+        - [Matrix transposition](#matrix transposition)
+        - [Matrix row wise reduce](#matrix row wise reduce)
+        - [Matrix column wise reduce](#matrix column wise reduce)
+        - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
 
-### <a name="vectors"></a>Vectors
+### Vectors
 
-#### <a name="vectors_introduction"></a>A couple of words about the underlying vector architecture
+#### A couple of words about the underlying vector architecture
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
 computation architecture, so this library presents a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart). 
 However, you cannot use it directly in your project. To create an instance of the vector, just import [Float32x4VectorFactory](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector_factory.dart)
 and instantiate a vector via the factory. Most of operations in the vector are performed in four "threads". This kind 
 of concurrency is reached by special 128-bit processor registers, which are used directly by program code.  For better understanding of the topic please read the [article](https://www.dartlang.org/articles/dart-vm/simd).
 
-#### <a name="vector_operations_examples"></a>Vector operations examples
+#### Vector operations examples
 At the present moment most common vector operations are implemented:
 
-##### <a name="vector_addition"></a>Vectors sum
+##### Vectors sum
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -57,7 +57,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
-##### <a name="vector_subtraction"></a>Vector subtraction
+##### Vectors subtraction
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -67,7 +67,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
 
-##### <a name="vector_element_wise_mult"></a>Element wise vector by vector multiplication
+##### Element wise vector by vector multiplication
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -77,7 +77,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
-##### <a name="vector_element_wise_div"></a>Element wise vector by vector division
+##### Element wise vector by vector division
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -87,7 +87,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
 ````
 
-##### <a name="euclidean_norm"></a>Euclidean norm
+##### Euclidean norm
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -96,7 +96,7 @@ At the present moment most common vector operations are implemented:
   print(result); // sqrt(2^2 + 3^2 + 4^2 + 5^2 + 6^2) = sqrt(90) ~~ 9.48
 ````
 
-##### <a name="manhattan_norm"></a>Manhattan norm
+##### Manhattan norm
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -105,7 +105,6 @@ At the present moment most common vector operations are implemented:
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0
 ````
 
-<a name="mean_value"></a>
 ##### Mean value
 ````Dart
   import 'package:linalg/ml_linalg.dart';
@@ -115,7 +114,7 @@ At the present moment most common vector operations are implemented:
   print(result); // (2 + 3 + 4 + 5 + 6) / 5 = 4.0
 ````
 
-##### <a name="vector_sum"></a>Sum of all vector elements
+##### Sum of all vector elements
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -124,7 +123,7 @@ At the present moment most common vector operations are implemented:
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0 (equivalent to Manhattan norm)
 ````
 
-##### <a name="vector_dot_product"></a>Dot product of two vectors
+##### Dot product of two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -134,7 +133,7 @@ At the present moment most common vector operations are implemented:
   print(result); // 1.0 * 2.0 + 2.0 * 3.0 + 3.0 * 4.0 + 4.0 * 5.0 + 5.0 * 6.0 = 70.0
 ````
 
-##### <a name="vector_scalar_add"></a>Sum of a vector and a scalar
+##### Sum of a vector and a scalar
 ````Dart
   import 'package:linalg/ml_linalg.dart';
 
@@ -144,7 +143,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [6.0, 7.0, 8.0, 9.0, 10.0]
 ````
 
-##### <a name="vector_scalar_sub"></a>Subtraction of a scalar from a vector
+##### Subtraction of a scalar from a vector
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -154,7 +153,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [-4.0, -3.0, -2.0, -1.0, 0.0]
 ````
 
-##### <a name="vector_scalar_mul"></a>Multiplication (scaling) of a vector by a scalar
+##### Multiplication (scaling) of a vector by a scalar
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -164,7 +163,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
-##### <a name="vector_scalar_div"></a>Division (scaling) of a vector by a scalar value
+##### Division (scaling) of a vector by a scalar value
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -174,7 +173,7 @@ At the present moment most common vector operations are implemented:
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
-##### <a name="vector_euclidean_dist"></a>Euclidean distance between two vectors
+##### Euclidean distance between two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -184,7 +183,7 @@ At the present moment most common vector operations are implemented:
   print(result); // ~~2.23
 ````
 
-##### <a name="vector_manhattan_dist"></a>Manhattan distance between two vectors
+##### Manhattan distance between two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -194,13 +193,13 @@ At the present moment most common vector operations are implemented:
   print(result); // 5.0
 ````
 
-### <a name="matrices"></a>Matrices
+### Matrices
 
 Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vector types.
 
-#### <a name="matrix_operations_examples"></a>Matrix operations examples
+#### Matrix operations examples
 
-##### <a name="matrix_matrix_add"></a>Sum of a matrix and another matrix
+##### Sum of a matrix and another matrix
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -222,7 +221,7 @@ print(matrix1 + matrix2);
 // ];
 ````
 
-##### <a name="matrix_scalar_add"></a>Sum of a matrix and a scalar
+##### Sum of a matrix and a scalar
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -239,7 +238,7 @@ print(matrix + 7);
 //  ];
 ````
 
-##### <a name="matrix_vector_mul"></a>Multiplication of a matrix and a vector
+##### Multiplication of a matrix and a vector
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -258,7 +257,7 @@ print(matrix + 7);
   //]
 ````
 
-##### <a name="matrix_matrix_mul"></a>Multiplication of a matrix and another matrix
+##### Multiplication of a matrix and another matrix
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -282,7 +281,7 @@ print(matrix + 7);
   //]
 ````
 
-##### <a name="matrix_scalar_mul"></a>Multiplication of a matrix and a scalar
+##### Multiplication of a matrix and a scalar
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -299,7 +298,7 @@ print(matrix * 3);
 // ];
 ````
 
-##### <a name="matrix_matrix_sub"></a>Element wise matrices subtraction
+##### Element wise matrices subtraction
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -321,7 +320,7 @@ print(matrix1 - matrix2);
 // ];
 ````
 
-##### <a name="matrix_transpose"></a>Matrix transposition
+##### Matrix transposition
 ````Dart
   import 'package:ml_linalg/linalg.dart';
   
@@ -340,7 +339,7 @@ print(matrix1 - matrix2);
   //]
 ````
  
-##### <a name="matrix_row_reduce"></a>Matrix row wise reduce
+##### Matrix row wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -352,7 +351,7 @@ print(matrix1 - matrix2);
   print(reduced); // [6.0, 8.0, 10.0, 12.0]
 ````
 
-##### <a name="matrix_col_reduce"></a>Matrix column wise reduce
+##### Matrix column wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -365,7 +364,7 @@ print(matrix1 - matrix2);
   print(result); // [50, 66, 90]
 ````
 
-##### <a name="matrix_submatrix"></a>Submatrix (taking a lower dimension matrix of the current matrix)
+##### Submatrix (taking a lower dimension matrix of the current matrix)
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
