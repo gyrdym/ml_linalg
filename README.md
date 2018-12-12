@@ -20,19 +20,19 @@
 	    - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
 	    - [Multiplication (scaling) of a vector by a scalar](#multiplication-scaling-of-a-vector-by-a-scalar)
 	    - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
-	    - [Euclidean distance between two vectors](#euclidean distance between two vectors)
-	    - [Manhattan distance between two vectors](#manhattan distance between two vectors)
+	    - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
+	    - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
 + [Matrices](#matrices)
-	+ [Matrix operations examples](#matrix operations examples)
-        - [Sum of a matrix and another matrix](#sum of a matrix and another matrix)
-        - [Sum of a matrix and a scalar](#sum of a matrix and a scalar)
-        - [Multiplication of a matrix and a vector](#multiplication of a matrix and a vector)
-        - [Multiplication of a matrix and another matrix](#multiplication of a matrix and another matrix)
-        - [Multiplication of a matrix and a scalar](#multiplication of a matrix and a scalar)
-        - [Element wise matrices subtraction](#element wise matrices subtraction)
-        - [Matrix transposition](#matrix transposition)
-        - [Matrix row wise reduce](#matrix row wise reduce)
-        - [Matrix column wise reduce](#matrix column wise reduce)
+	+ [Matrix operations examples](#matrix-operations-examples)
+        - [Sum of a matrix and another matrix](#sum-of-a-matrix-and-another-matrix)
+        - [Sum of a matrix and a scalar](#sum-of-a-matrix-and-a-scalar)
+        - [Multiplication of a matrix and a vector](#multiplication-of-a-matrix-and-a-vector)
+        - [Multiplication of a matrix and another matrix](#multiplication-of-a-matrix-and-another-matrix)
+        - [Multiplication of a matrix and a scalar](#multiplication-of-a-matrix-and-a-scalar)
+        - [Element wise matrices subtraction](#element-wise-matrices-subtraction)
+        - [Matrix transposition](#matrix-transposition)
+        - [Matrix row wise reduce](#matrix-row-wise-reduce)
+        - [Matrix column wise reduce](#matrix-column-wise-reduce)
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
 
 ### Vectors
@@ -107,7 +107,7 @@ At the present moment most common vector operations are implemented:
 
 ##### Mean value
 ````Dart
-  import 'package:linalg/ml_linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.mean();
@@ -135,7 +135,7 @@ At the present moment most common vector operations are implemented:
 
 ##### Sum of a vector and a scalar
 ````Dart
-  import 'package:linalg/ml_linalg.dart';
+  import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
@@ -203,12 +203,12 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
-final matrix1 = Float32x4Matrix.from([
+final matrix1 = Float32x4MatrixFactory.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
   [9.0, .0, -2.0, -3.0],
 ]);
-final matrix2 = Float32x4Matrix.from([
+final matrix2 = Float32x4MatrixFactory.from([
   [10.0, 20.0, 30.0, 40.0],
   [-5.0, 16.0, 2.0, 18.0],
   [2.0, -1.0, -2.0, -7.0],
@@ -225,7 +225,7 @@ print(matrix1 + matrix2);
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
-final matrix = Float32x4Matrix.from([
+final matrix = Float32x4MatrixFactory.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
   [9.0, .0, -2.0, -3.0],
@@ -242,7 +242,7 @@ print(matrix + 7);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix = Float32x4Matrix.from([
+  final matrix = Float32x4MatrixFactory.from([
     [1.0, 2.0, 3.0, 4.0],
     [5.0, 6.0, 7.0, 8.0],
     [9.0, .0, -2.0, -3.0],
@@ -261,12 +261,12 @@ print(matrix + 7);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix1 = Float32x4Matrix.from([
+  final matrix1 = Float32x4MatrixFactory.from([
     [1.0, 2.0, 3.0, 4.0],
     [5.0, 6.0, 7.0, 8.0],
     [9.0, .0, -2.0, -3.0],
   ]);
-  final matrix2 = Float32x4Matrix.from([
+  final matrix2 = Float32x4MatrixFactory.from([
     [1.0, 2.0],
     [5.0, 6.0],
     [9.0, .0],
@@ -285,7 +285,7 @@ print(matrix + 7);
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
-final matrix = Float32x4Matrix.from([
+final matrix = Float32x4MatrixFactory.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
   [9.0, .0, -2.0, -3.0],
@@ -302,12 +302,12 @@ print(matrix * 3);
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
-final matrix1 = Float32x4Matrix.from([
+final matrix1 = Float32x4MatrixFactory.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
   [9.0, .0, -2.0, -3.0],
 ]);
-final matrix2 = Float32x4Matrix.from([
+final matrix2 = Float32x4MatrixFactory.from([
   [10.0, 20.0, 30.0, 40.0],
   [-5.0, 16.0, 2.0, 18.0],
   [2.0, -1.0, -2.0, -7.0],
@@ -324,7 +324,7 @@ print(matrix1 - matrix2);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
   
-  final matrix = Float32x4Matrix.from([
+  final matrix = Float32x4MatrixFactory.from([
     [1.0, 2.0, 3.0, 4.0],
     [5.0, 6.0, 7.0, 8.0],
     [9.0, .0, -2.0, -3.0],
@@ -355,7 +355,7 @@ print(matrix1 - matrix2);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix = Float32x4Matrix.from([
+  final matrix = Float32x4MatrixFactory.from([
     [11.0, 12.0, 13.0, 14.0],
     [15.0, 16.0, 17.0, 18.0],
     [21.0, 22.0, 23.0, 24.0],
@@ -368,7 +368,7 @@ print(matrix1 - matrix2);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix = Float32x4Matrix.from([
+  final matrix = Float32x4MatrixFactory.from([
     [11.0, 12.0, 13.0, 14.0],
     [15.0, 16.0, 17.0, 18.0],
     [21.0, 22.0, 23.0, 24.0],
