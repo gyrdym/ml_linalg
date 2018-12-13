@@ -34,6 +34,7 @@
         - [Matrix row wise reduce](#matrix-row-wise-reduce)
         - [Matrix column wise reduce](#matrix-column-wise-reduce)
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
+    + [Matrix indexing](#matrix-indexing)
 
 ### Vectors
 
@@ -381,3 +382,29 @@ print(matrix1 - matrix2);
   //  [15.0, 16.0, 17.0, 18.0],
   //];
 ````
+
+### Matrix indexing
+The library's matrix interface offers `pick` method, that supposed to return a new matrix, consisting of different 
+segments of a source matrix (like in Pandas dataframe in Python, e.g. `loc` method). It's possible to build a new 
+matrix from certain columns and vectors and they should not be necessarily subsequent: for example, it is needed to
+create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, it's needed to access the matrix this way:
+````Dart
+final matrix = Float32x4MatrixFactory.from([
+//| 1 |         | 3 |                
+  [4.0,   8.0,   12.0,   16.0,  34.0], // 1 Range(0, 1)
+  [20.0,  24.0,  28.0,   32.0,  23.0],
+  [36.0,  .0,   -8.0,   -12.0,  12.0], // 3 Range(2, 3)
+  [16.0,  1.0,  -18.0,   3.0,   11.0],
+  [112.0, 10.0,  34.0,   2.0,   10.0], // 5 Range(4, 5)
+]);
+final result = matrix.pick(
+  rowRanges: [Range(0, 1), Range(2, 3), Range(4, 5)],
+  columnRanges: [Range(0, 1), Range(2, 3)],
+);
+print(result);
+/*
+  [4.0,   12.0],
+  [36.0,  -8.0],
+  [112.0, 34.0]
+*/
+````  
