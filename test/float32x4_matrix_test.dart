@@ -523,5 +523,25 @@ void main() {
       ]);
       expect(() => matrix.toVector(), throwsException);
     });
+
+    test('should create a new matrix from its diffrent segments', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+          rowRanges: [Range(0, 2), Range(3, 4)],
+          columnRanges: [Range(1, 2), Range(3, 4)],
+      );
+      final expected = [
+        [8.0, 16.0],
+        [24.0, 32.0],
+        [1.0, 3.0],
+      ];
+      expect(actual, equals(expected));
+    });
   });
 }

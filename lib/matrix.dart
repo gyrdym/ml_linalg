@@ -10,6 +10,7 @@ abstract class MLMatrix<E> {
   MLMatrix<E> operator *(Object value);
   MLMatrix<E> transpose();
   MLMatrix<E> submatrix({Range rows, Range columns});
+  MLMatrix<E> pick({Iterable<Range> rowRanges, Iterable<Range> columnRanges});
   MLVector<E> getColumnVector(int index);
   MLVector<E> getRowVector(int index);
   MLVector<E> reduceColumns(MLVector<E> combiner(MLVector<E> combine, MLVector<E> vector), {MLVector<E> initValue});
