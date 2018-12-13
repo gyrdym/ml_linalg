@@ -100,9 +100,11 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
 
   @override
   MLMatrix<E> pick({Iterable<Range> rowRanges, Iterable<Range> columnRanges}) {
-    final rows = _collectVectors(rowRanges, getRowVector);
+    rowRanges ??= [Range(0, rowsNum)];
+    columnRanges ??= [Range(0, columnsNum)];
+    final rows = _collectVectors(rowRanges, getRowVector, rowsNum);
     final rowBasedMatrix = createMatrixFromRows(rows);
-    final columns = _collectVectors(columnRanges, rowBasedMatrix.getColumnVector);
+    final columns = _collectVectors(columnRanges, rowBasedMatrix.getColumnVector, columnsNum);
     return createMatrixFromColumns(columns);
   }
 
@@ -223,9 +225,12 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   Float32List _query(int index, int length) =>
       data.buffer.asFloat32List(index * Float32List.bytesPerElement, length);
 
-  List<MLVector<E>> _collectVectors(Iterable<Range> ranges, MLVector<E> getVector(int i)) {
+  List<MLVector<E>> _collectVectors(Iterable<Range> ranges, MLVector<E> getVector(int i), int maxValue) {
     final vectors = <MLVector<E>>[];
     for (final range in ranges) {
+      if (range.end > maxValue) {
+        throw RangeError.range(range.end, 0, maxValue);
+      }
       final rowEndIdx = range.endInclusive ? range.end + 1 : range.end;
       for (int i = range.start; i < rowEndIdx; i++) {
         vectors.add(getVector(i));
