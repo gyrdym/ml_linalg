@@ -388,13 +388,6 @@ void main() {
       expect(result, isNot(vector));
     });
 
-    test('`copy` method', () {
-      final vector = Float32x4Vector.from([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
-      final tmp = vector.copy();
-      expect(tmp, equals([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]));
-      expect(identical(tmp, vector), isFalse);
-    });
-
     test('`query` method', () {
       final vector = Float32x4Vector.from([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
       final query = vector.query([1, 1, 0, 3]);

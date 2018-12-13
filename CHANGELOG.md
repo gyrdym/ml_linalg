@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.0
+- `vectorizedMap` vector's method improved: batch boundary indexes may be passed into a mapper function
+- `columnsMap` and `rowsMap` matrix's method combined into one method - `vectorizedMap`
+- Public factories `Float32x4VectorFactory` and `Float32x4MatrixFactory` renamed into `Float32x4Vector` and 
+ `Float32x4Matrix`
+- `copy` vector's method removed
+
 ## 2.3.0
 - `pick` method added to matrix api: it's possible now to combine a new matrix from different 
    segments of a source matrix  
