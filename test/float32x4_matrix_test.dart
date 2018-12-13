@@ -544,4 +544,246 @@ void main() {
       expect(actual, equals(expected));
     });
   });
+
+  group('Float32x4Matrix.pick()', () {
+    test('should create a new matrix from its diffrent segments (same row ranges case)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        rowRanges: [Range(0, 2), Range(0, 2)],
+        columnRanges: [Range(1, 2), Range(3, 4)],
+      );
+      final expected = [
+        [8.0, 16.0],
+        [24.0, 32.0],
+        [8.0, 16.0],
+        [24.0, 32.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (same coulmn ranges case)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        rowRanges: [Range(0, 2), Range(3, 4)],
+        columnRanges: [Range(1, 2), Range(1, 2)],
+      );
+      final expected = [
+        [8.0, 8.0],
+        [24.0, 24.0],
+        [1.0, 1.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (one row range, one column range)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        rowRanges: [Range(0, 2)],
+        columnRanges: [Range(1, 2)],
+      );
+      final expected = [
+        [8.0],
+        [24.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (one of the row ranges is out of bound)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = () => matrix.pick(
+        // take all 5 rows (20 > 5) and add second row to them (range from 1 to 2)
+        rowRanges: [Range(0, 20), Range(1, 2)],
+        columnRanges: [Range(1, 2)],
+      );
+      expect(actual, throwsRangeError, reason: '0, 20 - is not a correct range');
+    });
+
+    test('should create a new matrix from its diffrent segments (one of the column ranges is out of bound)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = () => matrix.pick(
+        rowRanges: [Range(1, 2)],
+        columnRanges: [Range(1, 6)],
+      );
+      expect(actual, throwsRangeError, reason: '1, 6 - is not a correct range');
+    });
+
+    test('should create a new matrix from its diffrent segments (given row range covers the whole rows range of the '
+        'matrix)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        rowRanges: [Range(0, 5)],
+        columnRanges: [Range(1, 3)],
+      );
+      final expected = [
+        [8.0, 12.0],
+        [24.0, 28.0],
+        [.0, -8.0],
+        [1.0, -18.0],
+        [10.0, 34.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (given column range covers the whole columns range of '
+        'the matrix)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        rowRanges: [Range(0, 2)],
+        columnRanges: [Range(0, 5)],
+      );
+      final expected = [
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (two or more row ranges cover the whole rows range of'
+        'the matrix are given)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        rowRanges: [Range(0, 5), Range(0, 5)],
+        columnRanges: [Range(2, 3)],
+      );
+      final expected = [
+        [12.0],
+        [28.0],
+        [-8.0],
+        [-18.0],
+        [34.0],
+        [12.0],
+        [28.0],
+        [-8.0],
+        [-18.0],
+        [34.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (two or more column ranges cover the whole columnss range '
+        'of the matrix are given)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        rowRanges: [Range(0, 1)],
+        columnRanges: [Range(0, 5), Range(0, 5)],
+      );
+      final expected = [
+        [4.0, 8.0, 12.0, 16.0, 34.0, 4.0, 8.0, 12.0, 16.0, 34.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (columnRanges parameter is omitted)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        rowRanges: [Range(0, 1), Range(3,4)],
+      );
+      final expected = [
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (rowRanges parameter is omitted)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick(
+        columnRanges: [Range(0, 1), Range(3,4)],
+      );
+      final expected = [
+        [4.0, 16.0],
+        [20.0, 32.0],
+        [36.0, -12.0],
+        [16.0, 3.0],
+        [112.0, 2.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should create a new matrix from its diffrent segments (both rowRanges and columnRanges parameters are '
+        'omitted)', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.pick();
+      final expected = [
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ];
+      expect(actual, equals(expected));
+    });
+  });
 }
