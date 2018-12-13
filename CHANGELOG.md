@@ -1,9 +1,13 @@
 # Changelog
 
-# 2.2.2
+## 2.3.0
+- `pick` method added to matrix api: it's possible now to combine a new matrix from different 
+   segments of a source matrix  
+
+## 2.2.2
 - README.md updated (table of content)
 
-# 2.2.1
+## 2.2.1
 - Travis integration added
 
 ## 2.2.0
