@@ -181,7 +181,11 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
 
   @override
   MLVector<E> vectorizedMap(E mapper(E el, [int offsetStart, int offsetEnd])) =>
-      _elementWiseSelfOperation((E el, [int i]) => mapper(el, i * bucketSize, i * bucketSize + bucketSize - 1));
+      _elementWiseSelfOperation((E el, [int i]) {
+        final offsetStart = i * bucketSize;
+        final offsetEnd = i * bucketSize + bucketSize - 1;
+        return mapper(el, offsetStart, math.min(offsetEnd, length - 1));
+      });
 
   @override
   MLVector<E> subvector(int start, [int end]) {
