@@ -316,6 +316,23 @@ void main() {
       expect(() => vector1 / vector2, throwsRangeError);
     });
 
+    test('should map an existing vector to a new one processing 4 elements in a time', () {
+      final vector = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      int iteration = 0;
+      final actual = vector.vectorizedMap((Float32x4 element, [int start, int end]) {
+        if (iteration == 0) {
+          expect([start, end], equals([0, 3]));
+        } else if (iteration == 1) {
+          expect([start, end], equals([4, 5]));
+        }
+        iteration++;
+        return element.scale(3.0);
+      });
+      final expected = [3.0, 6.0, 9.0, 12.0, 15.0, 18.0];
+      expect(iteration, equals(2));
+      expect(actual, equals(expected));
+    });
+
     test('Power', () {
       final result = vector1.toIntegerPower(3);
       expect(result != vector1, isTrue);
