@@ -6,7 +6,7 @@ import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 
 const amountOfElements = 10000000;
 
-Float32x4Vector vector;
+Float32x4VectorInternal vector;
 
 class VectorInitializationBenchmark extends BenchmarkBase {
   const VectorInitializationBenchmark() : super('Vector initialization (from simple iterable), $amountOfElements elements');
@@ -17,7 +17,7 @@ class VectorInitializationBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector = Float32x4Vector.from(List<double>.filled(amountOfElements, 1.0));
+    vector = Float32x4VectorInternal.from(List<double>.filled(amountOfElements, 1.0));
   }
 
   void tearDown() {

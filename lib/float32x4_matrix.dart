@@ -4,13 +4,13 @@ import 'package:ml_linalg/src/matrix/float32/float32x4_matrix.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/vector.dart';
 
-abstract class Float32x4MatrixFactory {
+abstract class Float32x4Matrix {
   static MLMatrix<Float32x4> from(List<List<double>> source) =>
-      Float32x4Matrix.from(source);
+      Float32x4MatrixInternal.from(source);
 
   static MLMatrix<Float32x4> rows(List<MLVector<Float32x4>> source) =>
-      Float32x4Matrix.rows(source);
+      Float32x4MatrixInternal.rows(source);
 
   static MLMatrix<Float32x4> columns(List<MLVector<Float32x4>> source) =>
-      Float32x4Matrix.columns(source);
+      Float32x4MatrixInternal.columns(source);
 }
