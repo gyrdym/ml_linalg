@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.com/gyrdym/ml_linalg.svg?branch=master)](https://travis-ci.com/gyrdym/ml_linalg)
+<a href="https://pub.dartlang.org/packages/ml_linalg"><img alt="Pub" src="https://img.shields.io/pub/v/ml_linalg.svg"></a>
+<a href="https://github.com/gyrdym/ml_linalg/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/gyrdym/ml_linalg.svg"></a>
+<br>
 
 **Linear algebra with Dart for machine learning**
 
@@ -22,6 +25,8 @@
 	    - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
 	    - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
 	    - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
+    + [Vectorized non-mathematical methods](#vectorized-non-mathematical-methods)
+        - [Vectorized map](#vectorized-map)
 + [Matrices](#matrices)
 	+ [Matrix operations examples](#matrix-operations-examples)
         - [Sum of a matrix and another matrix](#sum-of-a-matrix-and-another-matrix)
@@ -34,16 +39,26 @@
         - [Matrix row wise reduce](#matrix-row-wise-reduce)
         - [Matrix column wise reduce](#matrix-column-wise-reduce)
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
-    + [Matrix indexing](#matrix-indexing)
+    + [Vectorized non-mathematical matrix methods](#vectorized-non-mathematical-matrix-methods)
+        - [Matrix indexing](#matrix-indexing)
++ [Contacts](#contacts)
 
 ### Vectors
 
 #### A couple of words about the underlying vector architecture
+    
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
-computation architecture, so this library presents a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart). 
-However, you cannot use it directly in your project. To create an instance of the vector, just import [Float32x4VectorFactory](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector_factory.dart)
-and instantiate a vector via the factory. Most of operations in the vector are performed in four "threads". This kind 
-of concurrency is reached by special 128-bit processor registers, which are used directly by program code.  For better understanding of the topic please read the [article](https://www.dartlang.org/articles/dart-vm/simd).
+computation architecture. Actually, the main purpose of the library - connect such a powerful computation way with 
+the pure math. So the library contains a high performance SIMD vector class, based on 
+[Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - 
+[Float32x4VectorInternal](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart). 
+As you can see from the class name, you cannot use it directly in your project. To create an instance of the 
+vector, just import [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart)
+and instantiate a vector via this factory. Most of operations in the vector are performed in four "threads". This kind 
+of concurrency is reached by special 128-bit processor registers, which are used directly by program code.  For better 
+understanding of the topic please read the [article](https://www.dartlang.org/articles/dart-vm/simd).
+It is also possible to implement [Float64x2](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float64x2-class.html)-based
+version of the vector using existing codebase, but so far there is no need to do so. 
 
 #### Vector operations examples
 At the present moment most common vector operations are implemented:
@@ -52,8 +67,8 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-  final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector2 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1 + vector2;
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
@@ -62,8 +77,8 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([4.0, 5.0, 6.0, 7.0, 8.0]);
-  final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 2.0, 3.0, 2.0]);
+  final vector1 = Float32x4Vector.from([4.0, 5.0, 6.0, 7.0, 8.0]);
+  final vector2 = Float32x4Vector.from([2.0, 3.0, 2.0, 3.0, 2.0]);
   final result = vector1 - vector2;
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
@@ -72,8 +87,8 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-  final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector2 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1 * vector2;
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
@@ -82,8 +97,8 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([6.0, 12.0, 24.0, 48.0, 96.0]);
-  final vector2 = Float32x4VectorFactory.from([3.0, 4.0, 6.0, 8.0, 12.0]);
+  final vector1 = Float32x4Vector.from([6.0, 12.0, 24.0, 48.0, 96.0]);
+  final vector2 = Float32x4Vector.from([3.0, 4.0, 6.0, 8.0, 12.0]);
   final result = vector1 / vector2;
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
 ````
@@ -92,7 +107,7 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.norm();
   print(result); // sqrt(2^2 + 3^2 + 4^2 + 5^2 + 6^2) = sqrt(90) ~~ 9.48
 ````
@@ -101,7 +116,7 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.norm(Norm.manhattan);
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0
 ````
@@ -110,7 +125,7 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.mean();
   print(result); // (2 + 3 + 4 + 5 + 6) / 5 = 4.0
 ````
@@ -119,7 +134,7 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.sum();
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0 (equivalent to Manhattan norm)
 ````
@@ -128,8 +143,8 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-  final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector2 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.dot(vector2);
   print(result); // 1.0 * 2.0 + 2.0 * 3.0 + 3.0 * 4.0 + 4.0 * 5.0 + 5.0 * 6.0 = 70.0
 ````
@@ -138,7 +153,7 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
   final result = vector1 + scalar;
   print(result.toList()); // [6.0, 7.0, 8.0, 9.0, 10.0]
@@ -148,7 +163,7 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
   final result = vector1 - scalar;
   print(result.toList()); // [-4.0, -3.0, -2.0, -1.0, 0.0]
@@ -158,7 +173,7 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
   final result = vector1 * scalar;
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
@@ -168,7 +183,7 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([25.0, 50.0, 75.0, 100.0, 125.0]);
+  final vector1 = Float32x4Vector.from([25.0, 50.0, 75.0, 100.0, 125.0]);
   final scalar = 5.0;
   final result = vector1.scalarDiv(scalar);
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
@@ -178,8 +193,8 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-  final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector2 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.distanceTo(vector2);
   print(result); // ~~2.23
 ````
@@ -188,10 +203,30 @@ At the present moment most common vector operations are implemented:
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Float32x4VectorFactory.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-  final vector2 = Float32x4VectorFactory.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector2 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.distanceTo(vector2, Norm.manhattan);
   print(result); // 5.0
+````
+
+#### Vectorized non-mathematical methods
+
+It is also needed to operate with vectors in non-mathematical way, for instance, to create a new vector applying some 
+map function to an existing one. To do it effectively, one can use the following methods:
+
+##### Vectorized map
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final result = vector.vectorizedMap((Float32x4 element, int offsetStart, int offsetEnd) {
+    // offsetStart - start index for the current vectorized element, e.g. if `element` is second in the inner collection,
+    // the offsetStart will be 4 (because Float32x4 contains 4 elements)
+    // offsetEnd - end index for the current vectorized element, e.g. if `element` is second in the inner collection,
+    // the offsetStart will be 7
+    return element.scale(2.0);
+  });
+  print(result); // [2.0, 4.0, 6.0, 8.0, 10.0]
 ````
 
 ### Matrices
@@ -204,12 +239,12 @@ Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vec
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
-final matrix1 = Float32x4MatrixFactory.from([
+final matrix1 = Float32x4Matrix.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
   [9.0, .0, -2.0, -3.0],
 ]);
-final matrix2 = Float32x4MatrixFactory.from([
+final matrix2 = Float32x4Matrix.from([
   [10.0, 20.0, 30.0, 40.0],
   [-5.0, 16.0, 2.0, 18.0],
   [2.0, -1.0, -2.0, -7.0],
@@ -226,7 +261,7 @@ print(matrix1 + matrix2);
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
-final matrix = Float32x4MatrixFactory.from([
+final matrix = Float32x4Matrix.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
   [9.0, .0, -2.0, -3.0],
@@ -243,7 +278,7 @@ print(matrix + 7);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix = Float32x4MatrixFactory.from([
+  final matrix = Float32x4Matrix.from([
     [1.0, 2.0, 3.0, 4.0],
     [5.0, 6.0, 7.0, 8.0],
     [9.0, .0, -2.0, -3.0],
@@ -262,12 +297,12 @@ print(matrix + 7);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix1 = Float32x4MatrixFactory.from([
+  final matrix1 = Float32x4Matrix.from([
     [1.0, 2.0, 3.0, 4.0],
     [5.0, 6.0, 7.0, 8.0],
     [9.0, .0, -2.0, -3.0],
   ]);
-  final matrix2 = Float32x4MatrixFactory.from([
+  final matrix2 = Float32x4Matrix.from([
     [1.0, 2.0],
     [5.0, 6.0],
     [9.0, .0],
@@ -286,7 +321,7 @@ print(matrix + 7);
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
-final matrix = Float32x4MatrixFactory.from([
+final matrix = Float32x4Matrix.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
   [9.0, .0, -2.0, -3.0],
@@ -303,12 +338,12 @@ print(matrix * 3);
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
-final matrix1 = Float32x4MatrixFactory.from([
+final matrix1 = Float32x4Matrix.from([
   [1.0, 2.0, 3.0, 4.0],
   [5.0, 6.0, 7.0, 8.0],
   [9.0, .0, -2.0, -3.0],
 ]);
-final matrix2 = Float32x4MatrixFactory.from([
+final matrix2 = Float32x4Matrix.from([
   [10.0, 20.0, 30.0, 40.0],
   [-5.0, 16.0, 2.0, 18.0],
   [2.0, -1.0, -2.0, -7.0],
@@ -325,7 +360,7 @@ print(matrix1 - matrix2);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
   
-  final matrix = Float32x4MatrixFactory.from([
+  final matrix = Float32x4Matrix.from([
     [1.0, 2.0, 3.0, 4.0],
     [5.0, 6.0, 7.0, 8.0],
     [9.0, .0, -2.0, -3.0],
@@ -344,7 +379,7 @@ print(matrix1 - matrix2);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix = Float32x4MatrixFactory.from([
+  final matrix = Float32x4Matrix.from([
     [1.0, 2.0, 3.0, 4.0],
     [5.0, 6.0, 7.0, 8.0],
   ]); 
@@ -356,7 +391,7 @@ print(matrix1 - matrix2);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix = Float32x4MatrixFactory.from([
+  final matrix = Float32x4Matrix.from([
     [11.0, 12.0, 13.0, 14.0],
     [15.0, 16.0, 17.0, 18.0],
     [21.0, 22.0, 23.0, 24.0],
@@ -369,7 +404,7 @@ print(matrix1 - matrix2);
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final matrix = Float32x4MatrixFactory.from([
+  final matrix = Float32x4Matrix.from([
     [11.0, 12.0, 13.0, 14.0],
     [15.0, 16.0, 17.0, 18.0],
     [21.0, 22.0, 23.0, 24.0],
@@ -383,13 +418,15 @@ print(matrix1 - matrix2);
   //];
 ````
 
-### Matrix indexing
+### Vectorized non-mathematical matrix methods
+
+#### Matrix indexing
 The library's matrix interface offers `pick` method, that supposed to return a new matrix, consisting of different 
 segments of a source matrix (like in Pandas dataframe in Python, e.g. `loc` method). It's possible to build a new 
 matrix from certain columns and vectors and they should not be necessarily subsequent: for example, it is needed to
 create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, it's needed to access the matrix this way:
 ````Dart
-final matrix = Float32x4MatrixFactory.from([
+final matrix = Float32x4Matrix.from([
 //| 1 |         | 3 |                
   [4.0,   8.0,   12.0,   16.0,  34.0], // 1 Range(0, 1)
   [20.0,  24.0,  28.0,   32.0,  23.0],
@@ -408,3 +445,6 @@ print(result);
   [112.0, 34.0]
 */
 ````  
+
+### Contacts
+If you have questions, feel free to write me on [Facebook](https://www.facebook.com/ilya.gyrdymov)

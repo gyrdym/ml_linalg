@@ -11,7 +11,7 @@ import 'package:ml_linalg/src/matrix/ml_matrix_mixin.dart';
 import 'package:ml_linalg/src/vector/float32/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
-class Float32x4Matrix extends Object with
+class Float32x4MatrixInternal extends Object with
     IterableMixin<Iterable<double>>,
     MLMatrixValidatorMixin<Float32x4>,
     Float32x4MatrixFactoryMixin,
@@ -33,7 +33,7 @@ class Float32x4Matrix extends Object with
   @override
   final List<MLVector<Float32x4>> rowsCache;
 
-  Float32x4Matrix.from(Iterable<Iterable<double>> source)
+  Float32x4MatrixInternal.from(Iterable<Iterable<double>> source)
       : rowsNum = source.length,
         columnsNum = source.first.length,
         data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
@@ -55,7 +55,7 @@ class Float32x4Matrix extends Object with
   ///   {a2} {b2} {c2}
   ///   {a3} {b3} {c3}
   ///   {a4} {b4} {c4}
-  Float32x4Matrix.columns(Iterable<MLVector<Float32x4>> source)
+  Float32x4MatrixInternal.columns(Iterable<MLVector<Float32x4>> source)
       : rowsNum = source.first.length,
         columnsNum = source.length,
         data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
@@ -66,7 +66,7 @@ class Float32x4Matrix extends Object with
   }
 
   /// vectors from [source] will serve as rows of the matrix
-  Float32x4Matrix.rows(Iterable<MLVector<Float32x4>> source)
+  Float32x4MatrixInternal.rows(Iterable<MLVector<Float32x4>> source)
       : rowsNum = source.length,
         columnsNum = source.first.length,
         data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
@@ -76,7 +76,7 @@ class Float32x4Matrix extends Object with
     data.buffer.asFloat32List().setAll(0, flattened);
   }
 
-  Float32x4Matrix.flattened(Iterable<double> source, this.rowsNum, this.columnsNum)
+  Float32x4MatrixInternal.flattened(Iterable<double> source, this.rowsNum, this.columnsNum)
       : data = ByteData(rowsNum * columnsNum * Float32List.bytesPerElement),
         rowsCache = List<MLVector<Float32x4>>(rowsNum),
         columnsCache = List<MLVector<Float32x4>>(columnsNum) {

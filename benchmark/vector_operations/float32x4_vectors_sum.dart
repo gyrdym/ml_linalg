@@ -6,8 +6,8 @@ import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 
 const amountOfElements = 10000000;
 
-Float32x4Vector vector1;
-Float32x4Vector vector2;
+Float32x4VectorInternal vector1;
+Float32x4VectorInternal vector2;
 
 class VectorAdditionBenchmark extends BenchmarkBase {
   const VectorAdditionBenchmark() : super('Vectors addition, $amountOfElements elements');
@@ -24,8 +24,8 @@ class VectorAdditionBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector1 = Float32x4Vector.randomFilled(amountOfElements);
-    vector2 = Float32x4Vector.randomFilled(amountOfElements);
+    vector1 = Float32x4VectorInternal.randomFilled(amountOfElements);
+    vector2 = Float32x4VectorInternal.randomFilled(amountOfElements);
   }
 
   void tearDown() {
