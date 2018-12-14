@@ -66,7 +66,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
 
   @override
   MLVector<E> getRowVector(int index) {
-    rowsCache[index] ??= vectorFrom(this[index], MLVectorType.row);
+    rowsCache[index] ??= createVectorFrom(this[index], MLVectorType.row);
     return rowsCache[index];
   }
 
@@ -78,7 +78,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
         //@TODO: find a more efficient way to get the single value
         result[i] = _query(i * columnsNum + index, 1)[0];
       }
-      columnsCache[index] = vectorFrom(result, MLVectorType.column);
+      columnsCache[index] = createVectorFrom(result, MLVectorType.column);
     }
     return columnsCache[index];
   }
@@ -118,14 +118,9 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
       {MLVector<E> initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
 
   @override
-  MLMatrix<E> mapColumns(E mapper(E element)) {
-    final source = List<MLVector<E>>.generate(columnsNum, (int i) => getColumnVector(i).vectorizedMap(mapper));
-    return createMatrixFromColumns(source);
-  }
-
-  @override
-  MLMatrix<E> mapRows(E mapper(E element)) {
-    final source = List<MLVector<E>>.generate(rowsNum, (int i) => getRowVector(i).vectorizedMap(mapper));
+  MLMatrix<E> vectorizedMap(E mapper(E element)) {
+    final source = List<MLVector<E>>.generate(rowsNum, (int i) => getRowVector(i)
+        .vectorizedMap((E element, [int startOffset, int endOffset]) => mapper(element)));
     return createMatrixFromRows(source);
   }
 
@@ -173,7 +168,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
     }
     final generateElementFn = (int i) => vector.dot(getRowVector(i));
     final source = List<double>.generate(rowsNum, generateElementFn);
-    final vectorColumn = vectorFrom(source);
+    final vectorColumn = createVectorFrom(source);
     return createMatrixFromColumns([vectorColumn]);
   }
 

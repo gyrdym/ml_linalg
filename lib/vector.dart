@@ -32,9 +32,6 @@ abstract class MLVector<E> implements Iterable<double> {
   /// Returns a vector with absolute value of each vector element
   MLVector<E> abs();
 
-  /// Returns a copy of a vector
-  MLVector<E> copy();
-
   /// Returns a dot (inner) product of [this] and [vector]
   double dot(MLVector<E> vector);
 
@@ -63,8 +60,8 @@ abstract class MLVector<E> implements Iterable<double> {
   MLVector<E> unique();
 
   /// Applies mapper function throughout simd list
-  MLVector<E> vectorizedMap(E mapper(E element));
+  MLVector<E> vectorizedMap(E mapper(E element, [int offsetStartIdx, int offsetEndIdx]));
 
-  /// cuts out a part of the vector
+  /// Cuts out a part of the vector
   MLVector<E> subvector(int start, [int end]);
 }
