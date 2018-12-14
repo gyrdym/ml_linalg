@@ -8,8 +8,8 @@ import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 
 const amountOfElements = 10000000;
 
-Float32x4Vector vector1;
-Float32x4Vector vector2;
+Float32x4VectorInternal vector1;
+Float32x4VectorInternal vector2;
 
 class VectorMulBenchmark extends BenchmarkBase {
   const VectorMulBenchmark() : super('Vectors multiplication, $amountOfElements elements');
@@ -27,8 +27,8 @@ class VectorMulBenchmark extends BenchmarkBase {
   @override
   void setup() {
     final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
-    vector1 = Float32x4Vector.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
-    vector2 = Float32x4Vector.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
+    vector1 = Float32x4VectorInternal.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
+    vector2 = Float32x4VectorInternal.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
   }
 
   void tearDown() {

@@ -15,7 +15,6 @@ abstract class MLMatrix<E> {
   MLVector<E> getRowVector(int index);
   MLVector<E> reduceColumns(MLVector<E> combiner(MLVector<E> combine, MLVector<E> vector), {MLVector<E> initValue});
   MLVector<E> reduceRows(MLVector<E> combiner(MLVector<E> combine, MLVector<E> vector), {MLVector<E> initValue});
-  MLMatrix<E> mapColumns(E mapper(E columnElement));
-  MLMatrix<E> mapRows(E mapper(E rowElement));
+  MLMatrix<E> vectorizedMap(E mapper(E columnElement));
   MLVector<E> toVector();
 }

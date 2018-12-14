@@ -93,10 +93,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   @override
-  MLVector<E> abs() => _elementWiseSelfOperation(simdAbs);
-
-  @override
-  MLVector<E> copy() => _elementWiseSelfOperation((E value) => value);
+  MLVector<E> abs() => _elementWiseSelfOperation((E element, [int i]) => simdAbs(element));
 
   @override
   double dot(MLVector<E> vector) => (this * vector).sum();
@@ -159,7 +156,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (final idx in indexes) {
       list[i++] = this[idx];
     }
-    return vectorFrom(list);
+    return createVectorFrom(list);
   }
 
   @override
@@ -171,7 +168,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
         unique.add(el);
       }
     }
-    return vectorFrom(unique);
+    return createVectorFrom(unique);
   }
 
   @override
@@ -183,13 +180,18 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   @override
-  MLVector<E> vectorizedMap(E mapper(E el)) => _elementWiseSelfOperation(mapper);
+  MLVector<E> vectorizedMap(E mapper(E el, [int offsetStart, int offsetEnd])) =>
+      _elementWiseSelfOperation((E el, [int i]) {
+        final offsetStart = i * bucketSize;
+        final offsetEnd = i * bucketSize + bucketSize - 1;
+        return mapper(el, offsetStart, math.min(offsetEnd, length - 1));
+      });
 
   @override
   MLVector<E> subvector(int start, [int end]) {
     final collection = bufferAsTypedList(
         (data as TypedData).buffer, start, (end > length ? length : end) - start);
-    return vectorFrom(collection);
+    return createVectorFrom(collection);
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
@@ -246,7 +248,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], scalar);
     }
-    return vectorFromSIMDList(list, length);
+    return createVectorFromSIMDList(list, length);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
@@ -255,7 +257,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], simdVal);
     }
-    return vectorFromSIMDList(list, length);
+    return createVectorFromSIMDList(list, length);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
@@ -266,15 +268,15 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], (vector as MLVectorDataStore<S, E>).data[i]);
     }
-    return vectorFromSIMDList(list, length, direction);
+    return createVectorFromSIMDList(list, length, direction);
   }
 
-  MLVector<E> _elementWiseSelfOperation(E operation(E element)) {
+  MLVector<E> _elementWiseSelfOperation(E operation(E element, [int index])) {
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i]);
+      list[i] = operation(data[i], i);
     }
-    return vectorFromSIMDList(list, length);
+    return createVectorFromSIMDList(list, length);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
@@ -283,7 +285,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     for (int i = 0; i < data.length; i++) {
       list[i] = _simdToIntPow(data[i], exp);
     }
-    return vectorFromSIMDList(list, length);
+    return createVectorFromSIMDList(list, length);
   }
 
   MLVector<E> _matrixMul(MLMatrix<E> matrix) {
@@ -295,7 +297,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
           'vector length: $length, matrix row number: ${matrix.rowsNum}');
     }
     final source = List<double>.generate(matrix.columnsNum, (int i) => dot(matrix.getColumnVector(i)));
-    return vectorFrom(source, MLVectorType.row);
+    return createVectorFrom(source, MLVectorType.row);
   }
 
   RangeError _mismatchLengthError() => RangeError('Vectors length must be equal');
