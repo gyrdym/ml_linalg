@@ -118,8 +118,9 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
       {MLVector<E> initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
 
   @override
-  MLMatrix<E> vectorizedMap(E mapper(E element, [int offsetStartIdx, int offsetEndIdx])) {
-    final source = List<MLVector<E>>.generate(rowsNum, (int i) => getRowVector(i).vectorizedMap(mapper));
+  MLMatrix<E> vectorizedMap(E mapper(E element)) {
+    final source = List<MLVector<E>>.generate(rowsNum, (int i) => getRowVector(i)
+        .vectorizedMap((E element, [int startOffset, int endOffset]) => mapper(element)));
     return createMatrixFromRows(source);
   }
 
