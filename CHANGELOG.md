@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.3
+- readme contacts section updated
+- build_runner dependency updated
+
 ## 3.0.2
 - readme badge corrected
 

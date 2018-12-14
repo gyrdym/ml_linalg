@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.com/gyrdym/ml_linalg.svg?branch=master)](https://travis-ci.com/gyrdym/ml_linalg)
 [![pub package](https://img.shields.io/pub/v/ml_linalg.svg)](https://pub.dartlang.org/packages/ml_linalg)
-[![Coverage Status](https://coveralls.io/repos/github/gyrdym/ml_linalg/badge.svg)](https://coveralls.io/github/gyrdym/ml_linalg)
-[![HitCount](http://hits.dwyl.io/gyrdym/ml_linalg.svg)](http://hits.dwyl.io/gyrdym/ml_linalg)
 [![Gitter Chat](https://badges.gitter.im/gyrdym/gyrdym.svg)](https://gitter.im/gyrdym/)
 
 **Linear algebra with Dart for machine learning**
@@ -448,4 +446,6 @@ print(result);
 ````  
 
 ### Contacts
-If you have questions, feel free to write me on [Facebook](https://www.facebook.com/ilya.gyrdymov)
+If you have questions, feel free to write me on 
+ - [Facebook](https://www.facebook.com/ilya.gyrdymov)
+ - [Linkedin](https://www.linkedin.com/in/gyrdym/)
