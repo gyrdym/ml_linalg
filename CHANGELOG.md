@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.1
+- readme updated
+
 ## 3.0.0
 - `vectorizedMap` vector's method improved: batch boundary indexes may be passed into a mapper function
 - `columnsMap` and `rowsMap` matrix's method combined into one method - `vectorizedMap`
