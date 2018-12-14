@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.2
+- readme badge corrected
+
 ## 3.0.1
 - readme updated
 
