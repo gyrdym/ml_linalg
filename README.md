@@ -1,6 +1,5 @@
-<a href="https://pub.dartlang.org/packages/ml_linalg"><img alt="Pub" src="https://img.shields.io/pub/v/ml_linalg.svg"></a>
-<a href="https://github.com/gyrdym/ml_linalg/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/gyrdym/ml_linalg.svg"></a>
 [![Build Status](https://travis-ci.com/gyrdym/ml_linalg.svg?branch=master)](https://travis-ci.com/gyrdym/ml_linalg)
+![pub package](https://img.shields.io/pub/v/ml_linalg.svg)
 
 **Linear algebra with Dart for machine learning**
 
