@@ -448,7 +448,7 @@ void main() {
       expect(vector.min(), 1.0);
     });
 
-    test('[] operator, case 1', () {
+    test('should provide indexed access ([] operator, case 1)', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       expect(vector[0], 1.0);
       expect(vector[1], 2.0);
@@ -460,7 +460,7 @@ void main() {
       expect(() => vector[100], throwsRangeError);
     });
 
-    test('[] operator, case 2', () {
+    test('should provide indexed access ([] operator, case 2)', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0]);
       expect(vector[0], 1.0);
       expect(vector[1], 2.0);
@@ -471,7 +471,7 @@ void main() {
       expect(() => vector[100], throwsRangeError);
     });
 
-    test('[] operator, case 3', () {
+    test('should provide indexed access ([] operator, case 3)', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0]);
       expect(vector[0], 1.0);
       expect(vector[1], 2.0);
@@ -481,7 +481,7 @@ void main() {
       expect(() => vector[100], throwsRangeError);
     });
 
-    test('[] operator, case 4', () {
+    test('should provide indexed access ([] operator, case 4)', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0]);
       expect(vector[0], 1.0);
       expect(vector[1], 2.0);
@@ -490,7 +490,7 @@ void main() {
       expect(() => vector[100], throwsRangeError);
     });
 
-    test('[] operator, case 5', () {
+    test('should provide indexed access ([] operator, case 5)', () {
       final vector = Float32x4VectorInternal.from([1.0]);
       expect(vector[0], 1.0);
       expect(() => vector[-1], throwsRangeError);

@@ -65,20 +65,28 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   }
 
   @override
-  MLVector<E> getRowVector(int index) {
-    rowsCache[index] ??= createVectorFrom(this[index], MLVectorType.row);
-    return rowsCache[index];
+  MLVector<E> getRowVector(int index, {bool tryCache = true, bool mutable = false}) {
+    if (tryCache) {
+      rowsCache[index] ??= createVectorFrom(this[index], MLVectorType.row, mutable);
+      return rowsCache[index];
+    } else {
+      return createVectorFrom(this[index], MLVectorType.row, mutable);
+    }
   }
 
   @override
-  MLVector<E> getColumnVector(int index) {
-    if (columnsCache[index] == null) {
+  MLVector<E> getColumnVector(int index, {bool tryCache = true, bool mutable = false}) {
+    if (columnsCache[index] == null || !tryCache) {
       final result = List<double>(rowsNum);
       for (int i = 0; i < rowsNum; i++) {
         //@TODO: find a more efficient way to get the single value
         result[i] = _query(i * columnsNum + index, 1)[0];
       }
-      columnsCache[index] = createVectorFrom(result, MLVectorType.column);
+      final column = createVectorFrom(result, MLVectorType.column, mutable);
+      if (!tryCache) {
+        return column;
+      }
+      columnsCache[index] = column;
     }
     return columnsCache[index];
   }
@@ -140,11 +148,11 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   }
 
   @override
-  MLVector<E> toVector() {
+  MLVector<E> toVector({bool mutable = false}) {
     if (columnsNum == 1) {
-      return getColumnVector(0);
+      return getColumnVector(0, tryCache: !mutable, mutable: mutable);
     } else if (rowsNum == 1) {
-      return getRowVector(0);
+      return getRowVector(0, tryCache: !mutable, mutable: mutable);
     }
     throw Exception('Cannot convert a ${rowsNum}x${columnsNum} matrix into a vector');
   }
