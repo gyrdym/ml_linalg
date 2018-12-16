@@ -7,11 +7,12 @@ import 'package:ml_linalg/vector_type.dart';
 
 abstract class Float32x4VectorFactoryMixin implements MLVectorFactory<Float32x4List, Float32x4> {
   @override
-  MLVector<Float32x4> createVectorFrom(Iterable<double> source, [MLVectorType type = MLVectorType.column]) =>
-      Float32x4VectorInternal.from(source, type: type);
+  MLVector<Float32x4> createVectorFrom(Iterable<double> source, [MLVectorType type = MLVectorType.column,
+    bool mutable = false]) =>
+      Float32x4VectorInternal.from(source, type: type, isMutable: mutable);
 
   @override
   MLVector<Float32x4> createVectorFromSIMDList(Float32x4List source, [int length,
-    MLVectorType type = MLVectorType.column]) => Float32x4VectorInternal.fromSIMDList(source, origLength: length,
-      type: type);
+    MLVectorType type = MLVectorType.column, bool mutable = false]) =>
+      Float32x4VectorInternal.fromSIMDList(source, origLength: length, type: type, isMutable: mutable);
 }

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.5.0
+- Mutable vectors supported in matrix
+
 ## 3.4.0
 - Add possibility to create mutable vectors
 - Add support for value assignment via []= operator
