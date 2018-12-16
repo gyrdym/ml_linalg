@@ -100,6 +100,37 @@ void main() {
       expect(row2, [15.0, 16.0, 17.0, 18.0]);
     });
 
+    test('should cache repeatedly retrieving row vector', () {
+      final matrix = Float32x4MatrixInternal.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      // write value to the cache
+      final row1 = matrix.getRowVector(1);
+      final row2 = matrix.getRowVector(1);
+
+      expect(identical(row1, row2), isTrue);
+    });
+
+    test('should ignore cache to get row vector if it is needed', () {
+      final matrix = Float32x4MatrixInternal.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      // write value to the cache
+      final row1 = matrix.getRowVector(1);
+      final row2 = matrix.getRowVector(1, tryCache: false);
+
+      expect(identical(row1, row2), isFalse);
+      expect(row1, equals(row2));
+    });
+
     test('should return required column as a vector', () {
       final matrix = Float32x4MatrixInternal.from([
         [11.0, 12.0, 13.0, 14.0],
@@ -126,6 +157,37 @@ void main() {
       expect(column4 is MLVector, isTrue);
       expect(column4.isColumn, isTrue);
       expect(column4, [14.0, 18.0, 24.0]);
+    });
+
+    test('should cache repeatedly retrieving column vector', () {
+      final matrix = Float32x4MatrixInternal.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      // write value to the cache
+      final column1 = matrix.getColumnVector(1);
+      final column2 = matrix.getColumnVector(1);
+
+      expect(identical(column1, column2), isTrue);
+    });
+
+    test('should ignore cache to get column vector if it is needed', () {
+      final matrix = Float32x4MatrixInternal.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.1],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      // write value to the cache
+      final column1 = matrix.getColumnVector(1);
+      final column2 = matrix.getColumnVector(1, tryCache: false);
+
+      expect(identical(column1, column2), isFalse);
+      expect(column1, equals(column2));
     });
 
     test('should cut out a submatrix with respect to given intervals, rows and columns range ends are excluded', () {
@@ -482,20 +544,56 @@ void main() {
         [5.0],
         [9.0],
       ]);
-      final actual = matrix.toVector();
-      expect(actual is MLVector<Float32x4>, isTrue);
-      expect(actual.isColumn, true);
-      expect(actual, equals([1.0, 5.0, 9.0]));
+      final column1 = matrix.toVector();
+      final column2 = matrix.toVector();
+      expect(column1 is MLVector<Float32x4>, isTrue);
+      expect(column1.isColumn, true);
+      expect(column1, equals([1.0, 5.0, 9.0]));
+      expect(identical(column1, column2), isTrue);
+    });
+
+    test('should convert itself to a mutable vector column', () {
+      final matrix = Float32x4MatrixInternal.from([
+        [1.0],
+        [5.0],
+        [9.0],
+      ]);
+      final column1 = matrix.toVector(mutable: true);
+      final column2 = matrix.toVector(mutable: true);
+
+      expect(column1 is MLVector<Float32x4>, isTrue);
+      expect(column1.isColumn, isTrue);
+      expect(column1.isMutable, isTrue);
+      expect(column1, equals([1.0, 5.0, 9.0]));
+      expect(identical(column1, column2), isFalse);
+      expect(column1, equals(column2));
     });
 
     test('should convert itself to a vector row', () {
       final matrix = Float32x4MatrixInternal.from([
         [4.0, 8.0, 12.0, 16.0],
       ]);
-      final actual = matrix.toVector();
-      expect(actual is MLVector<Float32x4>, isTrue);
-      expect(actual.isRow, true);
-      expect(actual, equals([4.0, 8.0, 12.0, 16.0]));
+      final row1 = matrix.toVector();
+      final row2 = matrix.toVector();
+      expect(row1 is MLVector<Float32x4>, isTrue);
+      expect(row1.isRow, true);
+      expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
+      expect(identical(row1, row2), isTrue);
+    });
+
+    test('should convert itself to a mutable vector row', () {
+      final matrix = Float32x4MatrixInternal.from([
+        [4.0, 8.0, 12.0, 16.0],
+      ]);
+      final row1 = matrix.toVector(mutable: true);
+      final row2 = matrix.toVector(mutable: true);
+
+      expect(row1 is MLVector<Float32x4>, isTrue);
+      expect(row1.isRow, isTrue);
+      expect(row1.isMutable, isTrue);
+      expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
+      expect(identical(row1, row2), isFalse);
+      expect(row1, equals(row2));
     });
 
     test('should throw an error if one tries to convert it into vector if its dimension is inappropriate', () {
