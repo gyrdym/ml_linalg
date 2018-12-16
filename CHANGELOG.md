@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.4.0
+- Add possibility to create mutable vectors
+- Add support for value assignment via []= operator
+
 ## 3.0.3
 - readme contacts section updated
 - build_runner dependency updated
