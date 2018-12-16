@@ -180,10 +180,19 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   @override
+  void operator []=(int index, double value) {
+    if (!isMutable) throw _dontMutateError();
+    if (index >= length) throw RangeError.index(index, this);
+    final base = (index / bucketSize).floor();
+    final offset = index - base * bucketSize;
+    data[base] = mutateSimdValueWithScalar(data[base], offset, value);
+  }
+
+  @override
   MLVector<E> vectorizedMap(E mapper(E el, [int offsetStart, int offsetEnd])) =>
       _elementWiseSelfOperation((E el, [int i]) {
         final offsetStart = i * bucketSize;
-        final offsetEnd = i * bucketSize + bucketSize - 1;
+        final offsetEnd = offsetStart + bucketSize - 1;
         return mapper(el, offsetStart, math.min(offsetEnd, length - 1));
       });
 
@@ -300,5 +309,6 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     return createVectorFrom(source, MLVectorType.row);
   }
 
+  UnsupportedError _dontMutateError() => UnsupportedError('mutation operations unsupported for immutable vectors');
   RangeError _mismatchLengthError() => RangeError('Vectors length must be equal');
 }

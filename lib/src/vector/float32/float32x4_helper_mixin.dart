@@ -83,4 +83,20 @@ class Float32x4HelperMixin implements SIMDDataHelper<Float32x4List, Float32x4> {
   @override
   Float32x4List sublist(Float32x4List list, int start, [int end]) =>
       list.buffer.asFloat32x4List(start * Float32x4List.bytesPerElement, end);
+
+  @override
+  Float32x4 mutateSimdValueWithScalar(Float32x4 simd, int offset, double value) {
+    switch (offset) {
+      case 0:
+        return simd.withX(value);
+      case 1:
+        return simd.withY(value);
+      case 2:
+        return simd.withZ(value);
+      case 3:
+        return simd.withW(value);
+      default:
+        throw RangeError('wrong offset');
+    }
+  }
 }

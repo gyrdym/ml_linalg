@@ -33,41 +33,46 @@ class Float32x4VectorInternal extends Object with
   @override
   final MLVectorType type;
 
+  @override
+  final bool isMutable;
+
   /// Creates a vector with both empty simd and typed inner lists
-  Float32x4VectorInternal(int length, [this.type = MLVectorType.column]) {
+  Float32x4VectorInternal(int length, {this.type = MLVectorType.column, this.isMutable = false}) {
     this.length = length;
     data = createSIMDList(length);
   }
 
   /// Creates a vector from collection
-  Float32x4VectorInternal.from(Iterable<double> source, [this.type = MLVectorType.column]) {
+  Float32x4VectorInternal.from(Iterable<double> source, {this.type = MLVectorType.column, this.isMutable = false}) {
     length = source.length;
     final List<double> _source = source is List ? source : source.toList(growable: false);
     data = convertCollectionToSIMDList(_source);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
-  Float32x4VectorInternal.fromSIMDList(Float32x4List source, [int origLength, this.type = MLVectorType.column]) {
+  Float32x4VectorInternal.fromSIMDList(Float32x4List source, {int origLength, this.type = MLVectorType.column,
+    this.isMutable = false}) {
     length = origLength ?? source.length * bucketSize;
     data = Float32x4List.fromList(source.sublist(0, source.length));
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a [value]
-  Float32x4VectorInternal.filled(int length, double value, [this.type = MLVectorType.column]) {
+  Float32x4VectorInternal.filled(int length, double value, {this.type = MLVectorType.column, this.isMutable = false}) {
     this.length = length;
     final source = List<double>.filled(length, value);
     data = convertCollectionToSIMDList(source);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a zero
-  Float32x4VectorInternal.zero(int length, [this.type = MLVectorType.column]) {
+  Float32x4VectorInternal.zero(int length, {this.type = MLVectorType.column, this.isMutable = false}) {
     this.length = length;
     final source = List<double>.filled(length, 0.0);
     data = convertCollectionToSIMDList(source);
   }
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements of created vector with a random value
-  Float32x4VectorInternal.randomFilled(int length, {int seed, this.type = MLVectorType.column}) {
+  Float32x4VectorInternal.randomFilled(int length, {int seed, this.type = MLVectorType.column,
+    this.isMutable = false}) {
     this.length = length;
     final random = math.Random(seed);
     final source = List<double>.generate(length, (_) => random.nextDouble());

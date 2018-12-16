@@ -294,7 +294,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0], MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0], type: MLVectorType.column);
       final actual = matrix * vector;
       final expected = [
         [40],
@@ -312,7 +312,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0], MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0], type: MLVectorType.row);
       expect(() => matrix * vector, throwsException);
     });
 
@@ -322,7 +322,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0, 7.0], MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0, 7.0], type: MLVectorType.column);
       expect(() => matrix * vector, throwsException);
     });
 
