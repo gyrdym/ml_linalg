@@ -33,13 +33,13 @@ void main() {
       });
 
       test('should create a column vector', () {
-        final vector = Float32x4VectorInternal.from(List.filled(1, 2.0), MLVectorType.column);
+        final vector = Float32x4VectorInternal.from(List.filled(1, 2.0), type: MLVectorType.column);
         expect(vector.isColumn, isTrue);
         expect(vector.isRow, isFalse);
       });
 
       test('should create a row vector', () {
-        final vector = Float32x4VectorInternal.from(List.filled(1, 2.0), MLVectorType.row);
+        final vector = Float32x4VectorInternal.from(List.filled(1, 2.0), type: MLVectorType.row);
         expect(vector.isRow, isTrue);
         expect(vector.isColumn, isFalse);
       });
@@ -59,25 +59,25 @@ void main() {
       });
 
       test('should create a vector and limit its length if argument `length` is passed', () {
-        final vector = Float32x4VectorInternal.fromSIMDList(typedList, 10);
+        final vector = Float32x4VectorInternal.fromSIMDList(typedList, origLength: 10);
         expect(vector, equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
         expect(vector.length, equals(10));
       });
 
       test('should create a column vector', () {
-        final vector = Float32x4VectorInternal.fromSIMDList(typedList, 10, MLVectorType.column);
+        final vector = Float32x4VectorInternal.fromSIMDList(typedList, origLength: 10, type: MLVectorType.column);
         expect(vector.isColumn, isTrue);
         expect(vector.isRow, isFalse);
       });
 
       test('should create a row vector', () {
-        final vector = Float32x4VectorInternal.fromSIMDList(typedList, 10, MLVectorType.row);
+        final vector = Float32x4VectorInternal.fromSIMDList(typedList, origLength: 10, type: MLVectorType.row);
         expect(vector.isRow, isTrue);
         expect(vector.isColumn, isFalse);
       });
 
       test('should create a column vector if there is no `length` argument', () {
-        final vector = Float32x4VectorInternal.fromSIMDList(typedList, null, MLVectorType.column);
+        final vector = Float32x4VectorInternal.fromSIMDList(typedList, origLength: null, type: MLVectorType.column);
         expect(vector.isRow, isFalse);
         expect(vector.isColumn, isTrue);
       });
@@ -91,13 +91,13 @@ void main() {
       });
 
       test('should create a column vector', () {
-        final vector = Float32x4VectorInternal.filled(10, 2.0, MLVectorType.column);
+        final vector = Float32x4VectorInternal.filled(10, 2.0, type: MLVectorType.column);
         expect(vector.isColumn, isTrue);
         expect(vector.isRow, isFalse);
       });
 
       test('should create a row vector', () {
-        final vector = Float32x4VectorInternal.filled(10, 3.0, MLVectorType.row);
+        final vector = Float32x4VectorInternal.filled(10, 3.0, type: MLVectorType.row);
         expect(vector.isRow, isTrue);
         expect(vector.isColumn, isFalse);
       });
@@ -123,13 +123,13 @@ void main() {
       });
 
       test('should create a column vector', () {
-        final vector = Float32x4VectorInternal.zero(10, MLVectorType.column);
+        final vector = Float32x4VectorInternal.zero(10, type: MLVectorType.column);
         expect(vector.isColumn, isTrue);
         expect(vector.isRow, isFalse);
       });
 
       test('should create a row vector', () {
-        final vector = Float32x4VectorInternal.zero(10, MLVectorType.row);
+        final vector = Float32x4VectorInternal.zero(10, type: MLVectorType.row);
         expect(vector.isRow, isTrue);
         expect(vector.isColumn, isFalse);
       });
@@ -182,7 +182,7 @@ void main() {
     });
 
     test('should perform addition of a rows matrix', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0], MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0], type: MLVectorType.row);
       final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
       final actual = vector + matrix;
       final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
@@ -192,7 +192,7 @@ void main() {
     });
 
     test('should throw an exception if one tries to add a matrix of inappropriate dimension', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0], MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0], type: MLVectorType.column);
       final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
       final actual = () => vector + matrix;
       expect(actual, throwsException);
@@ -213,7 +213,7 @@ void main() {
     });
 
     test('should perform subtraction of a column matrix', () {
-      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], type: MLVectorType.column);
       final matrix = Float32x4Matrix.from([
         [1.0],
         [2.0],
@@ -229,7 +229,7 @@ void main() {
     });
 
     test('should perform subtraction of a row matrix', () {
-      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], type: MLVectorType.row);
       final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
       final actual = vector - matrix;
       final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
@@ -239,7 +239,7 @@ void main() {
     });
 
     test('should perform subtraction of a row matrix', () {
-      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], type: MLVectorType.row);
       final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
       final actual = vector - matrix;
       final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
@@ -249,7 +249,7 @@ void main() {
     });
 
     test('should throw an exception if one tries to subtract a matrix of inappropriate dimension', () {
-      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], type: MLVectorType.column);
       final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
       final actual = () => vector - matrix;
       expect(actual, throwsException);
@@ -268,7 +268,7 @@ void main() {
     });
 
     test('should perform multiplication by a matrix', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], type: MLVectorType.row);
       final matrix = Float32x4Matrix.from([
         [2.0, 3.0],
         [4.0, 5.0],
@@ -282,7 +282,7 @@ void main() {
     });
 
     test('should throw an exception if one tries to multiple by an inappropriate matrix', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], type: MLVectorType.row);
       final matrix = Float32x4Matrix.from([
         [2.0, 3.0],
         [4.0, 5.0],
@@ -292,7 +292,7 @@ void main() {
     });
 
     test('should throw an exception if it is a column vector and it is being multiplied by a matrix', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], type: MLVectorType.column);
       final matrix = Float32x4Matrix.from([
         [2.0, 3.0],
         [4.0, 5.0],
@@ -359,14 +359,14 @@ void main() {
       expect(result, equals([0.5, 1.0, 1.5, 2.0, 2.5]));
     });
 
-    test('Scalar addition', () {
+    test('should perform addition of a scalar', () {
       final result = vector1 + 13.0;
       expect(result != vector1, isTrue);
       expect(result.length, equals(5));
       expect(result, equals([14.0, 15.0, 16.0, 17.0, 18.0]));
     });
 
-    test('Scalar substruction', () {
+    test('should perform substruction of a scalar', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final result = vector - 13.0;
       expect(result != vector, isTrue);
@@ -374,31 +374,31 @@ void main() {
       expect(result, equals([-12.0, -11.0, -10.0, -9.0, -8.0]));
     });
 
-    test('Euclidean distance (from vector to the same vector)', () {
+    test('should find Euclidean distance (from vector to the same vector)', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0]);
       final distance = vector.distanceTo(vector);
       expect(distance, equals(0.0), reason: 'Wrong vector distance calculation');
     });
 
-    test('Vector distance', () {
+    test('should find vectors distance', () {
       final vector1 = Float32x4VectorInternal.from([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
       final vector2 = Float32x4VectorInternal.from([1.0, 3.0, 2.0, 11.5, 10.0, 15.5]);
       expect(vector1.distanceTo(vector2, Norm.euclidean), equals(10.88577052853862), reason: 'Wrong vector distance calculation');
       expect(vector1.distanceTo(vector2, Norm.manhattan), equals(20.0), reason: 'Wrong vector distance calculation');
     });
 
-    test('Vector norm', () {
+    test('should find vector norm', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       expect(vector.norm(Norm.euclidean), equals(7.416198487095663), reason: 'Wrong norm calculation');
       expect(vector.norm(Norm.manhattan), equals(15.0), reason: 'Wrong norm calculation');
     });
 
-    test('Vector elements sum', () {
+    test('should find vector elements sum', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       expect(vector.sum(), equals(15.0));
     });
 
-    test('Vector elements absolute value', () {
+    test('should find vector elements absolute value', () {
       final vector = Float32x4VectorInternal.from([-3.0, 4.5, -12.0, -23.5, 44.0]);
       final result = vector.abs();
       expect(result, equals([3.0, 4.5, 12.0, 23.5, 44.0]));
@@ -498,7 +498,27 @@ void main() {
       expect(() => vector[100], throwsRangeError);
     });
 
-    test('`subVector` method', () {
+    test('should not allow to assign a value via indexed access if it is immutable ([]= operator)', () {
+      final vector = Float32x4VectorInternal.from([1.0, 2.0]); // immutable by default
+      expect(() => vector[0] = 3.0, throwsUnsupportedError);
+    });
+
+    test('should perform value assignment via indexed access if it is mutable ([]= operator)', () {
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
+      vector[0] = 6.0;
+      vector[1] = 7.0;
+      vector[2] = 8.0;
+      vector[3] = 9.0;
+      vector[4] = 10.0;
+      expect(vector, equals([6.0, 7.0, 8.0, 9.0, 10.0]));
+    });
+
+    test('should throw range error if one tries to set a value on non-existing index', () {
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
+      expect(() => vector[20] = 2.0, throwsRangeError);
+    });
+
+    test('should cut subvector', () {
       final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final actual = vector.subvector(1, 5);
       final expected = [2.0, 3.0, 4.0, 5.0];

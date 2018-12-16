@@ -54,4 +54,6 @@ abstract class SIMDDataHelper<S extends List<E>, E> {
   List<double> takeFirstNLanes(E a, int n);
 
   S sublist(S list, int start, [int end]);
+
+  E mutateSimdValueWithScalar(E simd, int offset, double scalar);
 }
