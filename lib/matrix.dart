@@ -11,8 +11,8 @@ abstract class MLMatrix<E> {
   MLMatrix<E> transpose();
   MLMatrix<E> submatrix({Range rows, Range columns});
   MLMatrix<E> pick({Iterable<Range> rowRanges, Iterable<Range> columnRanges});
-  MLVector<E> getColumnVector(int index, {bool tryCache = true});
-  MLVector<E> getRowVector(int index, {bool tryCache = true});
+  MLVector<E> getColumnVector(int index, {bool tryCache = true, bool mutable = false});
+  MLVector<E> getRowVector(int index, {bool tryCache = true, bool mutable = false});
   MLVector<E> reduceColumns(MLVector<E> combiner(MLVector<E> combine, MLVector<E> vector), {MLVector<E> initValue});
   MLVector<E> reduceRows(MLVector<E> combiner(MLVector<E> combine, MLVector<E> vector), {MLVector<E> initValue});
   MLMatrix<E> vectorizedMap(E mapper(E columnElement));
