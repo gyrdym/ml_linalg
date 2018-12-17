@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.0
+- Vector type removed (there are no longer `column` and `row` vectors)
+
 ## 3.5.0
 - Mutable vectors supported in matrix
 

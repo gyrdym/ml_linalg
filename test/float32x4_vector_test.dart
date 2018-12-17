@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 import 'package:ml_linalg/linalg.dart';
-import 'package:ml_linalg/vector_type.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -31,18 +30,6 @@ void main() {
         expect(vector, equals([2.0]));
         expect(vector.length, 1);
       });
-
-      test('should create a column vector', () {
-        final vector = Float32x4VectorInternal.from(List.filled(1, 2.0), type: MLVectorType.column);
-        expect(vector.isColumn, isTrue);
-        expect(vector.isRow, isFalse);
-      });
-
-      test('should create a row vector', () {
-        final vector = Float32x4VectorInternal.from(List.filled(1, 2.0), type: MLVectorType.row);
-        expect(vector.isRow, isTrue);
-        expect(vector.isColumn, isFalse);
-      });
     });
 
     group('`fromSIMDList` constructor', () {
@@ -63,24 +50,6 @@ void main() {
         expect(vector, equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
         expect(vector.length, equals(10));
       });
-
-      test('should create a column vector', () {
-        final vector = Float32x4VectorInternal.fromSIMDList(typedList, origLength: 10, type: MLVectorType.column);
-        expect(vector.isColumn, isTrue);
-        expect(vector.isRow, isFalse);
-      });
-
-      test('should create a row vector', () {
-        final vector = Float32x4VectorInternal.fromSIMDList(typedList, origLength: 10, type: MLVectorType.row);
-        expect(vector.isRow, isTrue);
-        expect(vector.isColumn, isFalse);
-      });
-
-      test('should create a column vector if there is no `length` argument', () {
-        final vector = Float32x4VectorInternal.fromSIMDList(typedList, origLength: null, type: MLVectorType.column);
-        expect(vector.isRow, isFalse);
-        expect(vector.isColumn, isTrue);
-      });
     });
 
     group('`filled` constructor', () {
@@ -88,18 +57,6 @@ void main() {
         final vector = Float32x4VectorInternal.filled(10, 2.0);
         expect(vector, equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
         expect(vector.length, equals(10));
-      });
-
-      test('should create a column vector', () {
-        final vector = Float32x4VectorInternal.filled(10, 2.0, type: MLVectorType.column);
-        expect(vector.isColumn, isTrue);
-        expect(vector.isRow, isFalse);
-      });
-
-      test('should create a row vector', () {
-        final vector = Float32x4VectorInternal.filled(10, 3.0, type: MLVectorType.row);
-        expect(vector.isRow, isTrue);
-        expect(vector.isColumn, isFalse);
       });
     });
 
@@ -120,18 +77,6 @@ void main() {
         final vector = Float32x4VectorInternal.zero(2);
         expect(vector, equals([0.0, 0.0]));
         expect(vector.length, equals(2));
-      });
-
-      test('should create a column vector', () {
-        final vector = Float32x4VectorInternal.zero(10, type: MLVectorType.column);
-        expect(vector.isColumn, isTrue);
-        expect(vector.isRow, isFalse);
-      });
-
-      test('should create a row vector', () {
-        final vector = Float32x4VectorInternal.zero(10, type: MLVectorType.row);
-        expect(vector.isRow, isTrue);
-        expect(vector.isColumn, isFalse);
       });
     });
   });
@@ -177,25 +122,16 @@ void main() {
       final actual = vector + matrix;
       final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
       expect(actual, equals(expected));
-      expect(actual.isColumn, isTrue);
       expect(actual.length, equals(5));
     });
 
     test('should perform addition of a rows matrix', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0], type: MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
       final actual = vector + matrix;
       final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
       expect(actual, equals(expected));
-      expect(actual.isRow, isTrue);
       expect(actual.length, equals(5));
-    });
-
-    test('should throw an exception if one tries to add a matrix of inappropriate dimension', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0, 5.0], type: MLVectorType.column);
-      final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
-      final actual = () => vector + matrix;
-      expect(actual, throwsException);
     });
 
     test('should perform a subtraction of another vector', () {
@@ -213,7 +149,7 @@ void main() {
     });
 
     test('should perform subtraction of a column matrix', () {
-      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], type: MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0]);
       final matrix = Float32x4Matrix.from([
         [1.0],
         [2.0],
@@ -224,35 +160,25 @@ void main() {
       final actual = vector - matrix;
       final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
       expect(actual, equals(expected));
-      expect(actual.isColumn, isTrue);
       expect(actual.length, equals(5));
     });
 
     test('should perform subtraction of a row matrix', () {
-      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], type: MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0]);
       final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
       final actual = vector - matrix;
       final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
       expect(actual, equals(expected));
-      expect(actual.isRow, isTrue);
       expect(actual.length, equals(5));
     });
 
     test('should perform subtraction of a row matrix', () {
-      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], type: MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0]);
       final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
       final actual = vector - matrix;
       final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
       expect(actual, equals(expected));
-      expect(actual.isRow, isTrue);
       expect(actual.length, equals(5));
-    });
-
-    test('should throw an exception if one tries to subtract a matrix of inappropriate dimension', () {
-      final vector = Float32x4VectorInternal.from([2.0, 6.0, 12.0, 15.0, 18.0], type: MLVectorType.column);
-      final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
-      final actual = () => vector - matrix;
-      expect(actual, throwsException);
     });
 
     test('should perform multiplication by another vector', () {
@@ -268,7 +194,7 @@ void main() {
     });
 
     test('should perform multiplication by a matrix', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], type: MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0]);
       final matrix = Float32x4Matrix.from([
         [2.0, 3.0],
         [4.0, 5.0],
@@ -277,29 +203,17 @@ void main() {
       final actual = vector * matrix;
       final expected = [28.0, 34.0];
       expect(actual, equals(expected));
-      expect(actual.isRow, isTrue);
       expect(actual.length, equals(2));
     });
 
     test('should throw an exception if one tries to multiple by an inappropriate matrix', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], type: MLVectorType.row);
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0]);
       final matrix = Float32x4Matrix.from([
         [2.0, 3.0],
         [4.0, 5.0],
       ]);
       final actual = () => vector * matrix;
       expect(actual, throwsException, reason: 'the matrix has different row number than the vector');
-    });
-
-    test('should throw an exception if it is a column vector and it is being multiplied by a matrix', () {
-      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0], type: MLVectorType.column);
-      final matrix = Float32x4Matrix.from([
-        [2.0, 3.0],
-        [4.0, 5.0],
-        [14.0, 15.0],
-      ]);
-      final actual = () => vector * matrix;
-      expect(actual, throwsException);
     });
 
     test('should perform division by another vector', () {
