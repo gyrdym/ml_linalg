@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.0
+- Vector type removed (there are no longer `column` and `row` vectors)
+- Matrix's method `getColumnVector` renamed to `getColumn`
+- Matrix method `getRowVector` renamed to `getRow`
+- Public api documentation for `MLMatrix<E>` added
+
 ## 3.5.0
 - Mutable vectors supported in matrix
 

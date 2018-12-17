@@ -9,7 +9,6 @@ import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
 import 'package:ml_linalg/src/vector/simd_data_helper.dart';
 import 'package:ml_linalg/src/vector/typed_data_helper.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:ml_linalg/vector_type.dart';
 
 abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> implements
     IterableMixin<double>,
@@ -18,12 +17,6 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     MLVectorDataStore<S, E>,
     MLVectorFactory<S, E>,
     MLVector<E> {
-
-  @override
-  bool get isColumn => type == MLVectorType.column;
-
-  @override
-  bool get isRow => type == MLVectorType.row;
 
   S get dataWithoutLastBucket => sublist(data, 0, data.length - 1);
 
@@ -37,13 +30,10 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   @override
   MLVector<E> operator +(Object value) {
     if (value is MLVector<E>) {
-      return _elementWiseVectorOperation(value, simdSum, type);
+      return _elementWiseVectorOperation(value, simdSum);
     } else if (value is MLMatrix<E>) {
       final other = value.toVector();
-      if (other.type != type) {
-        throw Exception('Cannot sum matrix $value from vector $this');
-      }
-      return _elementWiseVectorOperation(other, simdSum, type);
+      return _elementWiseVectorOperation(other, simdSum);
     } else if (value is num) {
       return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSum);
     }
@@ -53,13 +43,10 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   @override
   MLVector<E> operator -(Object value) {
     if (value is MLVector<E>) {
-      return _elementWiseVectorOperation(value, simdSub, type);
+      return _elementWiseVectorOperation(value, simdSub);
     } else if (value is MLMatrix<E>) {
       final other = value.toVector();
-      if (other.type != type) {
-        throw Exception('Cannot subtract matrix $value from vector $this');
-      }
-      return _elementWiseVectorOperation(other, simdSub, type);
+      return _elementWiseVectorOperation(other, simdSub);
     } else if (value is num) {
       return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSub);
     }
@@ -270,14 +257,13 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
-  MLVector<E> _elementWiseVectorOperation(MLVector<E> vector, E operation(E a, E b),
-      [MLVectorType direction = MLVectorType.column]) {
+  MLVector<E> _elementWiseVectorOperation(MLVector<E> vector, E operation(E a, E b)) {
     if (vector.length != length) throw _mismatchLengthError();
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], (vector as MLVectorDataStore<S, E>).data[i]);
     }
-    return createVectorFromSIMDList(list, length, direction);
+    return createVectorFromSIMDList(list, length);
   }
 
   MLVector<E> _elementWiseSelfOperation(E operation(E element, [int index])) {
@@ -298,15 +284,12 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   MLVector<E> _matrixMul(MLMatrix<E> matrix) {
-    if (isColumn) {
-      throw Exception('Multiplication by matrix is not defined for column vector');
-    }
     if (length != matrix.rowsNum) {
       throw Exception('Multiplication by a matrix with diffrent number of rows than the vector length is not allowed:'
           'vector length: $length, matrix row number: ${matrix.rowsNum}');
     }
-    final source = List<double>.generate(matrix.columnsNum, (int i) => dot(matrix.getColumnVector(i)));
-    return createVectorFrom(source, MLVectorType.row);
+    final source = List<double>.generate(matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
+    return createVectorFrom(source);
   }
 
   UnsupportedError _dontMutateError() => UnsupportedError('mutation operations unsupported for immutable vectors');
