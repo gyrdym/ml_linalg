@@ -1,19 +1,9 @@
-import 'package:ml_linalg/vector_type.dart';
-
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
 abstract class MLVector<E> implements Iterable<double> {
-  MLVectorType get type;
-
-  /// can someone mutate the vector e.g. via []= operator
+  /// Can someone mutate the vector e.g. via []= operator
   bool get isMutable;
-
-  /// is vector a column vector
-  bool get isColumn;
-
-  /// is vector a row vector
-  bool get isRow;
 
   /// Indexed access to a vector's element
   double operator [](int index);

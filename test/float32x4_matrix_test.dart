@@ -4,7 +4,6 @@ import 'package:ml_linalg/src/matrix/float32/float32x4_matrix.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:ml_linalg/vector_type.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -88,15 +87,13 @@ void main() {
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
       ]);
-      final row1 = matrix.getRowVector(0);
-      final row2 = matrix.getRowVector(1);
+      final row1 = matrix.getRow(0);
+      final row2 = matrix.getRow(1);
 
       expect(row1 is MLVector, isTrue);
-      expect(row1.isRow, isTrue);
       expect(row1, [11.0, 12.0, 13.0, 14.0]);
 
       expect(row2 is MLVector, isTrue);
-      expect(row2.isRow, isTrue);
       expect(row2, [15.0, 16.0, 17.0, 18.0]);
     });
 
@@ -109,8 +106,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       // write value to the cache
-      final row1 = matrix.getRowVector(1);
-      final row2 = matrix.getRowVector(1);
+      final row1 = matrix.getRow(1);
+      final row2 = matrix.getRow(1);
 
       expect(identical(row1, row2), isTrue);
     });
@@ -124,8 +121,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       // write value to the cache
-      final row1 = matrix.getRowVector(1);
-      final row2 = matrix.getRowVector(1, tryCache: false);
+      final row1 = matrix.getRow(1);
+      final row2 = matrix.getRow(1, tryCache: false);
 
       expect(identical(row1, row2), isFalse);
       expect(row1, equals(row2));
@@ -137,25 +134,21 @@ void main() {
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
       ]);
-      final column1 = matrix.getColumnVector(0);
-      final column2 = matrix.getColumnVector(1);
-      final column3 = matrix.getColumnVector(2);
-      final column4 = matrix.getColumnVector(3);
+      final column1 = matrix.getColumn(0);
+      final column2 = matrix.getColumn(1);
+      final column3 = matrix.getColumn(2);
+      final column4 = matrix.getColumn(3);
 
       expect(column1 is MLVector, isTrue);
-      expect(column1.isColumn, isTrue);
       expect(column1, [11.0, 15.0, 21.0]);
 
       expect(column2 is MLVector, isTrue);
-      expect(column2.isColumn, isTrue);
       expect(column2, [12.0, 16.0, 22.0]);
 
       expect(column3 is MLVector, isTrue);
-      expect(column3.isColumn, isTrue);
       expect(column3, [13.0, 17.0, 23.0]);
 
       expect(column4 is MLVector, isTrue);
-      expect(column4.isColumn, isTrue);
       expect(column4, [14.0, 18.0, 24.0]);
     });
 
@@ -168,8 +161,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       // write value to the cache
-      final column1 = matrix.getColumnVector(1);
-      final column2 = matrix.getColumnVector(1);
+      final column1 = matrix.getColumn(1);
+      final column2 = matrix.getColumn(1);
 
       expect(identical(column1, column2), isTrue);
     });
@@ -183,8 +176,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       // write value to the cache
-      final column1 = matrix.getColumnVector(1);
-      final column2 = matrix.getColumnVector(1, tryCache: false);
+      final column1 = matrix.getColumn(1);
+      final column2 = matrix.getColumn(1, tryCache: false);
 
       expect(identical(column1, column2), isFalse);
       expect(column1, equals(column2));
@@ -356,7 +349,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0], type: MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0]);
       final actual = matrix * vector;
       final expected = [
         [40],
@@ -368,23 +361,13 @@ void main() {
       expect(actual.columnsNum, 1);
     });
 
-    test('should throw an error if one tries to multile by a row vector', () {
-      final matrix = Float32x4MatrixInternal.from([
-        [1.0, 2.0, 3.0, 4.0],
-        [5.0, 6.0, 7.0, 8.0],
-        [9.0, .0, -2.0, -3.0],
-      ]);
-      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0], type: MLVectorType.row);
-      expect(() => matrix * vector, throwsException);
-    });
-
     test('should throw an error if one tries to multiple by a vector of unproper length', () {
       final matrix = Float32x4MatrixInternal.from([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0, 7.0], type: MLVectorType.column);
+      final vector = Float32x4VectorInternal.from([2.0, 3.0, 4.0, 5.0, 7.0]);
       expect(() => matrix * vector, throwsException);
     });
 
@@ -441,6 +424,33 @@ void main() {
       expect(actual, equals(expected));
       expect(actual.rowsNum, 4);
       expect(actual.columnsNum, 3);
+    });
+
+    test('should transpose a 1xN matrix', () {
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0]);
+      final matrix = Float32x4MatrixInternal.rows([vector]);
+      final actual = matrix.transpose();
+      final expected = [
+        [1.0],
+        [2.0],
+        [3.0],
+        [4.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 4);
+      expect(actual.columnsNum, 1);
+    });
+
+    test('should transpose a Nx1 matrix', () {
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0]);
+      final matrix = Float32x4MatrixInternal.columns([vector]);
+      final actual = matrix.transpose();
+      final expected = [
+        [1.0, 2.0, 3.0, 4.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.columnsNum, 4);
+      expect(actual.rowsNum, 1);
     });
 
     test('should perform multiplication of a matrix and a scalar', () {
@@ -547,7 +557,6 @@ void main() {
       final column1 = matrix.toVector();
       final column2 = matrix.toVector();
       expect(column1 is MLVector<Float32x4>, isTrue);
-      expect(column1.isColumn, true);
       expect(column1, equals([1.0, 5.0, 9.0]));
       expect(identical(column1, column2), isTrue);
     });
@@ -562,7 +571,6 @@ void main() {
       final column2 = matrix.toVector(mutable: true);
 
       expect(column1 is MLVector<Float32x4>, isTrue);
-      expect(column1.isColumn, isTrue);
       expect(column1.isMutable, isTrue);
       expect(column1, equals([1.0, 5.0, 9.0]));
       expect(identical(column1, column2), isFalse);
@@ -576,7 +584,6 @@ void main() {
       final row1 = matrix.toVector();
       final row2 = matrix.toVector();
       expect(row1 is MLVector<Float32x4>, isTrue);
-      expect(row1.isRow, true);
       expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
       expect(identical(row1, row2), isTrue);
     });
@@ -589,7 +596,6 @@ void main() {
       final row2 = matrix.toVector(mutable: true);
 
       expect(row1 is MLVector<Float32x4>, isTrue);
-      expect(row1.isRow, isTrue);
       expect(row1.isMutable, isTrue);
       expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
       expect(identical(row1, row2), isFalse);

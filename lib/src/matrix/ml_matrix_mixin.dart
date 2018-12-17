@@ -7,7 +7,6 @@ import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_factory.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:ml_linalg/vector_type.dart';
 
 abstract class MLMatrixMixin<S extends List<E>, E>  implements
     Iterable<Iterable<double>>,
@@ -60,29 +59,29 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
 
   @override
   MLMatrix<E> transpose() {
-    final source = List<MLVector<E>>.generate(rowsNum, getRowVector);
+    final source = List<MLVector<E>>.generate(rowsNum, getRow);
     return createMatrixFromColumns(source);
   }
 
   @override
-  MLVector<E> getRowVector(int index, {bool tryCache = true, bool mutable = false}) {
+  MLVector<E> getRow(int index, {bool tryCache = true, bool mutable = false}) {
     if (tryCache) {
-      rowsCache[index] ??= createVectorFrom(this[index], MLVectorType.row, mutable);
+      rowsCache[index] ??= createVectorFrom(this[index], mutable);
       return rowsCache[index];
     } else {
-      return createVectorFrom(this[index], MLVectorType.row, mutable);
+      return createVectorFrom(this[index], mutable);
     }
   }
 
   @override
-  MLVector<E> getColumnVector(int index, {bool tryCache = true, bool mutable = false}) {
+  MLVector<E> getColumn(int index, {bool tryCache = true, bool mutable = false}) {
     if (columnsCache[index] == null || !tryCache) {
       final result = List<double>(rowsNum);
       for (int i = 0; i < rowsNum; i++) {
         //@TODO: find a more efficient way to get the single value
         result[i] = _query(i * columnsNum + index, 1)[0];
       }
-      final column = createVectorFrom(result, MLVectorType.column, mutable);
+      final column = createVectorFrom(result, mutable);
       if (!tryCache) {
         return column;
       }
@@ -110,24 +109,24 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   MLMatrix<E> pick({Iterable<Range> rowRanges, Iterable<Range> columnRanges}) {
     rowRanges ??= [Range(0, rowsNum)];
     columnRanges ??= [Range(0, columnsNum)];
-    final rows = _collectVectors(rowRanges, getRowVector, rowsNum);
+    final rows = _collectVectors(rowRanges, getRow, rowsNum);
     final rowBasedMatrix = createMatrixFromRows(rows);
-    final columns = _collectVectors(columnRanges, rowBasedMatrix.getColumnVector, columnsNum);
+    final columns = _collectVectors(columnRanges, rowBasedMatrix.getColumn, columnsNum);
     return createMatrixFromColumns(columns);
   }
 
   @override
   MLVector<E> reduceColumns(
       MLVector<E> Function(MLVector<E> combine, MLVector<E> vector) combiner,
-      {MLVector<E> initValue}) => _reduce(combiner, columnsNum, getColumnVector, initValue: initValue);
+      {MLVector<E> initValue}) => _reduce(combiner, columnsNum, getColumn, initValue: initValue);
 
   @override
   MLVector<E> reduceRows(MLVector<E> Function(MLVector<E> combine, MLVector<E> vector) combiner,
-      {MLVector<E> initValue}) => _reduce(combiner, rowsNum, getRowVector, initValue: initValue);
+      {MLVector<E> initValue}) => _reduce(combiner, rowsNum, getRow, initValue: initValue);
 
   @override
   MLMatrix<E> vectorizedMap(E mapper(E element)) {
-    final source = List<MLVector<E>>.generate(rowsNum, (int i) => getRowVector(i)
+    final source = List<MLVector<E>>.generate(rowsNum, (int i) => getRow(i)
         .vectorizedMap((E element, [int startOffset, int endOffset]) => mapper(element)));
     return createMatrixFromRows(source);
   }
@@ -150,9 +149,9 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   @override
   MLVector<E> toVector({bool mutable = false}) {
     if (columnsNum == 1) {
-      return getColumnVector(0, tryCache: !mutable, mutable: mutable);
+      return getColumn(0, tryCache: !mutable, mutable: mutable);
     } else if (rowsNum == 1) {
-      return getRowVector(0, tryCache: !mutable, mutable: mutable);
+      return getRow(0, tryCache: !mutable, mutable: mutable);
     }
     throw Exception('Cannot convert a ${rowsNum}x${columnsNum} matrix into a vector');
   }
@@ -168,13 +167,10 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   }
 
   MLMatrix<E> _matrixVectorMul(MLVector<E> vector) {
-    if (vector.isRow) {
-      throw Exception('Cannot multiple the matrix ${this} by the row vector ${vector}');
-    }
     if (vector.length != columnsNum) {
       throw Exception('The dimension of the vector ${vector} and the columns number of matrix ${this} mismatch');
     }
-    final generateElementFn = (int i) => vector.dot(getRowVector(i));
+    final generateElementFn = (int i) => vector.dot(getRow(i));
     final source = List<double>.generate(rowsNum, generateElementFn);
     final vectorColumn = createVectorFrom(source);
     return createMatrixFromColumns([vectorColumn]);
@@ -185,7 +181,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
     final source = List<double>(rowsNum * matrix.columnsNum);
     for (int i = 0; i < rowsNum; i++) {
       for (int j = 0; j < matrix.columnsNum; j++) {
-        final element = getRowVector(i).dot(matrix.getColumnVector(j));
+        final element = getRow(i).dot(matrix.getColumn(j));
         source[i * matrix.columnsNum + j] = element;
       }
     }
@@ -213,14 +209,14 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
 
   MLMatrix<E> _matrix2matrixOperation(MLMatrix<E> matrix,
       MLVector<E> operation(MLVector<E> first, MLVector<E> second)) {
-    final elementGenFn = (int i) => operation(getRowVector(i), matrix.getRowVector(i));
+    final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
     final source = List<MLVector<E>>.generate(rowsNum, elementGenFn);
     return createMatrixFromRows(source);
   }
 
   MLMatrix<E> _matrix2scalarOperation(double scalar,
       MLVector<E> operation(double scalar, MLVector<E> vector)) {
-    final elementGenFn = (int i) => operation(scalar, getRowVector(i));
+    final elementGenFn = (int i) => operation(scalar, getRow(i));
     final source = List<MLVector<E>>.generate(rowsNum, elementGenFn);
     return createMatrixFromRows(source);
   }
