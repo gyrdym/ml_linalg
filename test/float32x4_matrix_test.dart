@@ -87,8 +87,8 @@ void main() {
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
       ]);
-      final row1 = matrix.getRowVector(0);
-      final row2 = matrix.getRowVector(1);
+      final row1 = matrix.getRow(0);
+      final row2 = matrix.getRow(1);
 
       expect(row1 is MLVector, isTrue);
       expect(row1, [11.0, 12.0, 13.0, 14.0]);
@@ -106,8 +106,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       // write value to the cache
-      final row1 = matrix.getRowVector(1);
-      final row2 = matrix.getRowVector(1);
+      final row1 = matrix.getRow(1);
+      final row2 = matrix.getRow(1);
 
       expect(identical(row1, row2), isTrue);
     });
@@ -121,8 +121,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       // write value to the cache
-      final row1 = matrix.getRowVector(1);
-      final row2 = matrix.getRowVector(1, tryCache: false);
+      final row1 = matrix.getRow(1);
+      final row2 = matrix.getRow(1, tryCache: false);
 
       expect(identical(row1, row2), isFalse);
       expect(row1, equals(row2));
@@ -134,10 +134,10 @@ void main() {
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
       ]);
-      final column1 = matrix.getColumnVector(0);
-      final column2 = matrix.getColumnVector(1);
-      final column3 = matrix.getColumnVector(2);
-      final column4 = matrix.getColumnVector(3);
+      final column1 = matrix.getColumn(0);
+      final column2 = matrix.getColumn(1);
+      final column3 = matrix.getColumn(2);
+      final column4 = matrix.getColumn(3);
 
       expect(column1 is MLVector, isTrue);
       expect(column1, [11.0, 15.0, 21.0]);
@@ -161,8 +161,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       // write value to the cache
-      final column1 = matrix.getColumnVector(1);
-      final column2 = matrix.getColumnVector(1);
+      final column1 = matrix.getColumn(1);
+      final column2 = matrix.getColumn(1);
 
       expect(identical(column1, column2), isTrue);
     });
@@ -176,8 +176,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       // write value to the cache
-      final column1 = matrix.getColumnVector(1);
-      final column2 = matrix.getColumnVector(1, tryCache: false);
+      final column1 = matrix.getColumn(1);
+      final column2 = matrix.getColumn(1, tryCache: false);
 
       expect(identical(column1, column2), isFalse);
       expect(column1, equals(column2));

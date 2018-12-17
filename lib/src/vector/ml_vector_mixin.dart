@@ -288,7 +288,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
       throw Exception('Multiplication by a matrix with diffrent number of rows than the vector length is not allowed:'
           'vector length: $length, matrix row number: ${matrix.rowsNum}');
     }
-    final source = List<double>.generate(matrix.columnsNum, (int i) => dot(matrix.getColumnVector(i)));
+    final source = List<double>.generate(matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
     return createVectorFrom(source);
   }
 
