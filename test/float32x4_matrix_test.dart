@@ -441,6 +441,18 @@ void main() {
       expect(actual.columnsNum, 1);
     });
 
+    test('should transpose a Nx1 matrix', () {
+      final vector = Float32x4VectorInternal.from([1.0, 2.0, 3.0, 4.0]);
+      final matrix = Float32x4MatrixInternal.columns([vector]);
+      final actual = matrix.transpose();
+      final expected = [
+        [1.0, 2.0, 3.0, 4.0],
+      ];
+      expect(actual, equals(expected));
+      expect(actual.columnsNum, 4);
+      expect(actual.rowsNum, 1);
+    });
+
     test('should perform multiplication of a matrix and a scalar', () {
       final matrix = Float32x4MatrixInternal.from([
         [1.0, 2.0, 3.0, 4.0],

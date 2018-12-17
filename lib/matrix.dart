@@ -1,6 +1,7 @@
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/vector.dart';
 
+/// An algebraic matrix
 abstract class MLMatrix<E> {
   /// Returns a number of matrix row
   int get rowsNum;
