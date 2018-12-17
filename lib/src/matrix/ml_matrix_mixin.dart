@@ -7,7 +7,6 @@ import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_factory.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:ml_linalg/vector_type.dart';
 
 abstract class MLMatrixMixin<S extends List<E>, E>  implements
     Iterable<Iterable<double>>,
@@ -67,10 +66,10 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   @override
   MLVector<E> getRowVector(int index, {bool tryCache = true, bool mutable = false}) {
     if (tryCache) {
-      rowsCache[index] ??= createVectorFrom(this[index], MLVectorType.row, mutable);
+      rowsCache[index] ??= createVectorFrom(this[index], mutable);
       return rowsCache[index];
     } else {
-      return createVectorFrom(this[index], MLVectorType.row, mutable);
+      return createVectorFrom(this[index], mutable);
     }
   }
 
@@ -82,7 +81,7 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
         //@TODO: find a more efficient way to get the single value
         result[i] = _query(i * columnsNum + index, 1)[0];
       }
-      final column = createVectorFrom(result, MLVectorType.column, mutable);
+      final column = createVectorFrom(result, mutable);
       if (!tryCache) {
         return column;
       }
@@ -168,9 +167,6 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   }
 
   MLMatrix<E> _matrixVectorMul(MLVector<E> vector) {
-    if (vector.isRow) {
-      throw Exception('Cannot multiple the matrix ${this} by the row vector ${vector}');
-    }
     if (vector.length != columnsNum) {
       throw Exception('The dimension of the vector ${vector} and the columns number of matrix ${this} mismatch');
     }
