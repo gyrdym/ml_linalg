@@ -2,7 +2,7 @@ import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
 abstract class MLVector<E> implements Iterable<double> {
-  /// can someone mutate the vector e.g. via []= operator
+  /// Can someone mutate the vector e.g. via []= operator
   bool get isMutable;
 
   /// Indexed access to a vector's element
