@@ -1,5 +1,9 @@
 # Changelog
 
+# 4.1.0
+- `toString` method specified for matrix mixin
+- examples for vector operations fixed
+
 ## 4.0.0
 - Vector type removed (there are no longer `column` and `row` vectors)
 - Matrix's method `getColumnVector` renamed to `getColumn`

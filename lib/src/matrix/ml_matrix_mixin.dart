@@ -156,6 +156,24 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
     throw Exception('Cannot convert a ${rowsNum}x${columnsNum} matrix into a vector');
   }
 
+  @override
+  String toString() {
+    final columnsLimit = 5;
+    final rowsLimit = 5;
+    final eol = columnsNum > columnsLimit ? ', ...)' : ')';
+    String result = 'Matrix $rowsNum x $columnsNum:\n';
+    int i = 1;
+    for (final row in this) {
+      if (i > rowsLimit) {
+        result += '...';
+        break;
+      }
+      result = '$result${row.take(columnsLimit).toString().replaceAll(RegExp(r'\)$'), '')}$eol\n';
+      i++;
+    }
+    return result;
+  }
+
   MLVector<E> _reduce(MLVector<E> Function(MLVector<E> combine, MLVector<E> vector) combiner,
       int length, MLVector<E> Function(int index) getVector, {MLVector<E> initValue}) {
     var reduced = initValue ?? getVector(0);
