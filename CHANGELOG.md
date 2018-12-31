@@ -1,5 +1,8 @@
 # Changelog
 
+# 4.2.0
+- Static factories converted into abstract factories
+
 # 4.1.0
 - `toString` method specified for matrix mixin
 - examples for vector operations fixed
