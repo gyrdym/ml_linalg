@@ -48,12 +48,9 @@
     
 All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
 computation architecture. Actually, the main purpose of the library - connect such a powerful computation way with 
-the pure math. So the library contains a high performance SIMD vector class, based on 
+the pure math. So, the library contains a high performance SIMD vector class, based on 
 [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - 
-[Float32x4VectorInternal](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart). 
-As you can see from the class name, you cannot use it directly in your project. To create an instance of the 
-vector, just import [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart)
-and instantiate a vector via this factory. Most of operations in the vector are performed in four "threads". This kind 
+[Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/float32x4_vector.dart). Most of operations in the vector are performed in four "threads". This kind 
 of concurrency is reached by special 128-bit processor registers, which are used directly by program code.  For better 
 understanding of the topic please read the [article](https://www.dartlang.org/articles/dart-vm/simd).
 It is also possible to implement [Float64x2](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float64x2-class.html)-based

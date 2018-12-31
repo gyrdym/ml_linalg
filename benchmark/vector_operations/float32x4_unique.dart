@@ -4,11 +4,11 @@
 import 'dart:math' as math;
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
+import 'package:ml_linalg/float32x4_vector.dart';
 
 const amountOfElements = 10000;
 
-Float32x4VectorInternal vector;
+Float32x4Vector vector;
 
 class VectorUniqueBenchmark extends BenchmarkBase {
   const VectorUniqueBenchmark() : super('Vector unnique elements obtaining, $amountOfElements elements');
@@ -25,7 +25,7 @@ class VectorUniqueBenchmark extends BenchmarkBase {
   @override
   void setup() {
     final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
-    vector = Float32x4VectorInternal.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
+    vector = Float32x4Vector.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
   }
 
   void tearDown() {
