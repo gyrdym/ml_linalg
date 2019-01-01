@@ -3,12 +3,12 @@ import 'dart:core';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+import 'package:ml_linalg/float32x4_vector.dart';
 import 'package:ml_linalg/src/vector/float32/float32_helper_mixin.dart';
 import 'package:ml_linalg/src/vector/float32/float32x4_data_store_mixin.dart';
 import 'package:ml_linalg/src/vector/float32/float32x4_helper_mixin.dart';
 import 'package:ml_linalg/src/vector/float32/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/src/vector/ml_vector_mixin.dart';
-import 'package:ml_linalg/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
 ///
@@ -27,16 +27,10 @@ class Float32x4VectorInternal extends Object with
     Float32x4HelperMixin,
     Float32x4VectorFactoryMixin,
     MLVectorMixin<Float32x4, Float32List, Float32x4List>,
-    Float32x4DataStoreMixin implements MLVector<Float32x4> {
+    Float32x4DataStoreMixin implements Float32x4Vector {
 
   @override
   final bool isMutable;
-
-  /// Creates a vector with both empty simd and typed inner lists
-  Float32x4VectorInternal(int length, {this.isMutable = false}) {
-    this.length = length;
-    data = createSIMDList(length);
-  }
 
   /// Creates a vector from collection
   Float32x4VectorInternal.from(Iterable<double> source, {this.isMutable = false}) {
