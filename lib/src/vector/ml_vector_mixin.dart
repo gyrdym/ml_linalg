@@ -10,13 +10,13 @@ import 'package:ml_linalg/src/vector/simd_data_helper.dart';
 import 'package:ml_linalg/src/vector/typed_data_helper.dart';
 import 'package:ml_linalg/vector.dart';
 
-abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> implements
+abstract class MLVectorMixin<E, S extends List<E>> implements
     IterableMixin<double>,
     SIMDDataHelper<S, E>,
-    TypedDataHelper<T>,
-    MLVectorDataStore<S, E>,
-    MLVectorFactory<S, E>,
-    MLVector<E> {
+    TypedDataHelper,
+    MLVectorDataStore<S>,
+    MLVectorFactory<S>,
+    MLVector {
 
   S get dataWithoutLastBucket => sublist(data, 0, data.length - 1);
 
@@ -28,10 +28,10 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   bool get _isLastBucketNotFull => length % bucketSize > 0;
 
   @override
-  MLVector<E> operator +(Object value) {
-    if (value is MLVector<E>) {
+  MLVector operator +(Object value) {
+    if (value is MLVector) {
       return _elementWiseVectorOperation(value, simdSum);
-    } else if (value is MLMatrix<E>) {
+    } else if (value is MLMatrix) {
       final other = value.toVector();
       return _elementWiseVectorOperation(other, simdSum);
     } else if (value is num) {
@@ -41,10 +41,10 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   @override
-  MLVector<E> operator -(Object value) {
-    if (value is MLVector<E>) {
+  MLVector operator -(Object value) {
+    if (value is MLVector) {
       return _elementWiseVectorOperation(value, simdSub);
-    } else if (value is MLMatrix<E>) {
+    } else if (value is MLMatrix) {
       final other = value.toVector();
       return _elementWiseVectorOperation(other, simdSub);
     } else if (value is num) {
@@ -54,10 +54,10 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   @override
-  MLVector<E> operator *(Object value) {
-    if (value is MLVector<E>) {
+  MLVector operator *(Object value) {
+    if (value is MLVector) {
       return _elementWiseVectorOperation(value, simdMul);
-    } else if (value is MLMatrix<E>) {
+    } else if (value is MLMatrix) {
       return _matrixMul(value);
     } else if (value is num) {
       return _elementWiseFloatScalarOperation(value.toDouble(), simdScale);
@@ -66,8 +66,8 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   @override
-  MLVector<E> operator /(Object value) {
-    if (value is MLVector<E>) {
+  MLVector operator /(Object value) {
+    if (value is MLVector) {
       return _elementWiseVectorOperation(value, simdDiv);
     } else if (value is num) {
       return _elementWiseFloatScalarOperation(1 / value, simdScale);
@@ -76,21 +76,21 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   @override
-  MLVector<E> toIntegerPower(int power) => _elementWisePow(power);
+  MLVector toIntegerPower(int power) => _elementWisePow(power);
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   @override
-  MLVector<E> abs() => _elementWiseSelfOperation((E element, [int i]) => simdAbs(element));
+  MLVector abs() => _elementWiseSelfOperation((E element, [int i]) => simdAbs(element));
 
   @override
-  double dot(MLVector<E> vector) => (this * vector).sum();
+  double dot(MLVector vector) => (this * vector).sum();
 
   /// Returns sum of all vector components
   @override
   double sum() => singleSIMDSum(data.reduce(simdSum));
 
   @override
-  double distanceTo(MLVector<E> vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
+  double distanceTo(MLVector vector, [Norm norm = Norm.euclidean]) => (this - vector).norm(norm);
 
   @override
   double mean() => sum() / length;
@@ -137,7 +137,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   @override
-  MLVector<E> query(Iterable<int> indexes) {
+  MLVector query(Iterable<int> indexes) {
     final list = createTypedList(indexes.length);
     int i = 0;
     for (final idx in indexes) {
@@ -147,7 +147,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   @override
-  MLVector<E> unique() {
+  MLVector unique() {
     final unique = <double>[];
     for (int i = 0; i < length; i++) {
       final el = this[i];
@@ -175,16 +175,16 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     data[base] = mutateSimdValueWithScalar(data[base], offset, value);
   }
 
-  @override
-  MLVector<E> vectorizedMap(E mapper(E el, [int offsetStart, int offsetEnd])) =>
-      _elementWiseSelfOperation((E el, [int i]) {
-        final offsetStart = i * bucketSize;
-        final offsetEnd = offsetStart + bucketSize - 1;
-        return mapper(el, offsetStart, math.min(offsetEnd, length - 1));
-      });
+//  @override
+//  MLVector vectorizedMap(E mapper(E el, [int offsetStart, int offsetEnd])) =>
+//      _elementWiseSelfOperation((E el, [int i]) {
+//        final offsetStart = i * bucketSize;
+//        final offsetEnd = offsetStart + bucketSize - 1;
+//        return mapper(el, offsetStart, math.min(offsetEnd, length - 1));
+//      });
 
   @override
-  MLVector<E> subvector(int start, [int end]) {
+  MLVector subvector(int start, [int end]) {
     final collection = bufferAsTypedList(
         (data as TypedData).buffer, start, (end > length ? length : end) - start);
     return createVectorFrom(collection);
@@ -239,7 +239,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
-  MLVector<E> _elementWiseFloatScalarOperation(double scalar, E operation(E a, double b)) {
+  MLVector _elementWiseFloatScalarOperation(double scalar, E operation(E a, double b)) {
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], scalar);
@@ -248,7 +248,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
-  MLVector<E> _elementWiseSimdScalarOperation(E simdVal, E operation(E a, E b)) {
+  MLVector _elementWiseSimdScalarOperation(E simdVal, E operation(E a, E b)) {
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], simdVal);
@@ -257,16 +257,16 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
-  MLVector<E> _elementWiseVectorOperation(MLVector<E> vector, E operation(E a, E b)) {
+  MLVector _elementWiseVectorOperation(MLVector vector, E operation(E a, E b)) {
     if (vector.length != length) throw _mismatchLengthError();
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i], (vector as MLVectorDataStore<S, E>).data[i]);
+      list[i] = operation(data[i], (vector as MLVectorDataStore<S>).data[i]);
     }
     return createVectorFromSIMDList(list, length);
   }
 
-  MLVector<E> _elementWiseSelfOperation(E operation(E element, [int index])) {
+  MLVector _elementWiseSelfOperation(E operation(E element, [int index])) {
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], i);
@@ -275,7 +275,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
-  MLVector<E> _elementWisePow(int exp) {
+  MLVector _elementWisePow(int exp) {
     final list = createSIMDList(_bucketsNumber);
     for (int i = 0; i < data.length; i++) {
       list[i] = _simdToIntPow(data[i], exp);
@@ -283,7 +283,7 @@ abstract class MLVectorMixin<E, T extends List<double>, S extends List<E>> imple
     return createVectorFromSIMDList(list, length);
   }
 
-  MLVector<E> _matrixMul(MLMatrix<E> matrix) {
+  MLVector _matrixMul(MLMatrix matrix) {
     if (length != matrix.rowsNum) {
       throw Exception('Multiplication by a matrix with diffrent number of rows than the vector length is not allowed:'
           'vector length: $length, matrix row number: ${matrix.rowsNum}');
