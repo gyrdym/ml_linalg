@@ -1,9 +1,9 @@
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_validatior.dart';
 
-abstract class MLMatrixValidatorMixin<E> implements MLMatrixValidator<E> {
+abstract class MLMatrixValidatorMixin<E> implements MLMatrixValidator {
   @override
-  void checkDimensions(MLMatrix<E> first, MLMatrix<E> second,
+  void checkDimensions(MLMatrix first, MLMatrix second,
       {String errorTitle = 'Cannot perform the operation'}) {
     if (first.rowsNum != second.rowsNum || first.columnsNum != second.columnsNum) {
       throw Exception('${errorTitle}: the matrices have different dimensions - '
@@ -12,7 +12,7 @@ abstract class MLMatrixValidatorMixin<E> implements MLMatrixValidator<E> {
   }
 
   @override
-  void checkColumnsAndRowsNumber(MLMatrix<E> first, MLMatrix<E> second,
+  void checkColumnsAndRowsNumber(MLMatrix first, MLMatrix second,
       {String errorTitle = 'Cannot perform the operation'}) {
     if (first.columnsNum != second.rowsNum) {
       throw Exception('$errorTitle: column number (${first.columnsNum}) of the first matrix is not equal to row '

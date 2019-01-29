@@ -1,7 +1,56 @@
+import 'dart:typed_data';
+
+import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
+
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
-abstract class MLVector<E> implements Iterable<double> {
+abstract class MLVector implements Iterable<double> {
+  /// Creates a vector from a collection [source]. It converts the collection of [double]-type elements into a
+  /// collection of [Float32x4] elements. If [isMutable] is true, one can alter the vector, for example, via `[]=`
+  /// operator
+  factory MLVector.from(Iterable<double> source, {bool isMutable, Type dtype = Float32x4}) {
+    switch (dtype) {
+      case Float32x4:
+        return Float32x4Vector.from(source, isMutable: isMutable);
+      default:
+        throw UnimplementedError();
+    }
+  }
+
+  /// Creates a vector of length, equal to [length], filled with [value]. If [isMutable] is true, one can alter the
+  /// vector, for example, via `[]=` operator
+  factory MLVector.filled(int length, double value, {bool isMutable, Type dtype = Float32x4}) {
+    switch (dtype) {
+      case Float32x4:
+        return Float32x4Vector.filled(length, value, isMutable: isMutable);
+      default:
+        throw UnimplementedError();
+    }
+  }
+
+  /// Creates a vector of length, equal to [length], filled with zeroes. If [isMutable] is true, one can alter the
+  /// vector, for example, via `[]=` operator
+  factory MLVector.zero(int length, {bool isMutable, Type dtype = Float32x4}) {
+    switch (dtype) {
+      case Float32x4:
+        return Float32x4Vector.zero(length, isMutable: isMutable);
+      default:
+        throw UnimplementedError();
+    }
+  }
+
+  /// Creates a vector of length, equal to [length], filled with random values, generated from randomizer with seed,
+  /// equal to [seed]. If [isMutable] is true, one can alter the vector, for example, via `[]=` operator
+  factory MLVector.randomFilled(int length, {int seed, bool isMutable, Type dtype = Float32x4}) {
+    switch (dtype) {
+      case Float32x4:
+        return Float32x4Vector.randomFilled(length, seed: seed, isMutable: isMutable);
+      default:
+        throw UnimplementedError();
+    }
+  }
+
   /// Can someone mutate the vector e.g. via []= operator
   bool get isMutable;
 
@@ -12,28 +61,28 @@ abstract class MLVector<E> implements Iterable<double> {
   void operator []=(int index, double value);
 
   /// Vector addition (element-wise operation)
-  MLVector<E> operator +(Object value);
+  MLVector operator +(Object value);
 
   /// Vector subtraction (element-wise operation)
-  MLVector<E> operator -(Object value);
+  MLVector operator -(Object value);
 
   /// Vector multiplication (element-wise operation)
-  MLVector<E> operator *(Object value);
+  MLVector operator *(Object value);
 
   /// Element-wise division
-  MLVector<E> operator /(Object value);
+  MLVector operator /(Object value);
 
   /// Creates a new [MLVector] containing elements of this [MLVector] raised to the integer [power]
-  MLVector<E> toIntegerPower(int power);
+  MLVector toIntegerPower(int power);
 
   /// Returns a vector with absolute value of each vector element
-  MLVector<E> abs();
+  MLVector abs();
 
   /// Returns a dot (inner) product of [this] and [vector]
-  double dot(MLVector<E> vector);
+  double dot(MLVector vector);
 
   /// Returns a distance between [this] and [vector] with vector norm type considering
-  double distanceTo(MLVector<E> vector, [Norm norm = Norm.euclidean]);
+  double distanceTo(MLVector vector, [Norm norm = Norm.euclidean]);
 
   /// Returns a mean value of [this] vector
   double mean();
@@ -51,14 +100,14 @@ abstract class MLVector<E> implements Iterable<double> {
   double min();
 
   /// Returns a vector composed of elements which are located on the passed indexes
-  MLVector<E> query(Iterable<int> indexes);
+  MLVector query(Iterable<int> indexes);
 
   /// Returns a vector composed of unique vector's elements
-  MLVector<E> unique();
+  MLVector unique();
 
   /// Applies mapper function throughout simd list
-  MLVector<E> vectorizedMap(E mapper(E element, [int offsetStartIdx, int offsetEndIdx]));
+  //  MLVector vectorizedMap<E>(E mapper(E element, int offsetStartIdx, int offsetEndIdx));
 
   /// Cuts out a part of the vector
-  MLVector<E> subvector(int start, [int end]);
+  MLVector subvector(int start, [int end]);
 }

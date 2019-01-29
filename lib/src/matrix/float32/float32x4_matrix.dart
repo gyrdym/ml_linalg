@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:core';
 import 'dart:typed_data';
 
-import 'package:ml_linalg/float32x4_matrix.dart';
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/matrix/float32/float32_matrix_iterator.dart';
 import 'package:ml_linalg/src/matrix/float32/float32x4_matrix_factory_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
@@ -11,12 +11,12 @@ import 'package:ml_linalg/src/matrix/ml_matrix_validator_mixin.dart';
 import 'package:ml_linalg/src/vector/float32/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
-class Float32x4MatrixInternal extends Object with
+class Float32x4Matrix extends Object with
     IterableMixin<Iterable<double>>,
     MLMatrixValidatorMixin<Float32x4>,
     Float32x4MatrixFactoryMixin,
     Float32x4VectorFactoryMixin,
-    MLMatrixMixin<Float32x4List, Float32x4> implements MLMatrixDataStore<Float32x4>, Float32x4Matrix {
+    MLMatrixMixin<Float32x4List, Float32x4> implements MLMatrixDataStore<Float32x4>, MLMatrix {
 
   @override
   final int rowsNum;
@@ -28,17 +28,17 @@ class Float32x4MatrixInternal extends Object with
   final ByteData data;
 
   @override
-  final List<MLVector<Float32x4>> columnsCache;
+  final List<MLVector> columnsCache;
 
   @override
-  final List<MLVector<Float32x4>> rowsCache;
+  final List<MLVector> rowsCache;
 
-  Float32x4MatrixInternal.from(Iterable<Iterable<double>> source)
+  Float32x4Matrix.from(Iterable<Iterable<double>> source)
       : rowsNum = source.length,
         columnsNum = source.first.length,
         data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
-        rowsCache = List<MLVector<Float32x4>>(source.length),
-        columnsCache = List<MLVector<Float32x4>>(source.first.length) {
+        rowsCache = List<MLVector>(source.length),
+        columnsCache = List<MLVector>(source.first.length) {
     final flattened = flatten2dimList(source, (i, j) => i * columnsNum + j);
     data.buffer.asFloat32List().setAll(0, flattened);
   }
@@ -55,31 +55,31 @@ class Float32x4MatrixInternal extends Object with
   ///   {a2} {b2} {c2}
   ///   {a3} {b3} {c3}
   ///   {a4} {b4} {c4}
-  Float32x4MatrixInternal.columns(Iterable<MLVector<Float32x4>> source)
+  Float32x4Matrix.columns(Iterable<MLVector> source)
       : rowsNum = source.first.length,
         columnsNum = source.length,
         data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
-        rowsCache = List<MLVector<Float32x4>>(source.first.length),
+        rowsCache = List<MLVector>(source.first.length),
         columnsCache = source.toList(growable: false) {
     final flattened = flatten2dimList(source, (i, j) => j * columnsNum + i);
     data.buffer.asFloat32List().setAll(0, flattened);
   }
 
   /// vectors from [source] will serve as rows of the matrix
-  Float32x4MatrixInternal.rows(Iterable<MLVector<Float32x4>> source)
+  Float32x4Matrix.rows(Iterable<MLVector> source)
       : rowsNum = source.length,
         columnsNum = source.first.length,
         data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
         rowsCache = source.toList(growable: false),
-        columnsCache = List<MLVector<Float32x4>>(source.first.length) {
+        columnsCache = List<MLVector>(source.first.length) {
     final flattened = flatten2dimList(source, (i, j) => i * columnsNum + j);
     data.buffer.asFloat32List().setAll(0, flattened);
   }
 
-  Float32x4MatrixInternal.flattened(Iterable<double> source, this.rowsNum, this.columnsNum)
+  Float32x4Matrix.flattened(Iterable<double> source, this.rowsNum, this.columnsNum)
       : data = ByteData(rowsNum * columnsNum * Float32List.bytesPerElement),
-        rowsCache = List<MLVector<Float32x4>>(rowsNum),
-        columnsCache = List<MLVector<Float32x4>>(columnsNum) {
+        rowsCache = List<MLVector>(rowsNum),
+        columnsCache = List<MLVector>(columnsNum) {
     if (source.length != rowsNum * columnsNum) {
       throw Exception('Invalid number of rows and columns are provided');
     }
