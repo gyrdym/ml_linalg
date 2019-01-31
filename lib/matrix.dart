@@ -77,7 +77,7 @@ abstract class MLMatrix {
 
   /// Creates a new matrix, efficiently iterating through all the matrix elements (several floating point elements in a
   /// time) and applying the [mapper] function
-  //  MLMatrix<E> vectorizedMap(E mapper(E columnElement));
+  MLMatrix fastMap<E>(E mapper(E columnElement));
 
   /// Tries to convert the matrix to a vector. It fails, if the matrix's both numbers of columns and rows are greater
   /// than 1

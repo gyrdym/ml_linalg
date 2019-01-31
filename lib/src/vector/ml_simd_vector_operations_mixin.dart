@@ -4,26 +4,24 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
+import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
 import 'package:ml_linalg/src/vector/ml_vector_data_store.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
-import 'package:ml_linalg/src/vector/simd_data_helper.dart';
-import 'package:ml_linalg/src/vector/typed_data_helper.dart';
+import 'package:ml_linalg/src/vector/ml_typed_data_helper.dart';
 import 'package:ml_linalg/vector.dart';
 
-abstract class MLVectorMixin<E, S extends List<E>> implements
+abstract class MLSimdVectorOperationsMixin<E, S extends List<E>> implements
     IterableMixin<double>,
-    SIMDDataHelper<S, E>,
-    TypedDataHelper,
-    MLVectorDataStore<S>,
-    MLVectorFactory<S>,
+    MLSimdOperationsHelper<E, S>,
+    MLTypedListFactory,
+    MLVectorDataStore<E, S>,
+    MLVectorFactory<E, S>,
     MLVector {
 
   S get dataWithoutLastBucket => sublist(data, 0, data.length - 1);
 
   @override
   Iterator<double> get iterator => getIterator((data as TypedData).buffer, length);
-
-  int get _bucketsNumber => data.length;
 
   bool get _isLastBucketNotFull => length % bucketSize > 0;
 
@@ -35,7 +33,7 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
       final other = value.toVector();
       return _elementWiseVectorOperation(other, simdSum);
     } else if (value is num) {
-      return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSum);
+      return _elementWiseSimdScalarOperation(createSimdFilled(value.toDouble()), simdSum);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
@@ -48,7 +46,7 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
       final other = value.toVector();
       return _elementWiseVectorOperation(other, simdSub);
     } else if (value is num) {
-      return _elementWiseSimdScalarOperation(createSIMDFilled(value.toDouble()), simdSub);
+      return _elementWiseSimdScalarOperation(createSimdFilled(value.toDouble()), simdSub);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
@@ -175,14 +173,6 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
     data[base] = mutateSimdValueWithScalar(data[base], offset, value);
   }
 
-//  @override
-//  MLVector vectorizedMap(E mapper(E el, [int offsetStart, int offsetEnd])) =>
-//      _elementWiseSelfOperation((E el, [int i]) {
-//        final offsetStart = i * bucketSize;
-//        final offsetEnd = offsetStart + bucketSize - 1;
-//        return mapper(el, offsetStart, math.min(offsetEnd, length - 1));
-//      });
-
   @override
   MLVector subvector(int start, [int end]) {
     final collection = bufferAsTypedList(
@@ -205,7 +195,7 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
   /// Returns a SIMD value raised to the integer power
   E _simdToIntPow(E lane, int power) {
     if (power == 0) {
-      return createSIMDFilled(1.0);
+      return createSimdFilled(1.0);
     }
 
     final x = _simdToIntPow(lane, power ~/ 2);
@@ -232,7 +222,7 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
       final start = i * bucketSize;
       final end = start + bucketSize;
       final bucketAsList = source.sublist(start, math.min(end, source.length));
-      target[i] = createSIMDFromSimpleList(bucketAsList);
+      target[i] = createSimdFromSimpleList(bucketAsList);
     }
 
     return target;
@@ -240,7 +230,7 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
   MLVector _elementWiseFloatScalarOperation(double scalar, E operation(E a, double b)) {
-    final list = createSIMDList(_bucketsNumber);
+    final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], scalar);
     }
@@ -249,7 +239,7 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
   MLVector _elementWiseSimdScalarOperation(E simdVal, E operation(E a, E b)) {
-    final list = createSIMDList(_bucketsNumber);
+    final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], simdVal);
     }
@@ -259,15 +249,15 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
   MLVector _elementWiseVectorOperation(MLVector vector, E operation(E a, E b)) {
     if (vector.length != length) throw _mismatchLengthError();
-    final list = createSIMDList(_bucketsNumber);
+    final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i], (vector as MLVectorDataStore<S>).data[i]);
+      list[i] = operation(data[i], (vector as MLVectorDataStore<E, S>).data[i]);
     }
     return createVectorFromSIMDList(list, length);
   }
 
   MLVector _elementWiseSelfOperation(E operation(E element, [int index])) {
-    final list = createSIMDList(_bucketsNumber);
+    final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], i);
     }
@@ -276,7 +266,7 @@ abstract class MLVectorMixin<E, S extends List<E>> implements
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
   MLVector _elementWisePow(int exp) {
-    final list = createSIMDList(_bucketsNumber);
+    final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = _simdToIntPow(data[i], exp);
     }
