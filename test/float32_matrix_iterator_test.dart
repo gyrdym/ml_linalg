@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/float32/float32_matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/float32x4/float32_matrix_iterator.dart';
 import 'package:test/test.dart';
 
 import 'unit_test_helpers/float_iterable_almost_equal_to.dart';

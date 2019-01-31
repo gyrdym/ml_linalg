@@ -3,8 +3,8 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
-import 'package:ml_linalg/src/matrix/float32/float32_matrix_iterator.dart';
-import 'package:ml_linalg/src/matrix/float32/float32x4_matrix_factory_mixin.dart';
+import 'package:ml_linalg/src/matrix/float32x4/float32_matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix_factory_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_fast_iterable_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_mixin.dart';
