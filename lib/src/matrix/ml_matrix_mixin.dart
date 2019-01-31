@@ -8,11 +8,11 @@ import 'package:ml_linalg/src/matrix/ml_matrix_validatior.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
-abstract class MLMatrixMixin<S extends List<E>, E>  implements
+abstract class MLMatrixMixin<E, S extends List<E>>  implements
     Iterable<Iterable<double>>,
-    MLMatrixDataStore<E>,
-    MLMatrixFactory<E>,
-    MLVectorFactory<S>,
+    MLMatrixDataStore,
+    MLMatrixFactory,
+    MLVectorFactory<E, S>,
     MLMatrixValidator,
     MLMatrix {
 
@@ -123,14 +123,6 @@ abstract class MLMatrixMixin<S extends List<E>, E>  implements
   @override
   MLVector reduceRows(MLVector Function(MLVector combine, MLVector vector) combiner,
       {MLVector initValue}) => _reduce(combiner, rowsNum, getRow, initValue: initValue);
-
-//  @override
-//  MLMatrix vectorizedMap(E mapper(E element)) {
-//    final source = List<MLVector>.generate(rowsNum, (int i) => getRow(i)
-//        .vectorizedMap((E element, [int startOffset, int endOffset]) => mapper(element)));
-//    return createMatrixFromRows(source);
-//    throw UnimplementedError();
-//  }
 
   List<double> flatten2dimList(Iterable<Iterable<double>> rows, int Function(int i, int j) accessor) {
     int i = 0;

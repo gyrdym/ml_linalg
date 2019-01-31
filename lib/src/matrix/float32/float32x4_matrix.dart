@@ -6,9 +6,10 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/matrix/float32/float32_matrix_iterator.dart';
 import 'package:ml_linalg/src/matrix/float32/float32x4_matrix_factory_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
+import 'package:ml_linalg/src/matrix/ml_matrix_fast_iterable_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_validator_mixin.dart';
-import 'package:ml_linalg/src/vector/float32/float32x4_vector_factory_mixin.dart';
+import 'package:ml_linalg/src/vector/float32x4/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
 class Float32x4Matrix extends Object with
@@ -16,7 +17,9 @@ class Float32x4Matrix extends Object with
     MLMatrixValidatorMixin<Float32x4>,
     Float32x4MatrixFactoryMixin,
     Float32x4VectorFactoryMixin,
-    MLMatrixMixin<Float32x4List, Float32x4> implements MLMatrixDataStore<Float32x4>, MLMatrix {
+    MLMatrixFastIterableMixin,
+    MLMatrixMixin<Float32x4, Float32x4List>
+    implements MLMatrixDataStore, MLMatrix {
 
   @override
   final int rowsNum;

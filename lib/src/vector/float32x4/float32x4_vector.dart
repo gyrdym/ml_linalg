@@ -3,11 +3,12 @@ import 'dart:core';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/float32/float32_helper_mixin.dart';
-import 'package:ml_linalg/src/vector/float32/float32x4_data_store_mixin.dart';
-import 'package:ml_linalg/src/vector/float32/float32x4_helper_mixin.dart';
-import 'package:ml_linalg/src/vector/float32/float32x4_vector_factory_mixin.dart';
-import 'package:ml_linalg/src/vector/ml_vector_mixin.dart';
+import 'package:ml_linalg/src/vector/common/float32_list_factory_mixin.dart';
+import 'package:ml_linalg/src/vector/float32x4/float32x4_data_store_mixin.dart';
+import 'package:ml_linalg/src/vector/float32x4/float32x4_operations_mixin.dart';
+import 'package:ml_linalg/src/vector/float32x4/float32x4_vector_factory_mixin.dart';
+import 'package:ml_linalg/src/vector/ml_simd_vector_fast_iterable_mixin.dart';
+import 'package:ml_linalg/src/vector/ml_simd_vector_operations_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
@@ -23,11 +24,12 @@ import 'package:ml_linalg/vector.dart';
 /// simultaneously (in parallel)
 class Float32x4Vector extends Object with
     IterableMixin<double>,
-    Float32HelperMixin,
-    Float32x4HelperMixin,
+    Float32ListFactoryMixin,
+    Float32x4OperationsMixin,
     Float32x4VectorFactoryMixin,
-    MLVectorMixin<Float32x4, Float32x4List>,
-    Float32x4DataStoreMixin implements MLVector {
+    Float32x4DataStoreMixin,
+    MLSimdVectorFastIterableMixin<Float32x4, Float32x4List>,
+    MLSimdVectorOperationsMixin<Float32x4, Float32x4List> implements MLVector {
 
   @override
   final bool isMutable;

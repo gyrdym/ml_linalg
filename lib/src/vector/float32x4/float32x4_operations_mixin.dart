@@ -1,17 +1,17 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/simd_data_helper.dart';
+import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
 
-class Float32x4HelperMixin implements SIMDDataHelper<Float32x4List, Float32x4> {
+class Float32x4OperationsMixin implements MLSimdOperationsHelper<Float32x4, Float32x4List> {
   @override
   final bucketSize = 4;
 
   @override
-  Float32x4 createSIMDFilled(double value) => Float32x4.splat(value);
+  Float32x4 createSimdFilled(double value) => Float32x4.splat(value);
 
   @override
-  Float32x4 createSIMDFromSimpleList(List<double> list) {
+  Float32x4 createSimdFromSimpleList(List<double> list) {
     final x = list.isNotEmpty ? list[0] ?? 0.0 : 0.0;
     final y = list.length > 1 ? list[1] ?? 0.0 : 0.0;
     final z = list.length > 2 ? list[2] ?? 0.0 : 0.0;

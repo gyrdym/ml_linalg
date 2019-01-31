@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
+import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 
 import 'norm.dart';
 
@@ -105,8 +105,7 @@ abstract class MLVector implements Iterable<double> {
   /// Returns a vector composed of unique vector's elements
   MLVector unique();
 
-  /// Applies mapper function throughout simd list
-  //  MLVector vectorizedMap<E>(E mapper(E element, int offsetStartIdx, int offsetEndIdx));
+  MLVector fastMap<E>(E mapper(E element, int offsetStartIdx, int offsetEndIdx));
 
   /// Cuts out a part of the vector
   MLVector subvector(int start, [int end]);

@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/float32/float32x4_matrix.dart';
 import 'package:ml_linalg/range.dart';
-import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
+import 'package:ml_linalg/src/matrix/float32/float32x4_matrix.dart';
+import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
@@ -537,7 +537,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final actual = matrix.vectorizedMap((Float32x4 element, [int i, int j]) => element.scale(4.0));
+      final actual = matrix.fastMap<Float32x4>((Float32x4 element) => element.scale(4.0));
       final expected = [
         [4.0, 8.0, 12.0, 16.0],
         [20.0, 24.0, 28.0, 32.0],
@@ -556,7 +556,7 @@ void main() {
       ]);
       final column1 = matrix.toVector();
       final column2 = matrix.toVector();
-      expect(column1 is MLVector<Float32x4>, isTrue);
+      expect(column1 is MLVector, isTrue);
       expect(column1, equals([1.0, 5.0, 9.0]));
       expect(identical(column1, column2), isTrue);
     });
@@ -570,7 +570,7 @@ void main() {
       final column1 = matrix.toVector(mutable: true);
       final column2 = matrix.toVector(mutable: true);
 
-      expect(column1 is MLVector<Float32x4>, isTrue);
+      expect(column1 is MLVector, isTrue);
       expect(column1.isMutable, isTrue);
       expect(column1, equals([1.0, 5.0, 9.0]));
       expect(identical(column1, column2), isFalse);
@@ -583,7 +583,7 @@ void main() {
       ]);
       final row1 = matrix.toVector();
       final row2 = matrix.toVector();
-      expect(row1 is MLVector<Float32x4>, isTrue);
+      expect(row1 is MLVector, isTrue);
       expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
       expect(identical(row1, row2), isTrue);
     });
@@ -595,7 +595,7 @@ void main() {
       final row1 = matrix.toVector(mutable: true);
       final row2 = matrix.toVector(mutable: true);
 
-      expect(row1 is MLVector<Float32x4>, isTrue);
+      expect(row1 is MLVector, isTrue);
       expect(row1.isMutable, isTrue);
       expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
       expect(identical(row1, row2), isFalse);

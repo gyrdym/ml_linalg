@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/float32/float32x4_vector.dart';
 import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -233,7 +233,7 @@ void main() {
     test('should map an existing vector to a new one processing 4 elements in a time', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       int iteration = 0;
-      final actual = vector.vectorizedMap((Float32x4 element, [int start, int end]) {
+      final actual = vector.fastMap((Float32x4 element, int start, int end) {
         if (iteration == 0) {
           expect([start, end], equals([0, 3]));
         } else if (iteration == 1) {
