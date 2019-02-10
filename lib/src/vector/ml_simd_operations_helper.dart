@@ -1,13 +1,13 @@
-abstract class SIMDDataHelper<S extends List<E>, E> {
+abstract class MLSimdOperationsHelper<E, S extends List<E>> {
   /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
   int get bucketSize;
 
   /// creates a simd-value filled with [value]
-  E createSIMDFilled(double value);
+  E createSimdFilled(double value);
 
   /// creates a simd-value from passed [list]
-  E createSIMDFromSimpleList(List<double> list);
+  E createSimdFromSimpleList(List<double> list);
 
   /// performs summation of two simd values
   E simdSum(E a, E b);

@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/typed_data_helper.dart';
+import 'package:ml_linalg/src/vector/ml_typed_data_helper.dart';
 
-class Float32HelperMixin implements TypedDataHelper<Float32List> {
+class Float32ListFactoryMixin implements MLTypedListFactory {
   @override
   Float32List createTypedList(int length) => Float32List(length);
 
