@@ -432,7 +432,7 @@ void main() {
       expect(() => vector[20] = 2.0, throwsRangeError);
     });
 
-    test('should cut subvector', () {
+    test('should cut out a subvector', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final actual = vector.subvector(1, 5);
       final expected = [2.0, 3.0, 4.0, 5.0];

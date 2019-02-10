@@ -1,9 +1,12 @@
 # Changelog
 
-# 4.2.0
+## 5.0.0
+- MLVector and MLMatrix now don't have generic type parameters
+
+## 4.2.0
 - Static factories converted into abstract factories
 
-# 4.1.0
+## 4.1.0
 - `toString` method specified for matrix mixin
 - examples for vector operations fixed
 
