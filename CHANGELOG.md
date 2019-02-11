@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.1
+- Travis integration added
+- `dartfmt` task added
+
 ## 5.0.0
 - MLVector and MLMatrix now don't have generic type parameters
 

@@ -11,7 +11,8 @@ const amountOfElements = 10000;
 Float32x4Vector vector;
 
 class VectorUniqueBenchmark extends BenchmarkBase {
-  const VectorUniqueBenchmark() : super('Vector unnique elements obtaining, $amountOfElements elements');
+  const VectorUniqueBenchmark()
+      : super('Vector unnique elements obtaining, $amountOfElements elements');
 
   static void main() {
     const VectorUniqueBenchmark().report();
@@ -25,7 +26,8 @@ class VectorUniqueBenchmark extends BenchmarkBase {
   @override
   void setup() {
     final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
-    vector = Float32x4Vector.from(List<double>.generate(amountOfElements, (int idx) => generator.nextDouble()));
+    vector = Float32x4Vector.from(List<double>.generate(
+        amountOfElements, (int idx) => generator.nextDouble()));
   }
 
   void tearDown() {
