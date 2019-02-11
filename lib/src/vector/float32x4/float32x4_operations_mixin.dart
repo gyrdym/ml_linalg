@@ -3,7 +3,8 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
 
-class Float32x4OperationsMixin implements MLSimdOperationsHelper<Float32x4, Float32x4List> {
+class Float32x4OperationsMixin
+    implements MLSimdOperationsHelper<Float32x4, Float32x4List> {
   @override
   final bucketSize = 4;
 
@@ -38,8 +39,11 @@ class Float32x4OperationsMixin implements MLSimdOperationsHelper<Float32x4, Floa
   Float32x4 simdAbs(Float32x4 a) => a.abs();
 
   @override
-  double singleSIMDSum(Float32x4 a) => (a.x.isNaN ? 0.0 : a.x) + (a.y.isNaN ? 0.0 : a.y) + (a.z.isNaN ? 0.0 : a.z) +
-    (a.w.isNaN ? 0.0 : a.w);
+  double singleSIMDSum(Float32x4 a) =>
+      (a.x.isNaN ? 0.0 : a.x) +
+      (a.y.isNaN ? 0.0 : a.y) +
+      (a.z.isNaN ? 0.0 : a.z) +
+      (a.w.isNaN ? 0.0 : a.w);
 
   @override
   Float32x4List createSIMDList(int length) => Float32x4List(length);
@@ -64,28 +68,30 @@ class Float32x4OperationsMixin implements MLSimdOperationsHelper<Float32x4, Floa
   Float32x4 selectMax(Float32x4 a, Float32x4 b) => a.max(b);
 
   @override
-  double getMaxLane(Float32x4 a) => math.max(math.max(a.x, a.y), math.max(a.z, a.w));
+  double getMaxLane(Float32x4 a) =>
+      math.max(math.max(a.x, a.y), math.max(a.z, a.w));
 
   @override
   Float32x4 selectMin(Float32x4 a, Float32x4 b) => a.min(b);
 
   @override
-  double getMinLane(Float32x4 a) => math.min(math.min(a.x, a.y), math.min(a.z, a.w));
+  double getMinLane(Float32x4 a) =>
+      math.min(math.min(a.x, a.y), math.min(a.z, a.w));
 
   @override
   List<double> simdToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
 
   @override
-  List<double> takeFirstNLanes(Float32x4 a, int n) => simdToList(a)
-      .take(n)
-      .toList();
+  List<double> takeFirstNLanes(Float32x4 a, int n) =>
+      simdToList(a).take(n).toList();
 
   @override
   Float32x4List sublist(Float32x4List list, int start, [int end]) =>
       list.buffer.asFloat32x4List(start * Float32x4List.bytesPerElement, end);
 
   @override
-  Float32x4 mutateSimdValueWithScalar(Float32x4 simd, int offset, double value) {
+  Float32x4 mutateSimdValueWithScalar(
+      Float32x4 simd, int offset, double value) {
     switch (offset) {
       case 0:
         return simd.withX(value);

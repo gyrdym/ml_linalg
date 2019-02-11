@@ -74,7 +74,8 @@ void dot() {
   final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Float32x4Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.dot(vector2);
-  print(result); // 1.0 * 2.0 + 2.0 * 3.0 + 3.0 * 4.0 + 4.0 * 5.0 + 5.0 * 6.0 = 70.0
+  print(
+      result); // 1.0 * 2.0 + 2.0 * 3.0 + 3.0 * 4.0 + 4.0 * 5.0 + 5.0 * 6.0 = 70.0
 }
 
 void scalarAddition() {

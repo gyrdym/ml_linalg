@@ -22,7 +22,8 @@ void main() {
       expect(actual.columnsNum, 5);
     });
 
-    test('should create an instance with predefined vectors as matrix rows', () {
+    test('should create an instance with predefined vectors as matrix rows',
+        () {
       final actual = Float32x4Matrix.rows([
         Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]),
         Float32x4Vector.from([6.0, 7.0, 8.0, 9.0, 0.0]),
@@ -36,7 +37,8 @@ void main() {
       expect(actual.columnsNum, 5);
     });
 
-    test('should create an instance with predefined vectors as matrix columns', () {
+    test('should create an instance with predefined vectors as matrix columns',
+        () {
       final actual = Float32x4Matrix.columns([
         Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]),
         Float32x4Vector.from([6.0, 7.0, 8.0, 9.0, 0.0]),
@@ -54,7 +56,8 @@ void main() {
     });
 
     test('should create an instance from flattened collection', () {
-      final actual = Float32x4Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
+      final actual =
+          Float32x4Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
       final expected = [
         [1.0, 2.0, 3.0],
         [4.0, 5.0, 6.0],
@@ -64,9 +67,11 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should throw an error if one tries to create a matrix from flattened collection and with unproper specified '
+    test(
+        'should throw an error if one tries to create a matrix from flattened collection and with unproper specified '
         'dimensions', () {
-      expect(() => Float32x4Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0], 2, 3), throwsException);
+      expect(() => Float32x4Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0], 2, 3),
+          throwsException);
     });
 
     test('should provide indexed access to its elements', () {
@@ -183,14 +188,17 @@ void main() {
       expect(column1, equals(column2));
     });
 
-    test('should cut out a submatrix with respect to given intervals, rows and columns range ends are excluded', () {
+    test(
+        'should cut out a submatrix with respect to given intervals, rows and columns range ends are excluded',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
         [24.0, 32.0, 53.0, 74.0],
       ]);
-      final submatrix = matrix.submatrix(rows: Range(1, 3), columns: Range(1, 2));
+      final submatrix =
+          matrix.submatrix(rows: Range(1, 3), columns: Range(1, 2));
       final expected = [
         [16.0],
         [22.0],
@@ -198,14 +206,17 @@ void main() {
       expect(submatrix, expected);
     });
 
-    test('should cut out a submatrix with respect to given intervals, rows and columns range ends are included', () {
+    test(
+        'should cut out a submatrix with respect to given intervals, rows and columns range ends are included',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
         [24.0, 32.0, 53.0, 74.0],
       ]);
-      final submatrix = matrix.submatrix(rows: Range(1, 3, endInclusive: true),
+      final submatrix = matrix.submatrix(
+          rows: Range(1, 3, endInclusive: true),
           columns: Range(1, 2, endInclusive: true));
       final expected = [
         [16.0, 17.0],
@@ -215,14 +226,17 @@ void main() {
       expect(submatrix, expected);
     });
 
-    test('should cut out a submatrix with respect to given intervals, just rows range end is included', () {
+    test(
+        'should cut out a submatrix with respect to given intervals, just rows range end is included',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
         [24.0, 32.0, 53.0, 74.0],
       ]);
-      final submatrix = matrix.submatrix(rows: Range(1, 3, endInclusive: true),
+      final submatrix = matrix.submatrix(
+          rows: Range(1, 3, endInclusive: true),
           columns: Range(1, 2, endInclusive: false));
       final expected = [
         [16.0],
@@ -232,14 +246,17 @@ void main() {
       expect(submatrix, expected);
     });
 
-    test('should cut out a submatrix with respect to given intervals, just columns range end is included', () {
+    test(
+        'should cut out a submatrix with respect to given intervals, just columns range end is included',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
         [24.0, 32.0, 53.0, 74.0],
       ]);
-      final submatrix = matrix.submatrix(rows: Range(1, 3, endInclusive: false),
+      final submatrix = matrix.submatrix(
+          rows: Range(1, 3, endInclusive: false),
           columns: Range(1, 2, endInclusive: true));
       final expected = [
         [16.0, 17.0],
@@ -248,7 +265,9 @@ void main() {
       expect(submatrix, expected);
     });
 
-    test('should cut out a submatrix with respect to given intervals, both rows and columns ranges are unspecified', () {
+    test(
+        'should cut out a submatrix with respect to given intervals, both rows and columns ranges are unspecified',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
@@ -265,7 +284,9 @@ void main() {
       expect(submatrix, expected);
     });
 
-    test('should cut out a submatrix with respect to given intervals, rows range is unspecified', () {
+    test(
+        'should cut out a submatrix with respect to given intervals, rows range is unspecified',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
@@ -282,7 +303,9 @@ void main() {
       expect(submatrix, expected);
     });
 
-    test('should cut out a submatrix with respect to given intervals, columns range is unspecified', () {
+    test(
+        'should cut out a submatrix with respect to given intervals, columns range is unspecified',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
@@ -297,7 +320,9 @@ void main() {
       expect(submatrix, expected);
     });
 
-    test('should reduce all the matrix rows into a single vector, without initial reducer value', () {
+    test(
+        'should reduce all the matrix rows into a single vector, without initial reducer value',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
@@ -308,7 +333,9 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should reduce all the matrix rows into a single vector, with initial reducer value', () {
+    test(
+        'should reduce all the matrix rows into a single vector, with initial reducer value',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
@@ -320,18 +347,23 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should reduce all the matrix columns into a single vector, without initial reducer value', () {
+    test(
+        'should reduce all the matrix columns into a single vector, without initial reducer value',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
       ]);
-      final actual = matrix.reduceColumns((combine, vector) => combine + vector);
+      final actual =
+          matrix.reduceColumns((combine, vector) => combine + vector);
       final expected = [50, 66, 90];
       expect(actual, equals(expected));
     });
 
-    test('should reduce all the matrix columns into a single vector, with initial reducer value', () {
+    test(
+        'should reduce all the matrix columns into a single vector, with initial reducer value',
+        () {
       final matrix = Float32x4Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
@@ -361,7 +393,9 @@ void main() {
       expect(actual.columnsNum, 1);
     });
 
-    test('should throw an error if one tries to multiple by a vector of unproper length', () {
+    test(
+        'should throw an error if one tries to multiple by a vector of unproper length',
+        () {
       final matrix = Float32x4Matrix.from([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
@@ -394,7 +428,9 @@ void main() {
       expect(actual.columnsNum, 2);
     });
 
-    test('should throw an error if one tries to mult a matrix with another matrix of unproper dimensions', () {
+    test(
+        'should throw an error if one tries to mult a matrix with another matrix of unproper dimensions',
+        () {
       final matrix1 = Float32x4Matrix.from([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
@@ -537,7 +573,8 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final actual = matrix.fastMap<Float32x4>((Float32x4 element) => element.scale(4.0));
+      final actual =
+          matrix.fastMap<Float32x4>((Float32x4 element) => element.scale(4.0));
       final expected = [
         [4.0, 8.0, 12.0, 16.0],
         [20.0, 24.0, 28.0, 32.0],
@@ -602,7 +639,9 @@ void main() {
       expect(row1, equals(row2));
     });
 
-    test('should throw an error if one tries to convert it into vector if its dimension is inappropriate', () {
+    test(
+        'should throw an error if one tries to convert it into vector if its dimension is inappropriate',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0],
         [20.0, 24.0, 28.0, 32.0],
@@ -620,8 +659,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-          rowRanges: [Range(0, 2), Range(3, 4)],
-          columnRanges: [Range(1, 2), Range(3, 4)],
+        rowRanges: [Range(0, 2), Range(3, 4)],
+        columnRanges: [Range(1, 2), Range(3, 4)],
       );
       final expected = [
         [8.0, 16.0],
@@ -633,7 +672,9 @@ void main() {
   });
 
   group('Float32x4Matrix.pick()', () {
-    test('should create a new matrix from its diffrent segments (same row ranges case)', () {
+    test(
+        'should create a new matrix from its diffrent segments (same row ranges case)',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -654,7 +695,9 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (same coulmn ranges case)', () {
+    test(
+        'should create a new matrix from its diffrent segments (same coulmn ranges case)',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -674,7 +717,9 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (one row range, one column range)', () {
+    test(
+        'should create a new matrix from its diffrent segments (one row range, one column range)',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -693,7 +738,9 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (one of the row ranges is out of bound)', () {
+    test(
+        'should create a new matrix from its diffrent segments (one of the row ranges is out of bound)',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -702,14 +749,17 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = () => matrix.pick(
-        // take all 5 rows (20 > 5) and add second row to them (range from 1 to 2)
-        rowRanges: [Range(0, 20), Range(1, 2)],
-        columnRanges: [Range(1, 2)],
-      );
-      expect(actual, throwsRangeError, reason: '0, 20 - is not a correct range');
+            // take all 5 rows (20 > 5) and add second row to them (range from 1 to 2)
+            rowRanges: [Range(0, 20), Range(1, 2)],
+            columnRanges: [Range(1, 2)],
+          );
+      expect(actual, throwsRangeError,
+          reason: '0, 20 - is not a correct range');
     });
 
-    test('should create a new matrix from its diffrent segments (one of the column ranges is out of bound)', () {
+    test(
+        'should create a new matrix from its diffrent segments (one of the column ranges is out of bound)',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -718,13 +768,14 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = () => matrix.pick(
-        rowRanges: [Range(1, 2)],
-        columnRanges: [Range(1, 6)],
-      );
+            rowRanges: [Range(1, 2)],
+            columnRanges: [Range(1, 6)],
+          );
       expect(actual, throwsRangeError, reason: '1, 6 - is not a correct range');
     });
 
-    test('should create a new matrix from its diffrent segments (given row range covers the whole rows range of the '
+    test(
+        'should create a new matrix from its diffrent segments (given row range covers the whole rows range of the '
         'matrix)', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -747,7 +798,8 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (given column range covers the whole columns range of '
+    test(
+        'should create a new matrix from its diffrent segments (given column range covers the whole columns range of '
         'the matrix)', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -767,7 +819,8 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (two or more row ranges cover the whole rows range of'
+    test(
+        'should create a new matrix from its diffrent segments (two or more row ranges cover the whole rows range of'
         'the matrix are given)', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -795,7 +848,8 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (two or more column ranges cover the whole columnss range '
+    test(
+        'should create a new matrix from its diffrent segments (two or more column ranges cover the whole columnss range '
         'of the matrix are given)', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -814,7 +868,9 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (columnRanges parameter is omitted)', () {
+    test(
+        'should create a new matrix from its diffrent segments (columnRanges parameter is omitted)',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -823,7 +879,7 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range(0, 1), Range(3,4)],
+        rowRanges: [Range(0, 1), Range(3, 4)],
       );
       final expected = [
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -832,7 +888,9 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (rowRanges parameter is omitted)', () {
+    test(
+        'should create a new matrix from its diffrent segments (rowRanges parameter is omitted)',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -841,7 +899,7 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        columnRanges: [Range(0, 1), Range(3,4)],
+        columnRanges: [Range(0, 1), Range(3, 4)],
       );
       final expected = [
         [4.0, 16.0],
@@ -853,7 +911,8 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should create a new matrix from its diffrent segments (both rowRanges and columnRanges parameters are '
+    test(
+        'should create a new matrix from its diffrent segments (both rowRanges and columnRanges parameters are '
         'omitted)', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -893,7 +952,9 @@ void main() {
       expect(actual, expected);
     });
 
-    test('should provide readable string representation for Nx1 matrix, created from iterable', () {
+    test(
+        'should provide readable string representation for Nx1 matrix, created from iterable',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0],
         [20.0],
@@ -911,7 +972,9 @@ void main() {
       expect(actual, expected);
     });
 
-    test('should provide readable string representation for Nx1 matrix, created from columns constructor', () {
+    test(
+        'should provide readable string representation for Nx1 matrix, created from columns constructor',
+        () {
       final vector = Float32x4Vector.from([4.0, 20.0, 36.0, 16.0, 112.0]);
       final matrix = Float32x4Matrix.columns([vector]);
       final actual = matrix.toString();
@@ -924,7 +987,9 @@ void main() {
       expect(actual, expected);
     });
 
-    test('should provide readable string representation for 1xN matrix, created from iterable', () {
+    test(
+        'should provide readable string representation for 1xN matrix, created from iterable',
+        () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
       ]);
@@ -934,7 +999,9 @@ void main() {
       expect(actual, expected);
     });
 
-    test('should provide readable string representation for 1xN matrix, created from rows constructor', () {
+    test(
+        'should provide readable string representation for 1xN matrix, created from rows constructor',
+        () {
       final vector = Float32x4Vector.from([4.0, 8.0, 12.0, 16.0, 34.0]);
       final matrix = Float32x4Matrix.rows([vector]);
       final actual = matrix.toString();

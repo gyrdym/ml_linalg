@@ -9,7 +9,8 @@ abstract class MLVector implements Iterable<double> {
   /// Creates a vector from a collection [source]. It converts the collection of [double]-type elements into a
   /// collection of [Float32x4] elements. If [isMutable] is true, one can alter the vector, for example, via `[]=`
   /// operator
-  factory MLVector.from(Iterable<double> source, {bool isMutable, Type dtype = Float32x4}) {
+  factory MLVector.from(Iterable<double> source,
+      {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Vector.from(source, isMutable: isMutable);
@@ -20,7 +21,8 @@ abstract class MLVector implements Iterable<double> {
 
   /// Creates a vector of length, equal to [length], filled with [value]. If [isMutable] is true, one can alter the
   /// vector, for example, via `[]=` operator
-  factory MLVector.filled(int length, double value, {bool isMutable, Type dtype = Float32x4}) {
+  factory MLVector.filled(int length, double value,
+      {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Vector.filled(length, value, isMutable: isMutable);
@@ -42,10 +44,12 @@ abstract class MLVector implements Iterable<double> {
 
   /// Creates a vector of length, equal to [length], filled with random values, generated from randomizer with seed,
   /// equal to [seed]. If [isMutable] is true, one can alter the vector, for example, via `[]=` operator
-  factory MLVector.randomFilled(int length, {int seed, bool isMutable, Type dtype = Float32x4}) {
+  factory MLVector.randomFilled(int length,
+      {int seed, bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
-        return Float32x4Vector.randomFilled(length, seed: seed, isMutable: isMutable);
+        return Float32x4Vector.randomFilled(length,
+            seed: seed, isMutable: isMutable);
       default:
         throw UnimplementedError();
     }
@@ -105,7 +109,8 @@ abstract class MLVector implements Iterable<double> {
   /// Returns a vector composed of unique vector's elements
   MLVector unique();
 
-  MLVector fastMap<E>(E mapper(E element, int offsetStartIdx, int offsetEndIdx));
+  MLVector fastMap<E>(
+      E mapper(E element, int offsetStartIdx, int offsetEndIdx));
 
   /// Cuts out a part of the vector
   MLVector subvector(int start, [int end]);

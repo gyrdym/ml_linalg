@@ -12,15 +12,15 @@ import 'package:ml_linalg/src/matrix/ml_matrix_validator_mixin.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
-class Float32x4Matrix extends Object with
-    IterableMixin<Iterable<double>>,
-    MLMatrixValidatorMixin<Float32x4>,
-    Float32x4MatrixFactoryMixin,
-    Float32x4VectorFactoryMixin,
-    MLMatrixFastIterableMixin,
-    MLMatrixMixin<Float32x4, Float32x4List>
+class Float32x4Matrix extends Object
+    with
+        IterableMixin<Iterable<double>>,
+        MLMatrixValidatorMixin<Float32x4>,
+        Float32x4MatrixFactoryMixin,
+        Float32x4VectorFactoryMixin,
+        MLMatrixFastIterableMixin,
+        MLMatrixMixin<Float32x4, Float32x4List>
     implements MLMatrixDataStore, MLMatrix {
-
   @override
   final int rowsNum;
 
@@ -39,7 +39,8 @@ class Float32x4Matrix extends Object with
   Float32x4Matrix.from(Iterable<Iterable<double>> source)
       : rowsNum = source.length,
         columnsNum = source.first.length,
-        data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
+        data = ByteData(
+            source.length * source.first.length * Float32List.bytesPerElement),
         rowsCache = List<MLVector>(source.length),
         columnsCache = List<MLVector>(source.first.length) {
     final flattened = flatten2dimList(source, (i, j) => i * columnsNum + j);
@@ -61,7 +62,8 @@ class Float32x4Matrix extends Object with
   Float32x4Matrix.columns(Iterable<MLVector> source)
       : rowsNum = source.first.length,
         columnsNum = source.length,
-        data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
+        data = ByteData(
+            source.length * source.first.length * Float32List.bytesPerElement),
         rowsCache = List<MLVector>(source.first.length),
         columnsCache = source.toList(growable: false) {
     final flattened = flatten2dimList(source, (i, j) => j * columnsNum + i);
@@ -72,14 +74,16 @@ class Float32x4Matrix extends Object with
   Float32x4Matrix.rows(Iterable<MLVector> source)
       : rowsNum = source.length,
         columnsNum = source.first.length,
-        data = ByteData(source.length * source.first.length * Float32List.bytesPerElement),
+        data = ByteData(
+            source.length * source.first.length * Float32List.bytesPerElement),
         rowsCache = source.toList(growable: false),
         columnsCache = List<MLVector>(source.first.length) {
     final flattened = flatten2dimList(source, (i, j) => i * columnsNum + j);
     data.buffer.asFloat32List().setAll(0, flattened);
   }
 
-  Float32x4Matrix.flattened(Iterable<double> source, this.rowsNum, this.columnsNum)
+  Float32x4Matrix.flattened(
+      Iterable<double> source, this.rowsNum, this.columnsNum)
       : data = ByteData(rowsNum * columnsNum * Float32List.bytesPerElement),
         rowsCache = List<MLVector>(rowsNum),
         columnsCache = List<MLVector>(columnsNum) {
@@ -90,5 +94,6 @@ class Float32x4Matrix extends Object with
   }
 
   @override
-  Iterator<Iterable<double>> get iterator => Float32MatrixIterator(data, columnsNum);
+  Iterator<Iterable<double>> get iterator =>
+      Float32MatrixIterator(data, columnsNum);
 }
