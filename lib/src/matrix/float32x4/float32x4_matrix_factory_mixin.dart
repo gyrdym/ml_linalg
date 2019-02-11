@@ -9,7 +9,8 @@ abstract class Float32x4MatrixFactoryMixin implements MLMatrixFactory {
       Float32x4Matrix.from(source);
 
   @override
-  MLMatrix createMatrixFromFlattened(Iterable<double> source, int rowsNum, int columnsNum) =>
+  MLMatrix createMatrixFromFlattened(
+          Iterable<double> source, int rowsNum, int columnsNum) =>
       Float32x4Matrix.flattened(source, rowsNum, columnsNum);
 
   @override

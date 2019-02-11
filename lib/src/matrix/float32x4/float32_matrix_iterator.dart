@@ -18,10 +18,12 @@ class Float32MatrixIterator implements Iterator<Iterable<double>> {
     if (byteOffset >= _data.buffer.lengthInBytes) {
       _current = null;
     } else {
-      final totalSizeInBytes = byteOffset + (_columns * Float32List.bytesPerElement);
+      final totalSizeInBytes =
+          byteOffset + (_columns * Float32List.bytesPerElement);
       final length = _data.buffer.lengthInBytes >= totalSizeInBytes
           ? _columns
-          : (totalSizeInBytes - _data.buffer.lengthInBytes) ~/ Float32List.bytesPerElement;
+          : (totalSizeInBytes - _data.buffer.lengthInBytes) ~/
+              Float32List.bytesPerElement;
       _current = _data.buffer.asFloat32List(byteOffset, length);
     }
     _currentRow++;

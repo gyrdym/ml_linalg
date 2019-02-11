@@ -7,25 +7,34 @@ import 'package:test/test.dart';
 void main() {
   group('Float32x4Vector', () {
     group('`from` constructor', () {
-      test('should create a vector from dynamic-length list, length is greater than 4', () {
+      test(
+          'should create a vector from dynamic-length list, length is greater than 4',
+          () {
         final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
         expect(vector1, equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
         expect(vector1.length, equals(6));
       });
 
-      test('should create a vector from dynamic-length list, length is less than 4', () {
+      test(
+          'should create a vector from dynamic-length list, length is less than 4',
+          () {
         final vector = Float32x4Vector.from([1.0, 2.0]);
         expect(vector, equals([1.0, 2.0]));
         expect(vector.length, equals(2));
       });
 
-      test('should create a vector from fixed-length list, length is greater than 4', () {
+      test(
+          'should create a vector from fixed-length list, length is greater than 4',
+          () {
         final vector = Float32x4Vector.from(List.filled(11, 1.0));
-        expect(vector, equals([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]));
+        expect(vector,
+            equals([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]));
         expect(vector.length, 11);
       });
 
-      test('should create a vector from fixed-length list, length is less than 4', () {
+      test(
+          'should create a vector from fixed-length list, length is less than 4',
+          () {
         final vector = Float32x4Vector.from(List.filled(1, 2.0));
         expect(vector, equals([2.0]));
         expect(vector.length, 1);
@@ -39,15 +48,23 @@ void main() {
         Float32x4(9.0, 10.0, 0.0, 0.0)
       ]);
 
-      test('should create a vector with length equal to the length of the source', () {
+      test(
+          'should create a vector with length equal to the length of the source',
+          () {
         final vector = Float32x4Vector.fromSIMDList(typedList);
-        expect(vector.toList(), equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 0.0, 0.0]));
+        expect(
+            vector.toList(),
+            equals(
+                [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 0.0, 0.0]));
         expect(vector.length, equals(12));
       });
 
-      test('should create a vector and limit its length if argument `length` is passed', () {
+      test(
+          'should create a vector and limit its length if argument `length` is passed',
+          () {
         final vector = Float32x4Vector.fromSIMDList(typedList, origLength: 10);
-        expect(vector, equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
+        expect(vector,
+            equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
         expect(vector.length, equals(10));
       });
     });
@@ -55,7 +72,8 @@ void main() {
     group('`filled` constructor', () {
       test('should create a vector filled with the passed value', () {
         final vector = Float32x4Vector.filled(10, 2.0);
-        expect(vector, equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
+        expect(
+            vector, equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
         expect(vector.length, equals(10));
       });
     });
@@ -63,7 +81,8 @@ void main() {
     group('`zero` constructor', () {
       test('should fill a newly created vector with zeroes, case 1', () {
         final vector = Float32x4Vector.zero(10);
-        expect(vector, equals([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]));
+        expect(
+            vector, equals([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]));
         expect(vector.length, equals(10));
       });
 
@@ -104,7 +123,9 @@ void main() {
       expect(actual.length, equals(5));
     });
 
-    test('should throw an exception if one tries to sum vectors of different lengths', () {
+    test(
+        'should throw an exception if one tries to sum vectors of different lengths',
+        () {
       final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 + vector2, throwsRangeError);
@@ -127,7 +148,9 @@ void main() {
 
     test('should perform addition of a rows matrix', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0, 5.0]
+      ]);
       final actual = vector + matrix;
       final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
       expect(actual, equals(expected));
@@ -142,7 +165,9 @@ void main() {
       expect(result.length, equals(5));
     });
 
-    test('should throw an exception if one tries to subtract a vector of different length', () {
+    test(
+        'should throw an exception if one tries to subtract a vector of different length',
+        () {
       final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 - vector2, throwsRangeError);
@@ -165,7 +190,9 @@ void main() {
 
     test('should perform subtraction of a row matrix', () {
       final vector = Float32x4Vector.from([2.0, 6.0, 12.0, 15.0, 18.0]);
-      final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0, 5.0]
+      ]);
       final actual = vector - matrix;
       final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
       expect(actual, equals(expected));
@@ -174,7 +201,9 @@ void main() {
 
     test('should perform subtraction of a row matrix', () {
       final vector = Float32x4Vector.from([2.0, 6.0, 12.0, 15.0, 18.0]);
-      final matrix = Float32x4Matrix.from([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0, 5.0]
+      ]);
       final actual = vector - matrix;
       final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
       expect(actual, equals(expected));
@@ -187,7 +216,9 @@ void main() {
       expect(actual.length, equals(5));
     });
 
-    test('should throw an error if one tries to multiple by a vector of different length', () {
+    test(
+        'should throw an error if one tries to multiple by a vector of different length',
+        () {
       final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 * vector2, throwsRangeError);
@@ -206,14 +237,17 @@ void main() {
       expect(actual.length, equals(2));
     });
 
-    test('should throw an exception if one tries to multiple by an inappropriate matrix', () {
+    test(
+        'should throw an exception if one tries to multiple by an inappropriate matrix',
+        () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0]);
       final matrix = Float32x4Matrix.from([
         [2.0, 3.0],
         [4.0, 5.0],
       ]);
       final actual = () => vector * matrix;
-      expect(actual, throwsException, reason: 'the matrix has different row number than the vector');
+      expect(actual, throwsException,
+          reason: 'the matrix has different row number than the vector');
     });
 
     test('should perform division by another vector', () {
@@ -224,13 +258,17 @@ void main() {
       expect(actual.length, equals(5));
     });
 
-    test('should throw an error if one tries to divide it by a vector of different length', () {
+    test(
+        'should throw an error if one tries to divide it by a vector of different length',
+        () {
       final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 / vector2, throwsRangeError);
     });
 
-    test('should map an existing vector to a new one processing 4 elements in a time', () {
+    test(
+        'should map an existing vector to a new one processing 4 elements in a time',
+        () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       int iteration = 0;
       final actual = vector.fastMap((Float32x4 element, int start, int end) {
@@ -291,20 +329,26 @@ void main() {
     test('should find Euclidean distance (from vector to the same vector)', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0]);
       final distance = vector.distanceTo(vector);
-      expect(distance, equals(0.0), reason: 'Wrong vector distance calculation');
+      expect(distance, equals(0.0),
+          reason: 'Wrong vector distance calculation');
     });
 
     test('should find vectors distance', () {
       final vector1 = Float32x4Vector.from([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
       final vector2 = Float32x4Vector.from([1.0, 3.0, 2.0, 11.5, 10.0, 15.5]);
-      expect(vector1.distanceTo(vector2, Norm.euclidean), equals(10.88577052853862), reason: 'Wrong vector distance calculation');
-      expect(vector1.distanceTo(vector2, Norm.manhattan), equals(20.0), reason: 'Wrong vector distance calculation');
+      expect(vector1.distanceTo(vector2, Norm.euclidean),
+          equals(10.88577052853862),
+          reason: 'Wrong vector distance calculation');
+      expect(vector1.distanceTo(vector2, Norm.manhattan), equals(20.0),
+          reason: 'Wrong vector distance calculation');
     });
 
     test('should find vector norm', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector.norm(Norm.euclidean), equals(7.416198487095663), reason: 'Wrong norm calculation');
-      expect(vector.norm(Norm.manhattan), equals(15.0), reason: 'Wrong norm calculation');
+      expect(vector.norm(Norm.euclidean), equals(7.416198487095663),
+          reason: 'Wrong norm calculation');
+      expect(vector.norm(Norm.manhattan), equals(15.0),
+          reason: 'Wrong norm calculation');
     });
 
     test('should find vector elements sum', () {
@@ -327,7 +371,22 @@ void main() {
     });
 
     test('`unique` method', () {
-      final vector = Float32x4Vector.from([10.0, 3.0, 4.0, 0.0, 7.0, 4.0, 12.0, 3.0, 12.0, 9.0, 0.0, 12.0, 10.0, 3.0]);
+      final vector = Float32x4Vector.from([
+        10.0,
+        3.0,
+        4.0,
+        0.0,
+        7.0,
+        4.0,
+        12.0,
+        3.0,
+        12.0,
+        9.0,
+        0.0,
+        12.0,
+        10.0,
+        3.0
+      ]);
       final unique = vector.unique();
       expect(unique, equals([10.0, 3.0, 4.0, 0.0, 7.0, 12.0, 9.0]));
     });
@@ -412,13 +471,18 @@ void main() {
       expect(() => vector[100], throwsRangeError);
     });
 
-    test('should not allow to assign a value via indexed access if it is immutable ([]= operator)', () {
+    test(
+        'should not allow to assign a value via indexed access if it is immutable ([]= operator)',
+        () {
       final vector = Float32x4Vector.from([1.0, 2.0]); // immutable by default
       expect(() => vector[0] = 3.0, throwsUnsupportedError);
     });
 
-    test('should perform value assignment via indexed access if it is mutable ([]= operator)', () {
-      final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
+    test(
+        'should perform value assignment via indexed access if it is mutable ([]= operator)',
+        () {
+      final vector =
+          Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
       vector[0] = 6.0;
       vector[1] = 7.0;
       vector[2] = 8.0;
@@ -427,8 +491,11 @@ void main() {
       expect(vector, equals([6.0, 7.0, 8.0, 9.0, 10.0]));
     });
 
-    test('should throw range error if one tries to set a value on non-existing index', () {
-      final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
+    test(
+        'should throw range error if one tries to set a value on non-existing index',
+        () {
+      final vector =
+          Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
       expect(() => vector[20] = 2.0, throwsRangeError);
     });
 

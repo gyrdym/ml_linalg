@@ -70,10 +70,12 @@ abstract class MLMatrix {
   MLVector getRow(int index, {bool tryCache = true, bool mutable = false});
 
   /// Reduces all the matrix columns to only column, using [combiner] function
-  MLVector reduceColumns(MLVector combiner(MLVector combine, MLVector vector), {MLVector initValue});
+  MLVector reduceColumns(MLVector combiner(MLVector combine, MLVector vector),
+      {MLVector initValue});
 
   /// Reduces all the matrix rows to only row, using [combiner] function
-  MLVector reduceRows(MLVector combiner(MLVector combine, MLVector vector), {MLVector initValue});
+  MLVector reduceRows(MLVector combiner(MLVector combine, MLVector vector),
+      {MLVector initValue});
 
   /// Creates a new matrix, efficiently iterating through all the matrix elements (several floating point elements in a
   /// time) and applying the [mapper] function

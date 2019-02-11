@@ -22,27 +22,30 @@ import 'package:ml_linalg/vector.dart';
 /// - Each SIMD-typed value is a "cell", that contains several floating point values (2 or 4).
 /// - Sequence of SIMD-values forms a "computation lane", where computations are performed with each floating point element
 /// simultaneously (in parallel)
-class Float32x4Vector extends Object with
-    IterableMixin<double>,
-    Float32ListFactoryMixin,
-    Float32x4OperationsMixin,
-    Float32x4VectorFactoryMixin,
-    Float32x4DataStoreMixin,
-    MLSimdVectorFastIterableMixin<Float32x4, Float32x4List>,
-    MLSimdVectorOperationsMixin<Float32x4, Float32x4List> implements MLVector {
-
+class Float32x4Vector extends Object
+    with
+        IterableMixin<double>,
+        Float32ListFactoryMixin,
+        Float32x4OperationsMixin,
+        Float32x4VectorFactoryMixin,
+        Float32x4DataStoreMixin,
+        MLSimdVectorFastIterableMixin<Float32x4, Float32x4List>,
+        MLSimdVectorOperationsMixin<Float32x4, Float32x4List>
+    implements MLVector {
   @override
   final bool isMutable;
 
   /// Creates a vector from collection
   Float32x4Vector.from(Iterable<double> source, {this.isMutable = false}) {
     length = source.length;
-    final List<double> _source = source is List ? source : source.toList(growable: false);
+    final List<double> _source =
+        source is List ? source : source.toList(growable: false);
     data = convertCollectionToSIMDList(_source);
   }
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
-  Float32x4Vector.fromSIMDList(Float32x4List source, {int origLength, this.isMutable = false}) {
+  Float32x4Vector.fromSIMDList(Float32x4List source,
+      {int origLength, this.isMutable = false}) {
     length = origLength ?? source.length * bucketSize;
     data = Float32x4List.fromList(source.sublist(0, source.length));
   }
