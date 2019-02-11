@@ -10,7 +10,8 @@ Float32x4Vector vector1;
 Float32x4Vector vector2;
 
 class VectorAdditionBenchmark extends BenchmarkBase {
-  const VectorAdditionBenchmark() : super('Vectors addition, $amountOfElements elements');
+  const VectorAdditionBenchmark()
+      : super('Vectors addition, $amountOfElements elements');
 
   static void main() {
     const VectorAdditionBenchmark().report();
