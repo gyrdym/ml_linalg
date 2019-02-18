@@ -48,10 +48,12 @@ abstract class MLMatrix {
   /// Performs sum of the matrix and a matrix/ a vector/ a scalar/ whatever
   MLMatrix operator +(Object value);
 
-  /// Performs subtraction of the matrix and a matrix/ a vector/ a scalar/ whatever
+  /// Performs subtraction of the matrix and a matrix/ a vector/ a scalar/
+  /// whatever
   MLMatrix operator -(Object value);
 
-  /// Performs multiplication of the matrix and a matrix/ a vector/ a scalar/ whatever
+  /// Performs multiplication of the matrix and a matrix/ a vector/ a scalar/
+  /// whatever
   MLMatrix operator *(Object value);
 
   /// Performs transposition of the matrix
@@ -77,11 +79,20 @@ abstract class MLMatrix {
   MLVector reduceRows(MLVector combiner(MLVector combine, MLVector vector),
       {MLVector initValue});
 
-  /// Creates a new matrix, efficiently iterating through all the matrix elements (several floating point elements in a
-  /// time) and applying the [mapper] function
+  /// Creates a new matrix, efficiently iterating through all the matrix
+  /// elements (several floating point elements in a time) and applying the
+  /// [mapper] function
   MLMatrix fastMap<E>(E mapper(E columnElement));
 
-  /// Tries to convert the matrix to a vector. It fails, if the matrix's both numbers of columns and rows are greater
-  /// than 1
+  /// Tries to convert the matrix to a vector.
+  ///
+  /// It fails, if the matrix's both numbers of columns and rows are greater
+  /// than `1`
   MLVector toVector({bool mutable = false});
+
+  /// Returns max value of the matrix
+  double max();
+
+  /// Return min value of the matrix
+  double min();
 }

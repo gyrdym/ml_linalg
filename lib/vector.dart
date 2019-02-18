@@ -6,9 +6,11 @@ import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
 abstract class MLVector implements Iterable<double> {
-  /// Creates a vector from a collection [source]. It converts the collection of [double]-type elements into a
-  /// collection of [Float32x4] elements. If [isMutable] is true, one can alter the vector, for example, via `[]=`
-  /// operator
+  /// Creates a vector from a collection [source].
+  ///
+  /// It converts the collection of [double]-type elements into a collection of
+  /// [Float32x4] elements. If [isMutable] is true, one can alter the vector,
+  /// for example, via `[]=` operator
   factory MLVector.from(Iterable<double> source,
       {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
@@ -19,8 +21,10 @@ abstract class MLVector implements Iterable<double> {
     }
   }
 
-  /// Creates a vector of length, equal to [length], filled with [value]. If [isMutable] is true, one can alter the
-  /// vector, for example, via `[]=` operator
+  /// Creates a vector of length, equal to [length], filled with [value].
+  ///
+  /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
+  /// operator
   factory MLVector.filled(int length, double value,
       {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
@@ -31,8 +35,10 @@ abstract class MLVector implements Iterable<double> {
     }
   }
 
-  /// Creates a vector of length, equal to [length], filled with zeroes. If [isMutable] is true, one can alter the
-  /// vector, for example, via `[]=` operator
+  /// Creates a vector of length, equal to [length], filled with zeroes.
+  ///
+  /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
+  /// operator
   factory MLVector.zero(int length, {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -42,8 +48,11 @@ abstract class MLVector implements Iterable<double> {
     }
   }
 
-  /// Creates a vector of length, equal to [length], filled with random values, generated from randomizer with seed,
-  /// equal to [seed]. If [isMutable] is true, one can alter the vector, for example, via `[]=` operator
+  /// Creates a vector of length, equal to [length], filled with random values,
+  /// generated from randomizer with seed, equal to [seed].
+  ///
+  /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
+  /// operator
   factory MLVector.randomFilled(int length,
       {int seed, bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
@@ -55,7 +64,7 @@ abstract class MLVector implements Iterable<double> {
     }
   }
 
-  /// Can someone mutate the vector e.g. via []= operator
+  /// Can someone mutate the vector, e.g. via []= operator, or not
   bool get isMutable;
 
   /// Indexed access to a vector's element
@@ -76,7 +85,8 @@ abstract class MLVector implements Iterable<double> {
   /// Element-wise division
   MLVector operator /(Object value);
 
-  /// Creates a new [MLVector] containing elements of this [MLVector] raised to the integer [power]
+  /// Creates a new [MLVector] containing elements of this [MLVector] raised to
+  /// the integer [power]
   MLVector toIntegerPower(int power);
 
   /// Returns a vector with absolute value of each vector element
@@ -85,7 +95,8 @@ abstract class MLVector implements Iterable<double> {
   /// Returns a dot (inner) product of [this] and [vector]
   double dot(MLVector vector);
 
-  /// Returns a distance between [this] and [vector] with vector norm type considering
+  /// Returns a distance between [this] and [vector] with vector norm type
+  /// considering
   double distanceTo(MLVector vector, [Norm norm = Norm.euclidean]);
 
   /// Returns a mean value of [this] vector
@@ -103,7 +114,8 @@ abstract class MLVector implements Iterable<double> {
   /// Returns maximum element
   double min();
 
-  /// Returns a vector composed of elements which are located on the passed indexes
+  /// Returns a vector composed of elements which are located on the passed
+  /// indexes
   MLVector query(Iterable<int> indexes);
 
   /// Returns a vector composed of unique vector's elements

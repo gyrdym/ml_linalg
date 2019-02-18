@@ -39,6 +39,8 @@
         - [Matrix row wise reduce](#matrix-row-wise-reduce)
         - [Matrix column wise reduce](#matrix-column-wise-reduce)
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
+        - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
+        - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
     + [Vectorized non-mathematical matrix methods](#vectorized-non-mathematical-matrix-methods)
         - [Matrix indexing](#matrix-indexing)
 + [Contacts](#contacts)
@@ -415,6 +417,36 @@ print(matrix1 - matrix2);
   //  [11.0, 12.0, 13.0, 14.0],
   //  [15.0, 16.0, 17.0, 18.0],
   //];
+````
+
+##### Getting max value of the matrix
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = MLMatrix.from([
+    [11.0, 12.0, 13.0, 14.0],
+    [15.0, 16.0, 17.0, 18.0],
+    [21.0, 22.0, 23.0, 24.0],
+    [24.0, 32.0, 53.0, 74.0],
+  ]);
+  final maxValue = matrix.max();
+  print(maxValue);
+  // 74.0
+````
+
+##### Getting min value of the matrix
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = MLMatrix.from([
+    [11.0, 12.0, 13.0, 14.0],
+    [15.0, 16.0, 0.0, 18.0],
+    [21.0, 22.0, -23.0, 24.0],
+    [24.0, 32.0, 53.0, 74.0],
+  ]);
+  final minValue = matrix.min();
+  print(minValue);
+  // -23.0
 ````
 
 ### Vectorized non-mathematical matrix methods

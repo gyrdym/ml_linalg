@@ -41,8 +41,11 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   /// Mathematical matrix multiplication
-  /// The main rule: let N be a number of columns, so the multiplication is available only for
-  /// XxN * NxY matrices, that causes XxY matrix
+  ///
+  /// The main rule:
+  ///
+  /// let `N` be a number of columns, so the multiplication is
+  /// available only for X by N * N by Y matrices, that causes X by Y matrix
   @override
   MLMatrix operator *(Object value) {
     if (value is MLVector) {
@@ -173,10 +176,25 @@ abstract class MLMatrixMixin<E, S extends List<E>>
         break;
       }
       result =
-          '$result${row.take(columnsLimit).toString().replaceAll(RegExp(r'\)$'), '')}$eol\n';
+          '$result${row.take(columnsLimit).toString()
+              .replaceAll(RegExp(r'\)$'), '')}$eol\n';
       i++;
     }
     return result;
+  }
+
+  @override
+  double max() => _findExtrema((MLVector row) => row.max());
+
+  @override
+  double min() => _findExtrema((MLVector row) => row.min());
+
+  double _findExtrema(double callback(MLVector vector)) {
+    int i = 0;
+    return callback(reduceRows((MLVector result, MLVector row) {
+      result[i++] = callback(row);
+      return result;
+    }, initValue: MLVector.zero(rowsNum, isMutable: true)));
   }
 
   MLVector _reduce(
@@ -195,7 +213,8 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   MLMatrix _matrixVectorMul(MLVector vector) {
     if (vector.length != columnsNum) {
       throw Exception(
-          'The dimension of the vector ${vector} and the columns number of matrix ${this} mismatch');
+          'The dimension of the vector ${vector} and the columns number of '
+              'matrix ${this} mismatch');
     }
     final generateElementFn = (int i) => vector.dot(getRow(i));
     final source = List<double>.generate(rowsNum, generateElementFn);
