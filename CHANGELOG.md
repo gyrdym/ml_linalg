@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.0
+- `max` and `min` methods added for matrix 
+
 ## 5.0.1
 - Travis integration added
 - `dartfmt` task added
