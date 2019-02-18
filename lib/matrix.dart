@@ -56,6 +56,10 @@ abstract class MLMatrix {
   /// whatever
   MLMatrix operator *(Object value);
 
+  /// Performs division of the matrix by a matrix/ a vector/ a scalar/
+  /// whatever
+  MLMatrix operator /(Object value);
+
   /// Performs transposition of the matrix
   MLMatrix transpose();
 
@@ -78,6 +82,14 @@ abstract class MLMatrix {
   /// Reduces all the matrix rows to only row, using [combiner] function
   MLVector reduceRows(MLVector combiner(MLVector combine, MLVector vector),
       {MLVector initValue});
+
+  /// Performs column-wise mapping of this matrix to a new one via passed
+  /// [mapper] function
+  MLMatrix mapColumns(MLVector mapper(MLVector column));
+
+  /// Performs row-wise mapping of this matrix to a new one via passed
+  /// [mapper] function
+  MLMatrix mapRows(MLVector mapper(MLVector row));
 
   /// Creates a new matrix, efficiently iterating through all the matrix
   /// elements (several floating point elements in a time) and applying the
