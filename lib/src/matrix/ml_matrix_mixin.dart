@@ -60,6 +60,21 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     }
   }
 
+  /// Performs division of the matrix by vector, matrix or scalar
+  @override
+  MLMatrix operator /(Object value) {
+    if (value is MLVector) {
+      return _matrixByVectorDiv(value);
+    } else if (value is MLMatrix) {
+      return _matrixByMatrixDiv(value);
+    } else if (value is num) {
+      return _matrixByScalarDiv(value.toDouble());
+    } else {
+      throw UnsupportedError(
+          'Cannot divide a ${runtimeType} by a ${value.runtimeType}');
+    }
+  }
+
   @override
   List<double> operator [](int index) => _query(index * columnsNum, columnsNum);
 
@@ -135,6 +150,16 @@ abstract class MLMatrixMixin<E, S extends List<E>>
           MLVector Function(MLVector combine, MLVector vector) combiner,
           {MLVector initValue}) =>
       _reduce(combiner, rowsNum, getRow, initValue: initValue);
+
+  @override
+  MLMatrix mapColumns(MLVector mapper(MLVector columns)) =>
+      MLMatrix.columns(List<MLVector>.generate(columnsNum,
+              (int i) => mapper(getColumn(i))));
+
+  @override
+  MLMatrix mapRows(MLVector mapper(MLVector row)) =>
+      MLMatrix.rows(List<MLVector>.generate(rowsNum,
+              (int i) => mapper(getRow(i))));
 
   List<double> flatten2dimList(
       Iterable<Iterable<double>> rows, int Function(int i, int j) accessor) {
@@ -234,6 +259,24 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     return createMatrixFromFlattened(source, rowsNum, matrix.columnsNum);
   }
 
+  MLMatrix _matrixByVectorDiv(MLVector vector) {
+    if (vector.length == rowsNum) {
+      return mapColumns((column) => column / vector);
+    }
+    if (vector.length == columnsNum) {
+      return mapRows((row) => row / vector);
+    }
+    throw Exception('Cannot divide the $rowsNum x $columnsNum matrix by a '
+        'vector of length equals ${vector.length}');
+  }
+
+  MLMatrix _matrixByMatrixDiv(MLMatrix matrix) {
+    checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix by matrix '
+        'division');
+    return _matrix2matrixOperation(
+        matrix, (MLVector first, MLVector second) => first / second);
+  }
+
   MLMatrix _matrixAdd(MLMatrix matrix) {
     checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix addition');
     return _matrix2matrixOperation(
@@ -256,6 +299,9 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   MLMatrix _matrixScalarMul(double scalar) => _matrix2scalarOperation(
       scalar, (double val, MLVector vector) => vector * val);
 
+  MLMatrix _matrixByScalarDiv(double scalar) => _matrix2scalarOperation(
+    scalar, (double val, MLVector vector) => vector / val);
+
   MLMatrix _matrix2matrixOperation(
       MLMatrix matrix, MLVector operation(MLVector first, MLVector second)) {
     final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
@@ -265,6 +311,8 @@ abstract class MLMatrixMixin<E, S extends List<E>>
 
   MLMatrix _matrix2scalarOperation(
       double scalar, MLVector operation(double scalar, MLVector vector)) {
+    // TODO: use vectorized type (e.g. Float32x4) instead of `double`
+    // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));
     final source = List<MLVector>.generate(rowsNum, elementGenFn);
     return createMatrixFromRows(source);
