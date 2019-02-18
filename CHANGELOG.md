@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.2.0
+- MLMatrix: `/` operator added
+- MLMatrix: `rowsMap` method added
+- MLMatrix: `columnsMap` method added
+
 ## 5.1.0
 - `max` and `min` methods added for matrix 
 
