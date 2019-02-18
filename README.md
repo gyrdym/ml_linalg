@@ -26,7 +26,7 @@
 	    - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
 	    - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
     + [Vectorized non-mathematical methods](#vectorized-non-mathematical-methods)
-        - [Vectorized map](#vectorized-map)
+        - [Fast map](#fast-map)
 + [Matrices](#matrices)
 	+ [Matrix operations examples](#matrix-operations-examples)
         - [Sum of a matrix and another matrix](#sum-of-a-matrix-and-another-matrix)
@@ -38,6 +38,8 @@
         - [Matrix transposition](#matrix-transposition)
         - [Matrix row wise reduce](#matrix-row-wise-reduce)
         - [Matrix column wise reduce](#matrix-column-wise-reduce)
+        - [Matrix row wise map](#matrix-row-wise-map)
+        - [Matrix column wise map](#matrix-column-wise-map)
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
@@ -215,12 +217,12 @@ At the present moment most common vector operations are implemented:
 It is also needed to operate with vectors in non-mathematical way, for instance, to create a new vector applying some 
 map function to an existing one. To do it effectively, one can use the following methods:
 
-##### Vectorized map
+##### Fast map
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
   final vector = MLVector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-  final result = vector.vectorizedMap((Float32x4 element, int offsetStart, int offsetEnd) {
+  final result = vector.fastMap<Float32x4>((Float32x4 element, int offsetStart, int offsetEnd) {
     // offsetStart - start index for the current vectorized element, e.g. if `element` is second in the inner collection,
     // the offsetStart will be 4 (because Float32x4 contains 4 elements)
     // offsetEnd - end index for the current vectorized element, e.g. if `element` is second in the inner collection,
@@ -399,6 +401,40 @@ print(matrix1 - matrix2);
   ]);
   final result = matrix.reduceColumns((combine, vector) => combine + vector);
   print(result); // [50, 66, 90]
+````
+
+##### Matrix row wise map
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = MLMatrix.from([
+    [1.0, 2.0, 3.0, 4.0],
+    [5.0, 6.0, 7.0, 8.0],
+  ]); 
+  final modifier = MLVector.filled(4, 2.0);
+  final newMatrix = matrix.rowsMap((row) => row + modifier);
+  print(newMatrix); 
+  // [
+  //  [3.0, 4.0, 5.0, 6.0],
+  //  [7.0, 8.0, 9.0, 10.0],
+  // ]
+````
+
+##### Matrix column wise map
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = MLMatrix.from([
+    [1.0, 2.0, 3.0, 4.0],
+    [5.0, 6.0, 7.0, 8.0],
+  ]); 
+  final modifier = MLVector.filled(2, 2.0);
+  final newMatrix = matrix.columnsMap((column) => column + modifier);
+  print(newMatrix); 
+  // [
+  //  [3.0, 4.0, 5.0, 6.0],
+  //  [7.0, 8.0, 9.0, 10.0],
+  // ]
 ````
 
 ##### Submatrix (taking a lower dimension matrix of the current matrix)
