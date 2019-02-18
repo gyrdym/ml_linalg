@@ -25,7 +25,6 @@
 	    - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
 	    - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
 	    - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
-    + [Vectorized non-mathematical methods](#vectorized-non-mathematical-methods)
         - [Fast map](#fast-map)
 + [Matrices](#matrices)
 	+ [Matrix operations examples](#matrix-operations-examples)
@@ -43,7 +42,7 @@
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
-    + [Vectorized non-mathematical matrix methods](#vectorized-non-mathematical-matrix-methods)
+        - [Matrix fast map](#matrix-fast-map)
         - [Matrix indexing](#matrix-indexing)
 + [Contacts](#contacts)
 
@@ -212,12 +211,10 @@ At the present moment most common vector operations are implemented:
   print(result); // 5.0
 ````
 
-#### Vectorized non-mathematical methods
-
-It is also needed to operate with vectors in non-mathematical way, for instance, to create a new vector applying some 
-map function to an existing one. To do it effectively, one can use the following methods:
-
 ##### Fast map
+
+Performs mapping from one vector to another in efficient way (using simd computations)
+
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -485,7 +482,28 @@ print(matrix1 - matrix2);
   // -23.0
 ````
 
-### Vectorized non-mathematical matrix methods
+#### Matrix fast map
+
+Performs mapping from one matrix to another in efficient way (using simd computations)
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = MLMatrix.from([
+    [11.0, 12.0, 13.0, 14.0],
+    [15.0, 16.0, 0.0, 18.0],
+    [21.0, 22.0, -23.0, 24.0],
+    [24.0, 32.0, 53.0, 74.0],
+  ], dtype: Float32x4);
+  final newMatrix = matrix.fastMap<Float32x4>((Float32x4 val) => val.scale(3.0));
+  print(minValue);
+  // [
+  //   [33.0, 36.0, 39.0, 42.0],
+  //   [45.0, 48.0, 0.0, 54.0],
+  //   [63.0, 66.0, -69.0, 72.0],
+  //   [72.0, 96.0, 159.0, 222.0],
+  // ]
+````
 
 #### Matrix indexing
 The library's matrix interface offers `pick` method, that supposes to return a new matrix, consisting of different 
