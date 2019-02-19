@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix.dart';
 import 'package:ml_linalg/vector.dart';
@@ -107,4 +108,7 @@ abstract class MLMatrix {
 
   /// Return min value of the matrix
   double min();
+
+  /// Returns a norm of a matrix
+  double norm([MatrixNorm norm]);
 }
