@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
@@ -562,6 +563,17 @@ void main() {
       expect(actual, equals(expected));
       expect(actual.rowsNum, 3);
       expect(actual.columnsNum, 4);
+    });
+
+    test('should find a frobenius norm', () {
+      final matrix = Float32x4Matrix.from([
+        [1.0, 2.0, 3.0, 4.0],
+        [5.0, 6.0, 7.0, 8.0],
+        [9.0, .0, -2.0, -3.0],
+      ]);
+      final norm = matrix.norm(MatrixNorm.frobenius);
+      final expected = 17.2626;
+      expect(norm, closeTo(expected, 0.6));
     });
 
     test('should transpose a matrix', () {

@@ -1,6 +1,8 @@
 import 'dart:typed_data';
+import 'dart:math' as math;
 
 import 'package:ml_linalg/matrix.dart';
+import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_factory.dart';
@@ -213,6 +215,17 @@ abstract class MLMatrixMixin<E, S extends List<E>>
 
   @override
   double min() => _findExtrema((MLVector row) => row.min());
+
+  @override
+  double norm([MatrixNorm norm = MatrixNorm.frobenius]) {
+    switch (norm) {
+      case MatrixNorm.frobenius:
+        return math.sqrt(reduceRows((sum, row) => sum + row.toIntegerPower(2))
+            .sum());
+      default:
+        throw UnsupportedError('Unsupported matrix norm type - $norm');
+    }
+  }
 
   double _findExtrema(double callback(MLVector vector)) {
     int i = 0;
