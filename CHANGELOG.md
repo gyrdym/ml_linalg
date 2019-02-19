@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.3.0
+- MLMatrix: frobenius norm calculation added
+
 ## 5.2.0
 - MLMatrix: `/` operator added
 - MLMatrix: `rowsMap` method added
