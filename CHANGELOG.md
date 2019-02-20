@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.4.0
+- MLMatrix: dummy for `setColumn` method added
+
 ## 5.3.0
 - MLMatrix: frobenius norm calculation added
 
