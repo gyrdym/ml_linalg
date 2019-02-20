@@ -227,6 +227,15 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     }
   }
 
+  @override
+  void setColumn(int idx, Iterable<double> columnValues) {
+    if (columnValues.length != rowsNum) {
+      throw Exception('Matrix set column: new column has length '
+          '${columnValues.length}, but the matrix rows number is $rowsNum');
+    }
+    throw UnimplementedError();
+  }
+
   double _findExtrema(double callback(MLVector vector)) {
     int i = 0;
     return callback(reduceRows((MLVector result, MLVector row) {
