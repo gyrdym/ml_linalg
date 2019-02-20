@@ -111,4 +111,7 @@ abstract class MLMatrix {
 
   /// Returns a norm of a matrix
   double norm([MatrixNorm norm]);
+
+  /// Sets the new values for the specific column
+  void setColumn(int idx, Iterable<double> columnValues);
 }
