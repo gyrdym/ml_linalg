@@ -44,6 +44,7 @@
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
         - [Matrix fast map](#matrix-fast-map)
         - [Matrix indexing](#matrix-indexing)
+        - [Matrix column updating](#matrix-column-updating)
 + [Contacts](#contacts)
 
 ### Vectors
@@ -529,7 +530,29 @@ print(result);
   [36.0,  -8.0],
   [112.0, 34.0]
 */
-````  
+````
+
+#### Matrix column updating
+````dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix = MLMatrix.from([
+  [11.0, 12.0, 13.0, 14.0],
+  [15.0, 16.0, 0.0, 18.0],
+  [21.0, 22.0, -23.0, 24.0],
+  [24.0, 32.0, 53.0, 74.0],
+], dtype: Float32x4);
+
+matrix.setColumn(0, [1.0, 2.0, 3.0, 4.0]);
+
+print(matrix);
+// [
+//  [1.0, 12.0, 13.0, 14.0],
+//  [2.0, 16.0, 0.0, 18.0],
+//  [3.0, 22.0, -23.0, 24.0],
+//  [4.0, 32.0, 53.0, 74.0],
+// ]
+````
 
 ### Contacts
 If you have questions, feel free to write me on 

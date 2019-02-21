@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.5.0
+- MLMatrix: `setColumn` method implemented
+
 ## 5.4.0
 - MLMatrix: dummy for `setColumn` method added
 
