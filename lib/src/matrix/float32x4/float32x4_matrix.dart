@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
+import 'package:ml_linalg/src/matrix/float32x4/float32_data_helper_mixin.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32_matrix_iterator.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix_factory_mixin.dart';
 import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
@@ -18,9 +19,11 @@ class Float32x4Matrix extends Object
         MLMatrixValidatorMixin<Float32x4>,
         Float32x4MatrixFactoryMixin,
         Float32x4VectorFactoryMixin,
+        Float32DataHelperMixin,
         MLMatrixFastIterableMixin,
         MLMatrixMixin<Float32x4, Float32x4List>
     implements MLMatrixDataStore, MLMatrix {
+
   @override
   final int rowsNum;
 
@@ -50,15 +53,18 @@ class Float32x4Matrix extends Object
   /// vectors from [source] will serve as columns of the matrix
   /// It works this way:
   /// Input:
+  /// ```
   ///   {a1 a2 a3 a4}
   ///   {b1 b2 b3 b4}
   ///   {c1 c2 c3 c4}
-  ///
+  ///```
   ///  Output:
+  /// ```
   ///   {a1} {b1} {c1}
   ///   {a2} {b2} {c2}
   ///   {a3} {b3} {c3}
   ///   {a4} {b4} {c4}
+  /// ```
   Float32x4Matrix.columns(Iterable<MLVector> source)
       : rowsNum = source.first.length,
         columnsNum = source.length,
@@ -66,6 +72,8 @@ class Float32x4Matrix extends Object
             source.length * source.first.length * Float32List.bytesPerElement),
         rowsCache = List<MLVector>(source.first.length),
         columnsCache = source.toList(growable: false) {
+    // TODO: try to set the source values right in the byte data buffer
+    // inside `flatten2dimList` method
     final flattened = flatten2dimList(source, (i, j) => j * columnsNum + i);
     data.buffer.asFloat32List().setAll(0, flattened);
   }
@@ -78,6 +86,8 @@ class Float32x4Matrix extends Object
             source.length * source.first.length * Float32List.bytesPerElement),
         rowsCache = source.toList(growable: false),
         columnsCache = List<MLVector>(source.first.length) {
+    // TODO: try to set the source values right in the byte data buffer
+    // inside `flatten2dimList` method
     final flattened = flatten2dimList(source, (i, j) => i * columnsNum + j);
     data.buffer.asFloat32List().setAll(0, flattened);
   }
@@ -88,7 +98,7 @@ class Float32x4Matrix extends Object
         rowsCache = List<MLVector>(rowsNum),
         columnsCache = List<MLVector>(columnsNum) {
     if (source.length != rowsNum * columnsNum) {
-      throw Exception('Invalid number of rows and columns are provided');
+      throw Exception('Invalid matrix dimension is provided');
     }
     data.buffer.asFloat32List().setAll(0, source);
   }

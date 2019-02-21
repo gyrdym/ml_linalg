@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/ml_typed_data_helper.dart';
+import 'package:ml_linalg/src/vector/ml_typed_list_factory.dart';
 
 class Float32ListFactoryMixin implements MLTypedListFactory {
   @override

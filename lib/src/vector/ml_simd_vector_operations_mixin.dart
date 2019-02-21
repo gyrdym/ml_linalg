@@ -7,7 +7,7 @@ import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
 import 'package:ml_linalg/src/vector/ml_vector_data_store.dart';
 import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
-import 'package:ml_linalg/src/vector/ml_typed_data_helper.dart';
+import 'package:ml_linalg/src/vector/ml_typed_list_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
 abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>

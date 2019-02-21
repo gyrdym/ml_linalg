@@ -1,5 +1,5 @@
-import 'dart:typed_data';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
@@ -228,12 +228,26 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   @override
-  void setColumn(int idx, Iterable<double> columnValues) {
-    if (columnValues.length != rowsNum) {
-      throw Exception('Matrix set column: new column has length '
-          '${columnValues.length}, but the matrix rows number is $rowsNum');
+  void setColumn(int columnNum, Iterable<double> columnValues) {
+    if (columnNum >= columnsNum) {
+      throw RangeError.range(columnNum, 0, columnsNum - 1, 'Wrong column '
+          'number');
     }
-    throw UnimplementedError();
+    if (columnValues.length != rowsNum) {
+      throw Exception('New column has length ${columnValues.length}, but the '
+          'matrix rows number is $rowsNum');
+    }
+    columnsCache[columnNum] = columnValues is MLVector
+        ? columnValues : MLVector.from(columnValues);
+    final values = columnValues.toList(growable: false);
+    for (int i = 0, j = 0; i < rowsNum * columnsNum; i++) {
+      if (i == 0 && columnNum != 0) {
+        continue;
+      }
+      if (i == columnNum || i % (j * columnsNum + columnNum) == 0) {
+        updateByteData(i, values[j++]);
+      }
+    }
   }
 
   double _findExtrema(double callback(MLVector vector)) {

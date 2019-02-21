@@ -113,5 +113,9 @@ abstract class MLMatrix {
   double norm([MatrixNorm norm]);
 
   /// Sets the new values for the specific column
-  void setColumn(int idx, Iterable<double> columnValues);
+  ///
+  /// [columnNum] - 0-based column number
+  /// [columnValues] - values, that are going to be placed one by one in the
+  /// target column
+  void setColumn(int columnNum, Iterable<double> columnValues);
 }
