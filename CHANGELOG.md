@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.5.1
+- MLMatrix: fixed bug in `setColumn` method when rows cache was not cleared 
+
 ## 5.5.0
 - MLMatrix: `setColumn` method implemented
 
