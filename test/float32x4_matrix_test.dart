@@ -819,6 +819,8 @@ void main() {
       matrix.setColumn(1, newCol);
 
       expect(matrix.getColumn(1), equals(newCol));
+      expect(matrix.getRow(0), equals([4.0, 100.0, 12.0, 16.0, 34.0]));
+      expect(matrix.getRow(4), equals([112.0, 500.0, 34.0, 2.0, 10.0]));
       expect(matrix, equals([
         [4.0, 100.0, 12.0, 16.0, 34.0],
         [20.0, 200.0, 28.0, 32.0, 23.0],

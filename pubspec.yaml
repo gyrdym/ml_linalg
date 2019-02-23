@@ -1,11 +1,11 @@
 name: ml_linalg
 description: SIMD-based linear algebra with dart for machine learning purposes
-version: 5.5.0
+version: 5.5.1
 author: Ilia Gyrdymov <ilgyrd@gmail.com>
 homepage: https://github.com/gyrdym/ml_linalg
 
 environment:
-  sdk: '>=2.0.0 <3.0.0'
+  sdk: '>=2.1.0 <3.0.0'
 
 dev_dependencies:
   benchmark_harness: ">=1.0.0 <2.0.0"

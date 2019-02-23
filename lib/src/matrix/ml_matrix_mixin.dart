@@ -237,6 +237,8 @@ abstract class MLMatrixMixin<E, S extends List<E>>
       throw Exception('New column has length ${columnValues.length}, but the '
           'matrix rows number is $rowsNum');
     }
+    // clear rows cache
+    rowsCache.fillRange(0, rowsNum, null);
     columnsCache[columnNum] = columnValues is MLVector
         ? columnValues : MLVector.from(columnValues);
     final values = columnValues.toList(growable: false);
