@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/src/vector/ml_typed_list_factory.dart';
 
-class Float32ListFactoryMixin implements MLTypedListFactory {
+mixin Float32ListFactoryMixin implements TypedListFactory {
   @override
   Float32List createTypedList(int length) => Float32List(length);
 

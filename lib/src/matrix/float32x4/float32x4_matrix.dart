@@ -34,18 +34,18 @@ class Float32x4Matrix extends Object
   final ByteData data;
 
   @override
-  final List<MLVector> columnsCache;
+  final List<Vector> columnsCache;
 
   @override
-  final List<MLVector> rowsCache;
+  final List<Vector> rowsCache;
 
   Float32x4Matrix.from(Iterable<Iterable<double>> source)
       : rowsNum = source.length,
         columnsNum = source.first.length,
         data = ByteData(
             source.length * source.first.length * Float32List.bytesPerElement),
-        rowsCache = List<MLVector>(source.length),
-        columnsCache = List<MLVector>(source.first.length) {
+        rowsCache = List<Vector>(source.length),
+        columnsCache = List<Vector>(source.first.length) {
     final flattened = flatten2dimList(source, (i, j) => i * columnsNum + j);
     data.buffer.asFloat32List().setAll(0, flattened);
   }
@@ -65,12 +65,12 @@ class Float32x4Matrix extends Object
   ///   {a3} {b3} {c3}
   ///   {a4} {b4} {c4}
   /// ```
-  Float32x4Matrix.columns(Iterable<MLVector> source)
+  Float32x4Matrix.columns(Iterable<Vector> source)
       : rowsNum = source.first.length,
         columnsNum = source.length,
         data = ByteData(
             source.length * source.first.length * Float32List.bytesPerElement),
-        rowsCache = List<MLVector>(source.first.length),
+        rowsCache = List<Vector>(source.first.length),
         columnsCache = source.toList(growable: false) {
     // TODO: try to set the source values right in the byte data buffer
     // inside `flatten2dimList` method
@@ -79,13 +79,13 @@ class Float32x4Matrix extends Object
   }
 
   /// vectors from [source] will serve as rows of the matrix
-  Float32x4Matrix.rows(Iterable<MLVector> source)
+  Float32x4Matrix.rows(Iterable<Vector> source)
       : rowsNum = source.length,
         columnsNum = source.first.length,
         data = ByteData(
             source.length * source.first.length * Float32List.bytesPerElement),
         rowsCache = source.toList(growable: false),
-        columnsCache = List<MLVector>(source.first.length) {
+        columnsCache = List<Vector>(source.first.length) {
     // TODO: try to set the source values right in the byte data buffer
     // inside `flatten2dimList` method
     final flattened = flatten2dimList(source, (i, j) => i * columnsNum + j);
@@ -95,8 +95,8 @@ class Float32x4Matrix extends Object
   Float32x4Matrix.flattened(
       Iterable<double> source, this.rowsNum, this.columnsNum)
       : data = ByteData(rowsNum * columnsNum * Float32List.bytesPerElement),
-        rowsCache = List<MLVector>(rowsNum),
-        columnsCache = List<MLVector>(columnsNum) {
+        rowsCache = List<Vector>(rowsNum),
+        columnsCache = List<Vector>(columnsNum) {
     if (source.length != rowsNum * columnsNum) {
       throw Exception('Invalid matrix dimension is provided');
     }

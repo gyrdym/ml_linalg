@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.6.0
+- MLVector: equity operator implemented
+- MLMatrix: `uniqueRows` method added
+
 ## 5.5.1
 - MLMatrix: fixed bug in `setColumn` method when rows cache was not cleared 
 

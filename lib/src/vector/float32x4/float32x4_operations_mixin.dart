@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
 
-class Float32x4OperationsMixin
-    implements MLSimdOperationsHelper<Float32x4, Float32x4List> {
+mixin Float32x4OperationsMixin
+    implements SimdOperationsHelper<Float32x4, Float32x4List> {
   @override
   final bucketSize = 4;
 
@@ -37,6 +37,10 @@ class Float32x4OperationsMixin
 
   @override
   Float32x4 simdAbs(Float32x4 a) => a.abs();
+
+  @override
+  bool areValuesEqual(Float32x4 a, Float32x4 b) =>
+    a.equal(b).signMask == 15;
 
   @override
   double singleSIMDSum(Float32x4 a) =>

@@ -5,13 +5,13 @@ import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
-abstract class MLVector implements Iterable<double> {
+abstract class Vector implements Iterable<double> {
   /// Creates a vector from a collection [source].
   ///
   /// It converts the collection of [double]-type elements into a collection of
   /// [Float32x4] elements. If [isMutable] is true, one can alter the vector,
   /// for example, via `[]=` operator
-  factory MLVector.from(Iterable<double> source,
+  factory Vector.from(Iterable<double> source,
       {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -25,7 +25,7 @@ abstract class MLVector implements Iterable<double> {
   ///
   /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
   /// operator
-  factory MLVector.filled(int length, double value,
+  factory Vector.filled(int length, double value,
       {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -39,7 +39,7 @@ abstract class MLVector implements Iterable<double> {
   ///
   /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
   /// operator
-  factory MLVector.zero(int length, {bool isMutable, Type dtype = Float32x4}) {
+  factory Vector.zero(int length, {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Vector.zero(length, isMutable: isMutable);
@@ -53,7 +53,7 @@ abstract class MLVector implements Iterable<double> {
   ///
   /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
   /// operator
-  factory MLVector.randomFilled(int length,
+  factory Vector.randomFilled(int length,
       {int seed, bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -74,30 +74,30 @@ abstract class MLVector implements Iterable<double> {
   void operator []=(int index, double value);
 
   /// Vector addition (element-wise operation)
-  MLVector operator +(Object value);
+  Vector operator +(Object value);
 
   /// Vector subtraction (element-wise operation)
-  MLVector operator -(Object value);
+  Vector operator -(Object value);
 
   /// Vector multiplication (element-wise operation)
-  MLVector operator *(Object value);
+  Vector operator *(Object value);
 
   /// Element-wise division
-  MLVector operator /(Object value);
+  Vector operator /(Object value);
 
-  /// Creates a new [MLVector] containing elements of this [MLVector] raised to
+  /// Creates a new [Vector] containing elements of this [Vector] raised to
   /// the integer [power]
-  MLVector toIntegerPower(int power);
+  Vector toIntegerPower(int power);
 
   /// Returns a vector with absolute value of each vector element
-  MLVector abs();
+  Vector abs();
 
   /// Returns a dot (inner) product of [this] and [vector]
-  double dot(MLVector vector);
+  double dot(Vector vector);
 
   /// Returns a distance between [this] and [vector] with vector norm type
   /// considering
-  double distanceTo(MLVector vector, [Norm norm = Norm.euclidean]);
+  double distanceTo(Vector vector, [Norm norm = Norm.euclidean]);
 
   /// Returns a mean value of [this] vector
   double mean();
@@ -116,14 +116,14 @@ abstract class MLVector implements Iterable<double> {
 
   /// Returns a vector composed of elements which are located on the passed
   /// indexes
-  MLVector query(Iterable<int> indexes);
+  Vector query(Iterable<int> indexes);
 
   /// Returns a vector composed of unique vector's elements
-  MLVector unique();
+  Vector unique();
 
-  MLVector fastMap<E>(
+  Vector fastMap<E>(
       E mapper(E element, int offsetStartIdx, int offsetEndIdx));
 
   /// Cuts out a part of the vector
-  MLVector subvector(int start, [int end]);
+  Vector subvector(int start, [int end]);
 }

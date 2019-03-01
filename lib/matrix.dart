@@ -18,7 +18,7 @@ abstract class MLMatrix {
   }
 
   /// Creates a matrix with predefined row vectors
-  factory MLMatrix.rows(List<MLVector> source, {Type dtype = Float32x4}) {
+  factory MLMatrix.rows(List<Vector> source, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Matrix.rows(source);
@@ -28,7 +28,7 @@ abstract class MLMatrix {
   }
 
   /// Creates a matrix with predefined column vectors
-  factory MLMatrix.columns(List<MLVector> source, {Type dtype = Float32x4}) {
+  factory MLMatrix.columns(List<Vector> source, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Matrix.columns(source);
@@ -71,26 +71,26 @@ abstract class MLMatrix {
   MLMatrix pick({Iterable<Range> rowRanges, Iterable<Range> columnRanges});
 
   /// Returns a column of the matrix, resided on [index]
-  MLVector getColumn(int index, {bool tryCache = true, bool mutable = false});
+  Vector getColumn(int index, {bool tryCache = true, bool mutable = false});
 
   /// Returns a row of the matrix, resided on [index]
-  MLVector getRow(int index, {bool tryCache = true, bool mutable = false});
+  Vector getRow(int index, {bool tryCache = true, bool mutable = false});
 
   /// Reduces all the matrix columns to only column, using [combiner] function
-  MLVector reduceColumns(MLVector combiner(MLVector combine, MLVector vector),
-      {MLVector initValue});
+  Vector reduceColumns(Vector combiner(Vector combine, Vector vector),
+      {Vector initValue});
 
   /// Reduces all the matrix rows to only row, using [combiner] function
-  MLVector reduceRows(MLVector combiner(MLVector combine, MLVector vector),
-      {MLVector initValue});
+  Vector reduceRows(Vector combiner(Vector combine, Vector vector),
+      {Vector initValue});
 
   /// Performs column-wise mapping of this matrix to a new one via passed
   /// [mapper] function
-  MLMatrix mapColumns(MLVector mapper(MLVector column));
+  MLMatrix mapColumns(Vector mapper(Vector column));
 
   /// Performs row-wise mapping of this matrix to a new one via passed
   /// [mapper] function
-  MLMatrix mapRows(MLVector mapper(MLVector row));
+  MLMatrix mapRows(Vector mapper(Vector row));
 
   /// Creates a new matrix, efficiently iterating through all the matrix
   /// elements (several floating point elements in a time) and applying the
@@ -101,7 +101,7 @@ abstract class MLMatrix {
   ///
   /// It fails, if the matrix's both numbers of columns and rows are greater
   /// than `1`
-  MLVector toVector({bool mutable = false});
+  Vector toVector({bool mutable = false});
 
   /// Returns max value of the matrix
   double max();
