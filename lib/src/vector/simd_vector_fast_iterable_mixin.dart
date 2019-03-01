@@ -1,18 +1,18 @@
 import 'dart:math' as math;
 
-import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
-import 'package:ml_linalg/src/vector/ml_vector_data_store.dart';
-import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
+import 'package:ml_linalg/src/vector/simd_operations_helper.dart';
+import 'package:ml_linalg/src/vector/vector_data_store.dart';
+import 'package:ml_linalg/src/vector/vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
-abstract class MLSimdVectorFastIterableMixin<E, S extends List<E>>
+mixin SimdVectorFastIterableMixin<E, S extends List<E>>
     implements
-        MLVectorFactory<E, S>,
-        MLVectorDataStore<E, S>,
-        MLSimdOperationsHelper<E, S>,
-        MLVector {
+        VectorFactory<E, S>,
+        VectorDataStore<E, S>,
+        SimdOperationsHelper<E, S>,
+        Vector {
   @override
-  MLVector fastMap<T>(
+  Vector fastMap<T>(
       T mapper(T element, int offsetStartIdx, int offsetEndIdx)) {
     final list = createSIMDList(data.length) as List<T>;
     for (int i = 0; i < data.length; i++) {

@@ -4,20 +4,21 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
-import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
-import 'package:ml_linalg/src/vector/ml_vector_data_store.dart';
-import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
-import 'package:ml_linalg/src/vector/ml_typed_list_factory.dart';
+import 'package:ml_linalg/src/vector/simd_operations_helper.dart';
+import 'package:ml_linalg/src/vector/vector_data_store.dart';
+import 'package:ml_linalg/src/vector/vector_factory.dart';
+import 'package:ml_linalg/src/vector/typed_list_factory.dart';
 import 'package:ml_linalg/vector.dart';
+import 'package:quiver/core.dart';
 
-abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
+mixin SimdVectorMixin<E, S extends List<E>>
     implements
         IterableMixin<double>,
-        MLSimdOperationsHelper<E, S>,
-        MLTypedListFactory,
-        MLVectorDataStore<E, S>,
-        MLVectorFactory<E, S>,
-        MLVector {
+        SimdOperationsHelper<E, S>,
+        TypedListFactory,
+        VectorDataStore<E, S>,
+        VectorFactory<E, S>,
+        Vector {
   S get dataWithoutLastBucket => sublist(data, 0, data.length - 1);
 
   @override
@@ -27,10 +28,35 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   bool get _isLastBucketNotFull => length % bucketSize > 0;
 
   @override
-  MLVector operator +(Object value) {
-    if (value is MLVector) {
+  bool operator ==(Object obj) {
+    if (obj is Vector) {
+      // TODO: consider checking hashcode here to compare two vectors
+      if (length != obj.length) {
+        return false;
+      }
+      for (int i = 0; i < data.length; i++) {
+        if (!areValuesEqual(data[i], (obj as VectorDataStore<E, S>).data[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode {
+    _hash ??= hashObjects(data);
+    return _hash;
+  }
+
+  int _hash;
+
+  @override
+  Vector operator +(Object value) {
+    if (value is Vector) {
       return _elementWiseVectorOperation(value, simdSum);
-    } else if (value is MLMatrix) {
+    } else if (value is Matrix) {
       final other = value.toVector();
       return _elementWiseVectorOperation(other, simdSum);
     } else if (value is num) {
@@ -41,10 +67,10 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector operator -(Object value) {
-    if (value is MLVector) {
+  Vector operator -(Object value) {
+    if (value is Vector) {
       return _elementWiseVectorOperation(value, simdSub);
-    } else if (value is MLMatrix) {
+    } else if (value is Matrix) {
       final other = value.toVector();
       return _elementWiseVectorOperation(other, simdSub);
     } else if (value is num) {
@@ -55,10 +81,10 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector operator *(Object value) {
-    if (value is MLVector) {
+  Vector operator *(Object value) {
+    if (value is Vector) {
       return _elementWiseVectorOperation(value, simdMul);
-    } else if (value is MLMatrix) {
+    } else if (value is Matrix) {
       return _matrixMul(value);
     } else if (value is num) {
       return _elementWiseFloatScalarOperation(value.toDouble(), simdScale);
@@ -67,8 +93,8 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector operator /(Object value) {
-    if (value is MLVector) {
+  Vector operator /(Object value) {
+    if (value is Vector) {
       return _elementWiseVectorOperation(value, simdDiv);
     } else if (value is num) {
       return _elementWiseFloatScalarOperation(1 / value, simdScale);
@@ -77,22 +103,22 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector toIntegerPower(int power) => _elementWisePow(power);
+  Vector toIntegerPower(int power) => _elementWisePow(power);
 
   /// Returns a vector filled with absolute values of an each component of [this] vector
   @override
-  MLVector abs() =>
+  Vector abs() =>
       _elementWiseSelfOperation((E element, [int i]) => simdAbs(element));
 
   @override
-  double dot(MLVector vector) => (this * vector).sum();
+  double dot(Vector vector) => (this * vector).sum();
 
   /// Returns sum of all vector components
   @override
   double sum() => singleSIMDSum(data.reduce(simdSum));
 
   @override
-  double distanceTo(MLVector vector, [Norm norm = Norm.euclidean]) =>
+  double distanceTo(Vector vector, [Norm norm = Norm.euclidean]) =>
       (this - vector).norm(norm);
 
   @override
@@ -140,7 +166,7 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector query(Iterable<int> indexes) {
+  Vector query(Iterable<int> indexes) {
     final list = createTypedList(indexes.length);
     int i = 0;
     for (final idx in indexes) {
@@ -150,7 +176,7 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector unique() {
+  Vector unique() {
     final unique = <double>[];
     for (int i = 0; i < length; i++) {
       final el = this[i];
@@ -179,7 +205,7 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector subvector(int start, [int end]) {
+  Vector subvector(int start, [int end]) {
     final collection = bufferAsTypedList((data as TypedData).buffer, start,
         (end > length ? length : end) - start);
     return createVectorFrom(collection);
@@ -234,7 +260,7 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
-  MLVector _elementWiseFloatScalarOperation(
+  Vector _elementWiseFloatScalarOperation(
       double scalar, E operation(E a, double b)) {
     final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
@@ -244,7 +270,7 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
-  MLVector _elementWiseSimdScalarOperation(E simdVal, E operation(E a, E b)) {
+  Vector _elementWiseSimdScalarOperation(E simdVal, E operation(E a, E b)) {
     final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], simdVal);
@@ -253,16 +279,16 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
-  MLVector _elementWiseVectorOperation(MLVector vector, E operation(E a, E b)) {
+  Vector _elementWiseVectorOperation(Vector vector, E operation(E a, E b)) {
     if (vector.length != length) throw _mismatchLengthError();
     final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i], (vector as MLVectorDataStore<E, S>).data[i]);
+      list[i] = operation(data[i], (vector as VectorDataStore<E, S>).data[i]);
     }
     return createVectorFromSIMDList(list, length);
   }
 
-  MLVector _elementWiseSelfOperation(E operation(E element, [int index])) {
+  Vector _elementWiseSelfOperation(E operation(E element, [int index])) {
     final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], i);
@@ -271,7 +297,7 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
-  MLVector _elementWisePow(int exp) {
+  Vector _elementWisePow(int exp) {
     final list = createSIMDList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = _simdToIntPow(data[i], exp);
@@ -279,7 +305,7 @@ abstract class MLSimdVectorOperationsMixin<E, S extends List<E>>
     return createVectorFromSIMDList(list, length);
   }
 
-  MLVector _matrixMul(MLMatrix matrix) {
+  Vector _matrixMul(Matrix matrix) {
     if (length != matrix.rowsNum) {
       throw Exception(
           'Multiplication by a matrix with diffrent number of rows than the vector length is not allowed:'

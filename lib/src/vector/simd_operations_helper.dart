@@ -1,4 +1,4 @@
-abstract class MLSimdOperationsHelper<E, S extends List<E>> {
+abstract class SimdOperationsHelper<E, S extends List<E>> {
   /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
   int get bucketSize;
@@ -38,6 +38,8 @@ abstract class MLSimdOperationsHelper<E, S extends List<E>> {
 
   /// prepares a simd value comprised of maximum values of both [a] and [b]
   E selectMax(E a, E b);
+
+  bool areValuesEqual(E a, E b);
 
   /// returns a maximal element (lane) of [a]
   double getMaxLane(E a);
