@@ -8,7 +8,7 @@ import 'package:ml_linalg/src/vector/float32x4/float32x4_data_store_mixin.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_operations_mixin.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/src/vector/simd_vector_fast_iterable_mixin.dart';
-import 'package:ml_linalg/src/vector/simd_vector_operations_mixin.dart';
+import 'package:ml_linalg/src/vector/simd_vector_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
@@ -29,7 +29,7 @@ class Float32x4Vector with
         Float32x4VectorFactoryMixin,
         Float32x4DataStoreMixin,
         SimdVectorFastIterableMixin<Float32x4, Float32x4List>,
-        SimdVectorOperationsMixin<Float32x4, Float32x4List>
+        SimdVectorMixin<Float32x4, Float32x4List>
     implements Vector {
   /// Creates a vector from collection
   Float32x4Vector.from(Iterable<double> source, {this.isMutable = false}) {
@@ -66,6 +66,9 @@ class Float32x4Vector with
     final source = List<double>.generate(length, (_) => random.nextDouble());
     data = convertCollectionToSIMDList(source);
   }
+
+  @override
+  final Type dtype = Float32x4;
 
   @override
   final bool isMutable;
