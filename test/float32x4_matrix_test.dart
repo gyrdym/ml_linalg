@@ -95,10 +95,10 @@ void main() {
       final row1 = matrix.getRow(0);
       final row2 = matrix.getRow(1);
 
-      expect(row1 is MLVector, isTrue);
+      expect(row1 is Vector, isTrue);
       expect(row1, [11.0, 12.0, 13.0, 14.0]);
 
-      expect(row2 is MLVector, isTrue);
+      expect(row2 is Vector, isTrue);
       expect(row2, [15.0, 16.0, 17.0, 18.0]);
     });
 
@@ -144,16 +144,16 @@ void main() {
       final column3 = matrix.getColumn(2);
       final column4 = matrix.getColumn(3);
 
-      expect(column1 is MLVector, isTrue);
+      expect(column1 is Vector, isTrue);
       expect(column1, [11.0, 15.0, 21.0]);
 
-      expect(column2 is MLVector, isTrue);
+      expect(column2 is Vector, isTrue);
       expect(column2, [12.0, 16.0, 22.0]);
 
-      expect(column3 is MLVector, isTrue);
+      expect(column3 is Vector, isTrue);
       expect(column3, [13.0, 17.0, 23.0]);
 
-      expect(column4 is MLVector, isTrue);
+      expect(column4 is Vector, isTrue);
       expect(column4, [14.0, 18.0, 24.0]);
     });
 
@@ -370,7 +370,7 @@ void main() {
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
       ]);
-      final modifier = MLVector.filled(3, 2.0);
+      final modifier = Vector.filled(3, 2.0);
       final actual = matrix.mapColumns((column) => column + modifier);
       final expected = [
         [13.0, 14.0, 15.0, 16.0],
@@ -386,7 +386,7 @@ void main() {
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
       ]);
-      final modifier = MLVector.filled(4, 1.0);
+      final modifier = Vector.filled(4, 1.0);
       final actual = matrix.mapRows((row) => row - modifier);
       final expected = [
         [10.0, 11.0, 12.0, 13.0],
@@ -749,7 +749,7 @@ void main() {
       ]);
       final column1 = matrix.toVector();
       final column2 = matrix.toVector();
-      expect(column1 is MLVector, isTrue);
+      expect(column1 is Vector, isTrue);
       expect(column1, equals([1.0, 5.0, 9.0]));
       expect(identical(column1, column2), isTrue);
     });
@@ -763,7 +763,7 @@ void main() {
       final column1 = matrix.toVector(mutable: true);
       final column2 = matrix.toVector(mutable: true);
 
-      expect(column1 is MLVector, isTrue);
+      expect(column1 is Vector, isTrue);
       expect(column1.isMutable, isTrue);
       expect(column1, equals([1.0, 5.0, 9.0]));
       expect(identical(column1, column2), isFalse);
@@ -776,7 +776,7 @@ void main() {
       ]);
       final row1 = matrix.toVector();
       final row2 = matrix.toVector();
-      expect(row1 is MLVector, isTrue);
+      expect(row1 is Vector, isTrue);
       expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
       expect(identical(row1, row2), isTrue);
     });
@@ -788,7 +788,7 @@ void main() {
       final row1 = matrix.toVector(mutable: true);
       final row2 = matrix.toVector(mutable: true);
 
-      expect(row1 is MLVector, isTrue);
+      expect(row1 is Vector, isTrue);
       expect(row1.isMutable, isTrue);
       expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
       expect(identical(row1, row2), isFalse);
@@ -803,6 +803,46 @@ void main() {
         [36.0, .0, -8.0, -12.0],
       ]);
       expect(() => matrix.toVector(), throwsException);
+    });
+  });
+
+  group('Float32x4Matrix.uniqueRows', () {
+    test('should return the same row vectors as the matrix rows if all the '
+        'rows are unique', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final actual = matrix.uniqueRows();
+      final expected = [
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ];
+      expect(actual, equals(expected));
+    });
+
+    test('should return just unique rows', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+      ]);
+      final actual = matrix.uniqueRows();
+      final expected = [
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+      ];
+      expect(actual, equals(expected));
     });
   });
 

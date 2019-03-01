@@ -123,9 +123,57 @@ void main() {
       expect(actual.length, equals(5));
     });
 
-    test(
-        'should throw an exception if one tries to sum vectors of different lengths',
-        () {
+    test('should compare with another vector and return `true` if vectors are'
+        'equal', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      expect(vector1 == vector2, isTrue);
+    });
+
+    test('should compare with another vector and return `true` if vectors are'
+        'have all zero values', () {
+      final vector1 = Float32x4Vector.from([0.0, 0.0, 0.0, 0.0, 0.0]);
+      final vector2 = Float32x4Vector.from([0.0, 0.0, 0.0, 0.0, 0.0]);
+      expect(vector1 == vector2, isTrue);
+    });
+
+    test('should compare with another vector and return `false` if vectors are'
+        'different', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 30.0, 4.0, 5.0]);
+      expect(vector1 == vector2, isFalse);
+    });
+
+    test('should compare with another vector and return `false` if vectors are'
+        'have opposite values', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([-1.0, -2.0, -3.0, -4.0, -5.0]);
+      expect(vector1 == vector2, isFalse);
+    });
+
+    test('should compare with another vector and return `false` if one vector'
+        'have all zero values', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Float32x4Vector.from([0.0, 0.0, 0.0, 0.0, 0.0]);
+      expect(vector1 == vector2, isFalse);
+    });
+
+    test('should compare with another vector and return `false` if vectors '
+        'have different lengths', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      expect(vector1 == vector2, isFalse);
+    });
+
+    test('should compare with another object and return `false` if another '
+        'object is not a vector', () {
+      final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      final vector2 = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
+      expect(vector1 == vector2, isFalse);
+    });
+
+    test('should throw an exception if one tries to sum vectors of different '
+        'lengths', () {
       final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 + vector2, throwsRangeError);
@@ -165,9 +213,8 @@ void main() {
       expect(result.length, equals(5));
     });
 
-    test(
-        'should throw an exception if one tries to subtract a vector of different length',
-        () {
+    test('should throw an exception if one tries to subtract a vector of '
+        'different length', () {
       final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 - vector2, throwsRangeError);
@@ -216,9 +263,8 @@ void main() {
       expect(actual.length, equals(5));
     });
 
-    test(
-        'should throw an error if one tries to multiple by a vector of different length',
-        () {
+    test('should throw an error if one tries to multiple by a vector of '
+        'different length', () {
       final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 * vector2, throwsRangeError);
@@ -471,16 +517,14 @@ void main() {
       expect(() => vector[100], throwsRangeError);
     });
 
-    test(
-        'should not allow to assign a value via indexed access if it is immutable ([]= operator)',
-        () {
+    test('should not allow to assign a value via indexed access if it is '
+        'immutable ([]= operator)', () {
       final vector = Float32x4Vector.from([1.0, 2.0]); // immutable by default
       expect(() => vector[0] = 3.0, throwsUnsupportedError);
     });
 
-    test(
-        'should perform value assignment via indexed access if it is mutable ([]= operator)',
-        () {
+    test('should perform value assignment via indexed access if it is mutable '
+        '([]= operator)', () {
       final vector =
           Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
       vector[0] = 6.0;
@@ -491,9 +535,8 @@ void main() {
       expect(vector, equals([6.0, 7.0, 8.0, 9.0, 10.0]));
     });
 
-    test(
-        'should throw range error if one tries to set a value on non-existing index',
-        () {
+    test('should throw range error if one tries to set a value on non-existing '
+        'index', () {
       final vector =
           Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
       expect(() => vector[20] = 2.0, throwsRangeError);

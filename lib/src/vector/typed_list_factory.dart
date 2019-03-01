@@ -1,6 +1,6 @@
 import 'dart:typed_data' show ByteBuffer;
 
-abstract class MLTypedListFactory {
+abstract class TypedListFactory {
   /// returns a typed list with
   List<double> createTypedListFromByteBuffer(ByteBuffer data);
 

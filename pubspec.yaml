@@ -5,7 +5,10 @@ author: Ilia Gyrdymov <ilgyrd@gmail.com>
 homepage: https://github.com/gyrdym/ml_linalg
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.2.0 <3.0.0'
+
+dependencies:
+  quiver: '>=2.0.0 <3.0.0'
 
 dev_dependencies:
   benchmark_harness: ">=1.0.0 <2.0.0"
