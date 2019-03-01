@@ -7,8 +7,8 @@ import 'package:ml_linalg/src/vector/common/float32_list_factory_mixin.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_data_store_mixin.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_operations_mixin.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector_factory_mixin.dart';
-import 'package:ml_linalg/src/vector/ml_simd_vector_fast_iterable_mixin.dart';
-import 'package:ml_linalg/src/vector/ml_simd_vector_operations_mixin.dart';
+import 'package:ml_linalg/src/vector/simd_vector_fast_iterable_mixin.dart';
+import 'package:ml_linalg/src/vector/simd_vector_operations_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support

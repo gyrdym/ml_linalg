@@ -1,8 +1,8 @@
 import 'package:ml_linalg/matrix.dart';
 
-abstract class MLMatrixValidator {
-  void checkDimensions(MLMatrix first, MLMatrix second,
+abstract class MatrixValidator {
+  void checkDimensions(Matrix first, Matrix second,
       {String errorTitle = 'Cannot perform the operation'});
-  void checkColumnsAndRowsNumber(MLMatrix first, MLMatrix second,
+  void checkColumnsAndRowsNumber(Matrix first, Matrix second,
       {String errorTitle = 'Cannot perform the operation'});
 }

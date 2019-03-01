@@ -1,10 +1,10 @@
 import 'package:ml_linalg/matrix.dart';
-import 'package:ml_linalg/src/matrix/ml_matrix_factory.dart';
+import 'package:ml_linalg/src/matrix/matrix_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
-abstract class MLMatrixFastIterableMixin implements MLMatrixFactory, MLMatrix {
+mixin MatrixFastIterableMixin implements MatrixFactory, Matrix {
   @override
-  MLMatrix fastMap<T>(T mapper(T element)) {
+  Matrix fastMap<T>(T mapper(T element)) {
     final source = List<Vector>.generate(
         rowsNum,
         (int i) => (getRow(i)).fastMap(

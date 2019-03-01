@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/vector.dart';
 
-abstract class MLMatrixDataStore {
+abstract class MatrixDataStore {
   List<Vector> get columnsCache;
   List<Vector> get rowsCache;
   ByteData get data;

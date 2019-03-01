@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
+import 'package:ml_linalg/src/vector/simd_operations_helper.dart';
 
 mixin Float32x4OperationsMixin
     implements SimdOperationsHelper<Float32x4, Float32x4List> {
