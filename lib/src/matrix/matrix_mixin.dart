@@ -156,12 +156,12 @@ mixin MatrixMixin<E, S extends List<E>>
   @override
   Matrix mapColumns(Vector mapper(Vector columns)) =>
       Matrix.columns(List<Vector>.generate(columnsNum,
-              (int i) => mapper(getColumn(i))));
+              (int i) => mapper(getColumn(i))), dtype: dtype);
 
   @override
   Matrix mapRows(Vector mapper(Vector row)) =>
       Matrix.rows(List<Vector>.generate(rowsNum,
-              (int i) => mapper(getRow(i))));
+              (int i) => mapper(getRow(i))), dtype: dtype);
 
   @override
   Matrix uniqueRows() {

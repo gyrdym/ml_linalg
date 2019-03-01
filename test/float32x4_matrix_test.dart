@@ -826,6 +826,24 @@ void main() {
       ];
       expect(actual, equals(expected));
     });
+
+    test('should return just unique rows', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+      ]);
+      final actual = matrix.uniqueRows();
+      final expected = [
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+      ];
+      expect(actual, equals(expected));
+    });
   });
 
   group('Float32x4Matrix.setColumn', () {

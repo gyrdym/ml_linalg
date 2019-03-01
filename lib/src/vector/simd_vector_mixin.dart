@@ -11,7 +11,7 @@ import 'package:ml_linalg/src/vector/typed_list_factory.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/core.dart';
 
-mixin SimdVectorOperationsMixin<E, S extends List<E>>
+mixin SimdVectorMixin<E, S extends List<E>>
     implements
         IterableMixin<double>,
         SimdOperationsHelper<E, S>,
