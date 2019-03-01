@@ -5,6 +5,6 @@ abstract class MLMatrixFactory {
   MLMatrix createMatrixFrom(Iterable<Iterable<double>> source);
   MLMatrix createMatrixFromFlattened(
       Iterable<double> source, int rowsNum, int columnsNum);
-  MLMatrix createMatrixFromRows(Iterable<MLVector> source);
-  MLMatrix createMatrixFromColumns(Iterable<MLVector> source);
+  MLMatrix createMatrixFromRows(Iterable<Vector> source);
+  MLMatrix createMatrixFromColumns(Iterable<Vector> source);
 }

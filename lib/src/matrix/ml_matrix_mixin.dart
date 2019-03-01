@@ -15,7 +15,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
         Iterable<Iterable<double>>,
         MLMatrixDataStore,
         MLMatrixFactory,
-        MLVectorFactory<E, S>,
+        VectorFactory<E, S>,
         MLMatrixValidator,
         MLMatrix {
   @override
@@ -50,7 +50,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   /// available only for X by N * N by Y matrices, that causes X by Y matrix
   @override
   MLMatrix operator *(Object value) {
-    if (value is MLVector) {
+    if (value is Vector) {
       return _matrixVectorMul(value);
     } else if (value is MLMatrix) {
       return _matrixMul(value);
@@ -65,7 +65,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   /// Performs division of the matrix by vector, matrix or scalar
   @override
   MLMatrix operator /(Object value) {
-    if (value is MLVector) {
+    if (value is Vector) {
       return _matrixByVectorDiv(value);
     } else if (value is MLMatrix) {
       return _matrixByMatrixDiv(value);
@@ -82,12 +82,12 @@ abstract class MLMatrixMixin<E, S extends List<E>>
 
   @override
   MLMatrix transpose() {
-    final source = List<MLVector>.generate(rowsNum, getRow);
+    final source = List<Vector>.generate(rowsNum, getRow);
     return createMatrixFromColumns(source);
   }
 
   @override
-  MLVector getRow(int index, {bool tryCache = true, bool mutable = false}) {
+  Vector getRow(int index, {bool tryCache = true, bool mutable = false}) {
     if (tryCache) {
       rowsCache[index] ??= createVectorFrom(this[index], mutable);
       return rowsCache[index];
@@ -97,7 +97,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector getColumn(int index, {bool tryCache = true, bool mutable = false}) {
+  Vector getColumn(int index, {bool tryCache = true, bool mutable = false}) {
     if (columnsCache[index] == null || !tryCache) {
       final result = List<double>(rowsNum);
       for (int i = 0; i < rowsNum; i++) {
@@ -142,25 +142,25 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector reduceColumns(
-          MLVector Function(MLVector combine, MLVector vector) combiner,
-          {MLVector initValue}) =>
+  Vector reduceColumns(
+          Vector Function(Vector combine, Vector vector) combiner,
+          {Vector initValue}) =>
       _reduce(combiner, columnsNum, getColumn, initValue: initValue);
 
   @override
-  MLVector reduceRows(
-          MLVector Function(MLVector combine, MLVector vector) combiner,
-          {MLVector initValue}) =>
+  Vector reduceRows(
+          Vector Function(Vector combine, Vector vector) combiner,
+          {Vector initValue}) =>
       _reduce(combiner, rowsNum, getRow, initValue: initValue);
 
   @override
-  MLMatrix mapColumns(MLVector mapper(MLVector columns)) =>
-      MLMatrix.columns(List<MLVector>.generate(columnsNum,
+  MLMatrix mapColumns(Vector mapper(Vector columns)) =>
+      MLMatrix.columns(List<Vector>.generate(columnsNum,
               (int i) => mapper(getColumn(i))));
 
   @override
-  MLMatrix mapRows(MLVector mapper(MLVector row)) =>
-      MLMatrix.rows(List<MLVector>.generate(rowsNum,
+  MLMatrix mapRows(Vector mapper(Vector row)) =>
+      MLMatrix.rows(List<Vector>.generate(rowsNum,
               (int i) => mapper(getRow(i))));
 
   List<double> flatten2dimList(
@@ -180,7 +180,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   @override
-  MLVector toVector({bool mutable = false}) {
+  Vector toVector({bool mutable = false}) {
     if (columnsNum == 1) {
       return getColumn(0, tryCache: !mutable, mutable: mutable);
     } else if (rowsNum == 1) {
@@ -211,10 +211,10 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   @override
-  double max() => _findExtrema((MLVector row) => row.max());
+  double max() => _findExtrema((Vector row) => row.max());
 
   @override
-  double min() => _findExtrema((MLVector row) => row.min());
+  double min() => _findExtrema((Vector row) => row.min());
 
   @override
   double norm([MatrixNorm norm = MatrixNorm.frobenius]) {
@@ -239,8 +239,8 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     }
     // clear rows cache
     rowsCache.fillRange(0, rowsNum, null);
-    columnsCache[columnNum] = columnValues is MLVector
-        ? columnValues : MLVector.from(columnValues);
+    columnsCache[columnNum] = columnValues is Vector
+        ? columnValues : Vector.from(columnValues);
     final values = columnValues.toList(growable: false);
     for (int i = 0, j = 0; i < rowsNum * columnsNum; i++) {
       if (i == 0 && columnNum != 0) {
@@ -252,19 +252,19 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     }
   }
 
-  double _findExtrema(double callback(MLVector vector)) {
+  double _findExtrema(double callback(Vector vector)) {
     int i = 0;
-    return callback(reduceRows((MLVector result, MLVector row) {
+    return callback(reduceRows((Vector result, Vector row) {
       result[i++] = callback(row);
       return result;
-    }, initValue: MLVector.zero(rowsNum, isMutable: true)));
+    }, initValue: Vector.zero(rowsNum, isMutable: true)));
   }
 
-  MLVector _reduce(
-      MLVector Function(MLVector combine, MLVector vector) combiner,
+  Vector _reduce(
+      Vector Function(Vector combine, Vector vector) combiner,
       int length,
-      MLVector Function(int index) getVector,
-      {MLVector initValue}) {
+      Vector Function(int index) getVector,
+      {Vector initValue}) {
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
     for (int i = startIndex; i < length; i++) {
@@ -273,7 +273,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     return reduced;
   }
 
-  MLMatrix _matrixVectorMul(MLVector vector) {
+  MLMatrix _matrixVectorMul(Vector vector) {
     if (vector.length != columnsNum) {
       throw Exception(
           'The dimension of the vector ${vector} and the columns number of '
@@ -297,7 +297,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     return createMatrixFromFlattened(source, rowsNum, matrix.columnsNum);
   }
 
-  MLMatrix _matrixByVectorDiv(MLVector vector) {
+  MLMatrix _matrixByVectorDiv(Vector vector) {
     if (vector.length == rowsNum) {
       return mapColumns((column) => column / vector);
     }
@@ -312,56 +312,56 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix by matrix '
         'division');
     return _matrix2matrixOperation(
-        matrix, (MLVector first, MLVector second) => first / second);
+        matrix, (Vector first, Vector second) => first / second);
   }
 
   MLMatrix _matrixAdd(MLMatrix matrix) {
     checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix addition');
     return _matrix2matrixOperation(
-        matrix, (MLVector first, MLVector second) => first + second);
+        matrix, (Vector first, Vector second) => first + second);
   }
 
   MLMatrix _matrixSub(MLMatrix matrix) {
     checkDimensions(this, matrix,
         errorTitle: 'Cannot perform matrix subtraction');
     return _matrix2matrixOperation(
-        matrix, (MLVector first, MLVector second) => first - second);
+        matrix, (Vector first, Vector second) => first - second);
   }
 
   MLMatrix _matrixScalarAdd(double scalar) => _matrix2scalarOperation(
-      scalar, (double val, MLVector vector) => vector + val);
+      scalar, (double val, Vector vector) => vector + val);
 
   MLMatrix _matrixScalarSub(double scalar) => _matrix2scalarOperation(
-      scalar, (double val, MLVector vector) => vector - val);
+      scalar, (double val, Vector vector) => vector - val);
 
   MLMatrix _matrixScalarMul(double scalar) => _matrix2scalarOperation(
-      scalar, (double val, MLVector vector) => vector * val);
+      scalar, (double val, Vector vector) => vector * val);
 
   MLMatrix _matrixByScalarDiv(double scalar) => _matrix2scalarOperation(
-    scalar, (double val, MLVector vector) => vector / val);
+    scalar, (double val, Vector vector) => vector / val);
 
   MLMatrix _matrix2matrixOperation(
-      MLMatrix matrix, MLVector operation(MLVector first, MLVector second)) {
+      MLMatrix matrix, Vector operation(Vector first, Vector second)) {
     final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
-    final source = List<MLVector>.generate(rowsNum, elementGenFn);
+    final source = List<Vector>.generate(rowsNum, elementGenFn);
     return createMatrixFromRows(source);
   }
 
   MLMatrix _matrix2scalarOperation(
-      double scalar, MLVector operation(double scalar, MLVector vector)) {
+      double scalar, Vector operation(double scalar, Vector vector)) {
     // TODO: use vectorized type (e.g. Float32x4) instead of `double`
     // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));
-    final source = List<MLVector>.generate(rowsNum, elementGenFn);
+    final source = List<Vector>.generate(rowsNum, elementGenFn);
     return createMatrixFromRows(source);
   }
 
   Float32List _query(int index, int length) =>
       data.buffer.asFloat32List(index * Float32List.bytesPerElement, length);
 
-  List<MLVector> _collectVectors(
-      Iterable<Range> ranges, MLVector getVector(int i), int maxValue) {
-    final vectors = <MLVector>[];
+  List<Vector> _collectVectors(
+      Iterable<Range> ranges, Vector getVector(int i), int maxValue) {
+    final vectors = <Vector>[];
     for (final range in ranges) {
       if (range.end > maxValue) {
         throw RangeError.range(range.end, 0, maxValue);

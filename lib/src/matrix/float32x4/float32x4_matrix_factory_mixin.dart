@@ -14,10 +14,10 @@ abstract class Float32x4MatrixFactoryMixin implements MLMatrixFactory {
       Float32x4Matrix.flattened(source, rowsNum, columnsNum);
 
   @override
-  MLMatrix createMatrixFromRows(Iterable<MLVector> source) =>
+  MLMatrix createMatrixFromRows(Iterable<Vector> source) =>
       Float32x4Matrix.rows(source);
 
   @override
-  MLMatrix createMatrixFromColumns(Iterable<MLVector> source) =>
+  MLMatrix createMatrixFromColumns(Iterable<Vector> source) =>
       Float32x4Matrix.columns(source);
 }
