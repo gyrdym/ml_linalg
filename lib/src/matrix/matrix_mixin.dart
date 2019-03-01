@@ -4,23 +4,23 @@ import 'dart:typed_data';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/range.dart';
-import 'package:ml_linalg/src/matrix/ml_matrix_data_store.dart';
-import 'package:ml_linalg/src/matrix/ml_matrix_factory.dart';
-import 'package:ml_linalg/src/matrix/ml_matrix_validatior.dart';
-import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
+import 'package:ml_linalg/src/matrix/matrix_data_store.dart';
+import 'package:ml_linalg/src/matrix/matrix_factory.dart';
+import 'package:ml_linalg/src/matrix/matrix_validatior.dart';
+import 'package:ml_linalg/src/vector/vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
-abstract class MLMatrixMixin<E, S extends List<E>>
+mixin MatrixMixin<E, S extends List<E>>
     implements
         Iterable<Iterable<double>>,
-        MLMatrixDataStore,
-        MLMatrixFactory,
+        MatrixDataStore,
+        MatrixFactory,
         VectorFactory<E, S>,
-        MLMatrixValidator,
-        MLMatrix {
+        MatrixValidator,
+        Matrix {
   @override
-  MLMatrix operator +(Object value) {
-    if (value is MLMatrix) {
+  Matrix operator +(Object value) {
+    if (value is Matrix) {
       return _matrixAdd(value);
     } else if (value is num) {
       return _matrixScalarAdd(value.toDouble());
@@ -31,8 +31,8 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   @override
-  MLMatrix operator -(Object value) {
-    if (value is MLMatrix) {
+  Matrix operator -(Object value) {
+    if (value is Matrix) {
       return _matrixSub(value);
     } else if (value is num) {
       return _matrixScalarSub(value.toDouble());
@@ -49,10 +49,10 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   /// let `N` be a number of columns, so the multiplication is
   /// available only for X by N * N by Y matrices, that causes X by Y matrix
   @override
-  MLMatrix operator *(Object value) {
+  Matrix operator *(Object value) {
     if (value is Vector) {
       return _matrixVectorMul(value);
-    } else if (value is MLMatrix) {
+    } else if (value is Matrix) {
       return _matrixMul(value);
     } else if (value is num) {
       return _matrixScalarMul(value.toDouble());
@@ -64,10 +64,10 @@ abstract class MLMatrixMixin<E, S extends List<E>>
 
   /// Performs division of the matrix by vector, matrix or scalar
   @override
-  MLMatrix operator /(Object value) {
+  Matrix operator /(Object value) {
     if (value is Vector) {
       return _matrixByVectorDiv(value);
-    } else if (value is MLMatrix) {
+    } else if (value is Matrix) {
       return _matrixByMatrixDiv(value);
     } else if (value is num) {
       return _matrixByScalarDiv(value.toDouble());
@@ -81,7 +81,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   List<double> operator [](int index) => _query(index * columnsNum, columnsNum);
 
   @override
-  MLMatrix transpose() {
+  Matrix transpose() {
     final source = List<Vector>.generate(rowsNum, getRow);
     return createMatrixFromColumns(source);
   }
@@ -114,7 +114,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   @override
-  MLMatrix submatrix({Range rows, Range columns}) {
+  Matrix submatrix({Range rows, Range columns}) {
     rows ??= Range(0, rowsNum);
     columns ??= Range(0, columnsNum);
 
@@ -131,7 +131,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
   }
 
   @override
-  MLMatrix pick({Iterable<Range> rowRanges, Iterable<Range> columnRanges}) {
+  Matrix pick({Iterable<Range> rowRanges, Iterable<Range> columnRanges}) {
     rowRanges ??= [Range(0, rowsNum)];
     columnRanges ??= [Range(0, columnsNum)];
     final rows = _collectVectors(rowRanges, getRow, rowsNum);
@@ -154,14 +154,26 @@ abstract class MLMatrixMixin<E, S extends List<E>>
       _reduce(combiner, rowsNum, getRow, initValue: initValue);
 
   @override
-  MLMatrix mapColumns(Vector mapper(Vector columns)) =>
-      MLMatrix.columns(List<Vector>.generate(columnsNum,
+  Matrix mapColumns(Vector mapper(Vector columns)) =>
+      Matrix.columns(List<Vector>.generate(columnsNum,
               (int i) => mapper(getColumn(i))));
 
   @override
-  MLMatrix mapRows(Vector mapper(Vector row)) =>
-      MLMatrix.rows(List<Vector>.generate(rowsNum,
+  Matrix mapRows(Vector mapper(Vector row)) =>
+      Matrix.rows(List<Vector>.generate(rowsNum,
               (int i) => mapper(getRow(i))));
+
+  @override
+  Matrix uniqueRows() {
+    final checked = <Vector>[];
+    for (int i = 0; i < rowsNum; i++) {
+      final row = getRow(i);
+      if (!checked.contains(row)) {
+        checked.add(row);
+      }
+    }
+    return Matrix.rows(checked, dtype: dtype);
+  }
 
   List<double> flatten2dimList(
       Iterable<Iterable<double>> rows, int Function(int i, int j) accessor) {
@@ -273,7 +285,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     return reduced;
   }
 
-  MLMatrix _matrixVectorMul(Vector vector) {
+  Matrix _matrixVectorMul(Vector vector) {
     if (vector.length != columnsNum) {
       throw Exception(
           'The dimension of the vector ${vector} and the columns number of '
@@ -285,7 +297,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     return createMatrixFromColumns([vectorColumn]);
   }
 
-  MLMatrix _matrixMul(MLMatrix matrix) {
+  Matrix _matrixMul(Matrix matrix) {
     checkColumnsAndRowsNumber(this, matrix);
     final source = List<double>(rowsNum * matrix.columnsNum);
     for (int i = 0; i < rowsNum; i++) {
@@ -297,7 +309,7 @@ abstract class MLMatrixMixin<E, S extends List<E>>
     return createMatrixFromFlattened(source, rowsNum, matrix.columnsNum);
   }
 
-  MLMatrix _matrixByVectorDiv(Vector vector) {
+  Matrix _matrixByVectorDiv(Vector vector) {
     if (vector.length == rowsNum) {
       return mapColumns((column) => column / vector);
     }
@@ -308,46 +320,46 @@ abstract class MLMatrixMixin<E, S extends List<E>>
         'vector of length equals ${vector.length}');
   }
 
-  MLMatrix _matrixByMatrixDiv(MLMatrix matrix) {
+  Matrix _matrixByMatrixDiv(Matrix matrix) {
     checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix by matrix '
         'division');
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first / second);
   }
 
-  MLMatrix _matrixAdd(MLMatrix matrix) {
+  Matrix _matrixAdd(Matrix matrix) {
     checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix addition');
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first + second);
   }
 
-  MLMatrix _matrixSub(MLMatrix matrix) {
+  Matrix _matrixSub(Matrix matrix) {
     checkDimensions(this, matrix,
         errorTitle: 'Cannot perform matrix subtraction');
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first - second);
   }
 
-  MLMatrix _matrixScalarAdd(double scalar) => _matrix2scalarOperation(
+  Matrix _matrixScalarAdd(double scalar) => _matrix2scalarOperation(
       scalar, (double val, Vector vector) => vector + val);
 
-  MLMatrix _matrixScalarSub(double scalar) => _matrix2scalarOperation(
+  Matrix _matrixScalarSub(double scalar) => _matrix2scalarOperation(
       scalar, (double val, Vector vector) => vector - val);
 
-  MLMatrix _matrixScalarMul(double scalar) => _matrix2scalarOperation(
+  Matrix _matrixScalarMul(double scalar) => _matrix2scalarOperation(
       scalar, (double val, Vector vector) => vector * val);
 
-  MLMatrix _matrixByScalarDiv(double scalar) => _matrix2scalarOperation(
+  Matrix _matrixByScalarDiv(double scalar) => _matrix2scalarOperation(
     scalar, (double val, Vector vector) => vector / val);
 
-  MLMatrix _matrix2matrixOperation(
-      MLMatrix matrix, Vector operation(Vector first, Vector second)) {
+  Matrix _matrix2matrixOperation(
+      Matrix matrix, Vector operation(Vector first, Vector second)) {
     final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
     final source = List<Vector>.generate(rowsNum, elementGenFn);
     return createMatrixFromRows(source);
   }
 
-  MLMatrix _matrix2scalarOperation(
+  Matrix _matrix2scalarOperation(
       double scalar, Vector operation(double scalar, Vector vector)) {
     // TODO: use vectorized type (e.g. Float32x4) instead of `double`
     // TODO: use then `fastMap` to accelerate computations

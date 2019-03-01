@@ -4,10 +4,10 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
-import 'package:ml_linalg/src/vector/ml_simd_operations_helper.dart';
-import 'package:ml_linalg/src/vector/ml_vector_data_store.dart';
-import 'package:ml_linalg/src/vector/ml_vector_factory.dart';
-import 'package:ml_linalg/src/vector/ml_typed_list_factory.dart';
+import 'package:ml_linalg/src/vector/simd_operations_helper.dart';
+import 'package:ml_linalg/src/vector/vector_data_store.dart';
+import 'package:ml_linalg/src/vector/vector_factory.dart';
+import 'package:ml_linalg/src/vector/typed_list_factory.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/core.dart';
 
@@ -30,9 +30,7 @@ mixin SimdVectorOperationsMixin<E, S extends List<E>>
   @override
   bool operator ==(Object obj) {
     if (obj is Vector) {
-      if (hashCode == obj.hashCode) {
-        return true;
-      }
+      // TODO: consider checking hashcode here to compare two vectors
       if (length != obj.length) {
         return false;
       }
@@ -58,7 +56,7 @@ mixin SimdVectorOperationsMixin<E, S extends List<E>>
   Vector operator +(Object value) {
     if (value is Vector) {
       return _elementWiseVectorOperation(value, simdSum);
-    } else if (value is MLMatrix) {
+    } else if (value is Matrix) {
       final other = value.toVector();
       return _elementWiseVectorOperation(other, simdSum);
     } else if (value is num) {
@@ -72,7 +70,7 @@ mixin SimdVectorOperationsMixin<E, S extends List<E>>
   Vector operator -(Object value) {
     if (value is Vector) {
       return _elementWiseVectorOperation(value, simdSub);
-    } else if (value is MLMatrix) {
+    } else if (value is Matrix) {
       final other = value.toVector();
       return _elementWiseVectorOperation(other, simdSub);
     } else if (value is num) {
@@ -86,7 +84,7 @@ mixin SimdVectorOperationsMixin<E, S extends List<E>>
   Vector operator *(Object value) {
     if (value is Vector) {
       return _elementWiseVectorOperation(value, simdMul);
-    } else if (value is MLMatrix) {
+    } else if (value is Matrix) {
       return _matrixMul(value);
     } else if (value is num) {
       return _elementWiseFloatScalarOperation(value.toDouble(), simdScale);
@@ -307,7 +305,7 @@ mixin SimdVectorOperationsMixin<E, S extends List<E>>
     return createVectorFromSIMDList(list, length);
   }
 
-  Vector _matrixMul(MLMatrix matrix) {
+  Vector _matrixMul(Matrix matrix) {
     if (length != matrix.rowsNum) {
       throw Exception(
           'Multiplication by a matrix with diffrent number of rows than the vector length is not allowed:'

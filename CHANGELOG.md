@@ -1,8 +1,9 @@
 # Changelog
 
-## 5.6.0
-- MLVector: equity operator implemented
-- MLMatrix: `uniqueRows` method added
+## 6.0.0
+- prefix `ML` removed from entities' names
+- Float32x4Vector: equality operator override added
+- Matrix: `uniqueRows` method added
 
 ## 5.5.1
 - MLMatrix: fixed bug in `setColumn` method when rows cache was not cleared 
