@@ -5,7 +5,7 @@ import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
-abstract class Vector {
+abstract class Vector implements Iterable<double> {
   /// Creates a vector from a collection [source].
   ///
   /// It converts the collection of [double]-type elements into a collection of
@@ -75,6 +75,7 @@ abstract class Vector {
     }
   }
 
+  @override
   int get length;
 
   Type get dtype;
