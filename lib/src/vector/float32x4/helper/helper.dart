@@ -1,18 +1,19 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/simd_operations_helper.dart';
+import 'package:ml_linalg/src/vector/common/simd_helper.dart';
 
-mixin Float32x4OperationsMixin
-    implements SimdOperationsHelper<Float32x4, Float32x4List> {
+class Float32x4Helper
+    implements SimdHelper<Float32x4, Float32x4List> {
+
   @override
   final bucketSize = 4;
 
   @override
-  Float32x4 createSimdFilled(double value) => Float32x4.splat(value);
+  Float32x4 createFilled(double value) => Float32x4.splat(value);
 
   @override
-  Float32x4 createSimdFromSimpleList(List<double> list) {
+  Float32x4 createFromList(List<double> list) {
     final x = list.isNotEmpty ? list[0] ?? 0.0 : 0.0;
     final y = list.length > 1 ? list[1] ?? 0.0 : 0.0;
     final z = list.length > 2 ? list[2] ?? 0.0 : 0.0;
@@ -21,39 +22,39 @@ mixin Float32x4OperationsMixin
   }
 
   @override
-  Float32x4 simdSum(Float32x4 a, Float32x4 b) => a + b;
+  Float32x4 sum(Float32x4 a, Float32x4 b) => a + b;
 
   @override
-  Float32x4 simdSub(Float32x4 a, Float32x4 b) => a - b;
+  Float32x4 sub(Float32x4 a, Float32x4 b) => a - b;
 
   @override
-  Float32x4 simdMul(Float32x4 a, Float32x4 b) => a * b;
+  Float32x4 mul(Float32x4 a, Float32x4 b) => a * b;
 
   @override
-  Float32x4 simdScale(Float32x4 a, double scalar) => a.scale(scalar);
+  Float32x4 scale(Float32x4 a, double scalar) => a.scale(scalar);
 
   @override
-  Float32x4 simdDiv(Float32x4 a, Float32x4 b) => a / b;
+  Float32x4 div(Float32x4 a, Float32x4 b) => a / b;
 
   @override
-  Float32x4 simdAbs(Float32x4 a) => a.abs();
+  Float32x4 abs(Float32x4 a) => a.abs();
 
   @override
   bool areValuesEqual(Float32x4 a, Float32x4 b) =>
     a.equal(b).signMask == 15;
 
   @override
-  double singleSIMDSum(Float32x4 a) =>
+  double sumLanes(Float32x4 a) =>
       (a.x.isNaN ? 0.0 : a.x) +
       (a.y.isNaN ? 0.0 : a.y) +
       (a.z.isNaN ? 0.0 : a.z) +
       (a.w.isNaN ? 0.0 : a.w);
 
   @override
-  Float32x4List createSIMDList(int length) => Float32x4List(length);
+  Float32x4List createList(int length) => Float32x4List(length);
 
   @override
-  double getScalarByOffsetIndex(Float32x4 value, int offset) {
+  double getLaneByIndex(Float32x4 value, int offset) {
     switch (offset) {
       case 0:
         return value.x;
@@ -83,18 +84,18 @@ mixin Float32x4OperationsMixin
       math.min(math.min(a.x, a.y), math.min(a.z, a.w));
 
   @override
-  List<double> simdToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+  List<double> toList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
 
   @override
   List<double> takeFirstNLanes(Float32x4 a, int n) =>
-      simdToList(a).take(n).toList();
+      toList(a).take(n).toList();
 
   @override
   Float32x4List sublist(Float32x4List list, int start, [int end]) =>
       list.buffer.asFloat32x4List(start * Float32x4List.bytesPerElement, end);
 
   @override
-  Float32x4 mutateSimdValueWithScalar(
+  Float32x4 mutate(
       Float32x4 simd, int offset, double value) {
     switch (offset) {
       case 0:
