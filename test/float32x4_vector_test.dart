@@ -48,10 +48,9 @@ void main() {
         Float32x4(9.0, 10.0, 0.0, 0.0)
       ]);
 
-      test(
-          'should create a vector with length equal to the length of the source',
-          () {
-        final vector = Float32x4Vector.fromSIMDList(typedList);
+      test('should create a vector with length equal to the length of the '
+          'source', () {
+        final vector = Float32x4Vector.fromSimdList(typedList);
         expect(
             vector.toList(),
             equals(
@@ -59,10 +58,9 @@ void main() {
         expect(vector.length, equals(12));
       });
 
-      test(
-          'should create a vector and limit its length if argument `length` is passed',
-          () {
-        final vector = Float32x4Vector.fromSIMDList(typedList, origLength: 10);
+      test('should create a vector and limit its length if argument `length` '
+          'is passed', () {
+        final vector = Float32x4Vector.fromSimdList(typedList, origLength: 10);
         expect(vector,
             equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));
         expect(vector.length, equals(10));

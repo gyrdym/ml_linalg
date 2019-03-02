@@ -2,12 +2,10 @@ import 'dart:math' as math;
 
 import 'package:ml_linalg/src/vector/simd_operations_helper.dart';
 import 'package:ml_linalg/src/vector/vector_data_store.dart';
-import 'package:ml_linalg/src/vector/vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
 mixin SimdVectorFastIterableMixin<E, S extends List<E>>
     implements
-        VectorFactory<E, S>,
         VectorDataStore<E, S>,
         SimdOperationsHelper<E, S>,
         Vector {
@@ -21,6 +19,7 @@ mixin SimdVectorFastIterableMixin<E, S extends List<E>>
       list[i] =
           mapper(data[i] as T, offsetStart, math.min(offsetEnd, length - 1));
     }
-    return createVectorFromSIMDList(list as S, length);
+    return Vector.fromSimdList(list, actualLength: length,
+        isMutable: false, dtype: dtype);
   }
 }

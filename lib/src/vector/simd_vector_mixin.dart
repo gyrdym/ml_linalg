@@ -5,9 +5,8 @@ import 'dart:typed_data';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/vector/simd_operations_helper.dart';
-import 'package:ml_linalg/src/vector/vector_data_store.dart';
-import 'package:ml_linalg/src/vector/vector_factory.dart';
 import 'package:ml_linalg/src/vector/typed_list_factory.dart';
+import 'package:ml_linalg/src/vector/vector_data_store.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/core.dart';
 
@@ -17,7 +16,6 @@ mixin SimdVectorMixin<E, S extends List<E>>
         SimdOperationsHelper<E, S>,
         TypedListFactory,
         VectorDataStore<E, S>,
-        VectorFactory<E, S>,
         Vector {
   S get dataWithoutLastBucket => sublist(data, 0, data.length - 1);
 
@@ -172,7 +170,7 @@ mixin SimdVectorMixin<E, S extends List<E>>
     for (final idx in indexes) {
       list[i++] = this[idx];
     }
-    return createVectorFrom(list);
+    return Vector.from(list, dtype: dtype);
   }
 
   @override
@@ -184,7 +182,7 @@ mixin SimdVectorMixin<E, S extends List<E>>
         unique.add(el);
       }
     }
-    return createVectorFrom(unique);
+    return Vector.from(unique, dtype: dtype);
   }
 
   @override
@@ -208,7 +206,7 @@ mixin SimdVectorMixin<E, S extends List<E>>
   Vector subvector(int start, [int end]) {
     final collection = bufferAsTypedList((data as TypedData).buffer, start,
         (end > length ? length : end) - start);
-    return createVectorFrom(collection);
+    return Vector.from(collection, dtype: dtype);
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
@@ -266,7 +264,8 @@ mixin SimdVectorMixin<E, S extends List<E>>
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], scalar);
     }
-    return createVectorFromSIMDList(list, length);
+    return Vector.fromSimdList(list, actualLength: length,
+        isMutable: false, dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a simd value
@@ -275,7 +274,8 @@ mixin SimdVectorMixin<E, S extends List<E>>
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], simdVal);
     }
-    return createVectorFromSIMDList(list, length);
+    return Vector.fromSimdList(list, actualLength: length,
+        isMutable: false, dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise operation with a vector (e.g. vector addition)
@@ -285,7 +285,8 @@ mixin SimdVectorMixin<E, S extends List<E>>
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], (vector as VectorDataStore<E, S>).data[i]);
     }
-    return createVectorFromSIMDList(list, length);
+    return Vector.fromSimdList(list, actualLength: length,
+        isMutable: false, dtype: dtype);
   }
 
   Vector _elementWiseSelfOperation(E operation(E element, [int index])) {
@@ -293,7 +294,8 @@ mixin SimdVectorMixin<E, S extends List<E>>
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], i);
     }
-    return createVectorFromSIMDList(list, length);
+    return Vector.fromSimdList(list, actualLength: length,
+        isMutable: false, dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising to the integer power
@@ -302,7 +304,8 @@ mixin SimdVectorMixin<E, S extends List<E>>
     for (int i = 0; i < data.length; i++) {
       list[i] = _simdToIntPow(data[i], exp);
     }
-    return createVectorFromSIMDList(list, length);
+    return Vector.fromSimdList(list, actualLength: length,
+        isMutable: false, dtype: dtype);
   }
 
   Vector _matrixMul(Matrix matrix) {
@@ -313,7 +316,7 @@ mixin SimdVectorMixin<E, S extends List<E>>
     }
     final source = List<double>.generate(
         matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
-    return createVectorFrom(source);
+    return Vector.from(source, dtype: dtype);
   }
 
   UnsupportedError _dontMutateError() =>
