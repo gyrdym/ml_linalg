@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:core';
 import 'dart:typed_data';
 
@@ -6,6 +5,8 @@ import 'package:ml_linalg/src/vector/base_vector.dart';
 import 'package:ml_linalg/src/vector/common/typed_list_factory_factory.dart';
 import 'package:ml_linalg/src/vector/float32x4/helper/helper_factory.dart';
 import 'package:ml_linalg/src/vector/float32x4/typed_list_factory/typed_list_factory_factory.dart';
+
+const bucketSize = 4;
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
 ///
@@ -24,8 +25,7 @@ import 'package:ml_linalg/src/vector/float32x4/typed_list_factory/typed_list_fac
 ///
 /// - Sequence of SIMD-values forms a "computation lane", where computations
 /// are performed with each floating point element simultaneously (in parallel)
-class Float32x4Vector extends BaseVector<Float32x4, Float32x4List>
-    with IterableMixin<double> {
+class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
 
   /// Creates a vector from collection
   Float32x4Vector.from(Iterable<double> source, {
@@ -35,7 +35,7 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List>
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.from(
       source,
-      4,
+      bucketSize,
       isMutable,
       typedListFactoryFactory.create(),
       simdHelperFactory.create(),
@@ -48,12 +48,12 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List>
     const Float32ListFactoryFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.fromSimdList(
+    source,
     origLength,
-    4,
+    bucketSize,
     isMutable,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
-    () => Float32x4List.fromList(source.sublist(0, origLength)),
   );
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
@@ -66,7 +66,7 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List>
   }) : super.filled(
     length,
     value,
-    4,
+    bucketSize,
     isMutable,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
@@ -81,7 +81,7 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List>
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.zero(
     length,
-    4,
+    bucketSize,
     isMutable,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
@@ -98,7 +98,7 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List>
   }) : super.randomFilled(
     length,
     seed,
-    4,
+    bucketSize,
     isMutable,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
