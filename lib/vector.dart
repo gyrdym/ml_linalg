@@ -5,7 +5,7 @@ import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 import 'norm.dart';
 
 /// An algebraic vector (ordered set of elements).
-abstract class Vector implements Iterable<double> {
+abstract class Vector {
   /// Creates a vector from a collection [source].
   ///
   /// It converts the collection of [double]-type elements into a collection of
@@ -21,13 +21,12 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
-  factory Vector.fromSimdList(List source,
-      {int actualLength, bool isMutable, Type dtype = Float32x4}) {
+  factory Vector.fromSimdList(List source, int actualLength,
+      {bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Vector.fromSimdList(source as Float32x4List,
-            origLength: actualLength,
-            isMutable: isMutable);
+            actualLength, isMutable: isMutable);
       default:
         throw UnimplementedError();
     }
@@ -75,6 +74,8 @@ abstract class Vector implements Iterable<double> {
         throw UnimplementedError();
     }
   }
+
+  int get length;
 
   Type get dtype;
 
