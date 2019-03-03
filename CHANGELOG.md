@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.0.2
+- `Matrix`: `MatrixMixin` corrected
+
 ## 6.0.1
 - `Vector` class refactored (get rid of redundant mixins)
 
