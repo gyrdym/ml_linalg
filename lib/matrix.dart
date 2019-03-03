@@ -37,6 +37,18 @@ abstract class Matrix {
     }
   }
 
+  /// Creates a matrix from flattened iterable of length that is equal to
+  /// [rowsNum] * [columnsNum]
+  factory Matrix.flattened(Iterable<double> source, int rowsNum,
+      int columnsNum, {Type dtype = Float32x4}) {
+    switch (dtype) {
+      case Float32x4:
+        return Float32x4Matrix.flattened(source, rowsNum, columnsNum);
+      default:
+        throw UnimplementedError();
+    }
+  }
+
   Type get dtype;
 
   /// Returns a number of matrix row

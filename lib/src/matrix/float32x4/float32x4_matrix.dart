@@ -5,24 +5,18 @@ import 'dart:typed_data';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32_data_helper_mixin.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32_matrix_iterator.dart';
-import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix_factory_mixin.dart';
-import 'package:ml_linalg/src/matrix/matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/matrix_fast_iterable_mixin.dart';
 import 'package:ml_linalg/src/matrix/matrix_mixin.dart';
 import 'package:ml_linalg/src/matrix/matrix_validator_mixin.dart';
-import 'package:ml_linalg/src/vector/float32x4/float32x4_vector_factory_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 
-class Float32x4Matrix extends Object
-    with
+class Float32x4Matrix with
         IterableMixin<Iterable<double>>,
-        MatrixValidatorMixin<Float32x4>,
-        Float32x4MatrixFactoryMixin,
-        Float32x4VectorFactoryMixin,
+        MatrixValidatorMixin,
         Float32DataHelperMixin,
         MatrixFastIterableMixin,
-        MatrixMixin<Float32x4, Float32x4List>
-    implements MatrixDataStore, Matrix {
+        MatrixMixin
+    implements Matrix {
 
   Float32x4Matrix.from(Iterable<Iterable<double>> source)
       : rowsNum = source.length,

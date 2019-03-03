@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.0.1
+- `Vector` class refactored (get rid of redundant mixins)
+
 ## 6.0.0
 - prefix `ML` removed from entities' names
 - Float32x4Vector: equality operator override added
