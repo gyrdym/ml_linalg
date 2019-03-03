@@ -5,19 +5,15 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/matrix/matrix_data_store.dart';
-import 'package:ml_linalg/src/matrix/matrix_factory.dart';
 import 'package:ml_linalg/src/matrix/matrix_validatior.dart';
-import 'package:ml_linalg/src/vector/vector_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
-mixin MatrixMixin<E, S extends List<E>>
-    implements
+mixin MatrixMixin implements
         Iterable<Iterable<double>>,
         MatrixDataStore,
-        MatrixFactory,
-        VectorFactory<E, S>,
         MatrixValidator,
         Matrix {
+
   @override
   Matrix operator +(Object value) {
     if (value is Matrix) {
@@ -83,16 +79,17 @@ mixin MatrixMixin<E, S extends List<E>>
   @override
   Matrix transpose() {
     final source = List<Vector>.generate(rowsNum, getRow);
-    return createMatrixFromColumns(source);
+    return Matrix.columns(source, dtype: dtype);
   }
 
   @override
   Vector getRow(int index, {bool tryCache = true, bool mutable = false}) {
     if (tryCache) {
-      rowsCache[index] ??= createVectorFrom(this[index], mutable);
+      rowsCache[index] ??= Vector.from(this[index], isMutable: mutable,
+          dtype: dtype);
       return rowsCache[index];
     } else {
-      return createVectorFrom(this[index], mutable);
+      return Vector.from(this[index], isMutable: mutable, dtype: dtype);
     }
   }
 
@@ -104,7 +101,7 @@ mixin MatrixMixin<E, S extends List<E>>
         //@TODO: find a more efficient way to get the single value
         result[i] = _query(i * columnsNum + index, 1)[0];
       }
-      final column = createVectorFrom(result, mutable);
+      final column = Vector.from(result, isMutable: mutable, dtype: dtype);
       if (!tryCache) {
         return column;
       }
@@ -127,7 +124,7 @@ mixin MatrixMixin<E, S extends List<E>>
       matrixSource[i - rows.start] =
           _query(i * columnsNum + columns.start, columnsLength);
     }
-    return createMatrixFrom(matrixSource);
+    return Matrix.from(matrixSource, dtype: dtype);
   }
 
   @override
@@ -135,10 +132,10 @@ mixin MatrixMixin<E, S extends List<E>>
     rowRanges ??= [Range(0, rowsNum)];
     columnRanges ??= [Range(0, columnsNum)];
     final rows = _collectVectors(rowRanges, getRow, rowsNum);
-    final rowBasedMatrix = createMatrixFromRows(rows);
+    final rowBasedMatrix = Matrix.rows(rows, dtype: dtype);
     final columns =
         _collectVectors(columnRanges, rowBasedMatrix.getColumn, columnsNum);
-    return createMatrixFromColumns(columns);
+    return Matrix.columns(columns, dtype: dtype);
   }
 
   @override
@@ -293,8 +290,8 @@ mixin MatrixMixin<E, S extends List<E>>
     }
     final generateElementFn = (int i) => vector.dot(getRow(i));
     final source = List<double>.generate(rowsNum, generateElementFn);
-    final vectorColumn = createVectorFrom(source);
-    return createMatrixFromColumns([vectorColumn]);
+    final vectorColumn = Vector.from(source, dtype: dtype);
+    return Matrix.columns([vectorColumn], dtype: dtype);
   }
 
   Matrix _matrixMul(Matrix matrix) {
@@ -306,7 +303,7 @@ mixin MatrixMixin<E, S extends List<E>>
         source[i * matrix.columnsNum + j] = element;
       }
     }
-    return createMatrixFromFlattened(source, rowsNum, matrix.columnsNum);
+    return Matrix.flattened(source, rowsNum, matrix.columnsNum, dtype: dtype);
   }
 
   Matrix _matrixByVectorDiv(Vector vector) {
@@ -356,7 +353,7 @@ mixin MatrixMixin<E, S extends List<E>>
       Matrix matrix, Vector operation(Vector first, Vector second)) {
     final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
     final source = List<Vector>.generate(rowsNum, elementGenFn);
-    return createMatrixFromRows(source);
+    return Matrix.rows(source, dtype: dtype);
   }
 
   Matrix _matrix2scalarOperation(
@@ -365,7 +362,7 @@ mixin MatrixMixin<E, S extends List<E>>
     // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));
     final source = List<Vector>.generate(rowsNum, elementGenFn);
-    return createMatrixFromRows(source);
+    return Matrix.rows(source, dtype: dtype);
   }
 
   Float32List _query(int index, int length) =>

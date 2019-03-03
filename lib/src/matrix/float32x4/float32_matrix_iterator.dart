@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
 class Float32MatrixIterator implements Iterator<Iterable<double>> {
+  Float32MatrixIterator(this._data, this._columns);
+
   final ByteData _data;
   final int _columns;
 
   Iterable<double> _current;
   int _currentRow = 0;
-
-  Float32MatrixIterator(this._data, this._columns);
 
   @override
   Iterable<double> get current => _current;

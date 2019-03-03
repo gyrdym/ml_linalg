@@ -21,6 +21,17 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
+  factory Vector.fromSimdList(List source, int actualLength,
+      {bool isMutable, Type dtype = Float32x4}) {
+    switch (dtype) {
+      case Float32x4:
+        return Float32x4Vector.fromSimdList(source as Float32x4List,
+            actualLength, isMutable: isMutable);
+      default:
+        throw UnimplementedError();
+    }
+  }
+
   /// Creates a vector of length, equal to [length], filled with [value].
   ///
   /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
