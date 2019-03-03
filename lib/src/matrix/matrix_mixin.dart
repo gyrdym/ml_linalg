@@ -8,7 +8,7 @@ import 'package:ml_linalg/src/matrix/matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/matrix_validatior.dart';
 import 'package:ml_linalg/vector.dart';
 
-mixin MatrixMixin implements
+abstract class MatrixMixin implements
         Iterable<Iterable<double>>,
         MatrixDataStore,
         MatrixValidator,
