@@ -75,9 +75,6 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
-  @override
-  int get length;
-
   Type get dtype;
 
   /// Can someone mutate the vector, e.g. via []= operator, or not

@@ -15,64 +15,64 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   BaseVector.from(
     Iterable<double> source,
-    this.bucketSize,
+    this._bucketSize,
     this.isMutable,
-    this.typedListFactory,
-    this.simdHelper,
+    this._typedListFactory,
+    this._simdHelper,
   ) : length = source.length {
-    data = convertCollectionToSIMDList(source.toList(growable: false));
+    data = _convertCollectionToSIMDList(source.toList(growable: false));
   }
 
   BaseVector.randomFilled(
     this.length,
     int seed,
-    this.bucketSize,
+    this._bucketSize,
     this.isMutable,
-    this.typedListFactory,
-    this.simdHelper,
+    this._typedListFactory,
+    this._simdHelper,
   ) {
     final random = math.Random(seed);
     final source = List<double>.generate(length, (_) => random.nextDouble());
-    data = convertCollectionToSIMDList(source);
+    data = _convertCollectionToSIMDList(source);
   }
 
   BaseVector.filled(
     this.length,
     double value,
-    this.bucketSize,
+    this._bucketSize,
     this.isMutable,
-    this.typedListFactory,
-    this.simdHelper,
+    this._typedListFactory,
+    this._simdHelper,
   ) {
     final source = List<double>.filled(length, value);
-    data = convertCollectionToSIMDList(source);
+    data = _convertCollectionToSIMDList(source);
   }
 
   BaseVector.zero(
     this.length,
-    this.bucketSize,
+    this._bucketSize,
     this.isMutable,
-    this.typedListFactory,
-    this.simdHelper,
+    this._typedListFactory,
+    this._simdHelper,
   ) {
     final source = List<double>.filled(length, 0.0);
-    data = convertCollectionToSIMDList(source);
+    data = _convertCollectionToSIMDList(source);
   }
 
   BaseVector.fromSimdList(
     S source,
     this.length,
-    this.bucketSize,
+    this._bucketSize,
     this.isMutable,
-    this.typedListFactory,
-    this.simdHelper,
+    this._typedListFactory,
+    this._simdHelper,
   ) {
     data = source;
   }
 
   @override
   Iterator<double> get iterator =>
-      typedListFactory.createIterator((data as TypedData).buffer, length);
+      _typedListFactory.createIterator((data as TypedData).buffer, length);
 
   @override
   final int length;
@@ -83,16 +83,16 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   final bool isMutable;
 
-  final int bucketSize;
-  final SimdHelper<E, S> simdHelper;
-  final TypedListFactory typedListFactory;
+  final int _bucketSize;
+  final SimdHelper<E, S> _simdHelper;
+  final TypedListFactory _typedListFactory;
 
   @override
   S data;
 
-  S get dataWithoutLastBucket => simdHelper.sublist(data, 0, data.length - 1);
+  S get _dataWithoutLastBucket => _simdHelper.sublist(data, 0, data.length - 1);
 
-  bool get _isLastBucketNotFull => length % bucketSize > 0;
+  bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
   @override
   bool operator ==(Object obj) {
@@ -102,7 +102,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
         return false;
       }
       for (int i = 0; i < data.length; i++) {
-        if (!simdHelper.areValuesEqual(
+        if (!_simdHelper.areValuesEqual(
             data[i], (obj as VectorDataStore<E, S>).data[i])) {
           return false;
         }
@@ -123,13 +123,13 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   Vector operator +(Object value) {
     if (value is Vector) {
-      return _elementWiseVectorOperation(value, simdHelper.sum);
+      return _elementWiseVectorOperation(value, _simdHelper.sum);
     } else if (value is Matrix) {
       final other = value.toVector();
-      return _elementWiseVectorOperation(other, simdHelper.sum);
+      return _elementWiseVectorOperation(other, _simdHelper.sum);
     } else if (value is num) {
       return _elementWiseSimdScalarOperation(
-          simdHelper.createFilled(value.toDouble()), simdHelper.sum);
+          _simdHelper.createFilled(value.toDouble()), _simdHelper.sum);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
@@ -137,13 +137,13 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   Vector operator -(Object value) {
     if (value is Vector) {
-      return _elementWiseVectorOperation(value, simdHelper.sub);
+      return _elementWiseVectorOperation(value, _simdHelper.sub);
     } else if (value is Matrix) {
       final other = value.toVector();
-      return _elementWiseVectorOperation(other, simdHelper.sub);
+      return _elementWiseVectorOperation(other, _simdHelper.sub);
     } else if (value is num) {
       return _elementWiseSimdScalarOperation(
-          simdHelper.createFilled(value.toDouble()), simdHelper.sub);
+          _simdHelper.createFilled(value.toDouble()), _simdHelper.sub);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
@@ -151,12 +151,12 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   Vector operator *(Object value) {
     if (value is Vector) {
-      return _elementWiseVectorOperation(value, simdHelper.mul);
+      return _elementWiseVectorOperation(value, _simdHelper.mul);
     } else if (value is Matrix) {
       return _matrixMul(value);
     } else if (value is num) {
       return _elementWiseFloatScalarOperation(value.toDouble(),
-          simdHelper.scale);
+          _simdHelper.scale);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
@@ -164,9 +164,9 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   Vector operator /(Object value) {
     if (value is Vector) {
-      return _elementWiseVectorOperation(value, simdHelper.div);
+      return _elementWiseVectorOperation(value, _simdHelper.div);
     } else if (value is num) {
-      return _elementWiseFloatScalarOperation(1 / value, simdHelper.scale);
+      return _elementWiseFloatScalarOperation(1 / value, _simdHelper.scale);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
@@ -179,14 +179,14 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   Vector abs() =>
       _elementWiseSelfOperation((E element, [int i]) =>
-          simdHelper.abs(element));
+          _simdHelper.abs(element));
 
   @override
   double dot(Vector vector) => (this * vector).sum();
 
   /// Returns sum of all vector components
   @override
-  double sum() => simdHelper.sumLanes(data.reduce(simdHelper.sum));
+  double sum() => _simdHelper.sumLanes(data.reduce(_simdHelper.sum));
 
   @override
   double distanceTo(Vector vector, [Norm norm = Norm.euclidean]) =>
@@ -208,16 +208,16 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   double max() {
     if (_isLastBucketNotFull) {
       var max = -double.infinity;
-      final listOnlyWithFullBuckets = dataWithoutLastBucket;
+      final listOnlyWithFullBuckets = _dataWithoutLastBucket;
       if (listOnlyWithFullBuckets.isNotEmpty) {
-        max = simdHelper.getMaxLane(listOnlyWithFullBuckets
-            .reduce(simdHelper.selectMax));
+        max = _simdHelper.getMaxLane(listOnlyWithFullBuckets
+            .reduce(_simdHelper.selectMax));
       }
-      return simdHelper.toList(data.last)
-          .take(length % bucketSize)
+      return _simdHelper.toList(data.last)
+          .take(length % _bucketSize)
           .fold(max, math.max);
     } else {
-      return simdHelper.getMaxLane(data.reduce(simdHelper.selectMax));
+      return _simdHelper.getMaxLane(data.reduce(_simdHelper.selectMax));
     }
   }
 
@@ -225,22 +225,22 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   double min() {
     if (_isLastBucketNotFull) {
       var min = double.infinity;
-      final listOnlyWithFullBuckets = dataWithoutLastBucket;
+      final listOnlyWithFullBuckets = _dataWithoutLastBucket;
       if (listOnlyWithFullBuckets.isNotEmpty) {
-        min = simdHelper.getMinLane(listOnlyWithFullBuckets
-            .reduce(simdHelper.selectMin));
+        min = _simdHelper.getMinLane(listOnlyWithFullBuckets
+            .reduce(_simdHelper.selectMin));
       }
-      return simdHelper.toList(data.last)
-          .take(length % bucketSize)
+      return _simdHelper.toList(data.last)
+          .take(length % _bucketSize)
           .fold(min, math.min);
     } else {
-      return simdHelper.getMinLane(data.reduce(simdHelper.selectMin));
+      return _simdHelper.getMinLane(data.reduce(_simdHelper.selectMin));
     }
   }
 
   @override
   Vector query(Iterable<int> indexes) {
-    final list = typedListFactory.empty(indexes.length);
+    final list = _typedListFactory.empty(indexes.length);
     int i = 0;
     for (final idx in indexes) {
       list[i++] = this[idx];
@@ -263,10 +263,10 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   Vector fastMap<T>(
       T mapper(T element, int offsetStartIdx, int offsetEndIdx)) {
-    final list = simdHelper.createList(data.length) as List<T>;
+    final list = _simdHelper.createList(data.length) as List<T>;
     for (int i = 0; i < data.length; i++) {
-      final offsetStart = i * bucketSize;
-      final offsetEnd = offsetStart + bucketSize - 1;
+      final offsetStart = i * _bucketSize;
+      final offsetEnd = offsetStart + _bucketSize - 1;
       list[i] =
           mapper(data[i] as T, offsetStart, math.min(offsetEnd, length - 1));
     }
@@ -276,23 +276,23 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   double operator [](int index) {
     if (index >= length) throw RangeError.index(index, this);
-    final base = (index / bucketSize).floor();
-    final offset = index - base * bucketSize;
-    return simdHelper.getLaneByIndex(data[base], offset);
+    final base = (index / _bucketSize).floor();
+    final offset = index - base * _bucketSize;
+    return _simdHelper.getLaneByIndex(data[base], offset);
   }
 
   @override
   void operator []=(int index, double value) {
     if (!isMutable) throw _dontMutateError();
     if (index >= length) throw RangeError.index(index, this);
-    final base = (index / bucketSize).floor();
-    final offset = index - base * bucketSize;
-    data[base] = simdHelper.mutate(data[base], offset, value);
+    final base = (index / _bucketSize).floor();
+    final offset = index - base * _bucketSize;
+    data[base] = _simdHelper.mutate(data[base], offset, value);
   }
 
   @override
   Vector subvector(int start, [int end]) {
-    final collection = typedListFactory
+    final collection = _typedListFactory
         .fromBuffer((data as TypedData).buffer, start,
         (end > length ? length : end) - start);
     return Vector.from(collection, dtype: dtype);
@@ -313,17 +313,17 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   /// Returns a SIMD value raised to the integer power
   E _simdToIntPow(E lane, int power) {
     if (power == 0) {
-      return simdHelper.createFilled(1.0);
+      return _simdHelper.createFilled(1.0);
     }
 
     final x = _simdToIntPow(lane, power ~/ 2);
-    final sqrX = simdHelper.mul(x, x);
+    final sqrX = _simdHelper.mul(x, x);
 
     if (power % 2 == 0) {
       return sqrX;
     }
 
-    return simdHelper.mul(lane, sqrX);
+    return _simdHelper.mul(lane, sqrX);
   }
 
   /// Returns SIMD list (e.g. Float32x4List) as a result of converting iterable
@@ -331,16 +331,16 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   ///
   /// All sequence of [collection] elements splits into groups with
   /// [_bucketSize] length
-  S convertCollectionToSIMDList(List<double> collection) {
-    final numOfBuckets = (collection.length / bucketSize).ceil();
-    final source = typedListFactory.fromList(collection);
-    final target = simdHelper.createList(numOfBuckets);
+  S _convertCollectionToSIMDList(List<double> collection) {
+    final numOfBuckets = (collection.length / _bucketSize).ceil();
+    final source = _typedListFactory.fromList(collection);
+    final target = _simdHelper.createList(numOfBuckets);
 
     for (int i = 0; i < numOfBuckets; i++) {
-      final start = i * bucketSize;
-      final end = start + bucketSize;
+      final start = i * _bucketSize;
+      final end = start + _bucketSize;
       final bucketAsList = source.sublist(start, math.min(end, source.length));
-      target[i] = simdHelper.createFromList(bucketAsList);
+      target[i] = _simdHelper.createFromList(bucketAsList);
     }
 
     return target;
@@ -350,7 +350,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   /// operation with a simd value
   Vector _elementWiseFloatScalarOperation(
       double scalar, E operation(E a, double b)) {
-    final list = simdHelper.createList(data.length);
+    final list = _simdHelper.createList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], scalar);
     }
@@ -360,7 +360,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   /// Returns a vector as a result of applying to [this] any element-wise
   /// operation with a simd value
   Vector _elementWiseSimdScalarOperation(E simdVal, E operation(E a, E b)) {
-    final list = simdHelper.createList(data.length);
+    final list = _simdHelper.createList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], simdVal);
     }
@@ -371,7 +371,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   /// operation with a vector (e.g. vector addition)
   Vector _elementWiseVectorOperation(Vector vector, E operation(E a, E b)) {
     if (vector.length != length) throw _mismatchLengthError();
-    final list = simdHelper.createList(data.length);
+    final list = _simdHelper.createList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], (vector as VectorDataStore<E, S>).data[i]);
     }
@@ -379,7 +379,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   Vector _elementWiseSelfOperation(E operation(E element, [int index])) {
-    final list = simdHelper.createList(data.length);
+    final list = _simdHelper.createList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], i);
     }
@@ -389,7 +389,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   /// Returns a vector as a result of applying to [this] element-wise raising
   /// to the integer power
   Vector _elementWisePow(int exp) {
-    final list = simdHelper.createList(data.length);
+    final list = _simdHelper.createList(data.length);
     for (int i = 0; i < data.length; i++) {
       list[i] = _simdToIntPow(data[i], exp);
     }
