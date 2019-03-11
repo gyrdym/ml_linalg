@@ -68,8 +68,8 @@ abstract class Vector implements Iterable<double> {
       {int seed, bool isMutable, Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
-        return Float32x4Vector.randomFilled(length,
-            seed: seed, isMutable: isMutable);
+        return Float32x4Vector.randomFilled(length, seed: seed,
+            isMutable: isMutable);
       default:
         throw UnimplementedError();
     }
@@ -133,6 +133,12 @@ abstract class Vector implements Iterable<double> {
 
   /// Returns a vector composed of unique vector's elements
   Vector unique();
+
+  /// Returns normalized version of this vector
+  Vector normalize();
+
+  /// Returns standardized version of this vector
+  Vector standardize();
 
   Vector fastMap<E>(
       E mapper(E element, int offsetStartIdx, int offsetEndIdx));
