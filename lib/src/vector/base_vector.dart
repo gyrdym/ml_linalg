@@ -21,6 +21,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) : length = source.length {
     data = _convertCollectionToSIMDList(source.toList(growable: false));
+    _hash ??= hashObjects(data);
   }
 
   BaseVector.randomFilled(
@@ -34,6 +35,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     final random = math.Random(seed);
     final source = List<double>.generate(length, (_) => random.nextDouble());
     data = _convertCollectionToSIMDList(source);
+    _hash ??= hashObjects(data);
   }
 
   BaseVector.filled(
@@ -46,6 +48,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   ) {
     final source = List<double>.filled(length, value);
     data = _convertCollectionToSIMDList(source);
+    _hash ??= hashObjects(data);
   }
 
   BaseVector.zero(
@@ -57,6 +60,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   ) {
     final source = List<double>.filled(length, 0.0);
     data = _convertCollectionToSIMDList(source);
+    _hash ??= hashObjects(data);
   }
 
   BaseVector.fromSimdList(
@@ -68,6 +72,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) {
     data = source;
+    _hash ??= hashObjects(data);
   }
 
   @override
@@ -86,6 +91,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   final int _bucketSize;
   final SimdHelper<E, S> _simdHelper;
   final TypedListFactory _typedListFactory;
+  final Map<Norm, double> _cachedNorms = {};
 
   @override
   S data;
@@ -93,6 +99,9 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   S get _dataWithoutLastBucket => _simdHelper.sublist(data, 0, data.length - 1);
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
+
+  double _maxValue;
+  double _minValue;
 
   @override
   bool operator ==(Object obj) {
@@ -113,10 +122,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  int get hashCode {
-    _hash ??= hashObjects(data);
-    return _hash;
-  }
+  int get hashCode => _hash ??= hashObjects(data);
 
   int _hash;
 
@@ -197,45 +203,55 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   @override
   double norm([Norm norm = Norm.euclidean]) {
-    final power = _getPowerByNormType(norm);
-    if (power == 1) {
-      return abs().sum();
+    if (!_cachedNorms.containsKey(norm)) {
+      final power = _getPowerByNormType(norm);
+      if (power == 1) {
+        return abs().sum();
+      }
+      _cachedNorms[norm] = math.pow(toIntegerPower(power)
+          .sum(), 1 / power) as double;
     }
-    return math.pow(toIntegerPower(power).sum(), 1 / power) as double;
+    return _cachedNorms[norm];
   }
 
   @override
   double max() {
-    if (_isLastBucketNotFull) {
-      var max = -double.infinity;
-      final listOnlyWithFullBuckets = _dataWithoutLastBucket;
-      if (listOnlyWithFullBuckets.isNotEmpty) {
-        max = _simdHelper.getMaxLane(listOnlyWithFullBuckets
-            .reduce(_simdHelper.selectMax));
+    if (_maxValue == null) {
+      if (_isLastBucketNotFull) {
+        var max = -double.infinity;
+        final listOnlyWithFullBuckets = _dataWithoutLastBucket;
+        if (listOnlyWithFullBuckets.isNotEmpty) {
+          max = _simdHelper.getMaxLane(listOnlyWithFullBuckets
+              .reduce(_simdHelper.selectMax));
+        }
+        _maxValue = _simdHelper.toList(data.last)
+            .take(length % _bucketSize)
+            .fold(max, math.max);
+      } else {
+        _maxValue = _simdHelper.getMaxLane(data.reduce(_simdHelper.selectMax));
       }
-      return _simdHelper.toList(data.last)
-          .take(length % _bucketSize)
-          .fold(max, math.max);
-    } else {
-      return _simdHelper.getMaxLane(data.reduce(_simdHelper.selectMax));
     }
+    return _maxValue;
   }
 
   @override
   double min() {
-    if (_isLastBucketNotFull) {
-      var min = double.infinity;
-      final listOnlyWithFullBuckets = _dataWithoutLastBucket;
-      if (listOnlyWithFullBuckets.isNotEmpty) {
-        min = _simdHelper.getMinLane(listOnlyWithFullBuckets
-            .reduce(_simdHelper.selectMin));
+    if (_minValue == null) {
+      if (_isLastBucketNotFull) {
+        var min = double.infinity;
+        final listOnlyWithFullBuckets = _dataWithoutLastBucket;
+        if (listOnlyWithFullBuckets.isNotEmpty) {
+          min = _simdHelper.getMinLane(listOnlyWithFullBuckets
+              .reduce(_simdHelper.selectMin));
+        }
+        _minValue = _simdHelper.toList(data.last)
+            .take(length % _bucketSize)
+            .fold(min, math.min);
+      } else {
+        _minValue = _simdHelper.getMinLane(data.reduce(_simdHelper.selectMin));
       }
-      return _simdHelper.toList(data.last)
-          .take(length % _bucketSize)
-          .fold(min, math.min);
-    } else {
-      return _simdHelper.getMinLane(data.reduce(_simdHelper.selectMin));
     }
+    return _minValue;
   }
 
   @override
@@ -288,6 +304,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     final base = (index / _bucketSize).floor();
     final offset = index - base * _bucketSize;
     data[base] = _simdHelper.mutate(data[base], offset, value);
+    _invalidateCache();
   }
 
   @override
@@ -296,6 +313,16 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
         .fromBuffer((data as TypedData).buffer, start,
         (end > length ? length : end) - start);
     return Vector.from(collection, dtype: dtype);
+  }
+
+  @override
+  Vector normalize() => this / norm();
+
+  @override
+  Vector standardize() {
+    final minValue = min();
+    final maxValue = max();
+    return (this - minValue) / (maxValue - minValue);
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
@@ -406,6 +433,12 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     final source = List<double>.generate(
         matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
     return Vector.from(source, dtype: dtype);
+  }
+
+  void _invalidateCache() {
+    _maxValue = null;
+    _minValue = null;
+    _cachedNorms.clear();
   }
 
   UnsupportedError _dontMutateError() =>
