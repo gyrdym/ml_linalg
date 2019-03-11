@@ -230,7 +230,7 @@ At the present moment most common vector operations are implemented:
   import 'package:ml_linalg/linalg.dart';
 
   final vector = Vector.from([1.0, -2.0, 3.0, -4.0, 5.0]);
-  final result = vector.normalize(Norm.euclidean);
+  final result = vector.normalize(Norm.manhattan);
   print(result); // [0.066, -0.133, 0.200, -0.266, 0.333]
 ````
 
