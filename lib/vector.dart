@@ -135,7 +135,7 @@ abstract class Vector implements Iterable<double> {
   Vector unique();
 
   /// Returns normalized version of this vector
-  Vector normalize();
+  Vector normalize([Norm norm = Norm.euclidean]);
 
   /// Returns standardized version of this vector
   Vector standardize();

@@ -4,37 +4,35 @@ import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 import 'package:test/test.dart';
 
+import 'unit_test_helpers/float_iterable_almost_equal_to.dart';
+
 void main() {
   group('Float32x4Vector', () {
     group('`from` constructor', () {
-      test(
-          'should create a vector from dynamic-length list, length is greater than 4',
-          () {
+      test('should create a vector from dynamic-length list, length is '
+          'greater than 4', () {
         final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
         expect(vector1, equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
         expect(vector1.length, equals(6));
       });
 
-      test(
-          'should create a vector from dynamic-length list, length is less than 4',
-          () {
+      test('should create a vector from dynamic-length list, length is less '
+          'than 4', () {
         final vector = Float32x4Vector.from([1.0, 2.0]);
         expect(vector, equals([1.0, 2.0]));
         expect(vector.length, equals(2));
       });
 
-      test(
-          'should create a vector from fixed-length list, length is greater than 4',
-          () {
+      test('should create a vector from fixed-length list, length is greater '
+          'than 4', () {
         final vector = Float32x4Vector.from(List.filled(11, 1.0));
         expect(vector,
             equals([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]));
         expect(vector.length, 11);
       });
 
-      test(
-          'should create a vector from fixed-length list, length is less than 4',
-          () {
+      test('should create a vector from fixed-length list, length is less '
+          'than 4', () {
         final vector = Float32x4Vector.from(List.filled(1, 2.0));
         expect(vector, equals([2.0]));
         expect(vector.length, 1);
@@ -281,9 +279,8 @@ void main() {
       expect(actual.length, equals(2));
     });
 
-    test(
-        'should throw an exception if one tries to multiple by an inappropriate matrix',
-        () {
+    test('should throw an exception if one tries to multiple by an '
+        'inappropriate matrix', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0]);
       final matrix = Float32x4Matrix.from([
         [2.0, 3.0],
@@ -302,17 +299,15 @@ void main() {
       expect(actual.length, equals(5));
     });
 
-    test(
-        'should throw an error if one tries to divide it by a vector of different length',
-        () {
+    test('should throw an error if one tries to divide it by a vector of '
+        'different length', () {
       final vector1 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 / vector2, throwsRangeError);
     });
 
-    test(
-        'should map an existing vector to a new one processing 4 elements in a time',
-        () {
+    test('should map an existing vector to a new one processing 4 elements in '
+        'a time', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       int iteration = 0;
       final actual = vector.fastMap((Float32x4 element, int start, int end) {
@@ -389,10 +384,18 @@ void main() {
 
     test('should find vector norm', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector.norm(Norm.euclidean), equals(7.416198487095663),
+      expect(vector.norm(Norm.euclidean), equals(closeTo(7.41, 1e-2)),
           reason: 'Wrong norm calculation');
       expect(vector.norm(Norm.manhattan), equals(15.0),
           reason: 'Wrong norm calculation');
+    });
+
+    test('should normalize itself (eucleadean norm)', () {
+      final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.normalize(Norm.euclidean);
+      final expected = [0.134, 0.269, 0.404, 0.539, 0.674];
+      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expect(actual.norm(Norm.euclidean), closeTo(1.0, 1e-3));
     });
 
     test('should find vector elements sum', () {
