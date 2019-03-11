@@ -398,6 +398,22 @@ void main() {
       expect(actual.norm(Norm.euclidean), closeTo(1.0, 1e-3));
     });
 
+    test('should normalize itself (Manhattan norm)', () {
+      final vector = Float32x4Vector.from([1.0, -2.0, 3.0, -4.0, 5.0]);
+      final actual = vector.normalize(Norm.manhattan);
+      final expected = [1 / 15, -2 / 15, 3 / 15, -4 / 15, 5 / 15];
+      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expect(actual.norm(Norm.manhattan), closeTo(1.0, 1e-3));
+    });
+
+    test('should rescale its every element into range [0...1]', () {
+      final vector = Float32x4Vector.from([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
+      final actual = vector.rescale(); // min = -4, diff = 9
+      final expected = [5 / 9, 2 / 9, 7 / 9, 0.0, 1.0, 4 / 9];
+      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expected.forEach((element) => expect(element, inInclusiveRange(0, 1)));
+    });
+
     test('should find vector elements sum', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       expect(vector.sum(), equals(15.0));

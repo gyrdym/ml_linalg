@@ -91,7 +91,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   final int _bucketSize;
   final SimdHelper<E, S> _simdHelper;
   final TypedListFactory _typedListFactory;
-  final Map<Norm, double> _cachedNorms = {};
 
   @override
   S data;
@@ -100,8 +99,17 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
+  // Vector's cache TODO: move to cache manager
+  final Map<Norm, double> _cachedNorms = {};
   double _maxValue;
   double _minValue;
+  Vector _normalized;
+  Vector _rescaled;
+  Vector _unique;
+  Vector _abs;
+  double _sum;
+  int _hash;
+  // ------------
 
   @override
   bool operator ==(Object obj) {
@@ -123,8 +131,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   @override
   int get hashCode => _hash ??= hashObjects(data);
-
-  int _hash;
 
   @override
   Vector operator +(Object value) {
@@ -184,7 +190,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   /// [this] vector
   @override
   Vector abs() =>
-      _elementWiseSelfOperation((E element, [int i]) =>
+      _abs ??= _elementWiseSelfOperation((E element, [int i]) =>
           _simdHelper.abs(element));
 
   @override
@@ -192,7 +198,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   /// Returns sum of all vector components
   @override
-  double sum() => _simdHelper.sumLanes(data.reduce(_simdHelper.sum));
+  double sum() => _sum ??= _simdHelper.sumLanes(data.reduce(_simdHelper.sum));
 
   @override
   double distanceTo(Vector vector, [Norm norm = Norm.euclidean]) =>
@@ -266,14 +272,17 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   @override
   Vector unique() {
-    final unique = <double>[];
-    for (int i = 0; i < length; i++) {
-      final el = this[i];
-      if (!unique.contains(el)) {
-        unique.add(el);
+    if (_unique == null) {
+      final unique = <double>[];
+      for (int i = 0; i < length; i++) {
+        final el = this[i];
+        if (!unique.contains(el)) {
+          unique.add(el);
+        }
       }
+      _unique = Vector.from(unique, dtype: dtype);
     }
-    return Vector.from(unique, dtype: dtype);
+    return _unique;
   }
 
   @override
@@ -316,13 +325,17 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  Vector normalize([Norm normType = Norm.euclidean]) => this / norm(normType);
+  Vector normalize([Norm normType = Norm.euclidean]) =>
+      _normalized ??= this / norm(normType);
 
   @override
-  Vector standardize() {
-    final minValue = min();
-    final maxValue = max();
-    return (this - minValue) / (maxValue - minValue);
+  Vector rescale() {
+    if (_rescaled == null) {
+      final minValue = min();
+      final maxValue = max();
+      _rescaled = (this - minValue) / (maxValue - minValue);
+    }
+    return _rescaled;
   }
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2,
@@ -439,6 +452,11 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   void _invalidateCache() {
     _maxValue = null;
     _minValue = null;
+    _normalized = null;
+    _rescaled = null;
+    _unique = null;
+    _abs = null;
+    _sum = null;
     _cachedNorms.clear();
   }
 
