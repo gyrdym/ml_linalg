@@ -25,6 +25,9 @@
 	    - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
 	    - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
 	    - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
+	    - [Vector normalization (using Euclidean norm)](#vector-normalization-using-euclidean-norm)
+	    - [Vector normalization (using Manhattan norm)](#vector-normalization-using-manhattan-norm)
+	    - [Vector rescaling (min-max normalization)](#vector-rescaling-min-max-normalization)
         - [Fast map](#fast-map)
 + [Matrices](#matrices)
 	+ [Matrix operations examples](#matrix-operations-examples)
@@ -211,6 +214,33 @@ At the present moment most common vector operations are implemented:
   final vector2 = Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.distanceTo(vector2, Norm.manhattan);
   print(result); // 5.0
+````
+
+##### Vector normalization using Euclidean norm
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final result = vector.normalize(Norm.euclidean);
+  print(result); // [0.134, 0.269, 0.404, 0.539, 0.674]
+````
+
+##### Vector normalization using Manhattan norm
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.from([1.0, -2.0, 3.0, -4.0, 5.0]);
+  final result = vector.normalize(Norm.manhattan);
+  print(result); // [0.066, -0.133, 0.200, -0.266, 0.333]
+````
+
+##### Vector rescaling (min-max normalization)
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.from([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
+  final result = vector.rescale();
+  print(result); // [0.555, 0.222, 0.777, 0.0, 1.0, 0.444]
 ````
 
 ##### Fast map

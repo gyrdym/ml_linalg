@@ -94,6 +94,18 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
+  // Vector's cache TODO: move to cache manager
+  final Map<Norm, double> _cachedNorms = {};
+  double _maxValue;
+  double _minValue;
+  Vector _normalized;
+  Vector _rescaled;
+  Vector _unique;
+  Vector _abs;
+  double _sum;
+  int _hash;
+  // ------------
+
   @override
   bool operator ==(Object obj) {
     if (obj is Vector) {
@@ -113,12 +125,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  int get hashCode {
-    _hash ??= hashObjects(data);
-    return _hash;
-  }
-
-  int _hash;
+  int get hashCode => _hash ??= hashObjects(data);
 
   @override
   Vector operator +(Object value) {
@@ -178,7 +185,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   /// [this] vector
   @override
   Vector abs() =>
-      _elementWiseSelfOperation((E element, [int i]) =>
+      _abs ??= _elementWiseSelfOperation((E element, [int i]) =>
           _simdHelper.abs(element));
 
   @override
@@ -186,7 +193,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   /// Returns sum of all vector components
   @override
-  double sum() => _simdHelper.sumLanes(data.reduce(_simdHelper.sum));
+  double sum() => _sum ??= _simdHelper.sumLanes(data.reduce(_simdHelper.sum));
 
   @override
   double distanceTo(Vector vector, [Norm norm = Norm.euclidean]) =>
@@ -197,45 +204,55 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   @override
   double norm([Norm norm = Norm.euclidean]) {
-    final power = _getPowerByNormType(norm);
-    if (power == 1) {
-      return abs().sum();
+    if (!_cachedNorms.containsKey(norm)) {
+      final power = _getPowerByNormType(norm);
+      if (power == 1) {
+        return abs().sum();
+      }
+      _cachedNorms[norm] = math.pow(toIntegerPower(power)
+          .sum(), 1 / power) as double;
     }
-    return math.pow(toIntegerPower(power).sum(), 1 / power) as double;
+    return _cachedNorms[norm];
   }
 
   @override
   double max() {
-    if (_isLastBucketNotFull) {
-      var max = -double.infinity;
-      final listOnlyWithFullBuckets = _dataWithoutLastBucket;
-      if (listOnlyWithFullBuckets.isNotEmpty) {
-        max = _simdHelper.getMaxLane(listOnlyWithFullBuckets
-            .reduce(_simdHelper.selectMax));
+    if (_maxValue == null) {
+      if (_isLastBucketNotFull) {
+        var max = -double.infinity;
+        final listOnlyWithFullBuckets = _dataWithoutLastBucket;
+        if (listOnlyWithFullBuckets.isNotEmpty) {
+          max = _simdHelper.getMaxLane(listOnlyWithFullBuckets
+              .reduce(_simdHelper.selectMax));
+        }
+        _maxValue = _simdHelper.toList(data.last)
+            .take(length % _bucketSize)
+            .fold(max, math.max);
+      } else {
+        _maxValue = _simdHelper.getMaxLane(data.reduce(_simdHelper.selectMax));
       }
-      return _simdHelper.toList(data.last)
-          .take(length % _bucketSize)
-          .fold(max, math.max);
-    } else {
-      return _simdHelper.getMaxLane(data.reduce(_simdHelper.selectMax));
     }
+    return _maxValue;
   }
 
   @override
   double min() {
-    if (_isLastBucketNotFull) {
-      var min = double.infinity;
-      final listOnlyWithFullBuckets = _dataWithoutLastBucket;
-      if (listOnlyWithFullBuckets.isNotEmpty) {
-        min = _simdHelper.getMinLane(listOnlyWithFullBuckets
-            .reduce(_simdHelper.selectMin));
+    if (_minValue == null) {
+      if (_isLastBucketNotFull) {
+        var min = double.infinity;
+        final listOnlyWithFullBuckets = _dataWithoutLastBucket;
+        if (listOnlyWithFullBuckets.isNotEmpty) {
+          min = _simdHelper.getMinLane(listOnlyWithFullBuckets
+              .reduce(_simdHelper.selectMin));
+        }
+        _minValue = _simdHelper.toList(data.last)
+            .take(length % _bucketSize)
+            .fold(min, math.min);
+      } else {
+        _minValue = _simdHelper.getMinLane(data.reduce(_simdHelper.selectMin));
       }
-      return _simdHelper.toList(data.last)
-          .take(length % _bucketSize)
-          .fold(min, math.min);
-    } else {
-      return _simdHelper.getMinLane(data.reduce(_simdHelper.selectMin));
     }
+    return _minValue;
   }
 
   @override
@@ -250,14 +267,17 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   @override
   Vector unique() {
-    final unique = <double>[];
-    for (int i = 0; i < length; i++) {
-      final el = this[i];
-      if (!unique.contains(el)) {
-        unique.add(el);
+    if (_unique == null) {
+      final unique = <double>[];
+      for (int i = 0; i < length; i++) {
+        final el = this[i];
+        if (!unique.contains(el)) {
+          unique.add(el);
+        }
       }
+      _unique = Vector.from(unique, dtype: dtype);
     }
-    return Vector.from(unique, dtype: dtype);
+    return _unique;
   }
 
   @override
@@ -288,6 +308,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     final base = (index / _bucketSize).floor();
     final offset = index - base * _bucketSize;
     data[base] = _simdHelper.mutate(data[base], offset, value);
+    _invalidateCache();
   }
 
   @override
@@ -298,7 +319,22 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     return Vector.from(collection, dtype: dtype);
   }
 
-  /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
+  @override
+  Vector normalize([Norm normType = Norm.euclidean]) =>
+      _normalized ??= this / norm(normType);
+
+  @override
+  Vector rescale() {
+    if (_rescaled == null) {
+      final minValue = min();
+      final maxValue = max();
+      _rescaled = (this - minValue) / (maxValue - minValue);
+    }
+    return _rescaled;
+  }
+
+  /// Returns exponent depending on vector norm type (for Euclidean norm - 2,
+  /// Manhattan - 1)
   int _getPowerByNormType(Norm norm) {
     switch (norm) {
       case Norm.euclidean:
@@ -406,6 +442,17 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     final source = List<double>.generate(
         matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
     return Vector.from(source, dtype: dtype);
+  }
+
+  void _invalidateCache() {
+    _maxValue = null;
+    _minValue = null;
+    _normalized = null;
+    _rescaled = null;
+    _unique = null;
+    _abs = null;
+    _sum = null;
+    _cachedNorms.clear();
   }
 
   UnsupportedError _dontMutateError() =>
