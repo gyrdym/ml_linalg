@@ -137,8 +137,8 @@ abstract class Vector implements Iterable<double> {
   /// Returns normalized version of this vector
   Vector normalize([Norm norm = Norm.euclidean]);
 
-  /// Returns standardized version of this vector
-  Vector standardize();
+  /// Returns rescaled (min-max normed) version of this vector
+  Vector rescale();
 
   Vector fastMap<E>(
       E mapper(E element, int offsetStartIdx, int offsetEndIdx));
