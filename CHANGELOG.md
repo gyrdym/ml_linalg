@@ -1,9 +1,9 @@
 # Changelog
 
 ## 6.1.0
-- `Vector`: normalize method added to interface and supported 
-- `Vector`: rescale method added to interface and supported
-- `Vector`: cache for popular operations implemented 
+- `Vector`: normalize method added to interface and supported in `Float32x4Vector` 
+- `Vector`: rescale method added to interface and supported in `Float32x4Vector`
+- `VectorBase`: cache for popular operations implemented 
 
 ## 6.0.2
 - `Matrix`: `MatrixMixin` corrected
