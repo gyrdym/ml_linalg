@@ -25,13 +25,13 @@ void main() {
         () {
       final data = createByteData(source);
       final iterator = Float32MatrixIterator(data, 3)..moveNext();
-      expect(iterator.current, floatIterableAlmostEqualTo([1.0, 2.0, 3.0]));
+      expect(iterator.current, vectorAlmostEqualTo([1.0, 2.0, 3.0]));
 
       iterator.moveNext();
-      expect(iterator.current, floatIterableAlmostEqualTo([10.0, 22.0, 31.0]));
+      expect(iterator.current, vectorAlmostEqualTo([10.0, 22.0, 31.0]));
 
       iterator.moveNext();
-      expect(iterator.current, floatIterableAlmostEqualTo([8.3, 3.4, 34.5]));
+      expect(iterator.current, vectorAlmostEqualTo([8.3, 3.4, 34.5]));
 
       iterator.moveNext();
       expect(iterator.current, isNull);
@@ -42,19 +42,19 @@ void main() {
         () {
       final data = createByteData(source);
       final iterator = Float32MatrixIterator(data, 2)..moveNext();
-      expect(iterator.current, floatIterableAlmostEqualTo([1.0, 2.0]));
+      expect(iterator.current, vectorAlmostEqualTo([1.0, 2.0]));
 
       iterator.moveNext();
-      expect(iterator.current, floatIterableAlmostEqualTo([3.0, 10.0]));
+      expect(iterator.current, vectorAlmostEqualTo([3.0, 10.0]));
 
       iterator.moveNext();
-      expect(iterator.current, floatIterableAlmostEqualTo([22.0, 31.0]));
+      expect(iterator.current, vectorAlmostEqualTo([22.0, 31.0]));
 
       iterator.moveNext();
-      expect(iterator.current, floatIterableAlmostEqualTo([8.3, 3.4]));
+      expect(iterator.current, vectorAlmostEqualTo([8.3, 3.4]));
 
       iterator.moveNext();
-      expect(iterator.current, floatIterableAlmostEqualTo([34.5]));
+      expect(iterator.current, vectorAlmostEqualTo([34.5]));
 
       iterator.moveNext();
       expect(iterator.current, isNull);
@@ -67,7 +67,7 @@ void main() {
       final iterator = Float32MatrixIterator(data, 9)..moveNext();
       expect(
           iterator.current,
-          floatIterableAlmostEqualTo(
+          vectorAlmostEqualTo(
               [1.0, 2.0, 3.0, 10.0, 22.0, 31.0, 8.3, 3.4, 34.5]));
 
       iterator.moveNext();

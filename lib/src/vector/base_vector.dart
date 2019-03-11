@@ -316,7 +316,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  Vector normalize() => this / norm();
+  Vector normalize([Norm normType = Norm.euclidean]) => this / norm(normType);
 
   @override
   Vector standardize() {
@@ -325,7 +325,8 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     return (this - minValue) / (maxValue - minValue);
   }
 
-  /// Returns exponent depending on vector norm type (for Euclidean norm - 2, Manhattan - 1)
+  /// Returns exponent depending on vector norm type (for Euclidean norm - 2,
+  /// Manhattan - 1)
   int _getPowerByNormType(Norm norm) {
     switch (norm) {
       case Norm.euclidean:
