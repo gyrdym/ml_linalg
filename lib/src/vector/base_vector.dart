@@ -266,19 +266,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  Vector unique() {
-    if (_unique == null) {
-      final unique = <double>[];
-      for (int i = 0; i < length; i++) {
-        final el = this[i];
-        if (!unique.contains(el)) {
-          unique.add(el);
-        }
-      }
-      _unique = Vector.from(unique, dtype: dtype);
-    }
-    return _unique;
-  }
+  Vector unique() => _unique ??= Vector.from(Set.from(this), dtype: dtype);
 
   @override
   Vector fastMap<T>(
