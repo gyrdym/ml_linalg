@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.1.1
+- `Vector`: `unique` method refactored
+
 ## 6.1.0
 - `Vector`: normalize method added to interface and supported in `Float32x4Vector` 
 - `Vector`: rescale method added to interface and supported in `Float32x4Vector`
