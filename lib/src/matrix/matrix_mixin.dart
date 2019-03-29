@@ -3,10 +3,10 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
-import 'package:ml_linalg/range.dart';
 import 'package:ml_linalg/src/matrix/matrix_data_store.dart';
 import 'package:ml_linalg/src/matrix/matrix_validatior.dart';
 import 'package:ml_linalg/vector.dart';
+import 'package:xrange/range.dart';
 
 abstract class MatrixMixin implements
         Iterable<Iterable<double>>,
@@ -111,26 +111,26 @@ abstract class MatrixMixin implements
   }
 
   @override
-  Matrix submatrix({Range rows, Range columns}) {
-    rows ??= Range(0, rowsNum);
-    columns ??= Range(0, columnsNum);
-
-    final rowsNumber = rows.end - rows.start + (rows.endInclusive ? 1 : 0);
-    final matrixSource = List<List<double>>(rowsNumber);
-    final rowEndIdx = rows.endInclusive ? rows.end + 1 : rows.end;
+  Matrix submatrix({Range<num> rows, Range<num> columns}) {
+    rows ??= Range<num>.closedOpen(0, rowsNum);
+    columns ??= Range<num>.closedOpen(0, columnsNum);
+    final rowsNumber = rows.upper - rows.lower + (rows.isClosed ? 1 : 0);
+    final matrixSource = List<List<double>>(rowsNumber.toInt());
+    final rowEndIdx = rows.isClosed ? rows.upper + 1 : rows.upper;
     final columnsLength =
-        columns.end - columns.start + (columns.endInclusive ? 1 : 0);
-    for (int i = rows.start; i < rowEndIdx; i++) {
-      matrixSource[i - rows.start] =
-          _query(i * columnsNum + columns.start, columnsLength);
+      (columns.upper - columns.lower + (columns.isClosed ? 1 : 0)).toInt();
+    for (int i = rows.lower.toInt(); i < rowEndIdx; i++) {
+      matrixSource[i - rows.lower.toInt()] =
+          _query(i * columnsNum + columns.lower.toInt(), columnsLength);
     }
     return Matrix.from(matrixSource, dtype: dtype);
   }
 
   @override
-  Matrix pick({Iterable<Range> rowRanges, Iterable<Range> columnRanges}) {
-    rowRanges ??= [Range(0, rowsNum)];
-    columnRanges ??= [Range(0, columnsNum)];
+  Matrix pick({Iterable<Range<num>> rowRanges,
+    Iterable<Range<num>> columnRanges}) {
+    rowRanges ??= [Range<num>.closedOpen(0, rowsNum)];
+    columnRanges ??= [Range<num>.closedOpen(0, columnsNum)];
     final rows = _collectVectors(rowRanges, getRow, rowsNum);
     final rowBasedMatrix = Matrix.rows(rows, dtype: dtype);
     final columns =
@@ -369,17 +369,14 @@ abstract class MatrixMixin implements
       data.buffer.asFloat32List(index * Float32List.bytesPerElement, length);
 
   List<Vector> _collectVectors(
-      Iterable<Range> ranges, Vector getVector(int i), int maxValue) {
+      Iterable<Range<num>> ranges, Vector getVector(int i), int maxValue) {
     final vectors = <Vector>[];
-    for (final range in ranges) {
-      if (range.end > maxValue) {
-        throw RangeError.range(range.end, 0, maxValue);
-      }
-      final rowEndIdx = range.endInclusive ? range.end + 1 : range.end;
-      for (int i = range.start; i < rowEndIdx; i++) {
+    ranges.forEach((range) {
+      final rowEndIdx = range.isClosed ? range.upper + 1 : range.upper;
+      for (int i = range.lower.toInt(); i < rowEndIdx; i++) {
         vectors.add(getVector(i));
       }
-    }
+    });
     return vectors;
   }
 }
