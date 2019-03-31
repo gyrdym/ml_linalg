@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/ml_linalg.svg)](https://pub.dartlang.org/packages/ml_linalg)
 [![Gitter Chat](https://badges.gitter.im/gyrdym/gyrdym.svg)](https://gitter.im/gyrdym/)
 
-**Linear algebra with Dart for machine learning**
+**SIMD-based Linear algebra with Dart**
 
 **Table of contents**
 

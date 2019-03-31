@@ -1,5 +1,8 @@
 # Changelog
 
+## 7.0.0
+- `Matrix`: `ZRange` support (instead of the library built-in `Range`)
+
 ## 6.1.1
 - `Vector`: `unique` method refactored
 
