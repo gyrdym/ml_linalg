@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:xrange/range.dart';
+import 'package:xrange/zrange.dart';
 
 /// An algebraic matrix
 abstract class Matrix {
@@ -79,11 +79,10 @@ abstract class Matrix {
   Matrix transpose();
 
   /// Cuts out a part of the matrix bounded by [rows] and [columns] range
-  Matrix submatrix({Range<num> rows, Range<num> columns});
+  Matrix submatrix({ZRange rows, ZRange columns});
 
   /// Creates a new matrix, consisted of different segments of the matrix
-  Matrix pick({Iterable<Range<num>> rowRanges,
-    Iterable<Range<num>> columnRanges});
+  Matrix pick({Iterable<ZRange> rowRanges, Iterable<ZRange> columnRanges});
 
   /// Returns a column of the matrix, resided on [index]
   Vector getColumn(int index, {bool tryCache = true, bool mutable = false});

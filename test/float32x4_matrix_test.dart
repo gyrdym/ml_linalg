@@ -5,7 +5,7 @@ import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
-import 'package:xrange/range.dart';
+import 'package:xrange/zrange.dart';
 
 void main() {
   group('Float32x4Matrix', () {
@@ -197,8 +197,8 @@ void main() {
         [24.0, 32.0, 53.0, 74.0],
       ]);
       final submatrix = matrix.submatrix(
-          rows: Range.closedOpen(1, 3),
-          columns: Range.closedOpen(1, 2),
+          rows: ZRange.closedOpen(1, 3),
+          columns: ZRange.closedOpen(1, 2),
       );
       final expected = [
         [16.0],
@@ -216,8 +216,8 @@ void main() {
         [24.0, 32.0, 53.0, 74.0],
       ]);
       final submatrix = matrix.submatrix(
-          rows: Range.closed(1, 3),
-          columns: Range.closed(1, 2),
+          rows: ZRange.closed(1, 3),
+          columns: ZRange.closed(1, 2),
       );
       final expected = [
         [16.0, 17.0],
@@ -236,8 +236,8 @@ void main() {
         [24.0, 32.0, 53.0, 74.0],
       ]);
       final submatrix = matrix.submatrix(
-          rows: Range.closed(1, 3),
-          columns: Range.closedOpen(1, 2),
+          rows: ZRange.closed(1, 3),
+          columns: ZRange.closedOpen(1, 2),
       );
       final expected = [
         [16.0],
@@ -256,8 +256,8 @@ void main() {
         [24.0, 32.0, 53.0, 74.0],
       ]);
       final submatrix = matrix.submatrix(
-          rows: Range.closedOpen(1, 3),
-          columns: Range.closed(1, 2),
+          rows: ZRange.closedOpen(1, 3),
+          columns: ZRange.closed(1, 2),
       );
       final expected = [
         [16.0, 17.0],
@@ -292,7 +292,7 @@ void main() {
         [21.0, 22.0, 23.0, 24.0],
         [24.0, 32.0, 53.0, 74.0],
       ]);
-      final submatrix = matrix.submatrix(columns: Range.closedOpen(0, 2));
+      final submatrix = matrix.submatrix(columns: ZRange.closedOpen(0, 2));
       final expected = [
         [11.0, 12.0],
         [15.0, 16.0],
@@ -310,7 +310,7 @@ void main() {
         [21.0, 22.0, 23.0, 24.0],
         [24.0, 32.0, 53.0, 74.0],
       ]);
-      final submatrix = matrix.submatrix(rows: Range.closedOpen(0, 2));
+      final submatrix = matrix.submatrix(rows: ZRange.closedOpen(0, 2));
       final expected = [
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
@@ -955,8 +955,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 2), Range.closedOpen(3, 4)],
-        columnRanges: [Range.closedOpen(1, 2), Range.closedOpen(3, 4)],
+        rowRanges: [ZRange.closedOpen(0, 2), ZRange.closedOpen(3, 4)],
+        columnRanges: [ZRange.closedOpen(1, 2), ZRange.closedOpen(3, 4)],
       );
       final expected = [
         [8.0, 16.0],
@@ -976,8 +976,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 2), Range.closedOpen(0, 2)],
-        columnRanges: [Range.closedOpen(1, 2), Range.closedOpen(3, 4)],
+        rowRanges: [ZRange.closedOpen(0, 2), ZRange.closedOpen(0, 2)],
+        columnRanges: [ZRange.closedOpen(1, 2), ZRange.closedOpen(3, 4)],
       );
       final expected = [
         [8.0, 16.0],
@@ -998,8 +998,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 2), Range.closedOpen(3, 4)],
-        columnRanges: [Range.closedOpen(1, 2), Range.closedOpen(1, 2)],
+        rowRanges: [ZRange.closedOpen(0, 2), ZRange.closedOpen(3, 4)],
+        columnRanges: [ZRange.closedOpen(1, 2), ZRange.closedOpen(1, 2)],
       );
       final expected = [
         [8.0, 8.0],
@@ -1019,8 +1019,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 2)],
-        columnRanges: [Range.closedOpen(1, 2)],
+        rowRanges: [ZRange.closedOpen(0, 2)],
+        columnRanges: [ZRange.closedOpen(1, 2)],
       );
       final expected = [
         [8.0],
@@ -1041,8 +1041,8 @@ void main() {
       final actual = () => matrix.pick(
             // take all 5 rows (20 > 5) and add second row to them (range from
             // 1 to 2)
-            rowRanges: [Range.closedOpen(0, 20), Range.closedOpen(1, 2)],
-            columnRanges: [Range.closedOpen(1, 2)],
+            rowRanges: [ZRange.closedOpen(0, 20), ZRange.closedOpen(1, 2)],
+            columnRanges: [ZRange.closedOpen(1, 2)],
           );
       expect(actual, throwsRangeError,
           reason: '0, 20 - is not a correct range');
@@ -1058,8 +1058,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = () => matrix.pick(
-            rowRanges: [Range.closedOpen(1, 2)],
-            columnRanges: [Range.closedOpen(1, 6)],
+            rowRanges: [ZRange.closedOpen(1, 2)],
+            columnRanges: [ZRange.closedOpen(1, 6)],
           );
       expect(actual, throwsRangeError, reason: '1, 6 - is not a correct range');
     });
@@ -1074,8 +1074,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 5)],
-        columnRanges: [Range.closedOpen(1, 3)],
+        rowRanges: [ZRange.closedOpen(0, 5)],
+        columnRanges: [ZRange.closedOpen(1, 3)],
       );
       final expected = [
         [8.0, 12.0],
@@ -1097,8 +1097,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 2)],
-        columnRanges: [Range.closedOpen(0, 5)],
+        rowRanges: [ZRange.closedOpen(0, 2)],
+        columnRanges: [ZRange.closedOpen(0, 5)],
       );
       final expected = [
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -1117,8 +1117,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 5), Range.closedOpen(0, 5)],
-        columnRanges: [Range.closedOpen(2, 3)],
+        rowRanges: [ZRange.closedOpen(0, 5), ZRange.closedOpen(0, 5)],
+        columnRanges: [ZRange.closedOpen(2, 3)],
       );
       final expected = [
         [12.0],
@@ -1146,8 +1146,8 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 1)],
-        columnRanges: [Range.closedOpen(0, 5), Range.closedOpen(0, 5)],
+        rowRanges: [ZRange.closedOpen(0, 1)],
+        columnRanges: [ZRange.closedOpen(0, 5), ZRange.closedOpen(0, 5)],
       );
       final expected = [
         [4.0, 8.0, 12.0, 16.0, 34.0, 4.0, 8.0, 12.0, 16.0, 34.0],
@@ -1165,7 +1165,7 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        rowRanges: [Range.closedOpen(0, 1), Range.closedOpen(3, 4)],
+        rowRanges: [ZRange.closedOpen(0, 1), ZRange.closedOpen(3, 4)],
       );
       final expected = [
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -1184,7 +1184,7 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
       final actual = matrix.pick(
-        columnRanges: [Range.closedOpen(0, 1), Range.closedOpen(3, 4)],
+        columnRanges: [ZRange.closedOpen(0, 1), ZRange.closedOpen(3, 4)],
       );
       final expected = [
         [4.0, 16.0],
