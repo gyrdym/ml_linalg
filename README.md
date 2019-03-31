@@ -469,6 +469,7 @@ print(matrix1 - matrix2);
 ##### Submatrix (taking a lower dimension matrix of the current matrix)
 ````Dart
   import 'package:ml_linalg/linalg.dart';
+  import 'package:xrange/zrange.dart';
 
   final matrix = Matrix.from([
     [11.0, 12.0, 13.0, 14.0],
@@ -476,7 +477,7 @@ print(matrix1 - matrix2);
     [21.0, 22.0, 23.0, 24.0],
     [24.0, 32.0, 53.0, 74.0],
   ]);
-  final submatrix = matrix.submatrix(rows: Range(0, 2));
+  final submatrix = matrix.submatrix(rows: ZRange(0, 2));
   print(submatrix);
   // [
   //  [11.0, 12.0, 13.0, 14.0],
@@ -543,6 +544,9 @@ segments of a source matrix (like in Pandas dataframe in Python, e.g. `loc` meth
 matrix from certain columns and vectors and they should not be necessarily subsequent: for example, it is needed to
 create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, it's needed to access the matrix this way:
 ````Dart
+import 'package:ml_linalg/linalg.dart';
+import 'package:xrange/zrange.dart';
+
 final matrix = Float32x4Matrix.from([
 //| 1 |         | 3 |                
   [4.0,   8.0,   12.0,   16.0,  34.0], // 1 Range(0, 1)
@@ -552,8 +556,8 @@ final matrix = Float32x4Matrix.from([
   [112.0, 10.0,  34.0,   2.0,   10.0], // 5 Range(4, 5)
 ]);
 final result = matrix.pick(
-  rowRanges: [Range(0, 1), Range(2, 3), Range(4, 5)],
-  columnRanges: [Range(0, 1), Range(2, 3)],
+  rowRanges: [ZRange(0, 1), ZRange(2, 3), ZRange(4, 5)],
+  columnRanges: [ZRange(0, 1), ZRange(2, 3)],
 );
 print(result);
 /*
