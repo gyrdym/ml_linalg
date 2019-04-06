@@ -8,6 +8,6 @@ mixin MatrixFastIterableMixin implements Matrix {
         rowsNum,
         (int i) => (getRow(i)).fastMap(
             (T element, int startOffset, int endOffset) => mapper(element)));
-    return Matrix.rows(source, dtype: dtype);
+    return Matrix.fromRows(source, dtype: dtype);
   }
 }
