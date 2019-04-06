@@ -1,5 +1,12 @@
 # Changelog
 
+## 8.0.0
+- `Matrix`: `rows` constructor renamed to `fromRows` 
+- `Matrix`: `columns` constructor renamed to `fromColumns` 
+- `Matrix`: `rows` getter added 
+- `Matrix`: `columns` getter added 
+- `Matrix`: `dimensions` field added 
+
 ## 7.0.0
 - `Matrix`: `ZRange` support (instead of the library built-in `Range`)
 

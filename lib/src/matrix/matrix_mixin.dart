@@ -79,7 +79,7 @@ abstract class MatrixMixin implements
   @override
   Matrix transpose() {
     final source = List<Vector>.generate(rowsNum, getRow);
-    return Matrix.columns(source, dtype: dtype);
+    return Matrix.fromColumns(source, dtype: dtype);
   }
 
   @override
@@ -130,10 +130,10 @@ abstract class MatrixMixin implements
     rowRanges ??= [ZRange.closedOpen(0, rowsNum)];
     columnRanges ??= [ZRange.closedOpen(0, columnsNum)];
     final rows = _collectVectors(rowRanges, getRow);
-    final rowBasedMatrix = Matrix.rows(rows, dtype: dtype);
+    final rowBasedMatrix = Matrix.fromRows(rows, dtype: dtype);
     final columns =
         _collectVectors(columnRanges, rowBasedMatrix.getColumn);
-    return Matrix.columns(columns, dtype: dtype);
+    return Matrix.fromColumns(columns, dtype: dtype);
   }
 
   @override
@@ -150,12 +150,12 @@ abstract class MatrixMixin implements
 
   @override
   Matrix mapColumns(Vector mapper(Vector columns)) =>
-      Matrix.columns(List<Vector>.generate(columnsNum,
+      Matrix.fromColumns(List<Vector>.generate(columnsNum,
               (int i) => mapper(getColumn(i))), dtype: dtype);
 
   @override
   Matrix mapRows(Vector mapper(Vector row)) =>
-      Matrix.rows(List<Vector>.generate(rowsNum,
+      Matrix.fromRows(List<Vector>.generate(rowsNum,
               (int i) => mapper(getRow(i))), dtype: dtype);
 
   @override
@@ -167,7 +167,7 @@ abstract class MatrixMixin implements
         checked.add(row);
       }
     }
-    return Matrix.rows(checked, dtype: dtype);
+    return Matrix.fromRows(checked, dtype: dtype);
   }
 
   List<double> flatten2dimList(
@@ -259,6 +259,23 @@ abstract class MatrixMixin implements
     }
   }
 
+  @override
+  Iterable<Vector> get rows => _generateVectors(_rowIndices, getRow);
+
+  @override
+  Iterable<Vector> get columns => _generateVectors(_columnIndices, getColumn);
+
+  // TODO consider caching
+  Iterable<int> get _rowIndices => ZRange.closedOpen(0, rowsNum).values();
+
+  // TODO consider caching
+  Iterable<int> get _columnIndices => ZRange.closedOpen(0, columnsNum).values();
+
+  Iterable<Vector> _generateVectors(Iterable<int> indices,
+      Vector genFn(int idx)) sync * {
+    for (final i in indices) yield genFn(i);
+  }
+
   double _findExtrema(double callback(Vector vector)) {
     int i = 0;
     return callback(reduceRows((Vector result, Vector row) {
@@ -289,7 +306,7 @@ abstract class MatrixMixin implements
     final generateElementFn = (int i) => vector.dot(getRow(i));
     final source = List<double>.generate(rowsNum, generateElementFn);
     final vectorColumn = Vector.from(source, dtype: dtype);
-    return Matrix.columns([vectorColumn], dtype: dtype);
+    return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }
 
   Matrix _matrixMul(Matrix matrix) {
@@ -351,7 +368,7 @@ abstract class MatrixMixin implements
       Matrix matrix, Vector operation(Vector first, Vector second)) {
     final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
     final source = List<Vector>.generate(rowsNum, elementGenFn);
-    return Matrix.rows(source, dtype: dtype);
+    return Matrix.fromRows(source, dtype: dtype);
   }
 
   Matrix _matrix2scalarOperation(
@@ -360,7 +377,7 @@ abstract class MatrixMixin implements
     // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));
     final source = List<Vector>.generate(rowsNum, elementGenFn);
-    return Matrix.rows(source, dtype: dtype);
+    return Matrix.fromRows(source, dtype: dtype);
   }
 
   Float32List _query(int index, int length) =>

@@ -18,7 +18,7 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined row vectors
-  factory Matrix.rows(List<Vector> source, {Type dtype = Float32x4}) {
+  factory Matrix.fromRows(List<Vector> source, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Matrix.rows(source);
@@ -28,7 +28,7 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined column vectors
-  factory Matrix.columns(List<Vector> source, {Type dtype = Float32x4}) {
+  factory Matrix.fromColumns(List<Vector> source, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Matrix.columns(source);
@@ -50,6 +50,12 @@ abstract class Matrix {
   }
 
   Type get dtype;
+
+  /// Returns a generator of immutable row vectors of the matrix
+  Iterable<Vector> get rows;
+
+  /// Returns a generator of immutable column vectors of the matrix
+  Iterable<Vector> get columns;
 
   /// Returns a number of matrix row
   int get rowsNum;

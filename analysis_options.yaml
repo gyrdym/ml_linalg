@@ -26,7 +26,6 @@ linter:
     - avoid_return_types_on_setters
     - cascade_invocations
     - constant_identifier_names
-    - curly_braces_in_flow_control_structures
     - empty_catches
     - empty_constructor_bodies
     - file_names
