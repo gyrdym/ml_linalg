@@ -4,15 +4,19 @@ import 'package:ml_linalg/src/matrix/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32_matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
 
-typedef ByteDataAsTypedList = List<double> Function(ByteBuffer buffer,
+typedef ByteBufferAsTypedListFn = List<double> Function(ByteBuffer buffer,
     int offset, int length);
+
+typedef UpdateByteDataFn = void Function(ByteData data, int offset,
+    double value, Endian endian);
 
 class DataManagerImpl implements DataManager {
   DataManagerImpl.from(
       Iterable<Iterable<double>> source,
       int bytesPerElement,
       this._dtype,
-      this._byteDateAsTypedList,
+      this._convertByteBufferToTypedList,
+      this._updateByteData,
   ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
@@ -29,7 +33,8 @@ class DataManagerImpl implements DataManager {
       Iterable<Vector> source,
       int bytesPerElement,
       this._dtype,
-      this._byteDateAsTypedList,
+      this._convertByteBufferToTypedList,
+      this._updateByteData,
   ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
@@ -46,7 +51,8 @@ class DataManagerImpl implements DataManager {
       Iterable<Vector> source,
       int bytesPerElement,
       this._dtype,
-      this._byteDateAsTypedList,
+      this._convertByteBufferToTypedList,
+      this._updateByteData,
   ) :
         rowsNum = source.first.length,
         columnsNum = source.length,
@@ -65,7 +71,8 @@ class DataManagerImpl implements DataManager {
       int colsNum,
       int bytesPerElement,
       this._dtype,
-      this._byteDateAsTypedList,
+      this._convertByteBufferToTypedList,
+      this._updateByteData,
   ) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
@@ -93,7 +100,8 @@ class DataManagerImpl implements DataManager {
   final ByteData _data;
   final Type _dtype;
 
-  final ByteDataAsTypedList _byteDateAsTypedList;
+  final ByteBufferAsTypedListFn _convertByteBufferToTypedList;
+  final UpdateByteDataFn _updateByteData;
 
   @override
   Iterator<Iterable<double>> get dataIterator =>
@@ -102,16 +110,17 @@ class DataManagerImpl implements DataManager {
   //TODO consider a check if the index is inside the _data
   @override
   List<double> getValues(int index, int length) =>
-      _byteDateAsTypedList(_data.buffer, index * _bytesPerElement, length);
+      _convertByteBufferToTypedList(_data.buffer, index * _bytesPerElement,
+          length);
 
   //TODO consider a check if the index is inside the _data
   @override
   void update(int idx, double value) =>
-    _data.setFloat32(idx * _bytesPerElement, value, Endian.host);
+      _updateByteData(_data, idx * _bytesPerElement, value, Endian.host);
 
   @override
   void updateAll(int idx, Iterable<double> values) =>
-    _byteDateAsTypedList(_data.buffer, 0, rowsNum * columnsNum)
+    _convertByteBufferToTypedList(_data.buffer, 0, rowsNum * columnsNum)
         .setAll(0, values);
 
   @override
