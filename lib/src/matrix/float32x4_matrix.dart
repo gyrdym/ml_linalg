@@ -2,15 +2,9 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ml_linalg/src/matrix/base_matrix.dart';
+import 'package:ml_linalg/src/matrix/data_manager/float32_byte_data_methods.dart';
 import 'package:ml_linalg/src/matrix/data_manager/data_manager_impl.dart';
 import 'package:ml_linalg/vector.dart';
-
-final bufferToFloat32List =
-    (ByteBuffer buffer, int offset, int length) =>
-        buffer.asFloat32List(offset, length);
-
-final updateByteData = (ByteData data, int offset, double value,
-    Endian endian) => data.setFloat32(offset, value, endian);
 
 class Float32x4Matrix extends BaseMatrix {
   Float32x4Matrix.from(Iterable<Iterable<double>> source) :

@@ -1,13 +1,17 @@
 import 'dart:typed_data';
 
+import 'package:ml_linalg/src/matrix/data_manager/byte_data_methods.dart';
+
 class MatrixIterator implements Iterator<Iterable<double>> {
-  MatrixIterator(this._data, this._columns, this._bytesPerElement);
+  MatrixIterator(this._data, this._columns, this._bytesPerElement,
+      this._convertBuffetToTypedList);
 
   final ByteData _data;
   final int _columns;
   final int _bytesPerElement;
+  final ByteBufferAsTypedListFn _convertBuffetToTypedList;
 
-  Iterable<double> _current;
+  List<double> _current;
   int _currentRow = 0;
 
   @override
@@ -25,7 +29,7 @@ class MatrixIterator implements Iterator<Iterable<double>> {
           ? _columns
           : (totalSizeInBytes - _data.buffer.lengthInBytes) ~/
               _bytesPerElement;
-      _current = _data.buffer.asFloat32List(byteOffset, length);
+      _current = _convertBuffetToTypedList(_data.buffer, byteOffset, length);
     }
     _currentRow++;
     return _current != null;
