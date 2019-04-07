@@ -4,11 +4,15 @@ import 'package:ml_linalg/src/matrix/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/float32x4/float32_matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
 
+typedef ByteDataAsTypedList = List<double> Function(ByteBuffer buffer,
+    int offset, int length);
+
 class DataManagerImpl implements DataManager {
   DataManagerImpl.from(
       Iterable<Iterable<double>> source,
       int bytesPerElement,
       this._dtype,
+      this._byteDateAsTypedList,
   ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
@@ -25,6 +29,7 @@ class DataManagerImpl implements DataManager {
       Iterable<Vector> source,
       int bytesPerElement,
       this._dtype,
+      this._byteDateAsTypedList,
   ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
@@ -41,6 +46,7 @@ class DataManagerImpl implements DataManager {
       Iterable<Vector> source,
       int bytesPerElement,
       this._dtype,
+      this._byteDateAsTypedList,
   ) :
         rowsNum = source.first.length,
         columnsNum = source.length,
@@ -59,6 +65,7 @@ class DataManagerImpl implements DataManager {
       int colsNum,
       int bytesPerElement,
       this._dtype,
+      this._byteDateAsTypedList,
   ) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
@@ -86,14 +93,16 @@ class DataManagerImpl implements DataManager {
   final ByteData _data;
   final Type _dtype;
 
+  final ByteDataAsTypedList _byteDateAsTypedList;
+
   @override
   Iterator<Iterable<double>> get dataIterator =>
       Float32MatrixIterator(_data, columnsNum);
 
   //TODO consider a check if the index is inside the _data
   @override
-  Float32List getValues(int index, int length) =>
-      _data.buffer.asFloat32List(index * _bytesPerElement, length);
+  List<double> getValues(int index, int length) =>
+      _byteDateAsTypedList(_data.buffer, index * _bytesPerElement, length);
 
   //TODO consider a check if the index is inside the _data
   @override
@@ -101,9 +110,9 @@ class DataManagerImpl implements DataManager {
     _data.setFloat32(idx * _bytesPerElement, value, Endian.host);
 
   @override
-  void updateAll(int idx, Iterable<double> values) {
-    _data.buffer.asFloat32List().setAll(0, values);
-  }
+  void updateAll(int idx, Iterable<double> values) =>
+    _byteDateAsTypedList(_data.buffer, 0, rowsNum * columnsNum)
+        .setAll(0, values);
 
   @override
   Vector getRow(int index, {bool tryCache = true, bool mutable = false}) {
