@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 
-class Float32MatrixIterator implements Iterator<Iterable<double>> {
-  Float32MatrixIterator(this._data, this._columns);
+class MatrixIterator implements Iterator<Iterable<double>> {
+  MatrixIterator(this._data, this._columns, this._bytesPerElement);
 
   final ByteData _data;
   final int _columns;
+  final int _bytesPerElement;
 
   Iterable<double> _current;
   int _currentRow = 0;
@@ -14,16 +15,16 @@ class Float32MatrixIterator implements Iterator<Iterable<double>> {
 
   @override
   bool moveNext() {
-    final int byteOffset = _currentRow * _columns * Float32List.bytesPerElement;
+    final int byteOffset = _currentRow * _columns * _bytesPerElement;
     if (byteOffset >= _data.buffer.lengthInBytes) {
       _current = null;
     } else {
       final totalSizeInBytes =
-          byteOffset + (_columns * Float32List.bytesPerElement);
+          byteOffset + (_columns * _bytesPerElement);
       final length = _data.buffer.lengthInBytes >= totalSizeInBytes
           ? _columns
           : (totalSizeInBytes - _data.buffer.lengthInBytes) ~/
-              Float32List.bytesPerElement;
+              _bytesPerElement;
       _current = _data.buffer.asFloat32List(byteOffset, length);
     }
     _currentRow++;
