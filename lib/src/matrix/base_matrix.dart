@@ -22,10 +22,6 @@ abstract class BaseMatrix with
   @override
   int get columnsNum => _dataManager.columnsNum;
 
-  List<Vector> get _columnsCache => _dataManager.columnsCache;
-
-  List<Vector> get _rowsCache => _dataManager.rowsCache;
-
   @override
   Iterator<Iterable<double>> get iterator => _dataManager.dataIterator;
 
@@ -99,32 +95,12 @@ abstract class BaseMatrix with
   }
 
   @override
-  Vector getRow(int index, {bool tryCache = true, bool mutable = false}) {
-    if (tryCache) {
-      _rowsCache[index] ??= Vector.from(this[index], isMutable: mutable,
-          dtype: dtype);
-      return _rowsCache[index];
-    } else {
-      return Vector.from(this[index], isMutable: mutable, dtype: dtype);
-    }
-  }
+  Vector getRow(int index, {bool tryCache = true, bool mutable = false}) =>
+      _dataManager.getRow(index, tryCache: tryCache, mutable: mutable);
 
   @override
-  Vector getColumn(int index, {bool tryCache = true, bool mutable = false}) {
-    if (_columnsCache[index] == null || !tryCache) {
-      final result = List<double>(rowsNum);
-      for (int i = 0; i < rowsNum; i++) {
-        //@TODO: find a more efficient way to get the single value
-        result[i] = _dataManager.getValues(i * columnsNum + index, 1).first;
-      }
-      final column = Vector.from(result, isMutable: mutable, dtype: dtype);
-      if (!tryCache) {
-        return column;
-      }
-      _columnsCache[index] = column;
-    }
-    return _columnsCache[index];
-  }
+  Vector getColumn(int index, {bool tryCache = true, bool mutable = false}) =>
+      _dataManager.getColumn(index, tryCache: tryCache, mutable: mutable);
 
   @override
   Matrix submatrix({ZRange rows, ZRange columns}) {
@@ -236,29 +212,8 @@ abstract class BaseMatrix with
   }
 
   @override
-  void setColumn(int columnNum, Iterable<double> columnValues) {
-    if (columnNum >= columnsNum) {
-      throw RangeError.range(columnNum, 0, columnsNum - 1, 'Wrong column '
-          'number');
-    }
-    if (columnValues.length != rowsNum) {
-      throw Exception('New column has length ${columnValues.length}, but the '
-          'matrix rows number is $rowsNum');
-    }
-    // clear rows cache
-    _rowsCache.fillRange(0, rowsNum, null);
-    _columnsCache[columnNum] = columnValues is Vector
-        ? columnValues : Vector.from(columnValues);
-    final values = columnValues.toList(growable: false);
-    for (int i = 0, j = 0; i < rowsNum * columnsNum; i++) {
-      if (i == 0 && columnNum != 0) {
-        continue;
-      }
-      if (i == columnNum || i % (j * columnsNum + columnNum) == 0) {
-        _dataManager.update(i, values[j++]);
-      }
-    }
-  }
+  void setColumn(int columnNum, Iterable<double> columnValues) =>
+      _dataManager.setColumn(columnNum, columnValues);
 
   @override
   Iterable<Vector> get rows => _generateVectors(_rowIndices, getRow);
