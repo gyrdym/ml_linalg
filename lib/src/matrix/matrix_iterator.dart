@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/data_manager/byte_data_methods.dart';
+import 'package:ml_linalg/src/matrix/byte_data_helpers/byte_data_helpers.dart';
 
 class MatrixIterator implements Iterator<Iterable<double>> {
   MatrixIterator(this._data, this._columns, this._bytesPerElement,
