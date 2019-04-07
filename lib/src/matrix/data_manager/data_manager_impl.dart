@@ -1,14 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:ml_linalg/src/matrix/data_manager/byte_data_methods.dart';
 import 'package:ml_linalg/src/matrix/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
-
-typedef ByteBufferAsTypedListFn = List<double> Function(ByteBuffer buffer,
-    int offset, int length);
-
-typedef UpdateByteDataFn = void Function(ByteData data, int offset,
-    double value, Endian endian);
 
 class DataManagerImpl implements DataManager {
   DataManagerImpl.from(
@@ -105,7 +100,8 @@ class DataManagerImpl implements DataManager {
 
   @override
   Iterator<Iterable<double>> get dataIterator =>
-      MatrixIterator(_data, columnsNum, _bytesPerElement);
+      MatrixIterator(_data, columnsNum, _bytesPerElement,
+          _convertByteBufferToTypedList);
 
   //TODO consider a check if the index is inside the _data
   @override

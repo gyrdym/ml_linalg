@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ml_linalg/src/matrix/data_manager/float32_byte_data_methods.dart';
 import 'package:ml_linalg/src/matrix/matrix_iterator.dart';
 import 'package:test/test.dart';
 
@@ -16,15 +17,16 @@ void main() {
 
     test('should be created properly', () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement);
+      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement,
+          bufferToFloat32List);
       expect(iterator.current, isNull);
     });
 
     test('should return the next value on every `moveNext` method call (9 '
         'elements, 3 columns)', () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement)
-        ..moveNext();
+      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement,
+          bufferToFloat32List)..moveNext();
       expect(iterator.current, vectorAlmostEqualTo([1.0, 2.0, 3.0]));
 
       iterator.moveNext();
@@ -40,8 +42,8 @@ void main() {
     test('should return the next value on every `moveNext` method call (9 '
         'elements, 2 columns)', () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 2, Float32List.bytesPerElement)
-        ..moveNext();
+      final iterator = MatrixIterator(data, 2, Float32List.bytesPerElement,
+          bufferToFloat32List)..moveNext();
       expect(iterator.current, vectorAlmostEqualTo([1.0, 2.0]));
 
       iterator.moveNext();
@@ -63,8 +65,8 @@ void main() {
     test('should return the next value on every `moveNext` method call (9 '
         'elements, 9 columns)', () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 9, Float32List.bytesPerElement)
-        ..moveNext();
+      final iterator = MatrixIterator(data, 9, Float32List.bytesPerElement,
+          bufferToFloat32List)..moveNext();
       expect(
           iterator.current,
           vectorAlmostEqualTo(
@@ -77,7 +79,8 @@ void main() {
     test('should return a proper boolean indicator after each `moveNext` call',
         () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement);
+      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement,
+          bufferToFloat32List);
 
       expect(iterator.moveNext(), isTrue);
       expect(iterator.moveNext(), isTrue);
