@@ -5,46 +5,59 @@ import 'package:ml_linalg/src/matrix/float32x4/float32_matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
 
 class Float32DataManager implements DataManager {
-  Float32DataManager.from(Iterable<Iterable<double>> source) :
+  Float32DataManager.from(
+      Iterable<Iterable<double>> source,
+      int bytesPerElement,
+  ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
         rowsCache = List<Vector>(source.length),
         columnsCache = List<Vector>(source.first.length),
         _data = ByteData(source.length * source.first.length *
-            Float32List.bytesPerElement) {
+            bytesPerElement) {
     final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
     updateAll(0, flattened);
   }
 
-  Float32DataManager.fromRows(Iterable<Vector> source) :
+  Float32DataManager.fromRows(
+      Iterable<Vector> source,
+      int bytesPerElement,
+  ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
         rowsCache = source.toList(growable: false),
         columnsCache = List<Vector>(source.first.length),
         _data = ByteData(source.length * source.first.length *
-            Float32List.bytesPerElement) {
+            bytesPerElement) {
     final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
     updateAll(0, flattened);
   }
 
-  Float32DataManager.fromColumns(Iterable<Vector> source) :
+  Float32DataManager.fromColumns(
+      Iterable<Vector> source,
+      int bytesPerElement,
+  ) :
         rowsNum = source.first.length,
         columnsNum = source.length,
         rowsCache = List<Vector>(source.first.length),
         columnsCache = source.toList(growable: false),
         _data = ByteData(source.length * source.first.length *
-            Float32List.bytesPerElement) {
+            bytesPerElement) {
     final flattened = _flatten2dimList(source, (i, j) => j * columnsNum + i);
     updateAll(0, flattened);
   }
 
-  Float32DataManager.fromFlattened(Iterable<double> source, int rowsNum,
-      int colsNum) :
+  Float32DataManager.fromFlattened(
+      Iterable<double> source,
+      int rowsNum,
+      int colsNum,
+      int bytesPerElement,
+  ) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
         rowsCache = List<Vector>(rowsNum),
         columnsCache = List<Vector>(colsNum),
-        _data = ByteData(rowsNum * colsNum * Float32List.bytesPerElement) {
+        _data = ByteData(rowsNum * colsNum * bytesPerElement) {
     if (source.length != rowsNum * colsNum) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowsNum x $colsNum, but given a collection of length '
