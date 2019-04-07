@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix_norm.dart';
-import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 

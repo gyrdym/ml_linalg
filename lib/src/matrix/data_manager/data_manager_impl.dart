@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/src/matrix/data_manager/data_manager.dart';
-import 'package:ml_linalg/src/matrix/float32x4/float32_matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
 
 typedef ByteBufferAsTypedListFn = List<double> Function(ByteBuffer buffer,
@@ -105,7 +105,7 @@ class DataManagerImpl implements DataManager {
 
   @override
   Iterator<Iterable<double>> get dataIterator =>
-      Float32MatrixIterator(_data, columnsNum);
+      MatrixIterator(_data, columnsNum, _bytesPerElement);
 
   //TODO consider a check if the index is inside the _data
   @override
