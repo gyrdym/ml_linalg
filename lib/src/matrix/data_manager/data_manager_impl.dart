@@ -21,7 +21,7 @@ class DataManagerImpl implements DataManager {
             bytesPerElement),
         _bytesPerElement = bytesPerElement {
     final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
-    updateAll(0, flattened);
+    _updateAll(0, flattened);
   }
 
   DataManagerImpl.fromRows(
@@ -39,7 +39,7 @@ class DataManagerImpl implements DataManager {
             bytesPerElement),
         _bytesPerElement = bytesPerElement {
     final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
-    updateAll(0, flattened);
+    _updateAll(0, flattened);
   }
 
   DataManagerImpl.fromColumns(
@@ -57,7 +57,7 @@ class DataManagerImpl implements DataManager {
             bytesPerElement),
         _bytesPerElement = bytesPerElement {
     final flattened = _flatten2dimList(source, (i, j) => j * columnsNum + i);
-    updateAll(0, flattened);
+    _updateAll(0, flattened);
   }
 
   DataManagerImpl.fromFlattened(
@@ -80,7 +80,7 @@ class DataManagerImpl implements DataManager {
           '$rowsNum x $colsNum, but given a collection of length '
           '${source.length}');
     }
-    updateAll(0, source);
+    _updateAll(0, source);
   }
 
   @override
@@ -108,16 +108,6 @@ class DataManagerImpl implements DataManager {
   List<double> getValues(int index, int length) =>
       _convertByteBufferToTypedList(_data.buffer, index * _bytesPerElement,
           length);
-
-  //TODO consider a check if the index is inside the _data
-  @override
-  void update(int idx, double value) =>
-      _updateByteData(_data, idx * _bytesPerElement, value, Endian.host);
-
-  @override
-  void updateAll(int idx, Iterable<double> values) =>
-    _convertByteBufferToTypedList(_data.buffer, 0, rowsNum * columnsNum)
-        .setAll(0, values);
 
   @override
   Vector getRow(int index, {bool tryCache = true, bool mutable = false}) {
@@ -168,10 +158,18 @@ class DataManagerImpl implements DataManager {
         continue;
       }
       if (i == columnNum || i % (j * columnsNum + columnNum) == 0) {
-        update(i, values[j++]);
+        _update(i, values[j++]);
       }
     }
   }
+
+  //TODO consider a check if the index is inside the _data
+  void _update(int idx, double value) =>
+      _updateByteData(_data, idx * _bytesPerElement, value, Endian.host);
+
+  void _updateAll(int idx, Iterable<double> values) =>
+      _convertByteBufferToTypedList(_data.buffer, 0, rowsNum * columnsNum)
+          .setAll(0, values);
 
   List<double> _flatten2dimList(
       Iterable<Iterable<double>> rows, int accessor(int i, int j)) {
