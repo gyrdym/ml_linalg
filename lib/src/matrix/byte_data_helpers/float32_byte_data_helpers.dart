@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/data_manager/byte_data_methods.dart';
+import 'package:ml_linalg/src/matrix/byte_data_helpers/byte_data_helpers.dart';
 
 final ByteBufferAsTypedListFn bufferToFloat32List =
     (ByteBuffer buffer, int offset, int length) =>

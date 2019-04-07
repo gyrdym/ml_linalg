@@ -2,7 +2,7 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ml_linalg/src/matrix/base_matrix.dart';
-import 'package:ml_linalg/src/matrix/data_manager/float32_byte_data_methods.dart';
+import 'package:ml_linalg/src/matrix/byte_data_helpers/float32_byte_data_helpers.dart';
 import 'package:ml_linalg/src/matrix/data_manager/data_manager_impl.dart';
 import 'package:ml_linalg/vector.dart';
 

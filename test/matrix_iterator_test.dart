@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/data_manager/float32_byte_data_methods.dart';
+import 'package:ml_linalg/src/matrix/byte_data_helpers/float32_byte_data_helpers.dart';
 import 'package:ml_linalg/src/matrix/matrix_iterator.dart';
 import 'package:test/test.dart';
 
