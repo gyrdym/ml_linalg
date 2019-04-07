@@ -8,7 +8,7 @@ import 'package:xrange/zrange.dart';
 /// An algebraic matrix
 abstract class Matrix {
   /// Creates a matrix from a two dimensional list
-  factory Matrix.from(Iterable<Iterable<double>> source,
+  factory Matrix.from(List<List<double>> source,
       {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -19,7 +19,7 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined row vectors
-  factory Matrix.fromRows(Iterable<Vector> source, {Type dtype = Float32x4}) {
+  factory Matrix.fromRows(List<Vector> source, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Matrix.rows(source);
@@ -29,7 +29,7 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined column vectors
-  factory Matrix.fromColumns(Iterable<Vector> source,
+  factory Matrix.fromColumns(List<Vector> source,
       {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -41,7 +41,7 @@ abstract class Matrix {
 
   /// Creates a matrix from flattened iterable of length that is equal to
   /// [rowsNum] * [columnsNum]
-  factory Matrix.flattened(Iterable<double> source, int rowsNum,
+  factory Matrix.flattened(List<double> source, int rowsNum,
       int columnsNum, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:

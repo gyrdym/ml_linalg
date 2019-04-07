@@ -108,7 +108,7 @@ abstract class BaseMatrix with
     columns ??= ZRange.closedOpen(0, columnsNum);
     final rowsNumber = rows.length;
     final columnsLength = columns.length;
-    final matrixSource = List<Iterable<double>>(rowsNumber);
+    final matrixSource = List<List<double>>(rowsNumber);
     for (final i in rows.values()) {
       matrixSource[i - rows.firstValue] =
           _dataManager.getValues(i * columnsNum + columns.firstValue,
@@ -216,16 +216,12 @@ abstract class BaseMatrix with
       _dataManager.setColumn(columnNum, columnValues);
 
   @override
-  Iterable<Vector> get rows => _generateVectors(_rowIndices, getRow);
+  Iterable<Vector> get rows =>
+      _generateVectors(_dataManager.rowIndices, getRow);
 
   @override
-  Iterable<Vector> get columns => _generateVectors(_columnIndices, getColumn);
-
-  // TODO consider caching
-  Iterable<int> get _rowIndices => ZRange.closedOpen(0, rowsNum).values();
-
-  // TODO consider caching
-  Iterable<int> get _columnIndices => ZRange.closedOpen(0, columnsNum).values();
+  Iterable<Vector> get columns =>
+      _generateVectors(_dataManager.colIndices, getColumn);
 
   @override
   Matrix fastMap<T>(T mapper(T element)) {
