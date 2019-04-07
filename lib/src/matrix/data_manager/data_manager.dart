@@ -7,8 +7,5 @@ abstract class DataManager {
   Vector getColumn(int index, {bool tryCache = true, bool mutable = false});
   void setColumn(int columnNum, Iterable<double> columnValues);
   Vector getRow(int index, {bool tryCache = true, bool mutable = false});
-
-  void update(int idx, double value);
-  void updateAll(int idx, Iterable<double> values);
   List<double> getValues(int index, int length);
 }
