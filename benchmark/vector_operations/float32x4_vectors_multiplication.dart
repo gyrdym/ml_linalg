@@ -1,5 +1,5 @@
 // Performance test of vector (10 000 000 elements in vector) multiplication operation
-// It takes approximately 1.3 second (MacBook Air mid 2017)
+// It takes approximately 1 second (MacBook Air mid 2017)
 
 import 'dart:math' as math;
 

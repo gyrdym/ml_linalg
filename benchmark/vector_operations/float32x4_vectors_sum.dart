@@ -1,5 +1,5 @@
 // Performance test of vector (10 000 000 elements in vector) addition operation
-// It takes approximately 1.3 second (MacBook Air mid 2017)
+// It takes approximately 1 second (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
