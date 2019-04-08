@@ -154,7 +154,7 @@ abstract class BaseMatrix with
   @override
   Matrix uniqueRows() {
     final checked = <Vector>[];
-    for (int i = 0; i < rowsNum; i++) {
+    for (final i in _dataManager.rowIndices) {
       final row = getRow(i);
       if (!checked.contains(row)) {
         checked.add(row);
@@ -272,8 +272,8 @@ abstract class BaseMatrix with
   Matrix _matrixMul(Matrix matrix) {
     checkColumnsAndRowsNumber(this, matrix);
     final source = List<double>(rowsNum * matrix.columnsNum);
-    for (int i = 0; i < rowsNum; i++) {
-      for (int j = 0; j < matrix.columnsNum; j++) {
+    for (final i in _dataManager.rowIndices) {
+      for (final j in (matrix as BaseMatrix)._dataManager.colIndices) {
         final element = getRow(i).dot(matrix.getColumn(j));
         source[i * matrix.columnsNum + j] = element;
       }
