@@ -278,7 +278,7 @@ abstract class BaseMatrix with
         source[i * matrix.columnsNum + j] = element;
       }
     }
-    return Matrix.flattened(source, rowsNum, matrix.columnsNum, dtype: dtype);
+    return Matrix.fromFlattened(source, rowsNum, matrix.columnsNum, dtype: dtype);
   }
 
   Matrix _matrixByVectorDiv(Vector vector) {
