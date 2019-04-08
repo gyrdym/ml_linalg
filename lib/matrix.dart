@@ -41,7 +41,7 @@ abstract class Matrix {
 
   /// Creates a matrix from flattened iterable of length that is equal to
   /// [rowsNum] * [columnsNum]
-  factory Matrix.flattened(List<double> source, int rowsNum,
+  factory Matrix.fromFlattened(List<double> source, int rowsNum,
       int columnsNum, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
