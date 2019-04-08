@@ -115,16 +115,19 @@ class DataManagerImpl implements DataManager {
           _convertByteBufferToTypedList);
 
   @override
-  Iterable<int> get colIndices => _rowsIndicesRange.values();
+  Iterable<int> get colIndices => _colsIndicesRange.values();
 
   @override
-  Iterable<int> get rowIndices => _colsIndicesRange.values();
+  Iterable<int> get rowIndices => _rowsIndicesRange.values();
 
-  //TODO consider a check if the index is inside the _data
   @override
-  List<double> getValues(int index, int length) =>
-      _convertByteBufferToTypedList(_data.buffer, index * _bytesPerElement,
-          length);
+  List<double> getValues(int index, int length) {
+    if (index * _bytesPerElement >= _data.buffer.lengthInBytes) {
+      throw RangeError.range(index, 0, rowsNum * columnsNum);
+    }
+    return _convertByteBufferToTypedList(_data.buffer, index * _bytesPerElement,
+        length);
+  }
 
   @override
   Vector getRow(int index, {bool tryCache = true, bool mutable = false}) {
@@ -142,7 +145,7 @@ class DataManagerImpl implements DataManager {
   Vector getColumn(int index, {bool tryCache = true, bool mutable = false}) {
     if (_colsCache[index] == null || !tryCache) {
       final result = List<double>(rowsNum);
-      for (int i = 0; i < rowsNum; i++) {
+      for (final i in rowIndices) {
         //@TODO: find a more efficient way to get the single value
         result[i] = getValues(i * columnsNum + index, 1).first;
       }
