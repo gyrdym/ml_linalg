@@ -477,7 +477,7 @@ print(matrix1 - matrix2);
     [21.0, 22.0, 23.0, 24.0],
     [24.0, 32.0, 53.0, 74.0],
   ]);
-  final submatrix = matrix.submatrix(rows: ZRange(0, 2));
+  final submatrix = matrix.submatrix(rows: ZRange.closedOpen(0, 2));
   print(submatrix);
   // [
   //  [11.0, 12.0, 13.0, 14.0],
@@ -556,8 +556,8 @@ final matrix = Float32x4Matrix.from([
   [112.0, 10.0,  34.0,   2.0,   10.0], // 5 Range(4, 5)
 ]);
 final result = matrix.pick(
-  rowRanges: [ZRange(0, 1), ZRange(2, 3), ZRange(4, 5)],
-  columnRanges: [ZRange(0, 1), ZRange(2, 3)],
+  rowRanges: [ZRange.closedOpen(0, 1), ZRange.closedOpen(2, 3), ZRange.closedOpen(4, 5)],
+  columnRanges: [ZRange.closedOpen(0, 1), ZRange.closedOpen(2, 3)],
 );
 print(result);
 /*
