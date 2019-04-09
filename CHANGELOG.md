@@ -1,11 +1,12 @@
 # Changelog
 
 ## 8.0.0
-- `Matrix`: `rows` constructor renamed to `fromRows` 
-- `Matrix`: `columns` constructor renamed to `fromColumns` 
-- `Matrix`: `rows` getter added 
-- `Matrix`: `columns` getter added 
-- `Matrix`: `dimensions` field added 
+- `Matrix`: 
+    - `rows` constructor renamed to `fromRows` 
+    - `columns` constructor renamed to `fromColumns` 
+    - `flattened` constructor renamed to `fromFlattened` 
+    - `rows` getter added 
+    - `columns` getter added 
 
 ## 7.0.0
 - `Matrix`: `ZRange` support (instead of the library built-in `Range`)
@@ -14,8 +15,9 @@
 - `Vector`: `unique` method refactored
 
 ## 6.1.0
-- `Vector`: normalize method added to interface and supported in `Float32x4Vector` 
-- `Vector`: rescale method added to interface and supported in `Float32x4Vector`
+- `Vector`: 
+    - normalize method added to interface and supported in `Float32x4Vector` 
+    - rescale method added to interface and supported in `Float32x4Vector`
 - `VectorBase`: cache for popular operations implemented 
 
 ## 6.0.2
