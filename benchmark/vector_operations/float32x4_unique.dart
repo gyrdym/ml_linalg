@@ -1,10 +1,10 @@
 // Performance test of vector (10 000 elements in vector) multiplication operation
-// It takes approximately 0.9 second (MacBook Air 2017)
+// It takes approximately 0.175 microseconds (MacBook Air 2017)
 
 import 'dart:math' as math;
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:ml_linalg/float32x4_vector.dart';
+import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 
 const amountOfElements = 10000;
 
