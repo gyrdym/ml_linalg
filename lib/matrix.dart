@@ -1,14 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix_norm.dart';
-import 'package:ml_linalg/src/matrix/float32x4/float32x4_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 
 /// An algebraic matrix
 abstract class Matrix {
   /// Creates a matrix from a two dimensional list
-  factory Matrix.from(List<List<double>> source, {Type dtype = Float32x4}) {
+  factory Matrix.from(List<List<double>> source,
+      {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Matrix.from(source);
@@ -18,7 +19,7 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined row vectors
-  factory Matrix.rows(List<Vector> source, {Type dtype = Float32x4}) {
+  factory Matrix.fromRows(List<Vector> source, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Matrix.rows(source);
@@ -28,7 +29,8 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined column vectors
-  factory Matrix.columns(List<Vector> source, {Type dtype = Float32x4}) {
+  factory Matrix.fromColumns(List<Vector> source,
+      {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
         return Float32x4Matrix.columns(source);
@@ -39,7 +41,7 @@ abstract class Matrix {
 
   /// Creates a matrix from flattened iterable of length that is equal to
   /// [rowsNum] * [columnsNum]
-  factory Matrix.flattened(Iterable<double> source, int rowsNum,
+  factory Matrix.fromFlattened(List<double> source, int rowsNum,
       int columnsNum, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -51,6 +53,12 @@ abstract class Matrix {
 
   Type get dtype;
 
+  /// Returns a generator of immutable row vectors of the matrix
+  Iterable<Vector> get rows;
+
+  /// Returns a generator of immutable column vectors of the matrix
+  Iterable<Vector> get columns;
+
   /// Returns a number of matrix row
   int get rowsNum;
 
@@ -58,7 +66,7 @@ abstract class Matrix {
   int get columnsNum;
 
   /// Returns a matrix row on an index equals [index]
-  Iterable<double> operator [](int index);
+  List<double> operator [](int index);
 
   /// Performs sum of the matrix and a matrix/ a vector/ a scalar/ whatever
   Matrix operator +(Object value);

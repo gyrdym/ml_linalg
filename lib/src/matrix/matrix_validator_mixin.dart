@@ -1,8 +1,6 @@
 import 'package:ml_linalg/matrix.dart';
-import 'package:ml_linalg/src/matrix/matrix_validatior.dart';
 
-mixin MatrixValidatorMixin implements MatrixValidator {
-  @override
+mixin MatrixValidatorMixin {
   void checkDimensions(Matrix first, Matrix second,
       {String errorTitle = 'Cannot perform the operation'}) {
     if (first.rowsNum != second.rowsNum ||
@@ -13,7 +11,6 @@ mixin MatrixValidatorMixin implements MatrixValidator {
     }
   }
 
-  @override
   void checkColumnsAndRowsNumber(Matrix first, Matrix second,
       {String errorTitle = 'Cannot perform the operation'}) {
     if (first.columnsNum != second.rowsNum) {
