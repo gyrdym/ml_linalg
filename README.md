@@ -198,10 +198,6 @@ At the present moment most common vector operations are implemented:
 ````
 
 ##### Euclidean distance between two vectors
-Calculated by the formula:
-
-![\[D = \sqrt{\sum_{i = 1}^{n}(A_{i} - B_{i})^{2}}\]](https://latex.codecogs.com/gif.latex?D%20%3D%20%5Csqrt%7B%5Csum_%7Bi%20%3D%201%7D%5E%7Bn%7D%28A_%7Bi%7D%20-%20B_%7Bi%7D%29%5E%7B2%7D%7D)
-
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -212,10 +208,6 @@ Calculated by the formula:
 ````
 
 ##### Manhattan distance between two vectors
-Calculated by the formula:
-
-![\[D = \sum_{i = 1}^{n}\left |A_{i} - B_{i} \right |\]](https://latex.codecogs.com/gif.latex?D%20%3D%20%5Csum_%7Bi%20%3D%201%7D%5E%7Bn%7D%5Cleft%20%7CA_%7Bi%7D%20-%20B_%7Bi%7D%20%5Cright%20%7C)
-
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -226,10 +218,6 @@ Calculated by the formula:
 ````
 
 ##### Cosine distance between two vectors
-Calculated by the formula:
-
-![\[D = 1 - cos(\theta ) = 1 - \frac{A\cdot B}{\left \| A \right \|\left \| B \right \|}\]](https://latex.codecogs.com/gif.latex?D%20%3D%201%20-%20cos%28%5Ctheta%20%29%20%3D%201%20-%20%5Cfrac%7BA%5Ccdot%20B%7D%7B%5Cleft%20%5C%7C%20A%20%5Cright%20%5C%7C%5Cleft%20%5C%7C%20B%20%5Cright%20%5C%7C%7D)
-
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
