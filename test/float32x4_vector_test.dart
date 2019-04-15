@@ -419,10 +419,8 @@ void main() {
 
     test('should find vector norm', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector.norm(Norm.euclidean), equals(closeTo(7.41, 1e-2)),
-          reason: 'Wrong norm calculation');
-      expect(vector.norm(Norm.manhattan), equals(15.0),
-          reason: 'Wrong norm calculation');
+      expect(vector.norm(Norm.euclidean), equals(closeTo(7.41, 1e-2)));
+      expect(vector.norm(Norm.manhattan), equals(15.0));
     });
 
     test('should normalize itself (eucleadean norm)', () {

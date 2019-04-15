@@ -25,6 +25,7 @@
 	    - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
 	    - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
 	    - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
+	    - [Cosine distance between two vectors](#cosine-distance-between-two-vectors)
 	    - [Vector normalization (using Euclidean norm)](#vector-normalization-using-euclidean-norm)
 	    - [Vector normalization (using Manhattan norm)](#vector-normalization-using-manhattan-norm)
 	    - [Vector rescaling (min-max normalization)](#vector-rescaling-min-max-normalization)
@@ -59,8 +60,8 @@ computation architecture. Actually, the main purpose of the library - connect su
 the pure math. So, the library contains a high performance SIMD vector class, based on 
 [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - 
 [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart). 
-Most of operations in the vector class are performed in four "threads". This kind of concurrency is reached by special 
-128-bit processor registers, which are used directly by program code.  For better understanding of the topic please read 
+Most of operations in the vector class are performed in four "threads". This kind of parallelism is reached by special 
+128-bit processor registers, which are used directly by program code. For better understanding of the topic please read 
 the [article](https://www.dartlang.org/articles/dart-vm/simd). It is also possible to implement [Float64x2](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float64x2-class.html)-based
 version of vector using existing codebase, but so far there is no need to do so.
     The class [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
@@ -197,23 +198,45 @@ At the present moment most common vector operations are implemented:
 ````
 
 ##### Euclidean distance between two vectors
+Calculated by the formula:
+
+![\[D = \sqrt{\sum_{i = 1}^{n}(A_{i} - B_{i})^{2}}\]](https://latex.codecogs.com/gif.latex?D%20%3D%20%5Csqrt%7B%5Csum_%7Bi%20%3D%201%7D%5E%7Bn%7D%28A_%7Bi%7D%20-%20B_%7Bi%7D%29%5E%7B2%7D%7D)
+
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.distanceTo(vector2);
+  final result = vector1.distanceTo(vector2, distance: Distance.euclidean);
   print(result); // ~~2.23
 ````
 
 ##### Manhattan distance between two vectors
+Calculated by the formula:
+
+![\[D = \sum_{i = 1}^{n}\left |A_{i} - B_{i} \right |\]](https://latex.codecogs.com/gif.latex?D%20%3D%20%5Csum_%7Bi%20%3D%201%7D%5E%7Bn%7D%5Cleft%20%7CA_%7Bi%7D%20-%20B_%7Bi%7D%20%5Cright%20%7C)
+
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.distanceTo(vector2, Norm.manhattan);
+  final result = vector1.distanceTo(vector2, distance: Distance.manhattan);
   print(result); // 5.0
+````
+
+##### Cosine distance between two vectors
+Calculated by the formula:
+
+![\[D = 1 - cos(\theta ) = 1 - \frac{A\cdot B}{\left \| A \right \|\left \| B \right \|}\]](https://latex.codecogs.com/gif.latex?D%20%3D%201%20-%20cos%28%5Ctheta%20%29%20%3D%201%20-%20%5Cfrac%7BA%5Ccdot%20B%7D%7B%5Cleft%20%5C%7C%20A%20%5Cright%20%5C%7C%5Cleft%20%5C%7C%20B%20%5Cright%20%5C%7C%7D)
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector1 = Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector2 = Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final result = vector1.distanceTo(vector2, distance: Distance.cosine);
+  print(result); // 0.00506
 ````
 
 ##### Vector normalization using Euclidean norm
