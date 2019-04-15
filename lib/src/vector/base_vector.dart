@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/vector/common/simd_helper.dart';
@@ -107,15 +108,15 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   // ------------
 
   @override
-  bool operator ==(Object obj) {
-    if (obj is Vector) {
+  bool operator ==(Object other) {
+    if (other is Vector) {
       // TODO: consider checking hashcode here to compare two vectors
-      if (length != obj.length) {
+      if (length != other.length) {
         return false;
       }
       for (int i = 0; i < data.length; i++) {
         if (!_simdHelper.areValuesEqual(
-            data[i], (obj as VectorDataStore<E, S>).data[i])) {
+            data[i], (other as VectorDataStore<E, S>).data[i])) {
           return false;
         }
       }
@@ -196,8 +197,31 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   double sum() => _sum ??= _simdHelper.sumLanes(data.reduce(_simdHelper.sum));
 
   @override
-  double distanceTo(Vector vector, [Norm norm = Norm.euclidean]) =>
-      (this - vector).norm(norm);
+  double distanceTo(Vector other, {
+    Distance distance = Distance.euclidean,
+  }) {
+    switch (distance) {
+      case Distance.euclidean:
+        return (this - other).norm(Norm.euclidean);
+      case Distance.manhattan:
+        return (this - other).norm(Norm.manhattan);
+      case Distance.cosine:
+        return 1 - getCosine(other);
+      default:
+        throw UnimplementedError('Unimplemented distance type - $distance');
+    }
+  }
+
+  @override
+  double getCosine(Vector other) {
+    final cosine = (dot(other) / norm(Norm.euclidean) /
+        other.norm(Norm.euclidean));
+    if (cosine.isInfinite || cosine.isNaN) {
+      throw Exception('It is impossible to find cosine of an angle of two '
+          'vectors if at least one of the vectors is zero-vector');
+    }
+    return cosine;
+  }
 
   @override
   double mean() => sum() / length;

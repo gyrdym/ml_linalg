@@ -1,5 +1,11 @@
 # Changelog
 
+## 9.0.0
+- `Vector`:
+    - `Distance` enum added
+    - `distanceTo` method refactored
+    - cosine distance calculation added
+
 ## 8.0.0
 - `Matrix`: 
     - `rows` constructor renamed to `fromRows` 

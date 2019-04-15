@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 
 import 'norm.dart';
@@ -108,9 +109,13 @@ abstract class Vector implements Iterable<double> {
   /// Returns a dot (inner) product of [this] and [vector]
   double dot(Vector vector);
 
-  /// Returns a distance between [this] and [vector] with vector norm type
-  /// considering
-  double distanceTo(Vector vector, [Norm norm = Norm.euclidean]);
+  /// Returns a distance between [this] and [vector]
+  double distanceTo(Vector vector, {
+    Distance distance = Distance.euclidean,
+  });
+
+  /// Returns cosine of the angle between [this] and [other]
+  double getCosine(Vector other);
 
   /// Returns a mean value of [this] vector
   double mean();

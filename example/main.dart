@@ -1,3 +1,4 @@
+import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/linalg.dart';
 
 void main() {
@@ -16,6 +17,7 @@ void main() {
   scalarDivision();
   euclideanDistanceBetweenVectors();
   manhattanDistanceBetweenVectors();
+  cosineDistanceBetweenVectors();
 }
 
 void addition() {
@@ -116,6 +118,13 @@ void euclideanDistanceBetweenVectors() {
 void manhattanDistanceBetweenVectors() {
   final vector1 = Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.distanceTo(vector2, Norm.manhattan);
+  final result = vector1.distanceTo(vector2, distance: Distance.manhattan);
   print(result); // 5.0
+}
+
+void cosineDistanceBetweenVectors() {
+  final vector1 = Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector2 = Vector.from([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final result = vector1.distanceTo(vector2, distance: Distance.cosine);
+  print(result); // 0.00506
 }
