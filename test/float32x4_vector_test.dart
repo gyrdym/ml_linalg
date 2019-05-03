@@ -567,31 +567,6 @@ void main() {
       expect(() => vector[100], throwsRangeError);
     });
 
-    test('should not allow to assign a value via indexed access if it is '
-        'immutable ([]= operator)', () {
-      final vector = Float32x4Vector.from([1.0, 2.0]); // immutable by default
-      expect(() => vector[0] = 3.0, throwsUnsupportedError);
-    });
-
-    test('should perform value assignment via indexed access if it is mutable '
-        '([]= operator)', () {
-      final vector =
-          Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
-      vector[0] = 6.0;
-      vector[1] = 7.0;
-      vector[2] = 8.0;
-      vector[3] = 9.0;
-      vector[4] = 10.0;
-      expect(vector, equals([6.0, 7.0, 8.0, 9.0, 10.0]));
-    });
-
-    test('should throw range error if one tries to set a value on non-existing '
-        'index', () {
-      final vector =
-          Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0], isMutable: true);
-      expect(() => vector[20] = 2.0, throwsRangeError);
-    });
-
     test('should cut out a subvector', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0]);
       final actual = vector.subvector(1, 5);

@@ -133,11 +133,11 @@ class DataManagerImpl implements DataManager {
   Vector getRow(int index, {bool tryCache = true, bool mutable = false}) {
     if (tryCache) {
       _rowsCache[index] ??= Vector.from(getValues(index * columnsNum,
-          columnsNum), isMutable: mutable, dtype: _dtype);
+          columnsNum), dtype: _dtype);
       return _rowsCache[index];
     } else {
       return Vector.from(getValues(index * columnsNum, columnsNum),
-          isMutable: mutable, dtype: _dtype);
+          dtype: _dtype);
     }
   }
 
@@ -149,7 +149,7 @@ class DataManagerImpl implements DataManager {
         //@TODO: find a more efficient way to get the single value
         result[i] = getValues(i * columnsNum + index, 1).first;
       }
-      final column = Vector.from(result, isMutable: mutable, dtype: _dtype);
+      final column = Vector.from(result, dtype: _dtype);
       if (!tryCache) {
         return column;
       }
