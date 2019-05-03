@@ -238,10 +238,9 @@ abstract class BaseMatrix with
 
   double _findExtrema(double callback(Vector vector)) {
     int i = 0;
-    return callback(reduceRows((result, row) {
-      result[i++] = callback(row);
-      return result;
-    }, initValue: Vector.zero(rowsNum, isMutable: true)));
+    final minValues = List<double>(rowsNum);
+    for (final row in rows) minValues[i++] = callback(row);
+    return callback(Vector.from(minValues, dtype: dtype));
   }
 
   Vector _reduce(

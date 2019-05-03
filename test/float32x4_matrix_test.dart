@@ -769,7 +769,6 @@ void main() {
       final column2 = matrix.toVector(mutable: true);
 
       expect(column1 is Vector, isTrue);
-      expect(column1.isMutable, isTrue);
       expect(column1, equals([1.0, 5.0, 9.0]));
       expect(identical(column1, column2), isFalse);
       expect(column1, equals(column2));
@@ -794,7 +793,6 @@ void main() {
       final row2 = matrix.toVector(mutable: true);
 
       expect(row1 is Vector, isTrue);
-      expect(row1.isMutable, isTrue);
       expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
       expect(identical(row1, row2), isFalse);
       expect(row1, equals(row2));

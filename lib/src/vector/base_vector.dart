@@ -17,7 +17,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   BaseVector.from(
     Iterable<double> source,
     this._bucketSize,
-    this.isMutable,
     this._typedListFactory,
     this._simdHelper,
   ) : length = source.length {
@@ -28,7 +27,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this.length,
     int seed,
     this._bucketSize,
-    this.isMutable,
     this._typedListFactory,
     this._simdHelper,
   ) {
@@ -41,7 +39,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this.length,
     double value,
     this._bucketSize,
-    this.isMutable,
     this._typedListFactory,
     this._simdHelper,
   ) {
@@ -52,7 +49,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   BaseVector.zero(
     this.length,
     this._bucketSize,
-    this.isMutable,
     this._typedListFactory,
     this._simdHelper,
   ) {
@@ -64,7 +60,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     S source,
     this.length,
     this._bucketSize,
-    this.isMutable,
     this._typedListFactory,
     this._simdHelper,
   ) {
@@ -81,9 +76,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   final Type dtype = Float32x4;
 
-  @override
-  final bool isMutable;
-
   final int _bucketSize;
   final SimdHelper<E, S> _simdHelper;
   final TypedListFactory _typedListFactory;
@@ -95,7 +87,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
-  // Vector's cache TODO: move to cache manager
+  // Vector's cache
   final Map<Norm, double> _cachedNorms = {};
   double _maxValue;
   double _minValue;
@@ -105,7 +97,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   Vector _abs;
   double _sum;
   int _hash;
-  // ------------
 
   @override
   bool operator ==(Object other) {
@@ -302,7 +293,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
       list[i] =
           mapper(data[i] as T, offsetStart, math.min(offsetEnd, length - 1));
     }
-    return Vector.fromSimdList(list, length, isMutable: false, dtype: dtype);
+    return Vector.fromSimdList(list, length, dtype: dtype);
   }
 
   @override
@@ -311,16 +302,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     final base = (index / _bucketSize).floor();
     final offset = index - base * _bucketSize;
     return _simdHelper.getLaneByIndex(data[base], offset);
-  }
-
-  @override
-  void operator []=(int index, double value) {
-    if (!isMutable) throw _dontMutateError();
-    if (index >= length) throw RangeError.index(index, this);
-    final base = (index / _bucketSize).floor();
-    final offset = index - base * _bucketSize;
-    data[base] = _simdHelper.mutate(data[base], offset, value);
-    _invalidateCache();
   }
 
   @override
@@ -402,7 +383,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], scalar);
     }
-    return Vector.fromSimdList(list, length, isMutable: false, dtype: dtype);
+    return Vector.fromSimdList(list, length, dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise
@@ -412,7 +393,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], simdVal);
     }
-    return Vector.fromSimdList(list, length, isMutable: false, dtype: dtype);
+    return Vector.fromSimdList(list, length, dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise
@@ -423,7 +404,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], (vector as VectorDataStore<E, S>).data[i]);
     }
-    return Vector.fromSimdList(list, length, isMutable: false, dtype: dtype);
+    return Vector.fromSimdList(list, length, dtype: dtype);
   }
 
   Vector _elementWiseSelfOperation(E operation(E element, [int index])) {
@@ -431,7 +412,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     for (int i = 0; i < data.length; i++) {
       list[i] = operation(data[i], i);
     }
-    return Vector.fromSimdList(list, length, isMutable: false, dtype: dtype);
+    return Vector.fromSimdList(list, length, dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising
@@ -441,7 +422,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     for (int i = 0; i < data.length; i++) {
       list[i] = _simdToIntPow(data[i], exp);
     }
-    return Vector.fromSimdList(list, length, isMutable: false, dtype: dtype);
+    return Vector.fromSimdList(list, length, dtype: dtype);
   }
 
   Vector _matrixMul(Matrix matrix) {
@@ -455,20 +436,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
         matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
     return Vector.from(source, dtype: dtype);
   }
-
-  void _invalidateCache() {
-    _maxValue = null;
-    _minValue = null;
-    _normalized = null;
-    _rescaled = null;
-    _unique = null;
-    _abs = null;
-    _sum = null;
-    _cachedNorms.clear();
-  }
-
-  UnsupportedError _dontMutateError() =>
-      UnsupportedError('mutation operations unsupported for immutable vectors');
 
   RangeError _mismatchLengthError() =>
       RangeError('Vectors length must be equal');

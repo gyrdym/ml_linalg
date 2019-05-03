@@ -29,21 +29,18 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
 
   /// Creates a vector from collection
   Float32x4Vector.from(Iterable<double> source, {
-    bool isMutable = false,
     TypedListFactoryFactory typedListFactoryFactory =
     const Float32ListFactoryFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.from(
       source,
       bucketSize,
-      isMutable,
       typedListFactoryFactory.create(),
       simdHelperFactory.create(),
   );
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
   Float32x4Vector.fromSimdList(Float32x4List source, int origLength, {
-    bool isMutable = false,
     TypedListFactoryFactory typedListFactoryFactory =
     const Float32ListFactoryFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -51,7 +48,6 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
     source,
     origLength,
     bucketSize,
-    isMutable,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
   );
@@ -67,7 +63,6 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
     length,
     value,
     bucketSize,
-    isMutable,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
   );
@@ -82,7 +77,6 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
   }) : super.zero(
     length,
     bucketSize,
-    isMutable,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
   );
@@ -99,7 +93,6 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
     length,
     seed,
     bucketSize,
-    isMutable,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
   );
