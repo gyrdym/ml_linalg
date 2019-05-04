@@ -284,15 +284,9 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   Vector unique() => _unique ??= Vector.from(Set.from(this), dtype: dtype);
 
   @override
-  Vector fastMap<T>(
-      T mapper(T element, int offsetStartIdx, int offsetEndIdx)) {
+  Vector fastMap<T>(T mapper(T element)) {
     final list = _simdHelper.createList(data.length) as List<T>;
-    for (int i = 0; i < data.length; i++) {
-      final offsetStart = i * _bucketSize;
-      final offsetEnd = offsetStart + _bucketSize - 1;
-      list[i] =
-          mapper(data[i] as T, offsetStart, math.min(offsetEnd, length - 1));
-    }
+    for (int i = 0; i < data.length; i++) list[i] = mapper(data[i] as T);
     return Vector.fromSimdList(list, length, dtype: dtype);
   }
 

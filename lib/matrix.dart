@@ -7,7 +7,10 @@ import 'package:xrange/zrange.dart';
 
 /// An algebraic matrix
 abstract class Matrix {
-  /// Creates a matrix from a two dimensional list
+  /// Creates a matrix from a two dimensional list, every nested list is a
+  /// representation for a row
+  /// There is no check of lists lengths in source due to performance,
+  /// keep it in mind, don't create a matrix from lists of different lengths
   factory Matrix.from(List<List<double>> source,
       {Type dtype = Float32x4}) {
     switch (dtype) {
@@ -19,6 +22,8 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined row vectors
+  /// There is no check of vectors lengths in source due to performance,
+  /// keep it in mind, don't create a matrix from vectors of different lengths
   factory Matrix.fromRows(List<Vector> source, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -29,6 +34,8 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined column vectors
+  /// There is no check of vectors lengths in source due to performance,
+  /// keep it in mind, don't create a matrix from vectors of different lengths
   factory Matrix.fromColumns(List<Vector> source,
       {Type dtype = Float32x4}) {
     switch (dtype) {
@@ -93,10 +100,10 @@ abstract class Matrix {
   Matrix pick({Iterable<ZRange> rowRanges, Iterable<ZRange> columnRanges});
 
   /// Returns a column of the matrix, resided on [index]
-  Vector getColumn(int index, {bool tryCache = true, bool mutable = false});
+  Vector getColumn(int index, {bool tryCache = true});
 
   /// Returns a row of the matrix, resided on [index]
-  Vector getRow(int index, {bool tryCache = true, bool mutable = false});
+  Vector getRow(int index, {bool tryCache = true});
 
   /// Reduces all the matrix columns to only column, using [combiner] function
   Vector reduceColumns(Vector combiner(Vector combine, Vector vector),
@@ -123,7 +130,7 @@ abstract class Matrix {
   ///
   /// It fails, if the matrix's both numbers of columns and rows are greater
   /// than `1`
-  Vector toVector({bool mutable = false});
+  Vector toVector();
 
   /// Returns max value of the matrix
   double max();
@@ -134,12 +141,8 @@ abstract class Matrix {
   /// Returns a norm of a matrix
   double norm([MatrixNorm norm]);
 
-  /// Sets the new values for the specific column
-  ///
-  /// [columnNum] - 0-based column number
-  /// [columnValues] - values, that are going to be placed one by one in the
-  /// target column
-  void setColumn(int columnNum, Iterable<double> columnValues);
+  /// Returns a new matrix with inserted column
+  Matrix insertColumns(int index, List<Vector> columns);
 
   /// Extracts non-repeated matrix rows and pack them into matrix
   Matrix uniqueRows();

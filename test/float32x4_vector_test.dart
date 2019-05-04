@@ -312,12 +312,7 @@ void main() {
         'a time', () {
       final vector = Float32x4Vector.from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       int iteration = 0;
-      final actual = vector.fastMap((Float32x4 element, int start, int end) {
-        if (iteration == 0) {
-          expect([start, end], equals([0, 3]));
-        } else if (iteration == 1) {
-          expect([start, end], equals([4, 5]));
-        }
+      final actual = vector.fastMap((Float32x4 element) {
         iteration++;
         return element.scale(3.0);
       });

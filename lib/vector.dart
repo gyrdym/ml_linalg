@@ -126,8 +126,7 @@ abstract class Vector implements Iterable<double> {
   /// Returns rescaled (min-max normed) version of this vector
   Vector rescale();
 
-  Vector fastMap<E>(
-      E mapper(E element, int offsetStartIdx, int offsetEndIdx));
+  Vector fastMap<E>(E mapper(E element));
 
   /// Cuts out a part of the vector
   Vector subvector(int start, [int end]);

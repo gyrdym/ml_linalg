@@ -12,24 +12,21 @@ class Float32x4Matrix extends BaseMatrix {
           source,
           Float32List.bytesPerElement,
           Float32x4,
-          bufferToFloat32List,
-          updateByteData));
+          bufferToFloat32List));
 
   Float32x4Matrix.columns(List<Vector> source) :
         super(DataManagerImpl.fromColumns(
           source,
           Float32List.bytesPerElement,
           Float32x4,
-          bufferToFloat32List,
-          updateByteData));
+          bufferToFloat32List));
 
   Float32x4Matrix.rows(List<Vector> source) :
         super(DataManagerImpl.fromRows(
           source,
           Float32List.bytesPerElement,
           Float32x4,
-          bufferToFloat32List,
-          updateByteData));
+          bufferToFloat32List));
 
   Float32x4Matrix.flattened(List<double> source, int rowsNum,
       int columnsNum) :
@@ -39,8 +36,7 @@ class Float32x4Matrix extends BaseMatrix {
           columnsNum,
           Float32List.bytesPerElement,
           Float32x4,
-          bufferToFloat32List,
-          updateByteData));
+          bufferToFloat32List));
 
   @override
   final Type dtype = Float32x4;
