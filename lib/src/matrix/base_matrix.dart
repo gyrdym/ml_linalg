@@ -212,8 +212,16 @@ abstract class BaseMatrix with
   }
 
   @override
-  void setColumn(int columnNum, Iterable<double> columnValues) =>
-      _dataManager.setColumn(columnNum, columnValues);
+  Matrix insertColumns(int targetIdx, List<Vector> columns) {
+    final newColumns = List<Vector>(columnsNum + columns.length)
+      ..setRange(targetIdx, targetIdx + columns.length, columns);
+    var i = 0;
+    for (final column in this.columns) {
+      if (i == targetIdx) i += columns.length;
+      newColumns[i++] = column;
+    }
+    return Matrix.fromColumns(newColumns, dtype: dtype);
+  }
 
   @override
   Iterable<Vector> get rows =>
@@ -226,8 +234,7 @@ abstract class BaseMatrix with
   @override
   Matrix fastMap<T>(T mapper(T element)) {
     final source = List<Vector>.generate(
-        rowsNum, (int i) => (getRow(i)).fastMap(
-            (T element, int startOffset, int endOffset) => mapper(element)));
+        rowsNum, (int i) => getRow(i).fastMap(mapper));
     return Matrix.fromRows(source, dtype: dtype);
   }
 

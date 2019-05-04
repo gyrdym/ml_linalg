@@ -876,8 +876,8 @@ void main() {
     });
   });
 
-  group('Float32x4Matrix.setColumn', () {
-    test('should set a new column by column index', () {
+  group('Float32x4Matrix.insertColumn', () {
+    test('should insert a new column by column index', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -885,22 +885,22 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final newCol = [100.0, 200.0, 300.0, 400.0, 500.0];
-      matrix.setColumn(1, newCol);
+      final newCol = Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]);
+      final newMatrix = matrix.insertColumns(1, [newCol]);
 
-      expect(matrix.getColumn(1), equals(newCol));
-      expect(matrix.getRow(0), equals([4.0, 100.0, 12.0, 16.0, 34.0]));
-      expect(matrix.getRow(4), equals([112.0, 500.0, 34.0, 2.0, 10.0]));
-      expect(matrix, equals([
-        [4.0, 100.0, 12.0, 16.0, 34.0],
-        [20.0, 200.0, 28.0, 32.0, 23.0],
-        [36.0, 300.0, -8.0, -12.0, 12.0],
-        [16.0, 400.0, -18.0, 3.0, 11.0],
-        [112.0, 500.0, 34.0, 2.0, 10.0],
+      expect(newMatrix.getColumn(1), equals(newCol));
+      expect(newMatrix.getRow(0), equals([4.0, 100.0, 8.0, 12.0, 16.0, 34.0]));
+      expect(newMatrix.getRow(4), equals([112.0, 500.0, 10.0, 34.0, 2.0, 10.0]));
+      expect(newMatrix, equals([
+        [4.0, 100.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 200.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, 300.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 400.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 500.0, 10.0, 34.0, 2.0, 10.0],
       ]));
     });
 
-    test('should set a new column at the very first index', () {
+    test('should insert a new column at the very first index', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -908,20 +908,20 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final newCol = [100.0, 200.0, 300.0, 400.0, 500.0];
-      matrix.setColumn(0, newCol);
+      final newCol = Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]);
+      final newMatrix = matrix.insertColumns(0, [newCol]);
 
-      expect(matrix.getColumn(0), equals(newCol));
-      expect(matrix, equals([
-        [100.0, 8.0, 12.0, 16.0, 34.0],
-        [200.0, 24.0, 28.0, 32.0, 23.0],
-        [300.0, .0, -8.0, -12.0, 12.0],
-        [400.0, 1.0, -18.0, 3.0, 11.0],
-        [500.0, 10.0, 34.0, 2.0, 10.0],
+      expect(newMatrix.getColumn(0), equals(newCol));
+      expect(newMatrix, equals([
+        [100.0, 4.0, 8.0, 12.0, 16.0, 34.0],
+        [200.0, 20.0, 24.0, 28.0, 32.0, 23.0],
+        [300.0, 36.0, .0, -8.0, -12.0, 12.0],
+        [400.0, 16.0, 1.0, -18.0, 3.0, 11.0],
+        [500.0, 112.0, 10.0, 34.0, 2.0, 10.0],
       ]));
     });
 
-    test('should set a new column at the very last index', () {
+    test('should set a new column at penultimate index', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -929,16 +929,146 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final newCol = [100.0, 200.0, 300.0, 400.0, 500.0];
-      matrix.setColumn(4, newCol);
+      final newCol = Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]);
+      final newMatrix = matrix.insertColumns(4, [newCol]);
 
-      expect(matrix.getColumn(4), equals(newCol));
-      expect(matrix, equals([
-        [4.0, 8.0, 12.0, 16.0, 100.0],
-        [20.0, 24.0, 28.0, 32.0, 200.0],
-        [36.0, .0, -8.0, -12.0, 300.0],
-        [16.0, 1.0, -18.0, 3.0, 400.0],
-        [112.0, 10.0, 34.0, 2.0, 500.0],
+      expect(newMatrix.getColumn(4), equals(newCol));
+      expect(newMatrix, equals([
+        [4.0, 8.0, 12.0, 16.0, 100.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 200.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 300.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 400.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 500.0, 10.0],
+      ]));
+    });
+
+    test('should set a new column at very last index', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final newCol = Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]);
+      final newMatrix = matrix.insertColumns(5, [newCol]);
+
+      expect(newMatrix.getColumn(5), equals(newCol));
+      expect(newMatrix, equals([
+        [4.0, 8.0, 12.0, 16.0, 34.0, 100.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0, 200.0],
+        [36.0, .0, -8.0, -12.0, 12.0, 300.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0, 400.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0, 500.0],
+      ]));
+    });
+
+    test('should insert new columns by column index', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final newCols = [
+        Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]),
+        Vector.from([-100.0, -200.0, -300.0, -400.0, -500.0]),
+      ];
+      final newMatrix = matrix.insertColumns(1, newCols);
+
+      expect([
+        newMatrix.getColumn(1),
+        newMatrix.getColumn(2),
+      ], equals(newCols));
+
+      expect(newMatrix.getRow(0),
+          equals([4.0, 100.0, -100.0, 8.0, 12.0, 16.0, 34.0]));
+      expect(newMatrix.getRow(4),
+          equals([112.0, 500.0, -500.0, 10.0, 34.0, 2.0, 10.0]));
+      expect(newMatrix, equals([
+        [4.0, 100.0, -100.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 200.0, -200.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, 300.0, -300.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 400.0, -400.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 500.0, -500.0, 10.0, 34.0, 2.0, 10.0],
+      ]));
+    });
+
+    test('should insert new columns at the very first index', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final newCols = [
+        Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]),
+        Vector.from([-100.0, -200.0, -300.0, -400.0, -500.0]),
+      ];
+      final newMatrix = matrix.insertColumns(0, newCols);
+
+      expect([
+        newMatrix.getColumn(0),
+        newMatrix.getColumn(1),
+      ], equals(newCols));
+
+      expect(newMatrix, equals([
+        [100.0, -100.0, 4.0, 8.0, 12.0, 16.0, 34.0],
+        [200.0, -200.0, 20.0, 24.0, 28.0, 32.0, 23.0],
+        [300.0, -300.0, 36.0, .0, -8.0, -12.0, 12.0],
+        [400.0, -400.0, 16.0, 1.0, -18.0, 3.0, 11.0],
+        [500.0, -500.0, 112.0, 10.0, 34.0, 2.0, 10.0],
+      ]));
+    });
+
+    test('should set new columns at penultimate index', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final newCol = Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]);
+      final newMatrix = matrix.insertColumns(4, [newCol]);
+
+      expect(newMatrix.getColumn(4), equals(newCol));
+      expect(newMatrix, equals([
+        [4.0, 8.0, 12.0, 16.0, 100.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 200.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 300.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 400.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 500.0, 10.0],
+      ]));
+    });
+
+    test('should set new columns at very last index', () {
+      final matrix = Float32x4Matrix.from([
+        [4.0, 8.0, 12.0, 16.0, 34.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0],
+        [36.0, .0, -8.0, -12.0, 12.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0],
+      ]);
+      final newCols = [
+        Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]),
+        Vector.from([-100.0, -200.0, -300.0, -400.0, -500.0]),
+      ];
+      final newMatrix = matrix.insertColumns(5, newCols);
+
+      expect([
+        newMatrix.getColumn(5),
+        newMatrix.getColumn(6),
+      ], equals(newCols));
+
+      expect(newMatrix, equals([
+        [4.0, 8.0, 12.0, 16.0, 34.0, 100.0, -100.0],
+        [20.0, 24.0, 28.0, 32.0, 23.0, 200.0, -200.0],
+        [36.0, .0, -8.0, -12.0, 12.0, 300.0, -300.0],
+        [16.0, 1.0, -18.0, 3.0, 11.0, 400.0, -400.0],
+        [112.0, 10.0, 34.0, 2.0, 10.0, 500.0, -500.0],
       ]));
     });
 
@@ -950,13 +1080,12 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final newCol = [100.0, 200.0, 300.0, 400.0, 500.0, 1000.0];
-
-      expect(() => matrix.setColumn(4, newCol), throwsException);
+      final newCol = Vector.from([100.0, 200.0, 300.0, 400.0, 500.0, 1000.0]);
+      expect(() => matrix.insertColumns(4, [newCol]), throwsRangeError);
     });
 
-    test('should throw an error if the passed column number is greater than or '
-        'equal to the total number of columns', () {
+    test('should throw an error if the passed column index is greater than or '
+        'equal to the total number of new columns', () {
       final matrix = Float32x4Matrix.from([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -964,9 +1093,9 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final newCol = [100.0, 200.0, 300.0, 400.0, 500.0];
+      final newCol = Vector.from([100.0, 200.0, 300.0, 400.0, 500.0]);
 
-      expect(() => matrix.setColumn(5, newCol), throwsRangeError);
+      expect(() => matrix.insertColumns(6, [newCol]), throwsRangeError);
     });
   });
 

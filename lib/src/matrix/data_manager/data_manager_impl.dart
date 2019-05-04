@@ -12,7 +12,6 @@ class DataManagerImpl implements DataManager {
       int bytesPerElement,
       this._dtype,
       this._convertByteBufferToTypedList,
-      this._updateByteData,
   ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
@@ -32,7 +31,6 @@ class DataManagerImpl implements DataManager {
       int bytesPerElement,
       this._dtype,
       this._convertByteBufferToTypedList,
-      this._updateByteData,
   ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
@@ -52,7 +50,6 @@ class DataManagerImpl implements DataManager {
       int bytesPerElement,
       this._dtype,
       this._convertByteBufferToTypedList,
-      this._updateByteData,
   ) :
         rowsNum = source.first.length,
         columnsNum = source.length,
@@ -74,7 +71,6 @@ class DataManagerImpl implements DataManager {
       int bytesPerElement,
       this._dtype,
       this._convertByteBufferToTypedList,
-      this._updateByteData,
   ) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
@@ -107,7 +103,6 @@ class DataManagerImpl implements DataManager {
   final Type _dtype;
 
   final ByteBufferAsTypedListFn _convertByteBufferToTypedList;
-  final UpdateByteDataFn _updateByteData;
 
   @override
   Iterator<Iterable<double>> get dataIterator =>
@@ -157,35 +152,6 @@ class DataManagerImpl implements DataManager {
     }
     return _colsCache[index];
   }
-
-  @override
-  void setColumn(int columnNum, Iterable<double> columnValues) {
-    if (columnNum >= columnsNum) {
-      throw RangeError.range(columnNum, 0, columnsNum - 1, 'Wrong column '
-          'number');
-    }
-    if (columnValues.length != rowsNum) {
-      throw Exception('New column has length ${columnValues.length}, but the '
-          'matrix rows number is $rowsNum');
-    }
-    // clear rows cache
-    _rowsCache.fillRange(0, rowsNum, null);
-    _colsCache[columnNum] = columnValues is Vector
-        ? columnValues : Vector.from(columnValues);
-    final values = columnValues.toList(growable: false);
-    for (int i = 0, j = 0; i < rowsNum * columnsNum; i++) {
-      if (i == 0 && columnNum != 0) {
-        continue;
-      }
-      if (i == columnNum || i % (j * columnsNum + columnNum) == 0) {
-        _update(i, values[j++]);
-      }
-    }
-  }
-
-  //TODO consider a check if the index is inside the _data
-  void _update(int idx, double value) =>
-      _updateByteData(_data, idx * _bytesPerElement, value, Endian.host);
 
   void _updateAll(int idx, Iterable<double> values) =>
       _convertByteBufferToTypedList(_data.buffer, 0, rowsNum * columnsNum)
