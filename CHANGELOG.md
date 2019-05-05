@@ -1,5 +1,18 @@
 # Changelog
 
+## 10.0.0
+- `Vector`:
+    - removed possibility to mutate an instance of the Vector:
+        - `isMutable` flag removed
+        - `[]=` operator removed
+- `Matrix`:
+    - removed possibility to mutate an instance of the Matrix:
+        - `setColumn` method removed
+    - `insertColumns` method added
+    - `Matrix.from` renamed to `Matrix.fromList`
+    - `Matrix.fromFlattened` renamed to `Matrix.fromFlattenedList` 
+    - benchmarks added for checking matrix initialization performance 
+
 ## 9.0.0
 - `Vector`:
     - `Distance` enum added
