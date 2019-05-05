@@ -54,6 +54,10 @@ class Float32x4Helper
   Float32x4List createList(int length) => Float32x4List(length);
 
   @override
+  Float32x4List createListFrom(List<Float32x4> source) =>
+      Float32x4List.fromList(source);
+
+  @override
   double getLaneByIndex(Float32x4 value, int offset) {
     switch (offset) {
       case 0:

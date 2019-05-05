@@ -28,9 +28,9 @@ class VectorMulBenchmark extends BenchmarkBase {
   @override
   void setup() {
     final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
-    vector1 = Float32x4Vector.from(List<double>.generate(
+    vector1 = Float32x4Vector.fromList(List<double>.generate(
         amountOfElements, (int idx) => generator.nextDouble()));
-    vector2 = Float32x4Vector.from(List<double>.generate(
+    vector2 = Float32x4Vector.fromList(List<double>.generate(
         amountOfElements, (int idx) => generator.nextDouble()));
   }
 

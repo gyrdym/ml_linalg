@@ -17,7 +17,7 @@ class VectorInitializationBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    Float32x4Vector.from(List<double>.filled(amountOfElements, 1.0));
+    Float32x4Vector.fromList(List<double>.filled(amountOfElements, 1.0));
   }
 }
 

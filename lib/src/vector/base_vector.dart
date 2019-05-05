@@ -7,21 +7,24 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/vector/common/simd_helper.dart';
 import 'package:ml_linalg/src/vector/common/typed_list_factory.dart';
-import 'package:ml_linalg/src/vector/common/vector_data_store.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/core.dart';
+import 'package:quiver/iterables.dart';
 
 abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
-    implements Vector, VectorDataStore<E, S> {
+    implements Vector {
 
-  BaseVector.from(
-    Iterable<double> source,
+  BaseVector.fromList(
+    List<double> source,
     this._bucketSize,
     this._typedListFactory,
     this._simdHelper,
-  ) : length = source.length {
-    data = _convertCollectionToSIMDList(source.toList(growable: false));
-  }
+  ) : length = source.length, _genInnerList = (() sync* {
+    final numOfBuckets = (source.length / _bucketSize).ceil();
+    final data = _simdHelper.createList(numOfBuckets);
+    yield _genSimdList<E, S>(source, _bucketSize, data,
+        _simdHelper.createFromList);
+  });
 
   BaseVector.randomFilled(
     this.length,
@@ -32,7 +35,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   ) {
     final random = math.Random(seed);
     final source = List<double>.generate(length, (_) => random.nextDouble());
-    data = _convertCollectionToSIMDList(source);
+//    data = _genSimdList(source);
   }
 
   BaseVector.filled(
@@ -43,7 +46,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) {
     final source = List<double>.filled(length, value);
-    data = _convertCollectionToSIMDList(source);
+//    data = _genSimdList(source);
   }
 
   BaseVector.zero(
@@ -53,7 +56,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) {
     final source = List<double>.filled(length, 0.0);
-    data = _convertCollectionToSIMDList(source);
+//    data = _genSimdList(source);
   }
 
   BaseVector.fromSimdList(
@@ -63,12 +66,16 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._typedListFactory,
     this._simdHelper,
   ) {
-    data = source;
+    _data = source;
   }
+
+  final Function _genInnerList;
+
+  S _data;
 
   @override
   Iterator<double> get iterator =>
-      _typedListFactory.createIterator((data as TypedData).buffer, length);
+      _typedListFactory.createIterator((_innerList as TypedData).buffer, length);
 
   @override
   final int length;
@@ -80,10 +87,8 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   final SimdHelper<E, S> _simdHelper;
   final TypedListFactory _typedListFactory;
 
-  @override
-  S data;
-
-  S get _dataWithoutLastBucket => _simdHelper.sublist(data, 0, data.length - 1);
+  Iterable<E> get _dataWithoutLastBucket => _innerList
+      .take(_innerList.length - 1);
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
@@ -100,24 +105,19 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   @override
   bool operator ==(Object other) {
-    if (other is Vector) {
+    if (other is BaseVector<E, S>) {
       // TODO: consider checking hashcode here to compare two vectors
       if (length != other.length) {
         return false;
       }
-      for (int i = 0; i < data.length; i++) {
-        if (!_simdHelper.areValuesEqual(
-            data[i], (other as VectorDataStore<E, S>).data[i])) {
-          return false;
-        }
-      }
-      return true;
+      return zip<E>([_innerList, other._innerList]).any((values) =>
+          _simdHelper.areValuesEqual(values.first, values.last));
     }
     return false;
   }
 
   @override
-  int get hashCode => _hash ??= hashObjects(data);
+  int get hashCode => _hash ??= hashObjects(_innerList);
 
   @override
   Vector operator +(Object value) {
@@ -185,7 +185,8 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   /// Returns sum of all vector components
   @override
-  double sum() => _sum ??= _simdHelper.sumLanes(data.reduce(_simdHelper.sum));
+  double sum() => _sum ??= _simdHelper.sumLanes(_innerList
+      .reduce(_simdHelper.sum));
 
   @override
   double distanceTo(Vector other, {
@@ -235,16 +236,17 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     if (_maxValue == null) {
       if (_isLastBucketNotFull) {
         var max = -double.infinity;
-        final listOnlyWithFullBuckets = _dataWithoutLastBucket;
-        if (listOnlyWithFullBuckets.isNotEmpty) {
-          max = _simdHelper.getMaxLane(listOnlyWithFullBuckets
+        final fullBucketsList = _dataWithoutLastBucket;
+        if (fullBucketsList.isNotEmpty) {
+          max = _simdHelper.getMaxLane(fullBucketsList
               .reduce(_simdHelper.selectMax));
         }
-        _maxValue = _simdHelper.toList(data.last)
+        _maxValue = _simdHelper.toList(_innerList.last)
             .take(length % _bucketSize)
             .fold(max, math.max);
       } else {
-        _maxValue = _simdHelper.getMaxLane(data.reduce(_simdHelper.selectMax));
+        _maxValue = _simdHelper
+            .getMaxLane(_innerList.reduce(_simdHelper.selectMax));
       }
     }
     return _maxValue;
@@ -260,11 +262,12 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
           min = _simdHelper.getMinLane(listOnlyWithFullBuckets
               .reduce(_simdHelper.selectMin));
         }
-        _minValue = _simdHelper.toList(data.last)
+        _minValue = _simdHelper.toList(_innerList.last)
             .take(length % _bucketSize)
             .fold(min, math.min);
       } else {
-        _minValue = _simdHelper.getMinLane(data.reduce(_simdHelper.selectMin));
+        _minValue = _simdHelper
+            .getMinLane(_innerList.reduce(_simdHelper.selectMin));
       }
     }
     return _minValue;
@@ -274,20 +277,20 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   Vector query(Iterable<int> indexes) {
     final list = _typedListFactory.empty(indexes.length);
     int i = 0;
-    for (final idx in indexes) {
-      list[i++] = this[idx];
-    }
-    return Vector.from(list, dtype: dtype);
+    for (final idx in indexes) list[i++] = this[idx];
+    return Vector.fromList(list, dtype: dtype);
   }
 
   @override
-  Vector unique() => _unique ??= Vector.from(Set.from(this), dtype: dtype);
+  Vector unique() => _unique ??= Vector
+      .fromList(Set<double>.from(this).toList(growable: false), dtype: dtype);
 
   @override
   Vector fastMap<T>(T mapper(T element)) {
-    final list = _simdHelper.createList(data.length) as List<T>;
-    for (int i = 0; i < data.length; i++) list[i] = mapper(data[i] as T);
-    return Vector.fromSimdList(list, length, dtype: dtype);
+    final source = _innerList.map((value) => mapper(value as T))
+        .toList(growable: false) as List<E>;
+    return Vector.fromSimdList(_simdHelper.createListFrom(source), length,
+        dtype: dtype);
   }
 
   @override
@@ -295,15 +298,15 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     if (index >= length) throw RangeError.index(index, this);
     final base = (index / _bucketSize).floor();
     final offset = index - base * _bucketSize;
-    return _simdHelper.getLaneByIndex(data[base], offset);
+    return _simdHelper.getLaneByIndex(_innerList.elementAt(base), offset);
   }
 
   @override
   Vector subvector(int start, [int end]) {
     final collection = _typedListFactory
-        .fromBuffer((data as TypedData).buffer, start,
+        .fromBuffer((_innerList as TypedData).buffer, start,
         (end > length ? length : end) - start);
-    return Vector.from(collection, dtype: dtype);
+    return Vector.fromList(collection, dtype: dtype);
   }
 
   @override
@@ -349,74 +352,68 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     return _simdHelper.mul(lane, sqrX);
   }
 
+  Iterable<E> get _innerList => _data ?? _genInnerList();
+
   /// Returns SIMD list (e.g. Float32x4List) as a result of converting iterable
   /// source
   ///
-  /// All sequence of [collection] elements splits into groups with
+  /// All sequence of [source] elements splits into groups with
   /// [_bucketSize] length
-  S _convertCollectionToSIMDList(List<double> collection) {
-    final numOfBuckets = (collection.length / _bucketSize).ceil();
-    final source = _typedListFactory.fromList(collection);
-    final target = _simdHelper.createList(numOfBuckets);
-
+  static Iterable<E> _genSimdList<E, S extends List<E>>(List<double> source,
+      int bucketSize, S data, E simdValueFactory(List<double> source)) sync* {
+    final numOfBuckets = (source.length / bucketSize).ceil();
     for (int i = 0; i < numOfBuckets; i++) {
-      final start = i * _bucketSize;
-      final end = start + _bucketSize;
+      final start = i * bucketSize;
+      final end = start + bucketSize;
       final bucketAsList = source.sublist(start, math.min(end, source.length));
-      target[i] = _simdHelper.createFromList(bucketAsList);
+      final value = simdValueFactory(bucketAsList);
+      data[i] = value;
+      yield value;
     }
-
-    return target;
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise
   /// operation with a simd value
-  Vector _elementWiseFloatScalarOperation(
-      double scalar, E operation(E a, double b)) {
-    final list = _simdHelper.createList(data.length);
-    for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i], scalar);
-    }
-    return Vector.fromSimdList(list, length, dtype: dtype);
+  Vector _elementWiseFloatScalarOperation(double arg, E operation(E a, double b)) {
+    final source = _innerList.map((value) => operation(value, arg))
+        .toList(growable: false);
+    return Vector.fromSimdList(_simdHelper.createListFrom(source), length,
+        dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise
   /// operation with a simd value
-  Vector _elementWiseSimdScalarOperation(E simdVal, E operation(E a, E b)) {
-    final list = _simdHelper.createList(data.length);
-    for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i], simdVal);
-    }
-    return Vector.fromSimdList(list, length, dtype: dtype);
+  Vector _elementWiseSimdScalarOperation(E arg, E operation(E a, E b)) {
+    final source = _innerList.map((value) => operation(value, arg))
+        .toList(growable: false);
+    return Vector.fromSimdList(_simdHelper.createListFrom(source), length,
+        dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] any element-wise
   /// operation with a vector (e.g. vector addition)
-  Vector _elementWiseVectorOperation(Vector vector, E operation(E a, E b)) {
-    if (vector.length != length) throw _mismatchLengthError();
-    final list = _simdHelper.createList(data.length);
-    for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i], (vector as VectorDataStore<E, S>).data[i]);
-    }
-    return Vector.fromSimdList(list, length, dtype: dtype);
+  Vector _elementWiseVectorOperation(Vector arg, E operation(E a, E b)) {
+    if (arg.length != length) throw _mismatchLengthError();
+    final source = zip<E>([_innerList, (arg as BaseVector<E, S>)._innerList])
+        .map((values) => operation(values.first, values.last))
+        .toList(growable: false);
+    return Vector.fromSimdList(_simdHelper.createListFrom(source), length,
+        dtype: dtype);
   }
 
   Vector _elementWiseSelfOperation(E operation(E element, [int index])) {
-    final list = _simdHelper.createList(data.length);
-    for (int i = 0; i < data.length; i++) {
-      list[i] = operation(data[i], i);
-    }
-    return Vector.fromSimdList(list, length, dtype: dtype);
+    final source = _innerList.map(operation).toList(growable: false);
+    return Vector.fromSimdList(_simdHelper.createListFrom(source), length,
+        dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising
   /// to the integer power
   Vector _elementWisePow(int exp) {
-    final list = _simdHelper.createList(data.length);
-    for (int i = 0; i < data.length; i++) {
-      list[i] = _simdToIntPow(data[i], exp);
-    }
-    return Vector.fromSimdList(list, length, dtype: dtype);
+    final source = _innerList.map((value) => _simdToIntPow(value, exp))
+        .toList(growable: false);
+    return Vector.fromSimdList(_simdHelper.createListFrom(source), length,
+        dtype: dtype);
   }
 
   Vector _matrixMul(Matrix matrix) {
@@ -428,7 +425,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     }
     final source = List<double>.generate(
         matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
-    return Vector.from(source, dtype: dtype);
+    return Vector.fromList(source, dtype: dtype);
   }
 
   RangeError _mismatchLengthError() =>

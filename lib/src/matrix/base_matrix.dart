@@ -247,7 +247,7 @@ abstract class BaseMatrix with
     int i = 0;
     final minValues = List<double>(rowsNum);
     for (final row in rows) minValues[i++] = callback(row);
-    return callback(Vector.from(minValues, dtype: dtype));
+    return callback(Vector.fromList(minValues, dtype: dtype));
   }
 
   Vector _reduce(
@@ -271,7 +271,7 @@ abstract class BaseMatrix with
     }
     final generateElementFn = (int i) => vector.dot(getRow(i));
     final source = List<double>.generate(rowsNum, generateElementFn);
-    final vectorColumn = Vector.from(source, dtype: dtype);
+    final vectorColumn = Vector.fromList(source, dtype: dtype);
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }
 

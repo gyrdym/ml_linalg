@@ -26,7 +26,7 @@ class VectorUniqueBenchmark extends BenchmarkBase {
   @override
   void setup() {
     final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
-    vector = Float32x4Vector.from(List<double>.generate(
+    vector = Float32x4Vector.fromList(List<double>.generate(
         amountOfElements, (int idx) => generator.nextDouble()));
   }
 
