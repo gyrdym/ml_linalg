@@ -30,8 +30,11 @@ abstract class SimdHelper<E, S extends List<E>> {
   /// performs summation of all components of passed simd value [a]
   double sumLanes(E a);
 
-  /// returns a typed simd list of length equals [length]
+  /// returns a simd list of length equals [length]
   S createList(int length);
+
+  /// returns a simd list created from [source]
+  S createListFrom(List<E> source);
 
   /// returns particular component (lane) of simd value [value] by offset
   double getLaneByIndex(E value, int offset);

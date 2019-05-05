@@ -28,11 +28,11 @@ const bucketSize = 4;
 class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
 
   /// Creates a vector from collection
-  Float32x4Vector.from(Iterable<double> source, {
+  Float32x4Vector.fromList(List<double> source, {
     TypedListFactoryFactory typedListFactoryFactory =
     const Float32ListFactoryFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
-  }) : super.from(
+  }) : super.fromList(
       source,
       bucketSize,
       typedListFactoryFactory.create(),

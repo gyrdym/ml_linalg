@@ -11,10 +11,10 @@ abstract class Vector implements Iterable<double> {
   ///
   /// It converts the collection of [double]-type elements into a collection of
   /// [Float32x4] elements.
-  factory Vector.from(Iterable<double> source, {Type dtype = Float32x4}) {
+  factory Vector.fromList(List<double> source, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
-        return Float32x4Vector.from(source);
+        return Float32x4Vector.fromList(source);
       default:
         throw UnimplementedError();
     }
