@@ -11,7 +11,7 @@ abstract class Matrix {
   /// representation for a row
   /// There is no check of lists lengths in source due to performance,
   /// keep it in mind, don't create a matrix from lists of different lengths
-  factory Matrix.from(List<List<double>> source,
+  factory Matrix.fromList(List<List<double>> source,
       {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:
@@ -48,7 +48,7 @@ abstract class Matrix {
 
   /// Creates a matrix from flattened iterable of length that is equal to
   /// [rowsNum] * [columnsNum]
-  factory Matrix.fromFlattened(List<double> source, int rowsNum,
+  factory Matrix.fromFlattenedList(List<double> source, int rowsNum,
       int columnsNum, {Type dtype = Float32x4}) {
     switch (dtype) {
       case Float32x4:

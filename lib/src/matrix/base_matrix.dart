@@ -114,7 +114,7 @@ abstract class BaseMatrix with
           _dataManager.getValues(i * columnsNum + columns.firstValue,
               columnsLength);
     }
-    return Matrix.from(matrixSource, dtype: dtype);
+    return Matrix.fromList(matrixSource, dtype: dtype);
   }
 
   @override
@@ -284,7 +284,7 @@ abstract class BaseMatrix with
         source[i * matrix.columnsNum + j] = element;
       }
     }
-    return Matrix.fromFlattened(source, rowsNum, matrix.columnsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(source, rowsNum, matrix.columnsNum, dtype: dtype);
   }
 
   Matrix _matrixByVectorDiv(Vector vector) {
