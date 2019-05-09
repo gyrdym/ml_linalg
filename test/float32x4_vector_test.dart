@@ -59,7 +59,7 @@ void main() {
       });
 
       test('should create a vector and limit its length if argument `length` '
-          'is passed', () {
+          'is given', () {
         final vector = Float32x4Vector.fromSimdList(typedList, 10);
         expect(vector,
             equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]));

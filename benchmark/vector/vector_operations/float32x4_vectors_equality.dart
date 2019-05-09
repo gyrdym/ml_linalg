@@ -1,31 +1,31 @@
-// Approx. 1.2 second (MacBook Air mid 2017)
+// Approx. 0.35 microsecond (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 
 const amountOfElements = 10000000;
 
-class VectorMulBenchmark extends BenchmarkBase {
-  VectorMulBenchmark()
-      : super('Vectors multiplication, $amountOfElements elements');
+class VectorsEqualityBenchmark extends BenchmarkBase {
+  VectorsEqualityBenchmark()
+      : super('Vectors equality, $amountOfElements elements');
 
   Float32x4Vector vector1;
   Float32x4Vector vector2;
 
   static void main() {
-    VectorMulBenchmark().report();
+    VectorsEqualityBenchmark().report();
   }
 
   @override
   void run() {
     // ignore: unnecessary_statements
-    vector1 * vector2;
+    vector1 == vector2;
   }
 
   @override
   void setup() {
-    vector1 = Float32x4Vector.randomFilled(amountOfElements);
-    vector2 = Float32x4Vector.randomFilled(amountOfElements);
+    vector1 = Float32x4Vector.filled(amountOfElements, 10);
+    vector2 = Float32x4Vector.filled(amountOfElements, 10);
   }
 
   void tearDown() {
@@ -35,5 +35,5 @@ class VectorMulBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  VectorMulBenchmark.main();
+  VectorsEqualityBenchmark.main();
 }

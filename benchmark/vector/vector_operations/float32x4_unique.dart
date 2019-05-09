@@ -1,21 +1,18 @@
-// Performance test of vector (10 000 elements in vector) multiplication operation
-// It takes approximately 0.175 microseconds (MacBook Air 2017)
-
-import 'dart:math' as math;
+// Approx. 0.15 microsecond (MacBook Air 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
 
 const amountOfElements = 10000;
 
-Float32x4Vector vector;
-
 class VectorUniqueBenchmark extends BenchmarkBase {
-  const VectorUniqueBenchmark()
+  VectorUniqueBenchmark()
       : super('Vector unnique elements obtaining, $amountOfElements elements');
 
+  Float32x4Vector vector;
+
   static void main() {
-    const VectorUniqueBenchmark().report();
+    VectorUniqueBenchmark().report();
   }
 
   @override
@@ -25,9 +22,7 @@ class VectorUniqueBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    final generator = math.Random(DateTime.now().millisecondsSinceEpoch);
-    vector = Float32x4Vector.fromList(List<double>.generate(
-        amountOfElements, (int idx) => generator.nextDouble()));
+    vector = Float32x4Vector.randomFilled(amountOfElements);
   }
 
   void tearDown() {

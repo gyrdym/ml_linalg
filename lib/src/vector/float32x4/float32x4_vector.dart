@@ -2,9 +2,9 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ml_linalg/src/vector/base_vector.dart';
-import 'package:ml_linalg/src/vector/common/typed_list_factory_factory.dart';
-import 'package:ml_linalg/src/vector/float32x4/helper/helper_factory.dart';
-import 'package:ml_linalg/src/vector/float32x4/typed_list_factory/typed_list_factory_factory.dart';
+import 'package:ml_linalg/src/vector/common/typed_list_helper_factory.dart';
+import 'package:ml_linalg/src/vector/float32x4/simd_helper/float32x4_helper_factory.dart';
+import 'package:ml_linalg/src/vector/float32x4/typed_list_helper/typed_list_helper_factory.dart';
 
 const bucketSize = 4;
 
@@ -29,26 +29,26 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
 
   /// Creates a vector from collection
   Float32x4Vector.fromList(List<double> source, {
-    TypedListFactoryFactory typedListFactoryFactory =
-    const Float32ListFactoryFactory(),
+    TypedListHelperFactory typedListHelperFactory =
+      const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.fromList(
       source,
       bucketSize,
-      typedListFactoryFactory.create(),
+      typedListHelperFactory.create(),
       simdHelperFactory.create(),
   );
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
   Float32x4Vector.fromSimdList(Float32x4List source, int origLength, {
-    TypedListFactoryFactory typedListFactoryFactory =
-    const Float32ListFactoryFactory(),
+    TypedListHelperFactory typedListHelperFactory =
+      const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.fromSimdList(
     source,
     origLength,
     bucketSize,
-    typedListFactoryFactory.create(),
+    typedListHelperFactory.create(),
     simdHelperFactory.create(),
   );
 
@@ -56,14 +56,14 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
   /// of created vector with a [value]
   Float32x4Vector.filled(int length, double value, {
     bool isMutable = false,
-    TypedListFactoryFactory typedListFactoryFactory =
-    const Float32ListFactoryFactory(),
+    TypedListHelperFactory typedListHelperFactory =
+      const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.filled(
     length,
     value,
     bucketSize,
-    typedListFactoryFactory.create(),
+    typedListHelperFactory.create(),
     simdHelperFactory.create(),
   );
 
@@ -71,8 +71,8 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
   /// of created vector with a zero
   Float32x4Vector.zero(int length, {
     bool isMutable = false,
-    TypedListFactoryFactory typedListFactoryFactory =
-    const Float32ListFactoryFactory(),
+    TypedListHelperFactory typedListFactoryFactory =
+    const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.zero(
     length,
@@ -86,8 +86,8 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
   Float32x4Vector.randomFilled(int length, {
     int seed,
     bool isMutable = false,
-    TypedListFactoryFactory typedListFactoryFactory =
-    const Float32ListFactoryFactory(),
+    TypedListHelperFactory typedListFactoryFactory =
+    const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
   }) : super.randomFilled(
     length,

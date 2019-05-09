@@ -6,9 +6,6 @@ abstract class SimdHelper<E, S extends List<E>> {
   /// creates a simd-value filled with [value]
   E createFilled(double value);
 
-  /// creates a simd-value from passed [list]
-  E createFromList(List<double> list);
-
   /// performs summation of two simd values
   E sum(E a, E b);
 
@@ -55,10 +52,4 @@ abstract class SimdHelper<E, S extends List<E>> {
 
   /// converts simd value [a] to regular list
   List<double> toList(E a);
-
-  List<double> takeFirstNLanes(E a, int n);
-
-  S sublist(S list, int start, [int end]);
-
-  E mutate(E simd, int offset, double scalar);
 }
