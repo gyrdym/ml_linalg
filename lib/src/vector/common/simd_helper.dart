@@ -1,10 +1,6 @@
 import 'dart:typed_data';
 
 abstract class SimdHelper<E, S extends List<E>> {
-  /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
-  /// restricted by computing platform architecture)
-  int get bucketSize;
-
   /// creates a simd-value filled with [value]
   E createFilled(double value);
 
