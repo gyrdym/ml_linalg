@@ -1,4 +1,4 @@
-import 'dart:typed_data' show ByteBuffer;
+import 'dart:typed_data' show ByteBuffer, ByteData, Endian;
 
 abstract class TypedListHelper {
   /// returns a typed list with
@@ -10,8 +10,10 @@ abstract class TypedListHelper {
   /// returns a typed list (e.g. Float32List) created using [list] as a source
   List<double> fromList(List<double> list);
 
-  List<double> fromBuffer(ByteBuffer buffer, int start, int length);
+  /// returns byte buffer in list representation
+  List<double> getBufferAsList(ByteBuffer buffer, int start, int length);
 
-  /// converts a buffer into typed list and gets its iterator
-  Iterator<double> createIterator(ByteBuffer buffer, int length);
+  /// set
+  void setValue(ByteData byteData, int byteOffset, double value,
+      [Endian endian]);
 }
