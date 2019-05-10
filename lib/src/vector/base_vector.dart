@@ -150,7 +150,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
       final other = value.toVector();
       return _elementWiseVectorOperation(other, _simdHelper.sum);
     } else if (value is num) {
-      return _elementWiseSimdScalarOperation(
+      return _elementWiseScalarOperation<E>(
           _simdHelper.createFilled(value.toDouble()), _simdHelper.sum);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
@@ -164,7 +164,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
       final other = value.toVector();
       return _elementWiseVectorOperation(other, _simdHelper.sub);
     } else if (value is num) {
-      return _elementWiseSimdScalarOperation(
+      return _elementWiseScalarOperation<E>(
           _simdHelper.createFilled(value.toDouble()), _simdHelper.sub);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
@@ -177,7 +177,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     } else if (value is Matrix) {
       return _matrixMul(value);
     } else if (value is num) {
-      return _elementWiseFloatScalarOperation(value.toDouble(),
+      return _elementWiseScalarOperation<double>(value.toDouble(),
           _simdHelper.scale);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
@@ -188,7 +188,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     if (value is Vector) {
       return _elementWiseVectorOperation(value, _simdHelper.div);
     } else if (value is num) {
-      return _elementWiseFloatScalarOperation(1 / value, _simdHelper.scale);
+      return _elementWiseScalarOperation<double>(1 / value, _simdHelper.scale);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
@@ -358,18 +358,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     return _simdHelper.mul(lane, sqrX);
   }
 
-  /// Returns a vector as a result of applying to [this] any element-wise
-  /// operation with a simd value
-  Vector _elementWiseFloatScalarOperation(double arg, E operation(E a, double b)) {
-    final source = _innerSimdList.map((value) => operation(value, arg))
-        .toList(growable: false);
-    return Vector.fromSimdList(_simdHelper.createListFrom(source), length,
-        dtype: dtype);
-  }
-
-  /// Returns a vector as a result of applying to [this] any element-wise
-  /// operation with a simd value
-  Vector _elementWiseSimdScalarOperation(E arg, E operation(E a, E b)) {
+  Vector _elementWiseScalarOperation<T>(T arg, E operation(E a, T b)) {
     final source = _innerSimdList.map((value) => operation(value, arg))
         .toList(growable: false);
     return Vector.fromSimdList(_simdHelper.createListFrom(source), length,
