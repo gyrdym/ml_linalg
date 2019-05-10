@@ -5,9 +5,6 @@ import 'package:ml_linalg/src/vector/common/simd_helper.dart';
 
 class Float32x4Helper implements SimdHelper<Float32x4, Float32x4List> {
   @override
-  final bucketSize = 4;
-
-  @override
   Float32x4 createFilled(double value) => Float32x4.splat(value);
 
   @override

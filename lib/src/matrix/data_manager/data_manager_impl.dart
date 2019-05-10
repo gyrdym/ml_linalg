@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/matrix/byte_data_helpers/byte_data_helpers.dart';
 import 'package:ml_linalg/src/matrix/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/matrix_iterator.dart';
@@ -100,7 +101,7 @@ class DataManagerImpl implements DataManager {
   final List<Vector> _colsCache;
   final int _bytesPerElement;
   final ByteData _data;
-  final Type _dtype;
+  final DType _dtype;
 
   final ByteBufferAsTypedListFn _convertByteBufferToTypedList;
 

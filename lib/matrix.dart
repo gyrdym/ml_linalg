@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
 import 'package:ml_linalg/vector.dart';
@@ -12,9 +11,9 @@ abstract class Matrix {
   /// There is no check of lists lengths in source due to performance,
   /// keep it in mind, don't create a matrix from lists of different lengths
   factory Matrix.fromList(List<List<double>> source,
-      {Type dtype = Float32x4}) {
+      {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
+      case DType.float32:
         return Float32x4Matrix.from(source);
       default:
         throw UnimplementedError();
@@ -24,9 +23,9 @@ abstract class Matrix {
   /// Creates a matrix with predefined row vectors
   /// There is no check of vectors lengths in source due to performance,
   /// keep it in mind, don't create a matrix from vectors of different lengths
-  factory Matrix.fromRows(List<Vector> source, {Type dtype = Float32x4}) {
+  factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
+      case DType.float32:
         return Float32x4Matrix.rows(source);
       default:
         throw UnimplementedError();
@@ -37,9 +36,9 @@ abstract class Matrix {
   /// There is no check of vectors lengths in source due to performance,
   /// keep it in mind, don't create a matrix from vectors of different lengths
   factory Matrix.fromColumns(List<Vector> source,
-      {Type dtype = Float32x4}) {
+      {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
+      case DType.float32:
         return Float32x4Matrix.columns(source);
       default:
         throw UnimplementedError();
@@ -49,16 +48,16 @@ abstract class Matrix {
   /// Creates a matrix from flattened iterable of length that is equal to
   /// [rowsNum] * [columnsNum]
   factory Matrix.fromFlattenedList(List<double> source, int rowsNum,
-      int columnsNum, {Type dtype = Float32x4}) {
+      int columnsNum, {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
+      case DType.float32:
         return Float32x4Matrix.flattened(source, rowsNum, columnsNum);
       default:
         throw UnimplementedError();
     }
   }
 
-  Type get dtype;
+  DType get dtype;
 
   /// Returns a generator of immutable row vectors of the matrix
   Iterable<Vector> get rows;
