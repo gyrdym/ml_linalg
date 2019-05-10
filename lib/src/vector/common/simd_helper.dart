@@ -35,9 +35,6 @@ abstract class SimdHelper<E, S extends List<E>> {
   /// returns a simd list created from [source]
   S createListFrom(List<E> source);
 
-  /// returns particular component (lane) of simd value [value] by offset
-  double getLaneByIndex(E value, int offset);
-
   /// prepares a simd value comprised of maximum values of both [a] and [b]
   E selectMax(E a, E b);
 
@@ -53,7 +50,7 @@ abstract class SimdHelper<E, S extends List<E>> {
   double getMinLane(E a);
 
   /// converts simd value [a] to regular list
-  List<double> toList(E a);
+  List<double> simdValueToList(E a);
 
-  S byteBufferAsSimdList(ByteBuffer buffer);
+  S getBufferAsSimdList(ByteBuffer buffer);
 }

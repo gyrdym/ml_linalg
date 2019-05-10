@@ -15,10 +15,11 @@ class Float32ListHelper implements TypedListHelper {
       Float32List.view(buffer);
 
   @override
-  Float32List getBufferAsList(ByteBuffer buffer, int start, int length) =>
+  Float32List getBufferAsList(ByteBuffer buffer, [int start = 0, int length]) =>
       buffer.asFloat32List(start * Float32List.bytesPerElement, length);
 
   @override
   void setValue(ByteData byteData, int byteOffset, double value,
-      [Endian endian]) => byteData.setFloat32(byteOffset, value, Endian.host);
+      [Endian endian]) => byteData.setFloat32(byteOffset, value,
+      endian ?? Endian.host);
 }

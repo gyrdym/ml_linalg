@@ -11,7 +11,7 @@ abstract class TypedListHelper {
   List<double> fromList(List<double> list);
 
   /// returns byte buffer in list representation
-  List<double> getBufferAsList(ByteBuffer buffer, int start, int length);
+  List<double> getBufferAsList(ByteBuffer buffer, [int start = 0, int length]);
 
   /// set
   void setValue(ByteData byteData, int byteOffset, double value,

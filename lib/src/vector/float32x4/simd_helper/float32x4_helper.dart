@@ -47,22 +47,6 @@ class Float32x4Helper implements SimdHelper<Float32x4, Float32x4List> {
       Float32x4List.fromList(source);
 
   @override
-  double getLaneByIndex(Float32x4 value, int offset) {
-    switch (offset) {
-      case 0:
-        return value.x;
-      case 1:
-        return value.y;
-      case 2:
-        return value.z;
-      case 3:
-        return value.w;
-      default:
-        throw RangeError('wrong offset');
-    }
-  }
-
-  @override
   Float32x4 selectMax(Float32x4 a, Float32x4 b) => a.max(b);
 
   @override
@@ -77,9 +61,9 @@ class Float32x4Helper implements SimdHelper<Float32x4, Float32x4List> {
       math.min(math.min(a.x, a.y), math.min(a.z, a.w));
 
   @override
-  List<double> toList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+  List<double> simdValueToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
 
   @override
-  Float32x4List byteBufferAsSimdList(ByteBuffer buffer) =>
+  Float32x4List getBufferAsSimdList(ByteBuffer buffer) =>
       buffer.asFloat32x4List();
 }
