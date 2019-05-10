@@ -22,7 +22,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   ) :
         length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
-        _data = (() {
+        _source = (() {
           final length = _getNumOfBuckets(source.length, _bucketSize);
           return _getBuffer(length, _bytesPerElement * _bucketSize);
         })() {
@@ -38,7 +38,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _data = _getBuffer(length, _bytesPerElement) {
+        _source = _getBuffer(length, _bytesPerElement) {
     final generator = math.Random(seed);
     _setByteData((i) => generator.nextDouble());
   }
@@ -52,7 +52,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _data = _getBuffer(length, _bytesPerElement) {
+        _source = _getBuffer(length, _bytesPerElement) {
     _setByteData((i) => value);
   }
 
@@ -64,7 +64,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _data = _getBuffer(length, _bytesPerElement) {
+        _source = _getBuffer(length, _bytesPerElement) {
     _setByteData((i) => 0.0);
   }
 
@@ -77,7 +77,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) : 
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _data = (data as TypedData).buffer {
+        _source = (data as TypedData).buffer {
     _list = data;
   }
 
@@ -90,7 +90,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   final int length;
 
-  final ByteBuffer _data;
+  final ByteBuffer _source;
   final int _bytesPerElement;
   final int _bucketSize;
   final int _numOfBuckets;
@@ -98,9 +98,10 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   final TypedListHelper _typedListHelper;
 
   @override
-  Iterator<double> get iterator => _data.asFloat32List(0, length).iterator;
+  Iterator<double> get iterator => _typedListHelper
+      .getBufferAsList(_source, 0, length).iterator;
 
-  S get _innerList => _list ??= _data.asFloat32x4List() as S;
+  S get _innerList => _list ??= _simdHelper.byteBufferAsSimdList(_source);
   S _list;
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
@@ -321,7 +322,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   Vector subvector(int start, [int end]) {
     final collection = _typedListHelper
-        .fromBuffer((_innerList as TypedData).buffer, start,
+        .getBufferAsList((_innerList as TypedData).buffer, start,
         (end > length ? length : end) - start);
     return Vector.fromList(collection, dtype: dtype);
   }
@@ -427,11 +428,11 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   void _setByteData(double generateValue(int i)) {
-    final byteData = _data.asByteData();
-    var byteOffset = 0;
+    final byteData = _source.asByteData();
+    var byteOffset = -_bytesPerElement;
     for (int i = 0; i < length; i++) {
-      byteData.setFloat32(byteOffset, generateValue(i), Endian.host);
-      byteOffset += _bytesPerElement;
+      _typedListHelper.setValue(byteData, byteOffset += _bytesPerElement,
+          generateValue(i));
     }
   }
 

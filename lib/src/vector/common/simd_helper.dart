@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 abstract class SimdHelper<E, S extends List<E>> {
   /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
   /// restricted by computing platform architecture)
@@ -52,4 +54,6 @@ abstract class SimdHelper<E, S extends List<E>> {
 
   /// converts simd value [a] to regular list
   List<double> toList(E a);
+
+  S byteBufferAsSimdList(ByteBuffer buffer);
 }

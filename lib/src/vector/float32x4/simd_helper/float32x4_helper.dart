@@ -78,4 +78,8 @@ class Float32x4Helper implements SimdHelper<Float32x4, Float32x4List> {
 
   @override
   List<double> toList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+
+  @override
+  Float32x4List byteBufferAsSimdList(ByteBuffer buffer) =>
+      buffer.asFloat32x4List();
 }
