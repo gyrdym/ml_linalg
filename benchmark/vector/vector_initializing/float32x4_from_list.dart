@@ -1,7 +1,7 @@
 // Approx. 3 sec (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
+import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 
 const amountOfElements = 10000000;
 
@@ -16,7 +16,7 @@ class VectorInitializationBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    Float32x4Vector.fromList(List<double>.filled(amountOfElements, 1.0));
+    Float32Vector.fromList(List<double>.filled(amountOfElements, 1.0));
   }
 }
 

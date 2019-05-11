@@ -59,13 +59,13 @@ All vector operations are supported by SIMD ([single instruction, multiple data]
 computation architecture. Actually, the main purpose of the library - connect such a powerful computation way with 
 the pure math. So, the library contains a high performance SIMD vector class, based on 
 [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - 
-[Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart). 
+[Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart). 
 Most of operations in the vector class are performed in four "threads". This kind of parallelism is reached by special 
 128-bit processor registers, which are used directly by program code. For better understanding of the topic please read 
 the [article](https://www.dartlang.org/articles/dart-vm/simd). It is also possible to implement [Float64x2](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float64x2-class.html)-based
 version of vector using existing codebase, but so far there is no need to do so.
-    The class [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
-is hidden from the library's users. You can create a [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
+    The class [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
+is hidden from the library's users. You can create a [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
 instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
 #### Vector operations examples
@@ -274,7 +274,7 @@ Performs mapping from one vector to another in efficient way (using simd computa
 
 ### Matrices
 
-Also, a class for matrix is available. It is based on Float32x4 and Float32x4Vector types.
+Also, a class for matrix is available. It is based on Float32x4 and Float32Vector types.
 
 #### Matrix operations examples
 

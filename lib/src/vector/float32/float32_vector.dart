@@ -4,8 +4,8 @@ import 'dart:typed_data';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/vector/base_vector.dart';
 import 'package:ml_linalg/src/vector/common/typed_list_helper_factory.dart';
-import 'package:ml_linalg/src/vector/float32x4/simd_helper/float32x4_helper_factory.dart';
-import 'package:ml_linalg/src/vector/float32x4/typed_list_helper/typed_list_helper_factory.dart';
+import 'package:ml_linalg/src/vector/float32/simd_helper/float32x4_helper_factory.dart';
+import 'package:ml_linalg/src/vector/float32/typed_list_helper/float32_list_helper_factory.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
 ///
@@ -24,9 +24,9 @@ import 'package:ml_linalg/src/vector/float32x4/typed_list_helper/typed_list_help
 ///
 /// - Sequence of SIMD-values forms a "computation lane", where computations
 /// are performed with each floating point element simultaneously (in parallel)
-class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
+class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
   /// Creates a vector from collection
-  Float32x4Vector.fromList(List<double> source, {
+  Float32Vector.fromList(List<double> source, {
     TypedListHelperFactory typedListHelperFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -39,7 +39,7 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
   );
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
-  Float32x4Vector.fromSimdList(Float32x4List source, int origLength, {
+  Float32Vector.fromSimdList(Float32x4List source, int origLength, {
     TypedListHelperFactory typedListHelperFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -54,7 +54,7 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
   /// of created vector with a [value]
-  Float32x4Vector.filled(int length, double value, {
+  Float32Vector.filled(int length, double value, {
     bool isMutable = false,
     TypedListHelperFactory typedListHelperFactory =
       const Float32ListHelperFactory(),
@@ -70,7 +70,7 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
   /// of created vector with a zero
-  Float32x4Vector.zero(int length, {
+  Float32Vector.zero(int length, {
     bool isMutable = false,
     TypedListHelperFactory typedListFactoryFactory =
       const Float32ListHelperFactory(),
@@ -85,7 +85,7 @@ class Float32x4Vector extends BaseVector<Float32x4, Float32x4List> {
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
   /// of created vector with a random value
-  Float32x4Vector.randomFilled(int length, {
+  Float32Vector.randomFilled(int length, {
     int seed,
     bool isMutable = false,
     TypedListHelperFactory typedListFactoryFactory =
