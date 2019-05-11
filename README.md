@@ -538,7 +538,7 @@ Performs mapping from one matrix to another in efficient way (using simd computa
     [15.0, 16.0, 0.0, 18.0],
     [21.0, 22.0, -23.0, 24.0],
     [24.0, 32.0, 53.0, 74.0],
-  ], dtype: Float32x4);
+  ], dtype: DType.float32);
   final newMatrix = matrix.fastMap<Float32x4>((Float32x4 val) => val.scale(3.0));
   print(minValue);
   // [
@@ -558,7 +558,7 @@ create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, it's needed to 
 import 'package:ml_linalg/linalg.dart';
 import 'package:xrange/zrange.dart';
 
-final matrix = Float32x4Matrix.from([
+final matrix = Matrix.from([
 //| 1 |         | 3 |                
   [4.0,   8.0,   12.0,   16.0,  34.0], // 1 Range(0, 1)
   [20.0,  24.0,  28.0,   32.0,  23.0],
@@ -587,7 +587,7 @@ final matrix = Matrix.from([
   [15.0, 16.0, 0.0, 18.0],
   [21.0, 22.0, -23.0, 24.0],
   [24.0, 32.0, 53.0, 74.0],
-], dtype: Float32x4);
+], dtype: DType.float32);
 
 matrix.setColumn(0, [1.0, 2.0, 3.0, 4.0]);
 

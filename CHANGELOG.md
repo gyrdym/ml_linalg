@@ -35,8 +35,8 @@
 
 ## 6.1.0
 - `Vector`: 
-    - normalize method added to interface and supported in `Float32Vector` 
-    - rescale method added to interface and supported in `Float32Vector`
+    - normalize method added to interface and supported in `Float32x4Vector` 
+    - rescale method added to interface and supported in `Float32x4Vector`
 - `VectorBase`: cache for popular operations implemented 
 
 ## 6.0.2
@@ -47,7 +47,7 @@
 
 ## 6.0.0
 - prefix `ML` removed from entities' names
-- Float32Vector: equality operator override added
+- Float32x4Vector: equality operator override added
 - Matrix: `uniqueRows` method added
 
 ## 5.5.1
@@ -110,7 +110,7 @@
 ## 3.0.0
 - `vectorizedMap` vector's method improved: batch boundary indexes may be passed into a mapper function
 - `columnsMap` and `rowsMap` matrix's method combined into one method - `vectorizedMap`
-- Public factories `Float32VectorFactory` and `Float32x4MatrixFactory` renamed into `Float32Vector` and 
+- Public factories `Float32x4VectorFactory` and `Float32x4MatrixFactory` renamed into `Float32x4Vector` and 
  `Float32x4Matrix`
 - `copy` vector's method removed
 
