@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/src/matrix/byte_data_helpers/byte_data_helpers.dart';
-import 'package:ml_linalg/src/matrix/data_manager/data_manager.dart';
-import 'package:ml_linalg/src/matrix/matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/common/byte_data_helpers/byte_data_helpers.dart';
+import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
+import 'package:ml_linalg/src/matrix/common/matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 

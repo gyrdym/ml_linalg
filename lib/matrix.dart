@@ -1,6 +1,6 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix_norm.dart';
-import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 
@@ -14,7 +14,7 @@ abstract class Matrix {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Matrix.from(source);
+        return Float32Matrix.from(source);
       default:
         throw UnimplementedError();
     }
@@ -26,7 +26,7 @@ abstract class Matrix {
   factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Matrix.rows(source);
+        return Float32Matrix.rows(source);
       default:
         throw UnimplementedError();
     }
@@ -39,7 +39,7 @@ abstract class Matrix {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Matrix.columns(source);
+        return Float32Matrix.columns(source);
       default:
         throw UnimplementedError();
     }
@@ -51,7 +51,7 @@ abstract class Matrix {
       int columnsNum, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Matrix.flattened(source, rowsNum, columnsNum);
+        return Float32Matrix.flattened(source, rowsNum, columnsNum);
       default:
         throw UnimplementedError();
     }
