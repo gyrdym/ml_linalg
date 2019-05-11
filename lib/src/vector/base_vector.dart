@@ -22,10 +22,9 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   ) :
         length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
-        _source = (() {
-          final length = _getNumOfBuckets(source.length, _bucketSize);
-          return _getBuffer(length, _bytesPerElement * _bucketSize);
-        })() {
+        _source = _getBuffer(
+            _getNumOfBuckets(source.length, _bucketSize) * _bucketSize,
+            _bytesPerElement) {
     _setByteData((i) => source[i]);
   }
 
@@ -38,7 +37,9 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _source = _getBuffer(length, _bytesPerElement) {
+        _source = _getBuffer(
+            _getNumOfBuckets(length, _bucketSize) * _bucketSize,
+            _bytesPerElement) {
     final generator = math.Random(seed);
     _setByteData((i) => generator.nextDouble());
   }
@@ -52,8 +53,10 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _source = _getBuffer(length, _bytesPerElement) {
-    _setByteData((i) => value);
+        _source = _getBuffer(
+            _getNumOfBuckets(length, _bucketSize) * _bucketSize,
+            _bytesPerElement) {
+    _setByteData((_) => value);
   }
 
   BaseVector.zero(
@@ -64,8 +67,10 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._simdHelper,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _source = _getBuffer(length, _bytesPerElement) {
-    _setByteData((i) => 0.0);
+        _source = _getBuffer(
+            _getNumOfBuckets(length, _bucketSize) * _bucketSize,
+            _bytesPerElement) {
+    _setByteData((_) => 0.0);
   }
 
   BaseVector.fromSimdList(
@@ -130,7 +135,8 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
         return false;
       }
       for (int i = 0; i < _numOfBuckets; i++) {
-        if (!_simdHelper.areValuesEqual(_innerSimdList[i], other._innerSimdList[i])) {
+        if (!_simdHelper.areValuesEqual(_innerSimdList[i],
+            other._innerSimdList[i])) {
           return false;
         }
       }
