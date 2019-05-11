@@ -5,8 +5,8 @@ import 'dart:typed_data';
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
+import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/vector/common/simd_helper.dart';
-import 'package:ml_linalg/src/vector/common/typed_list_helper.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/core.dart';
 

@@ -2,10 +2,10 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/src/common/float32_list_helper/float32_list_helper_factory.dart';
+import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper_factory.dart';
 import 'package:ml_linalg/src/vector/base_vector.dart';
-import 'package:ml_linalg/src/vector/common/typed_list_helper_factory.dart';
 import 'package:ml_linalg/src/vector/float32/simd_helper/float32x4_helper_factory.dart';
-import 'package:ml_linalg/src/vector/float32/typed_list_helper/float32_list_helper_factory.dart';
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
 ///
