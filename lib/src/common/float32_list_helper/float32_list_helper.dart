@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/common/typed_list_helper.dart';
+import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 
 class Float32ListHelper implements TypedListHelper {
   @override

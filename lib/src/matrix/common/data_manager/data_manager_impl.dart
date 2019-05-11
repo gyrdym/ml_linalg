@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/src/matrix/common/byte_data_helpers/byte_data_helpers.dart';
+import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
@@ -12,7 +12,7 @@ class DataManagerImpl implements DataManager {
       List<List<double>> source,
       int bytesPerElement,
       this._dtype,
-      this._convertByteBufferToTypedList,
+      this._typedListHelper,
   ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
@@ -21,8 +21,7 @@ class DataManagerImpl implements DataManager {
         _rowsCache = List<Vector>(source.length),
         _colsCache = List<Vector>(source.first.length),
         _data = ByteData(source.length * source.first.length *
-            bytesPerElement),
-        _bytesPerElement = bytesPerElement {
+            bytesPerElement) {
     final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
     _updateAll(0, flattened);
   }
@@ -31,7 +30,7 @@ class DataManagerImpl implements DataManager {
       List<Vector> source,
       int bytesPerElement,
       this._dtype,
-      this._convertByteBufferToTypedList,
+      this._typedListHelper,
   ) :
         rowsNum = source.length,
         columnsNum = source.first.length,
@@ -40,8 +39,7 @@ class DataManagerImpl implements DataManager {
         _rowsCache = source.toList(growable: false),
         _colsCache = List<Vector>(source.first.length),
         _data = ByteData(source.length * source.first.length *
-            bytesPerElement),
-        _bytesPerElement = bytesPerElement {
+            bytesPerElement) {
     final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
     _updateAll(0, flattened);
   }
@@ -50,7 +48,7 @@ class DataManagerImpl implements DataManager {
       List<Vector> source,
       int bytesPerElement,
       this._dtype,
-      this._convertByteBufferToTypedList,
+      this._typedListHelper,
   ) :
         rowsNum = source.first.length,
         columnsNum = source.length,
@@ -59,8 +57,7 @@ class DataManagerImpl implements DataManager {
         _rowsCache = List<Vector>(source.first.length),
         _colsCache = source.toList(growable: false),
         _data = ByteData(source.length * source.first.length *
-            bytesPerElement),
-        _bytesPerElement = bytesPerElement {
+            bytesPerElement) {
     final flattened = _flatten2dimList(source, (i, j) => j * columnsNum + i);
     _updateAll(0, flattened);
   }
@@ -71,7 +68,7 @@ class DataManagerImpl implements DataManager {
       int colsNum,
       int bytesPerElement,
       this._dtype,
-      this._convertByteBufferToTypedList,
+      this._typedListHelper,
   ) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
@@ -79,8 +76,7 @@ class DataManagerImpl implements DataManager {
         _colsIndicesRange = ZRange.closedOpen(0, colsNum),
         _rowsCache = List<Vector>(rowsNum),
         _colsCache = List<Vector>(colsNum),
-        _data = ByteData(rowsNum * colsNum * bytesPerElement),
-        _bytesPerElement = bytesPerElement {
+        _data = ByteData(rowsNum * colsNum * bytesPerElement) {
     if (source.length != rowsNum * colsNum) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowsNum x $colsNum, but given a collection of length '
@@ -99,16 +95,14 @@ class DataManagerImpl implements DataManager {
   final ZRange _colsIndicesRange;
   final List<Vector> _rowsCache;
   final List<Vector> _colsCache;
-  final int _bytesPerElement;
   final ByteData _data;
   final DType _dtype;
 
-  final ByteBufferAsTypedListFn _convertByteBufferToTypedList;
+  final TypedListHelper _typedListHelper;
 
   @override
   Iterator<Iterable<double>> get dataIterator =>
-      MatrixIterator(_data, columnsNum, _bytesPerElement,
-          _convertByteBufferToTypedList);
+      MatrixIterator(_data, rowsNum, columnsNum, _typedListHelper);
 
   @override
   Iterable<int> get colIndices => _colsIndicesRange.values();
@@ -118,11 +112,10 @@ class DataManagerImpl implements DataManager {
 
   @override
   List<double> getValues(int index, int length) {
-    if (index * _bytesPerElement >= _data.buffer.lengthInBytes) {
+    if (index  >= rowsNum * columnsNum) {
       throw RangeError.range(index, 0, rowsNum * columnsNum);
     }
-    return _convertByteBufferToTypedList(_data.buffer, index * _bytesPerElement,
-        length);
+    return _typedListHelper.getBufferAsList(_data.buffer, index, length);
   }
 
   @override
@@ -155,8 +148,7 @@ class DataManagerImpl implements DataManager {
   }
 
   void _updateAll(int idx, Iterable<double> values) =>
-      _convertByteBufferToTypedList(_data.buffer, 0, rowsNum * columnsNum)
-          .setAll(0, values);
+      _typedListHelper.getBufferAsList(_data.buffer).setAll(0, values);
 
   List<double> _flatten2dimList(
       Iterable<Iterable<double>> rows, int accessor(int i, int j)) {

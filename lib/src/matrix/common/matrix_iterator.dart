@@ -1,15 +1,15 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/common/byte_data_helpers/byte_data_helpers.dart';
+import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 
 class MatrixIterator implements Iterator<Iterable<double>> {
-  MatrixIterator(this._data, this._columns, this._bytesPerElement,
-      this._convertBuffetToTypedList);
+  MatrixIterator(this._data, this._rowsNum, this._colsNum,
+      this._typedListHelper);
 
   final ByteData _data;
-  final int _columns;
-  final int _bytesPerElement;
-  final ByteBufferAsTypedListFn _convertBuffetToTypedList;
+  final int _rowsNum;
+  final int _colsNum;
+  final TypedListHelper _typedListHelper;
 
   List<double> _current;
   int _currentRow = 0;
@@ -19,17 +19,12 @@ class MatrixIterator implements Iterator<Iterable<double>> {
 
   @override
   bool moveNext() {
-    final int byteOffset = _currentRow * _columns * _bytesPerElement;
-    if (byteOffset >= _data.buffer.lengthInBytes) {
+    final startIdx = _currentRow * _colsNum;
+    if (_currentRow >= _rowsNum) {
       _current = null;
     } else {
-      final totalSizeInBytes =
-          byteOffset + (_columns * _bytesPerElement);
-      final length = _data.buffer.lengthInBytes >= totalSizeInBytes
-          ? _columns
-          : (totalSizeInBytes - _data.buffer.lengthInBytes) ~/
-              _bytesPerElement;
-      _current = _convertBuffetToTypedList(_data.buffer, byteOffset, length);
+      _current = _typedListHelper.getBufferAsList(_data.buffer, startIdx,
+          _colsNum);
     }
     _currentRow++;
     return _current != null;
