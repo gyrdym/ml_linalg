@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
-import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
+import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 import 'package:xrange/zrange.dart';
@@ -26,8 +26,8 @@ void main() {
     test('should create an instance with predefined vectors as matrix '
         'rows', () {
       final actual = Float32x4Matrix.rows([
-        Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]),
-        Float32x4Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0]),
+        Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]),
+        Float32Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0]),
       ]);
       final expected = [
         [1.0, 2.0, 3.0, 4.0, 5.0],
@@ -41,8 +41,8 @@ void main() {
     test('should create an instance with predefined vectors as matrix columns',
         () {
       final actual = Float32x4Matrix.columns([
-        Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]),
-        Float32x4Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0]),
+        Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]),
+        Float32Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0]),
       ]);
       final expected = [
         [1.0, 6.0],
@@ -338,7 +338,7 @@ void main() {
         [21.0, 22.0, 23.0, 24.0],
       ]);
       final actual = matrix.reduceRows((combine, vector) => combine + vector,
-          initValue: Float32x4Vector.fromList([2.0, 3.0, 4.0, 5.0]));
+          initValue: Float32Vector.fromList([2.0, 3.0, 4.0, 5.0]));
       final expected = [49, 53, 57, 61];
       expect(actual, equals(expected));
     });
@@ -364,7 +364,7 @@ void main() {
         [21.0, 22.0, 23.0, 24.0],
       ]);
       final actual = matrix.reduceColumns((combine, vector) => combine + vector,
-          initValue: Float32x4Vector.fromList([2.0, 3.0, 4.0]));
+          initValue: Float32Vector.fromList([2.0, 3.0, 4.0]));
       final expected = [52, 69, 94];
       expect(actual, equals(expected));
     });
@@ -407,7 +407,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4Vector.fromList([2.0, 3.0, 4.0, 5.0]);
+      final vector = Float32Vector.fromList([2.0, 3.0, 4.0, 5.0]);
       final actual = matrix * vector;
       final expected = [
         [40],
@@ -426,7 +426,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0]);
+      final vector = Float32Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0]);
       expect(() => matrix * vector, throwsException);
     });
 
@@ -474,7 +474,7 @@ void main() {
         [10.0, 18.0, 28.0, 40.0],
         [18.0, .0, -12.0, -35.0],
       ]);
-      final vector = Float32x4Vector.fromList([2.0, 3.0, 4.0, 5.0]);
+      final vector = Float32Vector.fromList([2.0, 3.0, 4.0, 5.0]);
       final actual = matrix / vector;
       final expected = [
         [2.0, 2.0, 5.0, 25.0],
@@ -492,7 +492,7 @@ void main() {
         [9.0, 18.0, 27.0, 45.0],
         [14.0, .0, -21.0, -35.0],
       ]);
-      final vector = Float32x4Vector.fromList([2.0, 3.0, 7.0]);
+      final vector = Float32Vector.fromList([2.0, 3.0, 7.0]);
       final actual = matrix / vector;
       final expected = [
         [2.0, 3.0, 10.0, 60.0],
@@ -511,7 +511,7 @@ void main() {
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final vector = Float32x4Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0]);
+      final vector = Float32Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0]);
       expect(() => matrix / vector, throwsException);
     });
 
@@ -600,7 +600,7 @@ void main() {
     });
 
     test('should transpose a 1xN matrix', () {
-      final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0]);
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0]);
       final matrix = Float32x4Matrix.rows([vector]);
       final actual = matrix.transpose();
       final expected = [
@@ -615,7 +615,7 @@ void main() {
     });
 
     test('should transpose a Nx1 matrix', () {
-      final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0]);
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0]);
       final matrix = Float32x4Matrix.columns([vector]);
       final actual = matrix.transpose();
       final expected = [
@@ -1411,7 +1411,7 @@ void main() {
 
     test('should provide readable string representation for Nx1 matrix, '
         'created from columns constructor', () {
-      final vector = Float32x4Vector.fromList([4.0, 20.0, 36.0, 16.0, 112.0]);
+      final vector = Float32Vector.fromList([4.0, 20.0, 36.0, 16.0, 112.0]);
       final matrix = Float32x4Matrix.columns([vector]);
       final actual = matrix.toString();
       final expected = 'Matrix 5 x 1:\n'
@@ -1436,7 +1436,7 @@ void main() {
 
     test('should provide readable string representation for 1xN matrix, '
         'created from rows constructor', () {
-      final vector = Float32x4Vector.fromList([4.0, 8.0, 12.0, 16.0, 34.0]);
+      final vector = Float32Vector.fromList([4.0, 8.0, 12.0, 16.0, 34.0]);
       final matrix = Float32x4Matrix.rows([vector]);
       final actual = matrix.toString();
       final expected = 'Matrix 1 x 5:\n'

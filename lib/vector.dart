@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
+import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 
 import 'norm.dart';
 
@@ -15,7 +15,7 @@ abstract class Vector implements Iterable<double> {
   factory Vector.fromList(List<double> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.fromList(source);
+        return Float32Vector.fromList(source);
       default:
         throw UnimplementedError();
     }
@@ -25,7 +25,7 @@ abstract class Vector implements Iterable<double> {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.fromSimdList(source as Float32x4List,
+        return Float32Vector.fromSimdList(source as Float32x4List,
             actualLength);
       default:
         throw UnimplementedError();
@@ -37,7 +37,7 @@ abstract class Vector implements Iterable<double> {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.filled(length, value);
+        return Float32Vector.filled(length, value);
       default:
         throw UnimplementedError();
     }
@@ -47,7 +47,7 @@ abstract class Vector implements Iterable<double> {
   factory Vector.zero(int length, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.zero(length);
+        return Float32Vector.zero(length);
       default:
         throw UnimplementedError();
     }
@@ -59,7 +59,7 @@ abstract class Vector implements Iterable<double> {
       {int seed, DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.randomFilled(length, seed: seed);
+        return Float32Vector.randomFilled(length, seed: seed);
       default:
         throw UnimplementedError();
     }
