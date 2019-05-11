@@ -1,7 +1,7 @@
 // It takes approximately 11.8 second (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/vector.dart';
 
 const numOfRows = 10000;
@@ -19,7 +19,7 @@ class Float32x4MatrixFromColumnsBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    Float32x4Matrix.columns(_source);
+    Float32Matrix.columns(_source);
   }
 
   @override

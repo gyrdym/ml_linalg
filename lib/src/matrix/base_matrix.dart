@@ -3,8 +3,8 @@ import 'dart:math' as math;
 
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
-import 'package:ml_linalg/src/matrix/data_manager/data_manager.dart';
-import 'package:ml_linalg/src/matrix/matrix_validator_mixin.dart';
+import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
+import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 

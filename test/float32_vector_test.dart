@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/linalg.dart';
-import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 import 'package:test/test.dart';
 
@@ -179,7 +179,7 @@ void main() {
 
     test('should perform addition of a column matrix', () {
       final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final matrix = Float32x4Matrix.from([
+      final matrix = Float32Matrix.from([
         [1.0],
         [2.0],
         [3.0],
@@ -194,7 +194,7 @@ void main() {
 
     test('should perform addition of a rows matrix', () {
       final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final matrix = Float32x4Matrix.from([
+      final matrix = Float32Matrix.from([
         [1.0, 2.0, 3.0, 4.0, 5.0]
       ]);
       final actual = vector + matrix;
@@ -220,7 +220,7 @@ void main() {
 
     test('should perform subtraction of a column matrix', () {
       final vector = Float32Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0]);
-      final matrix = Float32x4Matrix.from([
+      final matrix = Float32Matrix.from([
         [1.0],
         [2.0],
         [3.0],
@@ -235,7 +235,7 @@ void main() {
 
     test('should perform subtraction of a row matrix', () {
       final vector = Float32Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0]);
-      final matrix = Float32x4Matrix.from([
+      final matrix = Float32Matrix.from([
         [1.0, 2.0, 3.0, 4.0, 5.0]
       ]);
       final actual = vector - matrix;
@@ -246,7 +246,7 @@ void main() {
 
     test('should perform subtraction of a row matrix', () {
       final vector = Float32Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0]);
-      final matrix = Float32x4Matrix.from([
+      final matrix = Float32Matrix.from([
         [1.0, 2.0, 3.0, 4.0, 5.0]
       ]);
       final actual = vector - matrix;
@@ -270,7 +270,7 @@ void main() {
 
     test('should perform multiplication by a matrix', () {
       final vector = Float32Vector.fromList([1.0, 2.0, 3.0]);
-      final matrix = Float32x4Matrix.from([
+      final matrix = Float32Matrix.from([
         [2.0, 3.0],
         [4.0, 5.0],
         [6.0, 7.0],
@@ -284,7 +284,7 @@ void main() {
     test('should throw an exception if one tries to multiple by an '
         'inappropriate matrix', () {
       final vector = Float32Vector.fromList([1.0, 2.0, 3.0]);
-      final matrix = Float32x4Matrix.from([
+      final matrix = Float32Matrix.from([
         [2.0, 3.0],
         [4.0, 5.0],
       ]);
