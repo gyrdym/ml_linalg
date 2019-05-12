@@ -5,13 +5,13 @@ import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 
 const amountOfElements = 10000000;
 
-class VectorInitializationBenchmark extends BenchmarkBase {
-  const VectorInitializationBenchmark()
+class VectorFromListBenchmark extends BenchmarkBase {
+  const VectorFromListBenchmark()
       : super('Vector initialization (fromList), '
       '$amountOfElements elements');
 
   static void main() {
-    const VectorInitializationBenchmark().report();
+    const VectorFromListBenchmark().report();
   }
 
   @override
@@ -21,5 +21,5 @@ class VectorInitializationBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  VectorInitializationBenchmark.main();
+  VectorFromListBenchmark.main();
 }
