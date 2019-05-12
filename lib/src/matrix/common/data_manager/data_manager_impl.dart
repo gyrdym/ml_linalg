@@ -8,7 +8,7 @@ import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 
 class DataManagerImpl implements DataManager {
-  DataManagerImpl.from(
+  DataManagerImpl.fromList(
       List<List<double>> source,
       int bytesPerElement,
       this._dtype,
@@ -22,8 +22,8 @@ class DataManagerImpl implements DataManager {
         _colsCache = List<Vector>(source.first.length),
         _data = ByteData(source.length * source.first.length *
             bytesPerElement) {
-    final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
-    _updateAll(0, flattened);
+    _updateByteDataBy2dimIterable(source, (i, j) => i * columnsNum + j,
+        bytesPerElement);
   }
 
   DataManagerImpl.fromRows(
@@ -40,8 +40,8 @@ class DataManagerImpl implements DataManager {
         _colsCache = List<Vector>(source.first.length),
         _data = ByteData(source.length * source.first.length *
             bytesPerElement) {
-    final flattened = _flatten2dimList(source, (i, j) => i * columnsNum + j);
-    _updateAll(0, flattened);
+    _updateByteDataBy2dimIterable(source, (i, j) => i * columnsNum + j,
+        bytesPerElement);
   }
 
   DataManagerImpl.fromColumns(
@@ -58,8 +58,8 @@ class DataManagerImpl implements DataManager {
         _colsCache = source.toList(growable: false),
         _data = ByteData(source.length * source.first.length *
             bytesPerElement) {
-    final flattened = _flatten2dimList(source, (i, j) => j * columnsNum + i);
-    _updateAll(0, flattened);
+    _updateByteDataBy2dimIterable(source, (i, j) => j * columnsNum + i,
+        bytesPerElement);
   }
 
   DataManagerImpl.fromFlattened(
@@ -82,7 +82,7 @@ class DataManagerImpl implements DataManager {
           '$rowsNum x $colsNum, but given a collection of length '
           '${source.length}');
     }
-    _updateAll(0, source);
+    _updateByteDataByFlattenedIterable(source);
   }
 
   @override
@@ -138,22 +138,21 @@ class DataManagerImpl implements DataManager {
     return _colsCache[index];
   }
 
-  void _updateAll(int idx, Iterable<double> values) =>
+  void _updateByteDataByFlattenedIterable(Iterable<double> values) =>
       _typedListHelper.getBufferAsList(_data.buffer).setAll(0, values);
 
-  List<double> _flatten2dimList(
-      Iterable<Iterable<double>> rows, int accessor(int i, int j)) {
-    int i = 0;
-    int j = 0;
-    final flattened = List<double>(columnsNum * rowsNum);
+  void _updateByteDataBy2dimIterable(Iterable<Iterable<double>> rows,
+      int accessor(int i, int j), int bytesPerElement) {
+    var i = 0;
+    var j = 0;
     for (final row in rows) {
       for (final value in row) {
-        flattened[accessor(i, j)] = value;
+        _typedListHelper
+            .setValue(_data, accessor(i, j) * bytesPerElement, value);
         j++;
       }
-      j = 0;
       i++;
+      j = 0;
     }
-    return flattened;
   }
 }

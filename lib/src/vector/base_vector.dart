@@ -270,11 +270,11 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
       _minValue ??= _findExtrema(double.infinity, _simdHelper.getMinLane,
           _simdHelper.selectMin, math.min);
 
-  double _findExtrema(double fallbackValue, double getExtremalLane(E bucket),
+  double _findExtrema(double initialValue, double getExtremalLane(E bucket),
       E getExtremalBucket(E first, E second),
       double getExtremalValue(double first, double second)) {
     if (_isLastBucketNotFull) {
-      var extrema = fallbackValue;
+      var extrema = initialValue;
       final fullBucketsList = _innerSimdList.take(_numOfBuckets - 1);
       if (fullBucketsList.isNotEmpty) {
         extrema = getExtremalLane(fullBucketsList.reduce(getExtremalBucket));
