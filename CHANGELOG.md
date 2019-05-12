@@ -11,7 +11,8 @@
     - `insertColumns` method added
     - `Matrix.from` renamed to `Matrix.fromList`
     - `Matrix.fromFlattened` renamed to `Matrix.fromFlattenedList` 
-    - benchmarks added for checking matrix initialization performance 
+    - benchmarks added for checking matrix initialization performance
+- Performance enhancements
 
 ## 9.0.0
 - `Vector`:
