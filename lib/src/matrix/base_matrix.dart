@@ -154,9 +154,7 @@ abstract class BaseMatrix with
     final checked = <Vector>[];
     for (final i in _dataManager.rowIndices) {
       final row = getRow(i);
-      if (!checked.contains(row)) {
-        checked.add(row);
-      }
+      if (!checked.contains(row)) checked.add(row);
     }
     return Matrix.fromRows(checked, dtype: dtype);
   }
@@ -249,9 +247,9 @@ abstract class BaseMatrix with
   }
 
   Vector _reduce(
-      Vector Function(Vector combine, Vector vector) combiner,
+      Vector combiner(Vector combine, Vector vector),
       int length,
-      Vector Function(int index) getVector,
+      Vector getVector(int index),
       {Vector initValue}) {
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
@@ -267,8 +265,8 @@ abstract class BaseMatrix with
           'The dimension of the vector ${vector} and the columns number of '
               'matrix ${this} mismatch');
     }
-    final generateElementFn = (int i) => vector.dot(getRow(i));
-    final source = List<double>.generate(rowsNum, generateElementFn);
+    final generateElement = (int i) => vector.dot(getRow(i));
+    final source = List<double>.generate(rowsNum, generateElement);
     final vectorColumn = Vector.fromList(source, dtype: dtype);
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }

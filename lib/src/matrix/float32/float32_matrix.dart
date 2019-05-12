@@ -8,8 +8,8 @@ import 'package:ml_linalg/src/matrix/common/data_manager/data_manager_impl.dart'
 import 'package:ml_linalg/vector.dart';
 
 class Float32Matrix extends BaseMatrix {
-  Float32Matrix.from(List<List<double>> source) :
-        super(DataManagerImpl.from(
+  Float32Matrix.fromList(List<List<double>> source) :
+        super(DataManagerImpl.fromList(
           source,
           Float32List.bytesPerElement,
           DType.float32,

@@ -14,7 +14,7 @@ abstract class Matrix {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.from(source);
+        return Float32Matrix.fromList(source);
       default:
         throw UnimplementedError();
     }
