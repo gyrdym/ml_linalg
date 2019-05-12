@@ -138,7 +138,7 @@ class DataManagerImpl implements DataManager {
     return _colsCache[index];
   }
 
-  void _updateByteDataByFlattenedIterable(Iterable<double> values) =>
+  void _updateByteDataByFlattenedIterable(List<double> values) =>
       _typedListHelper.getBufferAsList(_data.buffer).setAll(0, values);
 
   void _updateByteDataBy2dimIterable(Iterable<Iterable<double>> rows,
