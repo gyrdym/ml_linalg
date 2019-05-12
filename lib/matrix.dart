@@ -7,9 +7,11 @@ import 'package:xrange/zrange.dart';
 /// An algebraic matrix
 abstract class Matrix {
   /// Creates a matrix from a two dimensional list, every nested list is a
-  /// representation for a row
-  /// There is no check of lists lengths in source due to performance,
-  /// keep it in mind, don't create a matrix from lists of different lengths
+  /// source for a matrix row.
+  ///
+  /// There is no check of nested lists lengths in the [source] due to
+  /// performance, keep it in mind, don't create a matrix from nested lists of
+  /// different lengths
   factory Matrix.fromList(List<List<double>> source,
       {DType dtype = DType.float32}) {
     switch (dtype) {
@@ -21,8 +23,10 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined row vectors
-  /// There is no check of vectors lengths in source due to performance,
-  /// keep it in mind, don't create a matrix from vectors of different lengths
+  ///
+  /// There is no check of nested vectors lengths in the [source] due to
+  /// performance, keep it in mind, don't create a matrix from vectors lists of
+  /// different lengths
   factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
@@ -33,8 +37,10 @@ abstract class Matrix {
   }
 
   /// Creates a matrix with predefined column vectors
-  /// There is no check of vectors lengths in source due to performance,
-  /// keep it in mind, don't create a matrix from vectors of different lengths
+  ///
+  /// There is no check of nested vectors lengths in the [source] due to
+  /// performance, keep it in mind, don't create a matrix from nested vectors of
+  /// different lengths
   factory Matrix.fromColumns(List<Vector> source,
       {DType dtype = DType.float32}) {
     switch (dtype) {
@@ -45,7 +51,7 @@ abstract class Matrix {
     }
   }
 
-  /// Creates a matrix from flattened iterable of length that is equal to
+  /// Creates a matrix from flattened list of length equal to
   /// [rowsNum] * [columnsNum]
   factory Matrix.fromFlattenedList(List<double> source, int rowsNum,
       int columnsNum, {DType dtype = DType.float32}) {
