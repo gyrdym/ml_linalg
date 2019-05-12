@@ -117,22 +117,6 @@ void main() {
       expect(identical(row1, row2), isTrue);
     });
 
-    test('should ignore cache to get row vector if it is needed', () {
-      final matrix = Float32Matrix.from([
-        [4.0, 8.0, 12.0, 16.0, 34.0],
-        [20.0, 24.0, 28.0, 32.0, 23.1],
-        [36.0, .0, -8.0, -12.0, 12.0],
-        [16.0, 1.0, -18.0, 3.0, 11.0],
-        [112.0, 10.0, 34.0, 2.0, 10.0],
-      ]);
-      // write value to the cache
-      final row1 = matrix.getRow(1);
-      final row2 = matrix.getRow(1, tryCache: false);
-
-      expect(identical(row1, row2), isFalse);
-      expect(row1, equals(row2));
-    });
-
     test('should return required column as a vector', () {
       final matrix = Float32Matrix.from([
         [11.0, 12.0, 13.0, 14.0],
@@ -170,22 +154,6 @@ void main() {
       final column2 = matrix.getColumn(1);
 
       expect(identical(column1, column2), isTrue);
-    });
-
-    test('should ignore cache to get column vector if it is needed', () {
-      final matrix = Float32Matrix.from([
-        [4.0, 8.0, 12.0, 16.0, 34.0],
-        [20.0, 24.0, 28.0, 32.0, 23.1],
-        [36.0, .0, -8.0, -12.0, 12.0],
-        [16.0, 1.0, -18.0, 3.0, 11.0],
-        [112.0, 10.0, 34.0, 2.0, 10.0],
-      ]);
-      // write value to the cache
-      final column1 = matrix.getColumn(1);
-      final column2 = matrix.getColumn(1, tryCache: false);
-
-      expect(identical(column1, column2), isFalse);
-      expect(column1, equals(column2));
     });
 
     test('should cut out a submatrix with respect to given intervals, rows and '
@@ -759,21 +727,6 @@ void main() {
       expect(identical(column1, column2), isTrue);
     });
 
-    test('should convert itself to a mutable vector column', () {
-      final matrix = Float32Matrix.from([
-        [1.0],
-        [5.0],
-        [9.0],
-      ]);
-      final column1 = matrix.toVector(mutable: true);
-      final column2 = matrix.toVector(mutable: true);
-
-      expect(column1 is Vector, isTrue);
-      expect(column1, equals([1.0, 5.0, 9.0]));
-      expect(identical(column1, column2), isFalse);
-      expect(column1, equals(column2));
-    });
-
     test('should convert itself to a vector row', () {
       final matrix = Float32Matrix.from([
         [4.0, 8.0, 12.0, 16.0],
@@ -785,19 +738,6 @@ void main() {
       expect(identical(row1, row2), isTrue);
     });
 
-    test('should convert itself to a mutable vector row', () {
-      final matrix = Float32Matrix.from([
-        [4.0, 8.0, 12.0, 16.0],
-      ]);
-      final row1 = matrix.toVector(mutable: true);
-      final row2 = matrix.toVector(mutable: true);
-
-      expect(row1 is Vector, isTrue);
-      expect(row1, equals([4.0, 8.0, 12.0, 16.0]));
-      expect(identical(row1, row2), isFalse);
-      expect(row1, equals(row2));
-    });
-
     test('should throw an error if one tries to convert it into vector if its '
         'dimension is inappropriate', () {
       final matrix = Float32Matrix.from([
@@ -805,6 +745,7 @@ void main() {
         [20.0, 24.0, 28.0, 32.0],
         [36.0, .0, -8.0, -12.0],
       ]);
+      // ignore: unnecessary_lambdas
       expect(() => matrix.toVector(), throwsException);
     });
 

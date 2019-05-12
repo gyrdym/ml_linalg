@@ -23,7 +23,7 @@ abstract class BaseMatrix with
   int get columnsNum => _dataManager.columnsNum;
 
   @override
-  Iterator<Iterable<double>> get iterator => _dataManager.dataIterator;
+  Iterator<Iterable<double>> get iterator => _dataManager.iterator;
 
   @override
   Matrix operator +(Object value) {
@@ -95,12 +95,10 @@ abstract class BaseMatrix with
   }
 
   @override
-  Vector getRow(int index, {bool tryCache = true, bool mutable = false}) =>
-      _dataManager.getRow(index, tryCache: tryCache, mutable: mutable);
+  Vector getRow(int index) => _dataManager.getRow(index);
 
   @override
-  Vector getColumn(int index, {bool tryCache = true, bool mutable = false}) =>
-      _dataManager.getColumn(index, tryCache: tryCache, mutable: mutable);
+  Vector getColumn(int index) => _dataManager.getColumn(index);
 
   @override
   Matrix submatrix({ZRange rows, ZRange columns}) {
@@ -164,11 +162,11 @@ abstract class BaseMatrix with
   }
 
   @override
-  Vector toVector({bool mutable = false}) {
+  Vector toVector() {
     if (columnsNum == 1) {
-      return getColumn(0, tryCache: !mutable, mutable: mutable);
+      return getColumn(0);
     } else if (rowsNum == 1) {
-      return getRow(0, tryCache: !mutable, mutable: mutable);
+      return getRow(0);
     }
     throw Exception(
         'Cannot convert a ${rowsNum}x${columnsNum} matrix into a vector');

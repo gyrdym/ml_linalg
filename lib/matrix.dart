@@ -99,10 +99,10 @@ abstract class Matrix {
   Matrix pick({Iterable<ZRange> rowRanges, Iterable<ZRange> columnRanges});
 
   /// Returns a column of the matrix, resided on [index]
-  Vector getColumn(int index, {bool tryCache = true});
+  Vector getColumn(int index);
 
   /// Returns a row of the matrix, resided on [index]
-  Vector getRow(int index, {bool tryCache = true});
+  Vector getRow(int index);
 
   /// Reduces all the matrix columns to only column, using [combiner] function
   Vector reduceColumns(Vector combiner(Vector combine, Vector vector),
