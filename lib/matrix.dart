@@ -1,57 +1,69 @@
-import 'dart:typed_data';
-
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix_norm.dart';
-import 'package:ml_linalg/src/matrix/float32x4_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 
 /// An algebraic matrix
 abstract class Matrix {
-  /// Creates a matrix from a two dimensional list
-  factory Matrix.from(List<List<double>> source,
-      {Type dtype = Float32x4}) {
+  /// Creates a matrix from a two dimensional list, every nested list is a
+  /// source for a matrix row.
+  ///
+  /// There is no check of nested lists lengths in the [source] due to
+  /// performance, keep it in mind, don't create a matrix from nested lists of
+  /// different lengths
+  factory Matrix.fromList(List<List<double>> source,
+      {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Matrix.from(source);
+      case DType.float32:
+        return Float32Matrix.fromList(source);
       default:
         throw UnimplementedError();
     }
   }
 
   /// Creates a matrix with predefined row vectors
-  factory Matrix.fromRows(List<Vector> source, {Type dtype = Float32x4}) {
+  ///
+  /// There is no check of nested vectors lengths in the [source] due to
+  /// performance, keep it in mind, don't create a matrix from vectors lists of
+  /// different lengths
+  factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Matrix.rows(source);
+      case DType.float32:
+        return Float32Matrix.rows(source);
       default:
         throw UnimplementedError();
     }
   }
 
   /// Creates a matrix with predefined column vectors
+  ///
+  /// There is no check of nested vectors lengths in the [source] due to
+  /// performance, keep it in mind, don't create a matrix from nested vectors of
+  /// different lengths
   factory Matrix.fromColumns(List<Vector> source,
-      {Type dtype = Float32x4}) {
+      {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Matrix.columns(source);
+      case DType.float32:
+        return Float32Matrix.columns(source);
       default:
         throw UnimplementedError();
     }
   }
 
-  /// Creates a matrix from flattened iterable of length that is equal to
+  /// Creates a matrix from flattened list of length equal to
   /// [rowsNum] * [columnsNum]
-  factory Matrix.fromFlattened(List<double> source, int rowsNum,
-      int columnsNum, {Type dtype = Float32x4}) {
+  factory Matrix.fromFlattenedList(List<double> source, int rowsNum,
+      int columnsNum, {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Matrix.flattened(source, rowsNum, columnsNum);
+      case DType.float32:
+        return Float32Matrix.flattened(source, rowsNum, columnsNum);
       default:
         throw UnimplementedError();
     }
   }
 
-  Type get dtype;
+  DType get dtype;
 
   /// Returns a generator of immutable row vectors of the matrix
   Iterable<Vector> get rows;
@@ -93,10 +105,10 @@ abstract class Matrix {
   Matrix pick({Iterable<ZRange> rowRanges, Iterable<ZRange> columnRanges});
 
   /// Returns a column of the matrix, resided on [index]
-  Vector getColumn(int index, {bool tryCache = true, bool mutable = false});
+  Vector getColumn(int index);
 
   /// Returns a row of the matrix, resided on [index]
-  Vector getRow(int index, {bool tryCache = true, bool mutable = false});
+  Vector getRow(int index);
 
   /// Reduces all the matrix columns to only column, using [combiner] function
   Vector reduceColumns(Vector combiner(Vector combine, Vector vector),
@@ -123,7 +135,7 @@ abstract class Matrix {
   ///
   /// It fails, if the matrix's both numbers of columns and rows are greater
   /// than `1`
-  Vector toVector({bool mutable = false});
+  Vector toVector();
 
   /// Returns max value of the matrix
   double max();
@@ -134,12 +146,8 @@ abstract class Matrix {
   /// Returns a norm of a matrix
   double norm([MatrixNorm norm]);
 
-  /// Sets the new values for the specific column
-  ///
-  /// [columnNum] - 0-based column number
-  /// [columnValues] - values, that are going to be placed one by one in the
-  /// target column
-  void setColumn(int columnNum, Iterable<double> columnValues);
+  /// Returns a new matrix with inserted column
+  Matrix insertColumns(int index, List<Vector> columns);
 
   /// Extracts non-repeated matrix rows and pack them into matrix
   Matrix uniqueRows();

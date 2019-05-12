@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/matrix/byte_data_helpers/float32_byte_data_helpers.dart';
-import 'package:ml_linalg/src/matrix/matrix_iterator.dart';
+import 'package:ml_linalg/src/common/float32_list_helper/float32_list_helper.dart';
+import 'package:ml_linalg/src/matrix/common/matrix_iterator.dart';
 import 'package:test/test.dart';
 
 import 'unit_test_helpers/float_iterable_almost_equal_to.dart';
@@ -17,16 +17,15 @@ void main() {
 
     test('should be created properly', () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement,
-          bufferToFloat32List);
+      final iterator = MatrixIterator(data, 3, 3, Float32ListHelper());
       expect(iterator.current, isNull);
     });
 
     test('should return the next value on every `moveNext` method call (9 '
         'elements, 3 columns)', () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement,
-          bufferToFloat32List)..moveNext();
+      final iterator = MatrixIterator(data, 3, 3, Float32ListHelper())
+        ..moveNext();
       expect(iterator.current, vectorAlmostEqualTo([1.0, 2.0, 3.0]));
 
       iterator.moveNext();
@@ -42,8 +41,8 @@ void main() {
     test('should return the next value on every `moveNext` method call (9 '
         'elements, 2 columns)', () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 2, Float32List.bytesPerElement,
-          bufferToFloat32List)..moveNext();
+      final iterator = MatrixIterator(data, 5, 2, Float32ListHelper())
+        ..moveNext();
       expect(iterator.current, vectorAlmostEqualTo([1.0, 2.0]));
 
       iterator.moveNext();
@@ -55,18 +54,18 @@ void main() {
       iterator.moveNext();
       expect(iterator.current, vectorAlmostEqualTo([8.3, 3.4]));
 
-      iterator.moveNext();
-      expect(iterator.current, vectorAlmostEqualTo([34.5]));
+      // ignore: unnecessary_lambdas
+      expect(() => iterator.moveNext(), throwsRangeError);
 
-      iterator.moveNext();
-      expect(iterator.current, isNull);
+      // ignore: unnecessary_lambdas
+      expect(() => iterator.moveNext(), throwsRangeError);
     });
 
     test('should return the next value on every `moveNext` method call (9 '
         'elements, 9 columns)', () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 9, Float32List.bytesPerElement,
-          bufferToFloat32List)..moveNext();
+      final iterator = MatrixIterator(data, 1, 9, Float32ListHelper())
+        ..moveNext();
       expect(
           iterator.current,
           vectorAlmostEqualTo(
@@ -79,8 +78,7 @@ void main() {
     test('should return a proper boolean indicator after each `moveNext` call',
         () {
       final data = createByteData(source);
-      final iterator = MatrixIterator(data, 3, Float32List.bytesPerElement,
-          bufferToFloat32List);
+      final iterator = MatrixIterator(data, 3, 3, Float32ListHelper());
 
       expect(iterator.moveNext(), isTrue);
       expect(iterator.moveNext(), isTrue);
