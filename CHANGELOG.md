@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.0.1
+- Links in README corrected
+
 ## 10.0.0
 - `Vector`:
     - removed possibility to mutate an instance of the Vector:
