@@ -13,6 +13,7 @@
     - `Matrix.fromFlattened` renamed to `Matrix.fromFlattenedList` 
     - benchmarks added for checking matrix initialization performance
 - Performance enhancements
+- Dart 2.3.0 supported
 
 ## 9.0.0
 - `Vector`:

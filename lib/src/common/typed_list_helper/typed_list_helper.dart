@@ -13,7 +13,7 @@ abstract class TypedListHelper {
   /// returns byte buffer in list representation
   List<double> getBufferAsList(ByteBuffer buffer, [int start = 0, int length]);
 
-  /// set
+  /// sets a value to a given [ByteData] by the specified byte offset
   void setValue(ByteData byteData, int byteOffset, double value,
       [Endian endian]);
 }
