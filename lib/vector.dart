@@ -32,7 +32,7 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
-  /// Creates a vector of length, equal to [length], filled with [value].
+  /// Creates a vector of length equal to [length], filled with [value].
   factory Vector.filled(int length, double value,
       {DType dtype = DType.float32}) {
     switch (dtype) {
@@ -43,7 +43,7 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
-  /// Creates a vector of length, equal to [length], filled with zeroes.
+  /// Creates a vector of length equal to [length], filled with zeroes.
   factory Vector.zero(int length, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
@@ -67,7 +67,7 @@ abstract class Vector implements Iterable<double> {
 
   DType get dtype;
 
-  /// Indexed access to a vector's element
+  /// Returns an element by its position in the vector
   double operator [](int index);
 
   /// Vector addition (element-wise operation)
@@ -86,7 +86,7 @@ abstract class Vector implements Iterable<double> {
   /// the integer [power]
   Vector toIntegerPower(int power);
 
-  /// Returns a vector with absolute value of each vector element
+  /// Returns a new vector with absolute value of each vector element
   Vector abs();
 
   /// Returns a dot (inner) product of [this] and [vector]
@@ -97,7 +97,7 @@ abstract class Vector implements Iterable<double> {
     Distance distance = Distance.euclidean,
   });
 
-  /// Returns cosine of the angle between [this] and [other]
+  /// Returns cosine of the angle between [this] and [other] vector
   double getCosine(Vector other);
 
   /// Returns a mean value of [this] vector
@@ -115,14 +115,14 @@ abstract class Vector implements Iterable<double> {
   /// Returns maximum element
   double min();
 
-  /// Returns a vector composed of elements which are located on the passed
+  /// Returns a new vector composed of elements which are located on the passed
   /// indexes
   Vector query(Iterable<int> indexes);
 
-  /// Returns a vector composed of unique vector's elements
+  /// Returns a new vector composed of the vector's unique elements
   Vector unique();
 
-  /// Returns normalized version of this vector
+  /// Returns a new vector with normalized values of [this] vector
   Vector normalize([Norm norm = Norm.euclidean]);
 
   /// Returns rescaled (min-max normed) version of this vector
@@ -130,6 +130,6 @@ abstract class Vector implements Iterable<double> {
 
   Vector fastMap<E>(E mapper(E element));
 
-  /// Cuts out a part of the vector
+  /// Returns a new vector formed by a specific part of [this] vector
   Vector subvector(int start, [int end]);
 }

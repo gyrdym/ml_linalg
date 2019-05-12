@@ -68,6 +68,9 @@ version of vector using existing codebase, but so far there is no need to do so.
 is hidden from the library's users. You can create a [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
 instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
+The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
+creation of a new vector instance (of course, if the operation is supposed to return `Vector`).
+
 #### Vector operations examples
 At the present moment most common vector operations are implemented:
 
@@ -274,7 +277,8 @@ Performs mapping from one vector to another in efficient way (using simd computa
 
 ### Matrices
 
-Also, a class for matrix is available. It is based on Float32x4 and Float32Vector types.
+Also, a class for matrix is available. It is based on Float32x4 and Float32Vector types. `Matrix` is immutable as well 
+as `Vector`.
 
 #### Matrix operations examples
 
@@ -578,7 +582,7 @@ print(result);
 */
 ````
 
-#### Matrix column updating
+#### Add a new column to a matrix
 ````dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -589,15 +593,17 @@ final matrix = Matrix.from([
   [24.0, 32.0, 53.0, 74.0],
 ], dtype: DType.float32);
 
-matrix.setColumn(0, [1.0, 2.0, 3.0, 4.0]);
+final updatedMatrix = matrix.insertColumn(0, [Vector.fromList([1.0, 2.0, 3.0, 4.0])]);
 
-print(matrix);
+print(updatedMatrix);
 // [
-//  [1.0, 12.0, 13.0, 14.0],
-//  [2.0, 16.0, 0.0, 18.0],
-//  [3.0, 22.0, -23.0, 24.0],
-//  [4.0, 32.0, 53.0, 74.0],
+//  [1.0, 11.0, 12.0, 13.0, 14.0],
+//  [2.0, 15.0, 16.0, 0.0, 18.0],
+//  [3.0, 21.0, 22.0, -23.0, 24.0],
+//  [4.0, 24.0, 32.0, 53.0, 74.0],
 // ]
+
+print(updatedMatrix == matrix); // false
 ````
 
 ### Contacts
