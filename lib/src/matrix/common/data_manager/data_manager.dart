@@ -3,10 +3,10 @@ import 'package:ml_linalg/vector.dart';
 abstract class DataManager {
   int get rowsNum;
   int get columnsNum;
-  Iterator<Iterable<double>> get dataIterator;
+  Iterator<Iterable<double>> get iterator;
   Iterable<int> get rowIndices;
   Iterable<int> get colIndices;
-  Vector getColumn(int index, {bool tryCache = true, bool mutable = false});
-  Vector getRow(int index, {bool tryCache = true, bool mutable = false});
+  Vector getColumn(int index);
+  Vector getRow(int index);
   List<double> getValues(int index, int length);
 }

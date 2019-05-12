@@ -101,7 +101,7 @@ class DataManagerImpl implements DataManager {
   final TypedListHelper _typedListHelper;
 
   @override
-  Iterator<Iterable<double>> get dataIterator =>
+  Iterator<Iterable<double>> get iterator =>
       MatrixIterator(_data, rowsNum, columnsNum, _typedListHelper);
 
   @override
@@ -119,30 +119,21 @@ class DataManagerImpl implements DataManager {
   }
 
   @override
-  Vector getRow(int index, {bool tryCache = true, bool mutable = false}) {
-    if (tryCache) {
-      _rowsCache[index] ??= Vector.fromList(getValues(index * columnsNum,
-          columnsNum), dtype: _dtype);
-      return _rowsCache[index];
-    } else {
-      return Vector.fromList(getValues(index * columnsNum, columnsNum),
-          dtype: _dtype);
-    }
+  Vector getRow(int index) {
+    _rowsCache[index] ??= Vector.fromList(getValues(index * columnsNum,
+        columnsNum), dtype: _dtype);
+    return _rowsCache[index];
   }
 
   @override
-  Vector getColumn(int index, {bool tryCache = true, bool mutable = false}) {
-    if (_colsCache[index] == null || !tryCache) {
+  Vector getColumn(int index) {
+    if (_colsCache[index] == null) {
       final result = List<double>(rowsNum);
       for (final i in rowIndices) {
         //@TODO: find a more efficient way to get the single value
         result[i] = getValues(i * columnsNum + index, 1).first;
       }
-      final column = Vector.fromList(result, dtype: _dtype);
-      if (!tryCache) {
-        return column;
-      }
-      _colsCache[index] = column;
+      _colsCache[index] = Vector.fromList(result, dtype: _dtype);
     }
     return _colsCache[index];
   }
