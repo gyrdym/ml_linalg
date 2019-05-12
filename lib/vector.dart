@@ -1,7 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/distance.dart';
-import 'package:ml_linalg/src/vector/float32x4/float32x4_vector.dart';
+import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 
 import 'norm.dart';
 
@@ -10,51 +11,43 @@ abstract class Vector implements Iterable<double> {
   /// Creates a vector from a collection [source].
   ///
   /// It converts the collection of [double]-type elements into a collection of
-  /// [Float32x4] elements. If [isMutable] is true, one can alter the vector,
-  /// for example, via `[]=` operator
-  factory Vector.from(Iterable<double> source,
-      {bool isMutable, Type dtype = Float32x4}) {
+  /// [Float32x4] elements.
+  factory Vector.fromList(List<double> source, {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Vector.from(source, isMutable: isMutable);
+      case DType.float32:
+        return Float32Vector.fromList(source);
       default:
         throw UnimplementedError();
     }
   }
 
   factory Vector.fromSimdList(List source, int actualLength,
-      {bool isMutable, Type dtype = Float32x4}) {
+      {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Vector.fromSimdList(source as Float32x4List,
-            actualLength, isMutable: isMutable);
+      case DType.float32:
+        return Float32Vector.fromSimdList(source as Float32x4List,
+            actualLength);
       default:
         throw UnimplementedError();
     }
   }
 
-  /// Creates a vector of length, equal to [length], filled with [value].
-  ///
-  /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
-  /// operator
+  /// Creates a vector of length equal to [length], filled with [value].
   factory Vector.filled(int length, double value,
-      {bool isMutable, Type dtype = Float32x4}) {
+      {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Vector.filled(length, value, isMutable: isMutable);
+      case DType.float32:
+        return Float32Vector.filled(length, value);
       default:
         throw UnimplementedError();
     }
   }
 
-  /// Creates a vector of length, equal to [length], filled with zeroes.
-  ///
-  /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
-  /// operator
-  factory Vector.zero(int length, {bool isMutable, Type dtype = Float32x4}) {
+  /// Creates a vector of length equal to [length], filled with zeroes.
+  factory Vector.zero(int length, {DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Vector.zero(length, isMutable: isMutable);
+      case DType.float32:
+        return Float32Vector.zero(length);
       default:
         throw UnimplementedError();
     }
@@ -62,30 +55,20 @@ abstract class Vector implements Iterable<double> {
 
   /// Creates a vector of length, equal to [length], filled with random values,
   /// generated from randomizer with seed, equal to [seed].
-  ///
-  /// If [isMutable] is true, one can alter the vector, for example, via `[]=`
-  /// operator
   factory Vector.randomFilled(int length,
-      {int seed, bool isMutable, Type dtype = Float32x4}) {
+      {int seed, DType dtype = DType.float32}) {
     switch (dtype) {
-      case Float32x4:
-        return Float32x4Vector.randomFilled(length, seed: seed,
-            isMutable: isMutable);
+      case DType.float32:
+        return Float32Vector.randomFilled(length, seed: seed);
       default:
         throw UnimplementedError();
     }
   }
 
-  Type get dtype;
+  DType get dtype;
 
-  /// Can someone mutate the vector, e.g. via []= operator, or not
-  bool get isMutable;
-
-  /// Indexed access to a vector's element
+  /// Returns an element by its position in the vector
   double operator [](int index);
-
-  /// Assigns a value via indexed access
-  void operator []=(int index, double value);
 
   /// Vector addition (element-wise operation)
   Vector operator +(Object value);
@@ -103,7 +86,7 @@ abstract class Vector implements Iterable<double> {
   /// the integer [power]
   Vector toIntegerPower(int power);
 
-  /// Returns a vector with absolute value of each vector element
+  /// Returns a new vector with absolute value of each vector element
   Vector abs();
 
   /// Returns a dot (inner) product of [this] and [vector]
@@ -114,7 +97,7 @@ abstract class Vector implements Iterable<double> {
     Distance distance = Distance.euclidean,
   });
 
-  /// Returns cosine of the angle between [this] and [other]
+  /// Returns cosine of the angle between [this] and [other] vector
   double getCosine(Vector other);
 
   /// Returns a mean value of [this] vector
@@ -132,22 +115,21 @@ abstract class Vector implements Iterable<double> {
   /// Returns maximum element
   double min();
 
-  /// Returns a vector composed of elements which are located on the passed
+  /// Returns a new vector composed of elements which are located on the passed
   /// indexes
   Vector query(Iterable<int> indexes);
 
-  /// Returns a vector composed of unique vector's elements
+  /// Returns a new vector composed of the vector's unique elements
   Vector unique();
 
-  /// Returns normalized version of this vector
+  /// Returns a new vector with normalized values of [this] vector
   Vector normalize([Norm norm = Norm.euclidean]);
 
   /// Returns rescaled (min-max normed) version of this vector
   Vector rescale();
 
-  Vector fastMap<E>(
-      E mapper(E element, int offsetStartIdx, int offsetEndIdx));
+  Vector fastMap<E>(E mapper(E element));
 
-  /// Cuts out a part of the vector
+  /// Returns a new vector formed by a specific part of [this] vector
   Vector subvector(int start, [int end]);
 }

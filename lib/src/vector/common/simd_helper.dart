@@ -1,13 +1,8 @@
-abstract class SimdHelper<E, S extends List<E>> {
-  /// number of lanes (it is 2 or 4 elements currently supported to be processed simultaneously, this characteristic
-  /// restricted by computing platform architecture)
-  int get bucketSize;
+import 'dart:typed_data';
 
+abstract class SimdHelper<E, S extends List<E>> {
   /// creates a simd-value filled with [value]
   E createFilled(double value);
-
-  /// creates a simd-value from passed [list]
-  E createFromList(List<double> list);
 
   /// performs summation of two simd values
   E sum(E a, E b);
@@ -30,11 +25,11 @@ abstract class SimdHelper<E, S extends List<E>> {
   /// performs summation of all components of passed simd value [a]
   double sumLanes(E a);
 
-  /// returns a typed simd list of length equals [length]
+  /// returns a simd list of length equals [length]
   S createList(int length);
 
-  /// returns particular component (lane) of simd value [value] by offset
-  double getLaneByIndex(E value, int offset);
+  /// returns a simd list created from [source]
+  S createListFrom(List<E> source);
 
   /// prepares a simd value comprised of maximum values of both [a] and [b]
   E selectMax(E a, E b);
@@ -51,11 +46,7 @@ abstract class SimdHelper<E, S extends List<E>> {
   double getMinLane(E a);
 
   /// converts simd value [a] to regular list
-  List<double> toList(E a);
+  List<double> simdValueToList(E a);
 
-  List<double> takeFirstNLanes(E a, int n);
-
-  S sublist(S list, int start, [int end]);
-
-  E mutate(E simd, int offset, double scalar);
+  S getBufferAsSimdList(ByteBuffer buffer);
 }

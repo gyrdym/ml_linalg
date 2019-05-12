@@ -3,8 +3,8 @@ import 'dart:math' as math;
 
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
-import 'package:ml_linalg/src/matrix/data_manager/data_manager.dart';
-import 'package:ml_linalg/src/matrix/matrix_validator_mixin.dart';
+import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
+import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 
@@ -23,7 +23,7 @@ abstract class BaseMatrix with
   int get columnsNum => _dataManager.columnsNum;
 
   @override
-  Iterator<Iterable<double>> get iterator => _dataManager.dataIterator;
+  Iterator<Iterable<double>> get iterator => _dataManager.iterator;
 
   @override
   Matrix operator +(Object value) {
@@ -95,12 +95,10 @@ abstract class BaseMatrix with
   }
 
   @override
-  Vector getRow(int index, {bool tryCache = true, bool mutable = false}) =>
-      _dataManager.getRow(index, tryCache: tryCache, mutable: mutable);
+  Vector getRow(int index) => _dataManager.getRow(index);
 
   @override
-  Vector getColumn(int index, {bool tryCache = true, bool mutable = false}) =>
-      _dataManager.getColumn(index, tryCache: tryCache, mutable: mutable);
+  Vector getColumn(int index) => _dataManager.getColumn(index);
 
   @override
   Matrix submatrix({ZRange rows, ZRange columns}) {
@@ -114,7 +112,7 @@ abstract class BaseMatrix with
           _dataManager.getValues(i * columnsNum + columns.firstValue,
               columnsLength);
     }
-    return Matrix.from(matrixSource, dtype: dtype);
+    return Matrix.fromList(matrixSource, dtype: dtype);
   }
 
   @override
@@ -156,19 +154,17 @@ abstract class BaseMatrix with
     final checked = <Vector>[];
     for (final i in _dataManager.rowIndices) {
       final row = getRow(i);
-      if (!checked.contains(row)) {
-        checked.add(row);
-      }
+      if (!checked.contains(row)) checked.add(row);
     }
     return Matrix.fromRows(checked, dtype: dtype);
   }
 
   @override
-  Vector toVector({bool mutable = false}) {
+  Vector toVector() {
     if (columnsNum == 1) {
-      return getColumn(0, tryCache: !mutable, mutable: mutable);
+      return getColumn(0);
     } else if (rowsNum == 1) {
-      return getRow(0, tryCache: !mutable, mutable: mutable);
+      return getRow(0);
     }
     throw Exception(
         'Cannot convert a ${rowsNum}x${columnsNum} matrix into a vector');
@@ -212,8 +208,16 @@ abstract class BaseMatrix with
   }
 
   @override
-  void setColumn(int columnNum, Iterable<double> columnValues) =>
-      _dataManager.setColumn(columnNum, columnValues);
+  Matrix insertColumns(int targetIdx, List<Vector> columns) {
+    final newColumns = List<Vector>(columnsNum + columns.length)
+      ..setRange(targetIdx, targetIdx + columns.length, columns);
+    var i = 0;
+    for (final column in this.columns) {
+      if (i == targetIdx) i += columns.length;
+      newColumns[i++] = column;
+    }
+    return Matrix.fromColumns(newColumns, dtype: dtype);
+  }
 
   @override
   Iterable<Vector> get rows =>
@@ -226,8 +230,7 @@ abstract class BaseMatrix with
   @override
   Matrix fastMap<T>(T mapper(T element)) {
     final source = List<Vector>.generate(
-        rowsNum, (int i) => (getRow(i)).fastMap(
-            (T element, int startOffset, int endOffset) => mapper(element)));
+        rowsNum, (int i) => getRow(i).fastMap(mapper));
     return Matrix.fromRows(source, dtype: dtype);
   }
 
@@ -238,16 +241,15 @@ abstract class BaseMatrix with
 
   double _findExtrema(double callback(Vector vector)) {
     int i = 0;
-    return callback(reduceRows((result, row) {
-      result[i++] = callback(row);
-      return result;
-    }, initValue: Vector.zero(rowsNum, isMutable: true)));
+    final minValues = List<double>(rowsNum);
+    for (final row in rows) minValues[i++] = callback(row);
+    return callback(Vector.fromList(minValues, dtype: dtype));
   }
 
   Vector _reduce(
-      Vector Function(Vector combine, Vector vector) combiner,
+      Vector combiner(Vector combine, Vector vector),
       int length,
-      Vector Function(int index) getVector,
+      Vector getVector(int index),
       {Vector initValue}) {
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
@@ -263,9 +265,9 @@ abstract class BaseMatrix with
           'The dimension of the vector ${vector} and the columns number of '
               'matrix ${this} mismatch');
     }
-    final generateElementFn = (int i) => vector.dot(getRow(i));
-    final source = List<double>.generate(rowsNum, generateElementFn);
-    final vectorColumn = Vector.from(source, dtype: dtype);
+    final generateElement = (int i) => vector.dot(getRow(i));
+    final source = List<double>.generate(rowsNum, generateElement);
+    final vectorColumn = Vector.fromList(source, dtype: dtype);
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }
 
@@ -278,7 +280,7 @@ abstract class BaseMatrix with
         source[i * matrix.columnsNum + j] = element;
       }
     }
-    return Matrix.fromFlattened(source, rowsNum, matrix.columnsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(source, rowsNum, matrix.columnsNum, dtype: dtype);
   }
 
   Matrix _matrixByVectorDiv(Vector vector) {
