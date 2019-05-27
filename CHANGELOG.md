@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.0.2
+- `Float32Matrix.fromList`: empty list supported as a source
+
 ## 10.0.1
 - Links in README corrected
 

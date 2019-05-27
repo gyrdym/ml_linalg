@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/src/common/helper/get_length_of_first_or_zero.dart';
 import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_iterator.dart';
@@ -15,12 +16,13 @@ class DataManagerImpl implements DataManager {
       this._typedListHelper,
   ) :
         rowsNum = source.length,
-        columnsNum = source.first.length,
+        columnsNum = getLengthOfFirstOrZero(source),
         _rowsIndicesRange = ZRange.closedOpen(0, source.length),
-        _colsIndicesRange = ZRange.closedOpen(0, source.first.length),
+        _colsIndicesRange = ZRange
+            .closedOpen(0, getLengthOfFirstOrZero(source)),
         _rowsCache = List<Vector>(source.length),
-        _colsCache = List<Vector>(source.first.length),
-        _data = ByteData(source.length * source.first.length *
+        _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
+        _data = ByteData(source.length * getLengthOfFirstOrZero(source) *
             bytesPerElement) {
     _updateByteDataBy2dimIterable(source, (i, j) => i * columnsNum + j,
         bytesPerElement);
