@@ -23,7 +23,8 @@ void main() {
       expect(actual.columnsNum, 5);
     });
 
-    test('should create an instance based on an empty list', () {
+    test('should create an instance based on an empty list (`fromList` '
+        'constructor)', () {
       final actual = Float32Matrix.fromList([]);
       final expected = <double>[];
       expect(actual, equals(expected));
@@ -46,6 +47,15 @@ void main() {
       expect(actual.columnsNum, 5);
     });
 
+    test('should create an instance based on an empty list (`rows` '
+        'constructor)', () {
+      final actual = Float32Matrix.rows([]);
+      final expected = <double>[];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 0);
+      expect(actual.columnsNum, 0);
+    });
+
     test('should create an instance with predefined vectors as matrix columns',
         () {
       final actual = Float32Matrix.columns([
@@ -64,6 +74,15 @@ void main() {
       expect(actual.columnsNum, 2);
     });
 
+    test('should create an instance based on an empty list (`columns` '
+        'constructor)', () {
+      final actual = Float32Matrix.columns([]);
+      final expected = <double>[];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 0);
+      expect(actual.columnsNum, 0);
+    });
+
     test('should create an instance from flattened collection', () {
       final actual =
           Float32Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
@@ -73,6 +92,16 @@ void main() {
       ];
       expect(actual.rowsNum, 2);
       expect(actual.columnsNum, 3);
+      expect(actual, equals(expected));
+    });
+
+    test('should create an instance based on an empty list (`flattened` '
+        'constructor)', () {
+      final actual =
+      Float32Matrix.flattened([], 0, 0);
+      final expected = <double>[];
+      expect(actual.rowsNum, 0);
+      expect(actual.columnsNum, 0);
       expect(actual, equals(expected));
     });
 
