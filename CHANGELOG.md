@@ -1,5 +1,9 @@
 # Changelog
 
+## 10.0.3
+- `Float32Matrix.columns`: empty list supported as a source
+- `Float32Matrix.rows`: empty list supported as a source
+
 ## 10.0.2
 - `Float32Matrix.fromList`: empty list supported as a source
 
