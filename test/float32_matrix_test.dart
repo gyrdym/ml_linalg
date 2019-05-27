@@ -23,6 +23,14 @@ void main() {
       expect(actual.columnsNum, 5);
     });
 
+    test('should create an instance based on an empty list', () {
+      final actual = Float32Matrix.fromList([]);
+      final expected = <double>[];
+      expect(actual, equals(expected));
+      expect(actual.rowsNum, 0);
+      expect(actual.columnsNum, 0);
+    });
+
     test('should create an instance with predefined vectors as matrix '
         'rows', () {
       final actual = Float32Matrix.rows([

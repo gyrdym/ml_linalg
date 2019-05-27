@@ -10,7 +10,7 @@ import 'unit_test_helpers/float_iterable_almost_equal_to.dart';
 
 void main() {
   group('Float32Vector', () {
-    group('`from` constructor', () {
+    group('`fromList` constructor', () {
       test('should create a vector from dynamic-length list, length is '
           'greater than 4', () {
         final vector1 = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -38,6 +38,12 @@ void main() {
         final vector = Float32Vector.fromList(List.filled(1, 2.0));
         expect(vector, equals([2.0]));
         expect(vector.length, 1);
+      });
+
+      test('should create a vector from an empty list', () {
+        final vector = Float32Vector.fromList([]);
+        expect(vector, equals(<double>[]));
+        expect(vector.length, 0);
       });
     });
 
@@ -167,6 +173,7 @@ void main() {
         'object is not a vector', () {
       final vector1 = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       final vector2 = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
+      // ignore: unrelated_type_equality_checks
       expect(vector1 == vector2, isFalse);
     });
 
