@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.0.4
+- `pubspec.yaml`: sdk version constraint changed from `>=2.3.0` to `>=2.2.0` 
+
 ## 10.0.3
 - `Float32Matrix.columns`: empty list supported as a source
 - `Float32Matrix.rows`: empty list supported as a source
