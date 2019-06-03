@@ -5,6 +5,7 @@ import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 import 'package:test/test.dart';
+import 'package:xrange/zrange.dart';
 
 import 'unit_test_helpers/float_iterable_almost_equal_to.dart';
 
@@ -461,7 +462,8 @@ void main() {
       expect(result, isNot(vector));
     });
 
-    test('`query` method', () {
+    test('should create a vector using elements on specific inidces from '
+        'given list', () {
       final vector = Float32Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
       final query = vector.query([1, 1, 0, 3]);
       expect(query, equals([3.0, 3.0, 10.0, 7.0]));
@@ -568,12 +570,100 @@ void main() {
       expect(() => vector[1], throwsRangeError);
       expect(() => vector[100], throwsRangeError);
     });
+  });
 
-    test('should cut out a subvector', () {
+  group('Float32x4Vector.subvector', () {
+    test('should cut out a subvector (`end` exclusive)', () {
       final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvector(1, 5);
-      final expected = [2.0, 3.0, 4.0, 5.0];
+      final actual = vector.subvector(1, 4);
+      final expected = [2.0, 3.0, 4.0];
       expect(actual, expected);
+    });
+
+    test('should cut out a subvector of length 1 if `start` is equal to the '
+        'last index of the vector', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subvector(4, 5);
+      final expected = [5.0];
+      expect(actual, expected);
+    });
+
+    test('should cut out rest of the vector if `end` is not specified', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
+      final actual = vector.subvector(1);
+      final expected = [2.0, 3.0, 4.0, 5.0, 7.0];
+      expect(actual, expected);
+    });
+
+    test('should cut out rest of the vector if `end` is specified and greater'
+        'that the vector length', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
+      final actual = vector.subvector(1, 20);
+      final expected = [2.0, 3.0, 4.0, 5.0, 7.0];
+      expect(actual, expected);
+    });
+
+    test('should throw a range error if `start` is negative', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
+      final actual = () => vector.subvector(-1, 20);
+      expect(actual, throwsRangeError);
+    });
+
+    test('should throw a range error if `start` is greater than `end`', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
+      final actual = () => vector.subvector(3, 2);
+      expect(actual, throwsRangeError);
+    });
+
+    test('should throw a range error if `start` is equal to the `end`', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = () => vector.subvector(4, 4);
+      expect(actual, throwsRangeError);
+    });
+  });
+
+  group('Float32x4Vector.subvectorByRange', () {
+    test('should return a proper vector using closed range', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subvectorByRange(ZRange.closed(1, 3));
+      expect(actual, equals([2.0, 3.0, 4.0]));
+    });
+
+    test('should return a proper vector using open range', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subvectorByRange(ZRange.open(1, 3));
+      expect(actual, equals([3.0]));
+    });
+
+    test('should return a proper vector using open-closed range', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subvectorByRange(ZRange.openClosed(1, 3));
+      expect(actual, equals([3.0, 4.0]));
+    });
+
+    test('should return a proper vector using closed-open range', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subvectorByRange(ZRange.closedOpen(1, 3));
+      expect(actual, equals([2.0, 3.0]));
+    });
+
+    test('should return a proper vector using upper boundless range', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subvectorByRange(ZRange.atLeast(2));
+      expect(actual, equals([3.0, 4.0, 5.0]));
+    });
+
+    test('should return a proper vector using lower boundless range', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subvectorByRange(ZRange.atMost(2));
+      expect(actual, equals([1.0, 2.0, 3.0]));
+    });
+
+    test('should return a copy of the vector using absolutely boundless '
+        'range', () {
+      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final actual = vector.subvectorByRange(ZRange.all());
+      expect(actual, equals([1.0, 2.0, 3.0, 4.0, 5.0]));
     });
   });
 }
