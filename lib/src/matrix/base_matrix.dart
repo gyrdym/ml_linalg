@@ -238,7 +238,7 @@ abstract class BaseMatrix with
 
   List<Vector> _doSort(Iterable<Vector> source, SortDirection sortDir,
       double selector(Vector vector)) {
-    final dir = sortDir == SortDirection.asc ? -1 : 1;
+    final dir = sortDir == SortDirection.asc ? 1 : -1;
     return source.toList(growable: false)
       ..sort((row1, row2) => (selector(row1) - selector(row2)) ~/ dir);
   }
