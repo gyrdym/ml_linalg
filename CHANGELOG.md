@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.2.0
+- `Matrix`: `sort` method added and implemented
+
 ## 10.1.0
 - `Vector`: `subvectorByRange` method added and implemented (for float32 vector)
 
