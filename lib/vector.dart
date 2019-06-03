@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
+import 'package:xrange/zrange.dart';
 
 import 'norm.dart';
 
@@ -129,6 +130,10 @@ abstract class Vector implements Iterable<double> {
   Vector rescale();
 
   Vector fastMap<E>(E mapper(E element));
+
+  /// Returns a new vector formed by a specific part of [this] vector using
+  /// integer range
+  Vector subvectorByRange(ZRange range);
 
   /// Returns a new vector formed by a specific part of [this] vector
   Vector subvector(int start, [int end]);
