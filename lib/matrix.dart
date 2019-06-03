@@ -155,6 +155,6 @@ abstract class Matrix {
   Matrix uniqueRows();
 
   /// Returns a new matrix with sorted elements from [this] matrix
-  Matrix sort(double selector(Vector vector), [Axis axis = Axis.rows,
+  Matrix sort(double selectSortValue(Vector vector), [Axis axis = Axis.rows,
     SortDirection sortDir = SortDirection.asc]);
 }

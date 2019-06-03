@@ -222,10 +222,10 @@ abstract class BaseMatrix with
   }
 
   @override
-  Matrix sort(double selector(Vector vector), [Axis axis = Axis.rows,
+  Matrix sort(double selectSortValue(Vector vector), [Axis axis = Axis.rows,
     SortDirection sortDir = SortDirection.asc]) {
     final doSort =
-        (Iterable<Vector> source) => _doSort(source, sortDir, selector);
+        (Iterable<Vector> source) => _doSort(source, sortDir, selectSortValue);
     switch (axis) {
       case Axis.rows:
         return Matrix.fromRows(doSort(rows), dtype: dtype);
