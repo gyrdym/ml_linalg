@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.1.0
+- `Vector`: `subvectorByRange` method added and implemented (for float32 vector)
+
 ## 10.0.4
 - `pubspec.yaml`: sdk version constraint changed from `>=2.3.0` to `>=2.2.0` 
 
