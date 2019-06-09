@@ -667,7 +667,7 @@ void main() {
     });
   });
 
-  group('Float32x4Vector.hash', () {
+  group('Float32x4Vector.hashCode', () {
     test('should return the same hashcode for equal vectors, case 1', () {
       final hash1 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
       final hash2 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
