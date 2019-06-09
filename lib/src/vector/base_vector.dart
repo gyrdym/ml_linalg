@@ -8,7 +8,6 @@ import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/vector/common/simd_helper.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:quiver/core.dart';
 import 'package:xrange/zrange.dart';
 
 abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
@@ -131,23 +130,16 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   bool operator ==(Object other) {
     if (other is BaseVector<E, S>) {
-      // TODO: consider checking hashcode here to compare two vectors
       if (length != other.length) {
         return false;
       }
-      for (int i = 0; i < _numOfBuckets; i++) {
-        if (!_simdHelper.areValuesEqual(_innerSimdList[i],
-            other._innerSimdList[i])) {
-          return false;
-        }
-      }
-      return true;
+      return hashCode == other.hashCode;
     }
     return false;
   }
 
   @override
-  int get hashCode => _hash ??= hashObjects(_innerSimdList);
+  int get hashCode => _hash ??= join().hashCode;
 
   @override
   Vector operator +(Object value) {
