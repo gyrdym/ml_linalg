@@ -688,6 +688,18 @@ void main() {
       expect(hash1, equals(hash2));
     });
 
+    test('should return the same hashcode for equal vectors, case 4', () {
+      final hash1 = Float32Vector.fromList([]).hashCode;
+      final hash2 = Float32Vector.fromList([]).hashCode;
+      expect(hash1, equals(hash2));
+    });
+
+    test('should return the same hashcode for equal vectors, case 5', () {
+      final hash1 = Float32Vector.fromList([100]).hashCode;
+      final hash2 = Float32Vector.fromList([100]).hashCode;
+      expect(hash1, equals(hash2));
+    });
+
     test('should return a different hashcode for unequal vectors, case 1', () {
       final hash1 = Float32Vector.fromList([0, 0, 0, 1, 0]).hashCode;
       final hash2 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
