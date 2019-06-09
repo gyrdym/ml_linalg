@@ -666,4 +666,44 @@ void main() {
       expect(actual, equals([1.0, 2.0, 3.0, 4.0, 5.0]));
     });
   });
+
+  group('Float32x4Vector.hash', () {
+    test('should return the same hashcode for equal vectors, case 1', () {
+      final hash1 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
+      final hash2 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
+      expect(hash1, equals(hash2));
+    });
+
+    test('should return the same hashcode for equal vectors, case 2', () {
+      final hash1 = Float32Vector.fromList([-10, double.infinity, 345, 20, 1])
+          .hashCode;
+      final hash2 = Float32Vector.fromList([-10, double.infinity, 345, 20, 1])
+          .hashCode;
+      expect(hash1, equals(hash2));
+    });
+
+    test('should return the same hashcode for equal vectors, case 3', () {
+      final hash1 = Float32Vector.fromList([0, 0, 0, 0, 0]).hashCode;
+      final hash2 = Float32Vector.fromList([0, 0, 0, 0, 0]).hashCode;
+      expect(hash1, equals(hash2));
+    });
+
+    test('should return a different hashcode for unequal vectors, case 1', () {
+      final hash1 = Float32Vector.fromList([0, 0, 0, 1, 0]).hashCode;
+      final hash2 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
+      expect(hash1, isNot(equals(hash2)));
+    });
+
+    test('should return a different hashcode for unequal vectors, case 2', () {
+      final hash1 = Float32Vector.fromList([0, 0, 0, 10, 0]).hashCode;
+      final hash2 = Float32Vector.fromList([0, 0, 0, 1, 0, 0]).hashCode;
+      expect(hash1, isNot(equals(hash2)));
+    });
+
+    test('should return a different hashcode for unequal vectors, case 3', () {
+      final hash1 = Float32Vector.fromList([-32, 12, 0, 10, 0]).hashCode;
+      final hash2 = Float32Vector.fromList([32, 12, 0, 10, 0]).hashCode;
+      expect(hash1, isNot(equals(hash2)));
+    });
+  });
 }
