@@ -133,13 +133,30 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
       if (length != other.length) {
         return false;
       }
-      return hashCode == other.hashCode;
+      for (int i = 0; i < _numOfBuckets; i++) {
+        if (!_simdHelper.areValuesEqual(_innerSimdList[i],
+            other._innerSimdList[i])) {
+          return false;
+        }
+      }
+      return true;
     }
     return false;
   }
 
   @override
-  int get hashCode => _hash ??= join(':').hashCode;
+  int get hashCode => _hash ??= length > 0 ? _generateHash() : 0;
+
+  int _generateHash() {
+    final floatHash = _simdHelper.sumLanes(_generateSimdHash());
+    return (floatHash.isInfinite || floatHash.isNaN) ? 0 : floatHash ~/ 1;
+  }
+
+  E _generateSimdHash() {
+    int i = 0;
+    return _innerSimdList.reduce((E result, E el) =>
+        _simdHelper.sum(result, _simdToIntPow(el, i++)));
+  }
 
   @override
   Vector operator +(Object value) {
