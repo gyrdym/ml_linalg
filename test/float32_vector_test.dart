@@ -717,5 +717,19 @@ void main() {
       final hash2 = Float32Vector.fromList([32, 12, 0, 10, 0]).hashCode;
       expect(hash1, isNot(equals(hash2)));
     });
+
+    test('should return a different hashcode for unequal vectors, case 4', () {
+      final hash1 = Float32Vector.fromList([32, 5, 46, 78, 9]).hashCode;
+      final hash2 = Float32Vector.fromList([3, 25, 46, 7, 89]).hashCode;
+      expect(hash1, isNot(equals(hash2)));
+    });
+
+    test('should return a different hashcode for unequal vectors, case 5', () {
+      final hash1 = Float32Vector.fromList([32.04999923706055, 0.5, 2.0, 11.5])
+          .hashCode;
+      final hash2 = Float32Vector.fromList([32.0, 49999237060550.5, 2.0, 11.5])
+          .hashCode;
+      expect(hash1, isNot(equals(hash2)));
+    });
   });
 }
