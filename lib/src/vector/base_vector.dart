@@ -139,7 +139,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  int get hashCode => _hash ??= join().hashCode;
+  int get hashCode => _hash ??= join(':').hashCode;
 
   @override
   Vector operator +(Object value) {

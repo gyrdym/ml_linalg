@@ -1,4 +1,4 @@
-// Approx. 3 sec (MacBook Air mid 2017)
+// Approx. 2.5 sec (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
