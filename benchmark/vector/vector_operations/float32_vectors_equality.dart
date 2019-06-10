@@ -24,8 +24,8 @@ class VectorsEqualityBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector1 = Float32Vector.filled(amountOfElements, 10);
-    vector2 = Float32Vector.filled(amountOfElements, 10);
+    vector1 = Float32Vector.randomFilled(amountOfElements);
+    vector2 = Float32Vector.randomFilled(amountOfElements);
   }
 
   void tearDown() {

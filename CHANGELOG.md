@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.3.1
+- `Vector`: `hashCode` improvements
+
 ## 10.3.0
 - `Vector`: `hashCode` re-implemented: now it's possible to use the vector as a map key 
 
