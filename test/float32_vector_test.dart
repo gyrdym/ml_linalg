@@ -83,6 +83,40 @@ void main() {
       });
     });
 
+    group('`randomFilled` constructor', () {
+      test('should create a vector filled with random values from range'
+          '[-5; -1)', () {
+        final vector = Float32Vector.randomFilled(200, min: -5, max: -1);
+        for (final element in vector) {
+          expect(element, inClosedOpenRange(-5, -1));
+        }
+      });
+
+      test('should create a vector filled with random values from range'
+          '[-5; 10)', () {
+        final vector = Float32Vector.randomFilled(200, min: -5, max: 10);
+        for (final element in vector) {
+          expect(element, inClosedOpenRange(-5, 10));
+        }
+      });
+
+      test('should create a vector filled with random values from range'
+          '[-5; -1) (min is greater than max)', () {
+        final vector = Float32Vector.randomFilled(200, min: -1, max: -5);
+        for (final element in vector) {
+          expect(element, inClosedOpenRange(-5, -1));
+        }
+      });
+
+      test('should create a vector filled with constant value if min equals '
+          'max', () {
+        final vector = Float32Vector.randomFilled(200, min: 2, max: 2);
+        for (final element in vector) {
+          expect(element, equals(2));
+        }
+      });
+    });
+
     group('`zero` constructor', () {
       test('should fill a newly created vector with zeroes, case 1', () {
         final vector = Float32Vector.zero(10);

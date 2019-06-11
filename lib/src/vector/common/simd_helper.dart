@@ -25,6 +25,10 @@ abstract class SimdHelper<E, S extends List<E>> {
   /// performs summation of all components of passed simd value [a]
   double sumLanes(E a);
 
+  /// Performs summation of the lanes of the given simd value to provide a
+  /// hashcode. The method handles infinite and NaN values.
+  double sumLanesForHash(E a);
+
   /// returns a simd list of length equals [length]
   S createList(int length);
 

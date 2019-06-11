@@ -1,4 +1,4 @@
-// Creation + hashing - approx. 11.5 seconds (MacBook Air mid 2017)
+// Creation + hashing - approx. 3.5 seconds (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
