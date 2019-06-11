@@ -1,5 +1,10 @@
 # Changelog
 
+## 10.3.2
+- `Vector`: 
+    - `hashCode` speed up
+    - `randomFilled` constructor extended: `min` and `max` parameters added
+
 ## 10.3.1
 - `Vector`: `hashCode` improvements
 
