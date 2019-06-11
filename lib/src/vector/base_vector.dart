@@ -35,13 +35,19 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
+    {
+      double min = 0,
+      double max = 1,
+    }
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _source = _getBuffer(
             _getNumOfBuckets(length, _bucketSize) * _bucketSize,
             _bytesPerElement) {
     final generator = math.Random(seed);
-    _setByteData((i) => generator.nextDouble());
+    final diff = (max - min).abs();
+    final realMin = math.min(min, max);
+    _setByteData((i) => generator.nextDouble() * diff + realMin);
   }
 
   BaseVector.filled(
@@ -148,14 +154,10 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   int get hashCode => _hash ??= length > 0 ? _generateHash() : 0;
 
   int _generateHash() {
-    final floatHash = _simdHelper.sumLanes(_generateSimdHash());
-    return (floatHash.isInfinite || floatHash.isNaN) ? 0 : floatHash ~/ 1;
-  }
-
-  E _generateSimdHash() {
     int i = 0;
-    return _innerSimdList.reduce((E result, E el) =>
-        _simdHelper.sum(result, _simdToIntPow(el, i++)));
+    final simdHash = _innerSimdList.reduce((sum, element) => _simdHelper
+            .sum(sum, _simdHelper.scale(element, (31 * (i++)) * 1.0)));
+    return _simdHelper.sumLanesForHash(simdHash) ~/ 1;
   }
 
   @override

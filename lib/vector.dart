@@ -55,12 +55,15 @@ abstract class Vector implements Iterable<double> {
   }
 
   /// Creates a vector of length, equal to [length], filled with random values,
+  /// which are bound by interval from [min] (inclusive) tp [max] (exclusive).
+  /// If [min] greater than [max] when [min] becomes [max]
   /// generated from randomizer with seed, equal to [seed].
   factory Vector.randomFilled(int length,
-      {int seed, DType dtype = DType.float32}) {
+      {int seed, double min, double max, DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Vector.randomFilled(length, seed: seed);
+        return Float32Vector.randomFilled(length, seed: seed,
+            max: max, min: min);
       default:
         throw UnimplementedError();
     }

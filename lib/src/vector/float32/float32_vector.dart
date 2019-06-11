@@ -55,7 +55,6 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
   /// Creates a SIMD-vector with length equals [length] and fills all elements
   /// of created vector with a [value]
   Float32Vector.filled(int length, double value, {
-    bool isMutable = false,
     TypedListHelperFactory typedListHelperFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -71,7 +70,6 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
   /// Creates a SIMD-vector with length equals [length] and fills all elements
   /// of created vector with a zero
   Float32Vector.zero(int length, {
-    bool isMutable = false,
     TypedListHelperFactory typedListFactoryFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -87,7 +85,8 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
   /// of created vector with a random value
   Float32Vector.randomFilled(int length, {
     int seed,
-    bool isMutable = false,
+    double min,
+    double max,
     TypedListHelperFactory typedListFactoryFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -98,6 +97,8 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
+    min: min,
+    max: max,
   );
 
   static const bucketSize = 4;

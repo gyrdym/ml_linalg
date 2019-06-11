@@ -16,7 +16,7 @@ class VectorRandomFilledBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    Float32Vector.randomFilled(amountOfElements);
+    Float32Vector.randomFilled(amountOfElements, min: -100, max: 100);
   }
 }
 
