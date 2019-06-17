@@ -51,6 +51,23 @@
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
 + [Contacts](#contacts)
 
+### SIMD-based linear algebra
+
+Vectors and matrices are extremely powerful tools, which can be applied not just in abstract sense, but also in 
+real-life applications, such as machine learning algorithms. There are many implementations of such great mathematical 
+entities in a plenty of programming languages, and as Dart offers developers good instrumentarium, e.g. highly optimized 
+virtual machine and rich out-of-the-box library, Dart-based implementation of vectors and matrices has to be performant
+and robust.
+
+Among myriad of standard Dart library tools there is SIMD data types. Namely support of SIMD computational architecture
+served as a source of inspiration for creating this library.
+
+### What is SIMD?
+
+SIMD extends as `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
+operations in parallel on huge amount of data. For instance, one has two vectors, ![\vec{a} = [10, 20, 30, 40]](<a href="https://www.codecogs.com/eqnedit.php?latex=\vec{a}&space;=&space;[10,&space;20,&space;30,&space;40]" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\vec{a}&space;=&space;[10,&space;20,&space;30,&space;40]" title="\vec{a} = [10, 20, 30, 40]" /></a>)
+and ![\vec{b} = [5, 6, 7, 8]](<a href="https://www.codecogs.com/eqnedit.php?latex=\vec{b}&space;=&space;[5,&space;6,&space;7,&space;8]" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\vec{b}&space;=&space;[5,&space;6,&space;7,&space;8]" title="\vec{b} = [5, 6, 7, 8]" /></a>)
+
 ### Vectors
 
 #### A couple of words about the underlying vector architecture
