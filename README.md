@@ -73,13 +73,12 @@ operations in parallel on huge amount of data. For instance, one has two arrays:
 and one needs to add these arrays element-wise. Using the regular architecture this operation could be done in this 
 manner:
 
-![Alt text](https://gyrdym.github.io/ml_linalg/img/non_simd_example.svg)
-<img src="https://potherca-blog.github.io/StackOverflow/question.13808020.include-an-svg-hosted-on-github-in-markdown/controllers_brief.svg">
+<img src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/non_simd_array_sum.svg?sanitize=true">
 
-We need to do 4 operations one by one in a row. But using SIMD architecture we may perform one mathematical 
+We need to do 4 operations one by one in a row. Using SIMD architecture we may perform one mathematical 
 operations on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
 
-- Step 1: 
+<img src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
       
 
 ### Vectors
