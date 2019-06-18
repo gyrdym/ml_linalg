@@ -34,7 +34,7 @@ served as a source of inspiration for creating this library.
 
 ### What is SIMD?
 
-&nbsp;&nbsp;&nbsp;&nbsp;SIMD stands form `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
+&nbsp;&nbsp;&nbsp;&nbsp;SIMD stands for `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
 operations in parallel on huge amount of data. For instance, one has two arrays: 
 
 - ![a = [10, 20, 30, 40]](https://latex.codecogs.com/gif.latex?a%20%3D%20%5B10%2C%2020%2C%2030%2C%2040%5D)
