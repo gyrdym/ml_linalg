@@ -7,64 +7,33 @@
 
 **Table of contents**
 
+- [What is linear algebra](#linear-algebra)
+- [What is SIMD](#what-is-simd)
 + [Vectors](#vectors)
 	- [A couple of words about the underlying vector architecture](#a-couple-of-words-about-the-underlying-vector-architecture)
-	+ [Vector operations examples](#vector-operations-examples)
-	    - [Vectors sum](#vectors-sum)
-	    - [Vectors subtraction](#vectors-subtraction)
-	    - [Element wise vector by vector multiplication](#element-wise-vector-by-vector-multiplication)
-	    - [Element wise vector by vector division](#element-wise-vector-by-vector-division)
-	    - [Euclidean norm](#euclidean-norm)
-	    - [Manhattan norm](#manhattan-norm)
-	    - [Mean value](#mean-value)
-	    - [Sum of all vector elements](#sum-of-all-vector-elements)
-	    - [Dot product](#dot-product-of-two-vectors)
-	    - [Sum of a vector and a scalar](#sum-of-a-vector-and-a-scalar)
-	    - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
-	    - [Multiplication (scaling) of a vector by a scalar](#multiplication-scaling-of-a-vector-by-a-scalar)
-	    - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
-	    - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
-	    - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
-	    - [Cosine distance between two vectors](#cosine-distance-between-two-vectors)
-	    - [Vector normalization (using Euclidean norm)](#vector-normalization-using-euclidean-norm)
-	    - [Vector normalization (using Manhattan norm)](#vector-normalization-using-manhattan-norm)
-	    - [Vector rescaling (min-max normalization)](#vector-rescaling-min-max-normalization)
-        - [Fast map](#fast-map)
+	- [Vector operations](#vector-operations-examples)
 + [Matrices](#matrices)
-	+ [Matrix operations examples](#matrix-operations-examples)
-        - [Sum of a matrix and another matrix](#sum-of-a-matrix-and-another-matrix)
-        - [Sum of a matrix and a scalar](#sum-of-a-matrix-and-a-scalar)
-        - [Multiplication of a matrix and a vector](#multiplication-of-a-matrix-and-a-vector)
-        - [Multiplication of a matrix and another matrix](#multiplication-of-a-matrix-and-another-matrix)
-        - [Multiplication of a matrix and a scalar](#multiplication-of-a-matrix-and-a-scalar)
-        - [Element wise matrices subtraction](#element-wise-matrices-subtraction)
-        - [Matrix transposition](#matrix-transposition)
-        - [Matrix row wise reduce](#matrix-row-wise-reduce)
-        - [Matrix column wise reduce](#matrix-column-wise-reduce)
-        - [Matrix row wise map](#matrix-row-wise-map)
-        - [Matrix column wise map](#matrix-column-wise-map)
-        - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
-        - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
-        - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
-        - [Matrix fast map](#matrix-fast-map)
-        - [Matrix indexing](#matrix-indexing)
-        - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
-+ [Contacts](#contacts)
+	- [Matrix operations](#matrix-operations-examples)
+- [Contacts](#contacts)
 
-### SIMD-based linear algebra
+### Linear algebra
 
-Vectors and matrices are extremely powerful tools, which can be applied not just in abstract sense, but also in 
-real-life applications, such as machine learning algorithms. There are many implementations of such great mathematical 
-entities in a plenty of programming languages, and as Dart offers developers good instrumentarium, e.g. highly optimized 
-virtual machine and rich out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite 
-performant.
+In a few words, linear algebra is a branch of mathematics working with vectors and matrices. Let's give a simple 
+definition of Vector and Matrix. Vector is an ordered set of numbers, representing a point in space where the vector 
+is directed. Matrix is a collection of vectors, usually used not just to store some numbers in a table manner, but to 
+map vectors from one space to another.     
+
+Vectors and matrices are extremely powerful tools, which can be used in real-life applications, such as machine 
+learning algorithms. There are many implementations of these great mathematical entities in a plenty of programming 
+languages, and as Dart offers developers good instrumentarium, e.g. highly optimized virtual machine and rich 
+out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite performant.
 
 Among myriad of standard Dart tools there is SIMD data types. Namely support of SIMD computational architecture
 served as a source of inspiration for creating this library.
 
 ### What is SIMD?
 
-SIMD extends as `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
+SIMD stands form `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
 operations in parallel on huge amount of data. For instance, one has two arrays: 
 
 - ![a = [10, 20, 30, 40]](https://latex.codecogs.com/gif.latex?a%20%3D%20%5B10%2C%2020%2C%2030%2C%2040%5D)
@@ -82,26 +51,38 @@ operations on several operands in parallel, thus element-wise sum of two arrays 
 
 <p align="center">
     <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
-</p>  
+</p>
 
 ### Vectors
 
 #### A couple of words about the underlying vector architecture
     
-All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
-computation architecture. Actually, the main purpose of the library - connect such a powerful computation way with 
-the pure math. So, the library contains a high performance SIMD vector class, based on 
-[Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - 
+&nbsp;&nbsp;&nbsp;&nbsp;The library contains a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - 
 [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart). 
 Most of operations in the vector class are performed in four "threads". This kind of parallelism is reached by special 
 128-bit processor registers, which are used directly by program code. It is also possible to implement [Float64x2](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float64x2-class.html)-based
 version of vector using existing codebase, but so far there is no need to do so.
-    The class [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart) 
+
+&nbsp;&nbsp;&nbsp;&nbsp;The class [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart) 
 is hidden from the library's users. You can create a [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
 instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
-The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
+&nbsp;&nbsp;&nbsp;&nbsp;The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
 creation of a new vector instance (of course, if the operation is supposed to return `Vector`).
+
+&nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for Map, HashMap and similar data structures and 
+it's also possible to look up a value by the vector-key, hash code is not unique for every new instance, it's the same 
+for equal vectors:
+
+```dart
+import 'package:ml_linalg/vector.dart';
+
+final map = HashMap<Vector, bool>();
+
+map[Vector.fromList([1, 2, 3, 4, 5])] = true;
+
+print(map[Vector.fromList([1, 2, 3, 4, 5])]); // true
+```
 
 #### Vector operations examples
 At the present moment most common vector operations are implemented:
