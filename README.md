@@ -18,22 +18,23 @@
 
 ### Linear algebra
 
-In a few words, linear algebra is a branch of mathematics working with vectors and matrices. Let's give a simple 
-definition of Vector and Matrix. Vector is an ordered set of numbers, representing a point in space where the vector 
-is directed. Matrix is a collection of vectors, usually used not just to store some numbers in a table manner, but to 
-map vectors from one space to another.     
+&nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics working with vectors and matrices. 
 
-Vectors and matrices are extremely powerful tools, which can be used in real-life applications, such as machine 
+&nbsp;&nbsp;&nbsp;&nbsp;Let's give a simple definition of Vector and Matrix. Vector is an ordered set of numbers, 
+representing a point in space where the vector is directed. Matrix is a collection of vectors, usually used not just 
+to store some numbers in a table manner, but to map vectors from one space to another.     
+
+&nbsp;&nbsp;&nbsp;&nbsp;Vectors and matrices are extremely powerful tools, which can be used in real-life applications, such as machine 
 learning algorithms. There are many implementations of these great mathematical entities in a plenty of programming 
 languages, and as Dart offers developers good instrumentarium, e.g. highly optimized virtual machine and rich 
 out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite performant.
 
-Among myriad of standard Dart tools there is SIMD data types. Namely support of SIMD computational architecture
+&nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there is SIMD data types. Namely support of SIMD computational architecture
 served as a source of inspiration for creating this library.
 
 ### What is SIMD?
 
-SIMD stands form `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
+&nbsp;&nbsp;&nbsp;&nbsp;SIMD stands form `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
 operations in parallel on huge amount of data. For instance, one has two arrays: 
 
 - ![a = [10, 20, 30, 40]](https://latex.codecogs.com/gif.latex?a%20%3D%20%5B10%2C%2020%2C%2030%2C%2040%5D)
@@ -46,7 +47,7 @@ manner:
     <img width="300" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/non_simd_array_sum.svg?sanitize=true">
 </p>
 
-We need to do 4 operations one by one in a row. Using SIMD architecture we may perform one mathematical 
+&nbsp;&nbsp;&nbsp;&nbsp;We need to do 4 operations one by one in a row. Using SIMD architecture we may perform one mathematical 
 operations on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
 
 <p align="center">
@@ -70,9 +71,9 @@ instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector
 &nbsp;&nbsp;&nbsp;&nbsp;The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
 creation of a new vector instance (of course, if the operation is supposed to return `Vector`).
 
-&nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for Map, HashMap and similar data structures and 
-it's also possible to look up a value by the vector-key, hash code is not unique for every new instance, it's the same 
-for equal vectors:
+&nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for Map, HashMap and similar data structures 
+and to look up a value by the vector-key, since hash code is not unique for every new instance, it's the same for equal 
+vectors:
 
 ```dart
 import 'package:ml_linalg/vector.dart';
