@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.3.3
+- Images for readme.md added (simd architecture explanation)
+
 ## 10.3.2
 - `Vector`: 
     - `hashCode` speed up
