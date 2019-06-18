@@ -56,17 +56,31 @@
 Vectors and matrices are extremely powerful tools, which can be applied not just in abstract sense, but also in 
 real-life applications, such as machine learning algorithms. There are many implementations of such great mathematical 
 entities in a plenty of programming languages, and as Dart offers developers good instrumentarium, e.g. highly optimized 
-virtual machine and rich out-of-the-box library, Dart-based implementation of vectors and matrices has to be performant
-and robust.
+virtual machine and rich out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite 
+performant.
 
-Among myriad of standard Dart library tools there is SIMD data types. Namely support of SIMD computational architecture
+Among myriad of standard Dart tools there is SIMD data types. Namely support of SIMD computational architecture
 served as a source of inspiration for creating this library.
 
 ### What is SIMD?
 
 SIMD extends as `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
-operations in parallel on huge amount of data. For instance, one has two vectors, ![\vec{a} = [10, 20, 30, 40]](https://latex.codecogs.com/gif.latex?%5Cvec%7Ba%7D%20%3D%20%5C%5B10%2C%2020%2C%2030%2C%2040%5C%5D)
-and ![\vec{b} = [5, 6, 7, 8]](https://latex.codecogs.com/gif.latex?%5Cvec%7Bb%7D%20%3D%20%5C%5B5%2C%206%2C%207%2C%208%5C%5D)
+operations in parallel on huge amount of data. For instance, one has two arrays: 
+
+- ![a = [10, 20, 30, 40]](https://latex.codecogs.com/gif.latex?a%20%3D%20%5B10%2C%2020%2C%2030%2C%2040%5D)
+- ![b = [50, 60, 70, 80]](https://latex.codecogs.com/gif.latex?b%20%3D%20%5B50%2C%2060%2C%2070%2C%2080%5D)
+
+and one needs to add these arrays element-wise. Using the regular architecture this operation could be done in this 
+manner:
+
+![Alt text](https://gyrdym.github.io/ml_linalg/img/non_simd_example.svg)
+<img src="https://potherca-blog.github.io/StackOverflow/question.13808020.include-an-svg-hosted-on-github-in-markdown/controllers_brief.svg">
+
+We need to do 4 operations one by one in a row. But using SIMD architecture we may perform one mathematical 
+operations on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
+
+- Step 1: 
+      
 
 ### Vectors
 
