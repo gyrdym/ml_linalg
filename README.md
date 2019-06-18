@@ -80,8 +80,9 @@ manner:
 We need to do 4 operations one by one in a row. Using SIMD architecture we may perform one mathematical 
 operations on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
 
-<img height="350" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
-      
+<p align="center">
+    <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
+</p>  
 
 ### Vectors
 
