@@ -7,31 +7,32 @@
 
 **Table of contents**
 
-+ [Vectors](#vectors)
-	- [A couple of words about the underlying vector architecture](#a-couple-of-words-about-the-underlying-vector-architecture)
-	+ [Vector operations examples](#vector-operations-examples)
-	    - [Vectors sum](#vectors-sum)
-	    - [Vectors subtraction](#vectors-subtraction)
-	    - [Element wise vector by vector multiplication](#element-wise-vector-by-vector-multiplication)
-	    - [Element wise vector by vector division](#element-wise-vector-by-vector-division)
-	    - [Euclidean norm](#euclidean-norm)
-	    - [Manhattan norm](#manhattan-norm)
-	    - [Mean value](#mean-value)
-	    - [Sum of all vector elements](#sum-of-all-vector-elements)
-	    - [Dot product](#dot-product-of-two-vectors)
-	    - [Sum of a vector and a scalar](#sum-of-a-vector-and-a-scalar)
-	    - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
-	    - [Multiplication (scaling) of a vector by a scalar](#multiplication-scaling-of-a-vector-by-a-scalar)
-	    - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
-	    - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
-	    - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
-	    - [Cosine distance between two vectors](#cosine-distance-between-two-vectors)
-	    - [Vector normalization (using Euclidean norm)](#vector-normalization-using-euclidean-norm)
-	    - [Vector normalization (using Manhattan norm)](#vector-normalization-using-manhattan-norm)
-	    - [Vector rescaling (min-max normalization)](#vector-rescaling-min-max-normalization)
-        - [Fast map](#fast-map)
-+ [Matrices](#matrices)
-	+ [Matrix operations examples](#matrix-operations-examples)
+- [What is linear algebra](#linear-algebra)
+- [What is SIMD](#what-is-simd)
+- [Vectors](#vectors)
+	- [A couple of words about the underlying architecture](#a-couple-of-words-about-the-underlying-architecture)
+	- [Vector operations](#vector-operations-examples)
+        - [Vectors sum](#vectors-sum)
+        - [Vectors subtraction](#vectors-subtraction)
+        - [Element wise vector by vector multiplication](#element-wise-vector-by-vector-multiplication)
+        - [Element wise vector by vector division](#element-wise-vector-by-vector-division)
+        - [Euclidean norm](#euclidean-norm)
+        - [Manhattan norm](#manhattan-norm)
+        - [Mean value](#mean-value)
+        - [Sum of all vector elements](#sum-of-all-vector-elements)
+        - [Dot product](#dot-product-of-two-vectors)
+        - [Sum of a vector and a scalar](#sum-of-a-vector-and-a-scalar)
+        - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
+        - [Multiplication (scaling) of a vector by a scalar](#multiplication-scaling-of-a-vector-by-a-scalar)
+        - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
+        - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
+        - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
+        - [Cosine distance between two vectors](#cosine-distance-between-two-vectors)
+        - [Vector normalization (using Euclidean norm)](#vector-normalization-using-euclidean-norm)
+        - [Vector normalization (using Manhattan norm)](#vector-normalization-using-manhattan-norm)
+        - [Vector rescaling (min-max normalization)](#vector-rescaling-min-max-normalization)
+- [Matrices](#matrices)
+    - [Matrix operations](#matrix-operations-examples)
         - [Sum of a matrix and another matrix](#sum-of-a-matrix-and-another-matrix)
         - [Sum of a matrix and a scalar](#sum-of-a-matrix-and-a-scalar)
         - [Multiplication of a matrix and a vector](#multiplication-of-a-matrix-and-a-vector)
@@ -46,32 +47,80 @@
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
-        - [Matrix fast map](#matrix-fast-map)
         - [Matrix indexing](#matrix-indexing)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
-+ [Contacts](#contacts)
+- [Contacts](#contacts)
+
+### Linear algebra
+
+&nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics that is working with vectors and 
+matrices. 
+
+&nbsp;&nbsp;&nbsp;&nbsp;Let's give a simple definition of Vector and Matrix. Vector is an ordered set of numbers, 
+representing a point in space where the vector is directed from the origin. Matrix is a collection of vectors, used to 
+map vectors from one space to another.     
+
+&nbsp;&nbsp;&nbsp;&nbsp;Vectors and matrices are extremely powerful tools, which can be used in real-life applications, such as machine 
+learning algorithms. There are many implementations of these great mathematical entities in a plenty of programming 
+languages, and as Dart offers developers good instrumentarium, e.g. highly optimized virtual machine and rich 
+out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite performant.
+
+&nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there is SIMD data types. Namely support of SIMD computational architecture
+served as a source of inspiration for creating this library.
+
+### What is SIMD?
+
+&nbsp;&nbsp;&nbsp;&nbsp;SIMD stands for `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
+operations in parallel on huge amount of data. For instance, one has two arrays: 
+
+- ![a = [10, 20, 30, 40]](https://latex.codecogs.com/gif.latex?a%20%3D%20%5B10%2C%2020%2C%2030%2C%2040%5D)
+- ![b = [50, 60, 70, 80]](https://latex.codecogs.com/gif.latex?b%20%3D%20%5B50%2C%2060%2C%2070%2C%2080%5D)
+
+and one needs to add these arrays element-wise. Using the regular architecture this operation could be done in this 
+manner:
+
+<p align="center">
+    <img width="300" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/non_simd_array_sum.svg?sanitize=true">
+</p>
+
+&nbsp;&nbsp;&nbsp;&nbsp;We need to do 4 operations one by one in a row. Using SIMD architecture we may perform one mathematical 
+operations on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
+
+<p align="center">
+    <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
+</p>
 
 ### Vectors
 
-#### A couple of words about the underlying vector architecture
+#### A couple of words about the underlying architecture
     
-All vector operations are supported by SIMD ([single instruction, multiple data](https://en.wikipedia.org/wiki/SIMD)) 
-computation architecture. Actually, the main purpose of the library - connect such a powerful computation way with 
-the pure math. So, the library contains a high performance SIMD vector class, based on 
-[Float32x4](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float32x4-class.html) - 
+&nbsp;&nbsp;&nbsp;&nbsp;The library contains a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) - 
 [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart). 
 Most of operations in the vector class are performed in four "threads". This kind of parallelism is reached by special 
-128-bit processor registers, which are used directly by program code. It is also possible to implement [Float64x2](https://api.dartlang.org/stable/2.1.0/dart-typed_data/Float64x2-class.html)-based
-version of vector using existing codebase, but so far there is no need to do so.
-    The class [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart) 
+128-bit processor registers, which are used directly by program code.
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart) 
 is hidden from the library's users. You can create a [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
 instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
-The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
+&nbsp;&nbsp;&nbsp;&nbsp;The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
 creation of a new vector instance (of course, if the operation is supposed to return `Vector`).
 
+&nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for HashMap and similar data structures 
+and to look up a value by the vector-key, since the hash code is the same for equal vectors:
+
+```dart
+import 'package:ml_linalg/vector.dart';
+
+final map = HashMap<Vector, bool>();
+
+map[Vector.fromList([1, 2, 3, 4, 5])] = true;
+
+print(map[Vector.fromList([1, 2, 3, 4, 5])]); // true
+print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 5]).hashCode); // true
+```
+
 #### Vector operations examples
-At the present moment most common vector operations are implemented:
 
 ##### Vectors sum
 ````Dart
@@ -256,22 +305,11 @@ At the present moment most common vector operations are implemented:
   print(result); // [0.555, 0.222, 0.777, 0.0, 1.0, 0.444]
 ````
 
-##### Fast map
-
-Performs mapping from one vector to another in efficient way (using simd computations)
-
-````Dart
-  import 'package:ml_linalg/linalg.dart';
-
-  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-  final result = vector.fastMap<Float32x4>((Float32x4 element) => element.scale(2.0));
-  print(result); // [2.0, 4.0, 6.0, 8.0, 10.0]
-````
-
 ### Matrices
 
-Also, a class for matrix is available. It is based on Float32x4 and Float32Vector types. `Matrix` is immutable as well 
-as `Vector`.
+&nbsp;&nbsp;&nbsp;&nbsp;Along with SIMD vectors, the library presents SIMD-based Matrices. One can use the matrices via 
+[Matrix factory](https://github.com/gyrdym/ml_linalg/blob/master/lib/matrix.dart). The matrices are immutable as well 
+as vectors.
 
 #### Matrix operations examples
 
@@ -523,34 +561,13 @@ print(matrix1 - matrix2);
   // -23.0
 ````
 
-#### Matrix fast map
-
-Performs mapping from one matrix to another in efficient way (using simd computations)
-
-````Dart
-  import 'package:ml_linalg/linalg.dart';
-
-  final matrix = Matrix.fromList([
-    [11.0, 12.0, 13.0, 14.0],
-    [15.0, 16.0, 0.0, 18.0],
-    [21.0, 22.0, -23.0, 24.0],
-    [24.0, 32.0, 53.0, 74.0],
-  ], dtype: DType.float32);
-  final newMatrix = matrix.fastMap<Float32x4>((Float32x4 val) => val.scale(3.0));
-  print(minValue);
-  // [
-  //   [33.0, 36.0, 39.0, 42.0],
-  //   [45.0, 48.0, 0.0, 54.0],
-  //   [63.0, 66.0, -69.0, 72.0],
-  //   [72.0, 96.0, 159.0, 222.0],
-  // ]
-````
-
 #### Matrix indexing
-The library's matrix interface offers `pick` method, that supposes to return a new matrix, consisting of different 
-segments of a source matrix (like in Pandas dataframe in Python, e.g. `loc` method). It's possible to build a new 
-matrix from certain columns and vectors and they should not be necessarily subsequent: for example, it is needed to
-create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, it's needed to access the matrix this way:
+&nbsp;&nbsp;&nbsp;&nbsp;The library's matrix interface offers `pick` method, that is supposed to return a new matrix, 
+consisting of different segments of a source matrix (like in Pandas dataframe in Python, e.g. `loc` method). It's 
+possible to build a new matrix from certain columns and vectors and they should not be necessarily subsequent. 
+&nbsp;&nbsp;&nbsp;&nbsp;For example, one needs to create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, 
+it's needed to access the matrix this way:
+
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 import 'package:xrange/zrange.dart';
