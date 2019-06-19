@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.3.5
+- readme updated: explanation images added
+
 ## 10.3.4
 - Images for readme.md updated (simd architecture explanation)
 

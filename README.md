@@ -10,7 +10,7 @@
 - [What is linear algebra](#linear-algebra)
 - [What is SIMD](#what-is-simd)
 - [Vectors](#vectors)
-	- [A couple of words about the underlying vector architecture](#a-couple-of-words-about-the-underlying-vector-architecture)
+	- [A couple of words about the underlying architecture](#a-couple-of-words-about-the-underlying-architecture)
 	- [Vector operations](#vector-operations-examples)
         - [Vectors sum](#vectors-sum)
         - [Vectors subtraction](#vectors-subtraction)
@@ -47,18 +47,18 @@
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
-        - [Matrix fast map](#matrix-fast-map)
         - [Matrix indexing](#matrix-indexing)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
 - [Contacts](#contacts)
 
 ### Linear algebra
 
-&nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics working with vectors and matrices. 
+&nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics that is working with vectors and 
+matrices. 
 
 &nbsp;&nbsp;&nbsp;&nbsp;Let's give a simple definition of Vector and Matrix. Vector is an ordered set of numbers, 
-representing a point in space where the vector is directed. Matrix is a collection of vectors, usually used not just 
-to store some numbers in a table manner, but to map vectors from one space to another.     
+representing a point in space where the vector is directed from the origin. Matrix is a collection of vectors, used to 
+map vectors from one space to another.     
 
 &nbsp;&nbsp;&nbsp;&nbsp;Vectors and matrices are extremely powerful tools, which can be used in real-life applications, such as machine 
 learning algorithms. There are many implementations of these great mathematical entities in a plenty of programming 
@@ -92,7 +92,7 @@ operations on several operands in parallel, thus element-wise sum of two arrays 
 
 ### Vectors
 
-#### A couple of words about the underlying vector architecture
+#### A couple of words about the underlying architecture
     
 &nbsp;&nbsp;&nbsp;&nbsp;The library contains a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) - 
 [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart). 
@@ -561,35 +561,12 @@ print(matrix1 - matrix2);
   // -23.0
 ````
 
-#### Matrix fast map
-
-Performs mapping from one matrix to another in efficient way (using simd computations)
-
-````Dart
-  import 'package:ml_linalg/linalg.dart';
-
-  final matrix = Matrix.fromList([
-    [11.0, 12.0, 13.0, 14.0],
-    [15.0, 16.0, 0.0, 18.0],
-    [21.0, 22.0, -23.0, 24.0],
-    [24.0, 32.0, 53.0, 74.0],
-  ], dtype: DType.float32);
-  final newMatrix = matrix.fastMap<Float32x4>((Float32x4 val) => val.scale(3.0));
-  print(minValue);
-  // [
-  //   [33.0, 36.0, 39.0, 42.0],
-  //   [45.0, 48.0, 0.0, 54.0],
-  //   [63.0, 66.0, -69.0, 72.0],
-  //   [72.0, 96.0, 159.0, 222.0],
-  // ]
-````
-
 #### Matrix indexing
-&nbsp;&nbsp;&nbsp;&nbsp;The library's matrix interface offers `pick` method, that returns a new matrix, 
+&nbsp;&nbsp;&nbsp;&nbsp;The library's matrix interface offers `pick` method, that is supposed to return a new matrix, 
 consisting of different segments of a source matrix (like in Pandas dataframe in Python, e.g. `loc` method). It's 
-possible to build a new matrix from certain columns and vectors and they should not be necessarily subsequent. For 
-example, one needs to create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, it's needed to access the 
-matrix this way:
+possible to build a new matrix from certain columns and vectors and they should not be necessarily subsequent. 
+&nbsp;&nbsp;&nbsp;&nbsp;For example, one needs to create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, 
+it's needed to access the matrix this way:
 
 ````Dart
 import 'package:ml_linalg/linalg.dart';
