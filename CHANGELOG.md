@@ -1,5 +1,9 @@
 # Changelog
 
+## 10.3.6
+- `Vector`: `randomFilled` default parameters fixed
+- Tests for `Vector`'s constructors added
+
 ## 10.3.5
 - readme updated: explanation images added
 
