@@ -59,7 +59,7 @@ abstract class Vector implements Iterable<double> {
   /// If [min] greater than [max] when [min] becomes [max]
   /// generated from randomizer with seed, equal to [seed].
   factory Vector.randomFilled(int length,
-      {int seed, double min, double max, DType dtype = DType.float32}) {
+      {int seed, double min = 0, double max = 1, DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
         return Float32Vector.randomFilled(length, seed: seed,
