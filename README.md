@@ -106,6 +106,9 @@ instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector
 &nbsp;&nbsp;&nbsp;&nbsp;The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
 creation of a new vector instance (of course, if the operation is supposed to return `Vector`).
 
+&nbsp;&nbsp;&nbsp;&nbsp;The class implements `Iterable<double>` interface - so it's possible to use it as regular 
+iterable collection.
+
 &nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for HashMap and similar data structures 
 and to look up a value by the vector-key, since the hash code is the same for equal vectors:
 
@@ -309,7 +312,8 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
 
 &nbsp;&nbsp;&nbsp;&nbsp;Along with SIMD vectors, the library presents SIMD-based Matrices. One can use the matrices via 
 [Matrix factory](https://github.com/gyrdym/ml_linalg/blob/master/lib/matrix.dart). The matrices are immutable as well 
-as vectors.
+as vectors and also they implement `Iterable`, to be precise - `Iterable<Iterable<double>>` interface, so it's possible 
+to use them as a regular iterable collection.
 
 #### Matrix operations examples
 

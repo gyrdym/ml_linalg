@@ -1,5 +1,8 @@
 # Changelog
 
+## 10.3.7
+- `Matrix`: `Iterable<Iterable<double>>` implemented
+
 ## 10.3.6
 - `Vector`: `randomFilled` default parameters fixed
 - Tests for `Vector`'s constructors added
