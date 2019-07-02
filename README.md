@@ -57,7 +57,7 @@
 matrices. 
 
 &nbsp;&nbsp;&nbsp;&nbsp;Let's give a simple definition of Vector and Matrix. Vector is an ordered set of numbers, 
-representing a point in space where the vector is directed from the origin. Matrix is a collection of vectors, used to 
+representing a point in the space where the vector is directed from the origin. Matrix is a collection of vectors, used to 
 map vectors from one space to another.     
 
 &nbsp;&nbsp;&nbsp;&nbsp;Vectors and matrices are extremely powerful tools, which can be used in real-life applications, such as machine 
@@ -65,7 +65,7 @@ learning algorithms. There are many implementations of these great mathematical 
 languages, and as Dart offers developers good instrumentarium, e.g. highly optimized virtual machine and rich 
 out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite performant.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there is SIMD data types. Namely support of SIMD computational architecture
+&nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there are SIMD data types. Namely support of SIMD computational architecture
 served as a source of inspiration for creating this library.
 
 ### What is SIMD?
@@ -106,10 +106,10 @@ instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector
 &nbsp;&nbsp;&nbsp;&nbsp;The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
 creation of a new vector instance (of course, if the operation is supposed to return `Vector`).
 
-&nbsp;&nbsp;&nbsp;&nbsp;The class implements `Iterable<double>` interface - so it's possible to use it as regular 
+&nbsp;&nbsp;&nbsp;&nbsp;The class implements `Iterable<double>` interface - so it's possible to use it as a regular 
 iterable collection.
 
-&nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for HashMap and similar data structures 
+&nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for `HashMap` and similar data structures 
 and to look up a value by the vector-key, since the hash code is the same for equal vectors:
 
 ```dart
@@ -312,7 +312,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
 
 &nbsp;&nbsp;&nbsp;&nbsp;Along with SIMD vectors, the library presents SIMD-based Matrices. One can use the matrices via 
 [Matrix factory](https://github.com/gyrdym/ml_linalg/blob/master/lib/matrix.dart). The matrices are immutable as well 
-as vectors and also they implement `Iterable`, to be precise - `Iterable<Iterable<double>>` interface, so it's possible 
+as vectors and also they implement `Iterable`, to be precise - `Iterable<Iterable<double>>` interface, thus it's possible 
 to use them as a regular iterable collection.
 
 #### Matrix operations examples
