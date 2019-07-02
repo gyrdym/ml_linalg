@@ -7,7 +7,7 @@ import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 
 /// An algebraic matrix
-abstract class Matrix {
+abstract class Matrix  implements Iterable<Iterable<double>> {
   /// Creates a matrix from a two dimensional list, every nested list is a
   /// source for a matrix row.
   ///
