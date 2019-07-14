@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/src/common/helper/get_length_of_first_or_zero.dart';
 import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_iterator.dart';
@@ -15,13 +16,14 @@ class DataManagerImpl implements DataManager {
       this._typedListHelper,
   ) :
         rowsNum = source.length,
-        columnsNum = source.first.length,
+        columnsNum = getLengthOfFirstOrZero<List<double>>(source),
         _rowsIndicesRange = ZRange.closedOpen(0, source.length),
-        _colsIndicesRange = ZRange.closedOpen(0, source.first.length),
+        _colsIndicesRange = ZRange
+            .closedOpen(0, getLengthOfFirstOrZero<List<double>>(source)),
         _rowsCache = List<Vector>(source.length),
-        _colsCache = List<Vector>(source.first.length),
-        _data = ByteData(source.length * source.first.length *
-            bytesPerElement) {
+        _colsCache = List<Vector>(getLengthOfFirstOrZero<List<double>>(source)),
+        _data = ByteData(source.length *
+            getLengthOfFirstOrZero<List<double>>(source) * bytesPerElement) {
     _updateByteDataBy2dimIterable(source, (i, j) => i * columnsNum + j,
         bytesPerElement);
   }
@@ -33,13 +35,14 @@ class DataManagerImpl implements DataManager {
       this._typedListHelper,
   ) :
         rowsNum = source.length,
-        columnsNum = source.first.length,
+        columnsNum = getLengthOfFirstOrZero<Vector>(source),
         _rowsIndicesRange = ZRange.closedOpen(0, source.length),
-        _colsIndicesRange = ZRange.closedOpen(0, source.first.length),
+        _colsIndicesRange = ZRange
+            .closedOpen(0, getLengthOfFirstOrZero<Vector>(source)),
         _rowsCache = source.toList(growable: false),
-        _colsCache = List<Vector>(source.first.length),
-        _data = ByteData(source.length * source.first.length *
-            bytesPerElement) {
+        _colsCache = List<Vector>(getLengthOfFirstOrZero<Vector>(source)),
+        _data = ByteData(source.length *
+            getLengthOfFirstOrZero<Vector>(source) * bytesPerElement) {
     _updateByteDataBy2dimIterable(source, (i, j) => i * columnsNum + j,
         bytesPerElement);
   }
@@ -50,14 +53,15 @@ class DataManagerImpl implements DataManager {
       this._dtype,
       this._typedListHelper,
   ) :
-        rowsNum = source.first.length,
+        rowsNum = getLengthOfFirstOrZero<Vector>(source),
         columnsNum = source.length,
-        _rowsIndicesRange = ZRange.closedOpen(0, source.first.length),
+        _rowsIndicesRange = ZRange
+            .closedOpen(0, getLengthOfFirstOrZero<Vector>(source)),
         _colsIndicesRange = ZRange.closedOpen(0, source.length),
-        _rowsCache = List<Vector>(source.first.length),
+        _rowsCache = List<Vector>(getLengthOfFirstOrZero<Vector>(source)),
         _colsCache = source.toList(growable: false),
-        _data = ByteData(source.length * source.first.length *
-            bytesPerElement) {
+        _data = ByteData(source.length *
+            getLengthOfFirstOrZero<Vector>(source) * bytesPerElement) {
     _updateByteDataBy2dimIterable(source, (i, j) => j * columnsNum + i,
         bytesPerElement);
   }

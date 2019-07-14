@@ -8,7 +8,7 @@ import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/vector/common/simd_helper.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:quiver/core.dart';
+import 'package:xrange/zrange.dart';
 
 abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     implements Vector {
@@ -35,13 +35,19 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
+    {
+      double min = 0,
+      double max = 1,
+    }
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _source = _getBuffer(
             _getNumOfBuckets(length, _bucketSize) * _bucketSize,
             _bytesPerElement) {
     final generator = math.Random(seed);
-    _setByteData((i) => generator.nextDouble());
+    final diff = (max - min).abs();
+    final realMin = math.min(min, max);
+    _setByteData((i) => generator.nextDouble() * diff + realMin);
   }
 
   BaseVector.filled(
@@ -130,7 +136,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   @override
   bool operator ==(Object other) {
     if (other is BaseVector<E, S>) {
-      // TODO: consider checking hashcode here to compare two vectors
       if (length != other.length) {
         return false;
       }
@@ -146,7 +151,14 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  int get hashCode => _hash ??= hashObjects(_innerSimdList);
+  int get hashCode => _hash ??= length > 0 ? _generateHash() : 0;
+
+  int _generateHash() {
+    int i = 0;
+    final simdHash = _innerSimdList.reduce((sum, element) => _simdHelper
+            .sum(sum, _simdHelper.scale(element, (31 * (i++)) * 1.0)));
+    return _simdHelper.sumLanesForHash(simdHash) ~/ 1;
+  }
 
   @override
   Vector operator +(Object value) {
@@ -314,10 +326,22 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
+  Vector subvectorByRange(ZRange range) =>
+      subvector(range.firstValue ?? 0, range.lastValue == null
+          ? null : range.lastValue + 1);
+
+  @override
   Vector subvector(int start, [int end]) {
+    if (start < 0) throw RangeError.range(start, 0, length - 1, '`start` cannot'
+        ' be negative');
+    if (end != null && start >= end) throw RangeError.range(start, 0,
+        length - 1, '`start` cannot be greater than or equal to `end`');
+    if (start >= length) throw RangeError.range(start, 0,
+        length - 1, '`start` cannot be greater than or equal to the vector'
+            'length');
     final collection = _typedListHelper
         .getBufferAsList((_innerSimdList as TypedData).buffer, start,
-        (end > length ? length : end) - start);
+        (end == null || end > length ? length : end) - start);
     return Vector.fromList(collection, dtype: dtype);
   }
 

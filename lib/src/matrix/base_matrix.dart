@@ -1,8 +1,10 @@
 import 'dart:collection';
 import 'dart:math' as math;
 
+import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
+import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
@@ -217,6 +219,28 @@ abstract class BaseMatrix with
       newColumns[i++] = column;
     }
     return Matrix.fromColumns(newColumns, dtype: dtype);
+  }
+
+  @override
+  Matrix sort(double selectSortValue(Vector vector), [Axis axis = Axis.rows,
+    SortDirection sortDir = SortDirection.asc]) {
+    final doSort =
+        (Iterable<Vector> source) => _doSort(source, sortDir, selectSortValue);
+    switch (axis) {
+      case Axis.rows:
+        return Matrix.fromRows(doSort(rows), dtype: dtype);
+      case Axis.columns:
+        return Matrix.fromColumns(doSort(columns), dtype: dtype);
+      default:
+        throw UnsupportedError('Unsupported axis type ${axis}');
+    }
+  }
+
+  List<Vector> _doSort(Iterable<Vector> source, SortDirection sortDir,
+      double selector(Vector vector)) {
+    final dir = sortDir == SortDirection.asc ? 1 : -1;
+    return source.toList(growable: false)
+      ..sort((row1, row2) => (selector(row1) - selector(row2)) ~/ dir);
   }
 
   @override

@@ -1,11 +1,13 @@
+import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix_norm.dart';
+import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:xrange/zrange.dart';
 
 /// An algebraic matrix
-abstract class Matrix {
+abstract class Matrix  implements Iterable<Iterable<double>> {
   /// Creates a matrix from a two dimensional list, every nested list is a
   /// source for a matrix row.
   ///
@@ -151,4 +153,8 @@ abstract class Matrix {
 
   /// Extracts non-repeated matrix rows and pack them into matrix
   Matrix uniqueRows();
+
+  /// Returns a new matrix with sorted elements from [this] matrix
+  Matrix sort(double selectSortValue(Vector vector), [Axis axis = Axis.rows,
+    SortDirection sortDir = SortDirection.asc]);
 }

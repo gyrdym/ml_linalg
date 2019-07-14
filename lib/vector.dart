@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
+import 'package:xrange/zrange.dart';
 
 import 'norm.dart';
 
@@ -54,12 +55,15 @@ abstract class Vector implements Iterable<double> {
   }
 
   /// Creates a vector of length, equal to [length], filled with random values,
+  /// which are bound by interval from [min] (inclusive) tp [max] (exclusive).
+  /// If [min] greater than [max] when [min] becomes [max]
   /// generated from randomizer with seed, equal to [seed].
   factory Vector.randomFilled(int length,
-      {int seed, DType dtype = DType.float32}) {
+      {int seed, double min = 0, double max = 1, DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Vector.randomFilled(length, seed: seed);
+        return Float32Vector.randomFilled(length, seed: seed,
+            max: max, min: min);
       default:
         throw UnimplementedError();
     }
@@ -129,6 +133,10 @@ abstract class Vector implements Iterable<double> {
   Vector rescale();
 
   Vector fastMap<E>(E mapper(E element));
+
+  /// Returns a new vector formed by a specific part of [this] vector using
+  /// integer range
+  Vector subvectorByRange(ZRange range);
 
   /// Returns a new vector formed by a specific part of [this] vector
   Vector subvector(int start, [int end]);

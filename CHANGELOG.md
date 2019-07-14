@@ -1,5 +1,48 @@
 # Changelog
 
+## 10.3.7
+- `Matrix`: `Iterable<Iterable<double>>` implemented
+
+## 10.3.6
+- `Vector`: `randomFilled` default parameters fixed
+- Tests for `Vector`'s constructors added
+
+## 10.3.5
+- readme updated: explanation images added
+
+## 10.3.4
+- Images for readme.md updated (simd architecture explanation)
+
+## 10.3.3
+- Images for readme.md added (simd architecture explanation)
+
+## 10.3.2
+- `Vector`: 
+    - `hashCode` speed up
+    - `randomFilled` constructor extended: `min` and `max` parameters added
+
+## 10.3.1
+- `Vector`: `hashCode` improvements
+
+## 10.3.0
+- `Vector`: `hashCode` re-implemented: now it's possible to use the vector as a map key 
+
+## 10.2.0
+- `Matrix`: `sort` method added and implemented
+
+## 10.1.0
+- `Vector`: `subvectorByRange` method added and implemented (for float32 vector)
+
+## 10.0.4
+- `pubspec.yaml`: sdk version constraint changed from `>=2.3.0` to `>=2.2.0` 
+
+## 10.0.3
+- `Float32Matrix.columns`: empty list supported as a source
+- `Float32Matrix.rows`: empty list supported as a source
+
+## 10.0.2
+- `Float32Matrix.fromList`: empty list supported as a source
+
 ## 10.0.1
 - Links in README corrected
 
