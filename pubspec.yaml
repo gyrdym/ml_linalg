@@ -1,20 +1,22 @@
 name: ml_linalg
 description: SIMD-based linear algebra (1 operation on 4 float32 values, 1 operation on 2 float64 values)
-version: 10.3.7
+version: 11.0.0
 author: Ilia Gyrdymov <ilgyrd@gmail.com>
 homepage: https://github.com/gyrdym/ml_linalg
 
 environment:
-  sdk: '>=2.2.0 <3.0.0'
+  sdk: '>=2.4.0 <3.0.0'
 
 dependencies:
   quiver: '>=2.0.0 <3.0.0'
   xrange: ^0.0.6
 
 dev_dependencies:
-  benchmark_harness: ">=1.0.0 <2.0.0"
-  test: ^1.2.0
-  mockito: ^3.0.0
-  dartdoc: any
+  benchmark_harness: '>=1.0.0 <2.0.0'
   build_runner: ^1.1.2
   build_test: ^0.10.2
+  dartdoc: any
+  grinder: ^0.8.3
+  ml_tech: ^0.0.5
+  mockito: ^3.0.0
+  test: ^1.2.0

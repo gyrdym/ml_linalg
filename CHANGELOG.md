@@ -1,5 +1,10 @@
 # Changelog
 
+## 11.0.0
+- Dart sdk constraint changed: from 2.2.0 to 2.4.0
+- `Matrix`: `pick` method refactored
+- Grinder tasks for unit testing, code analysis and coverage added
+
 ## 10.3.7
 - `Matrix`: `Iterable<Iterable<double>>` implemented
 
