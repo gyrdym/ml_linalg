@@ -367,13 +367,9 @@ abstract class BaseMatrix with
   }
 
   List<Vector> _collectVectors(
-      Iterable<ZRange> ranges, Vector getVector(int i)) {
-    final vectors = <Vector>[];
-    ranges.forEach((range) {
-      for (final i in range.values()) {
-        vectors.add(getVector(i));
-      }
-    });
-    return vectors;
-  }
+      Iterable<ZRange> ranges,
+      Vector getVector(int i),
+  ) => ranges
+      .expand((range) => range.values().map((idx) => getVector(idx)))
+      .toList();
 }
