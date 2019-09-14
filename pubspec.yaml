@@ -12,9 +12,11 @@ dependencies:
   xrange: ^0.0.6
 
 dev_dependencies:
-  benchmark_harness: ">=1.0.0 <2.0.0"
-  test: ^1.2.0
-  mockito: ^3.0.0
-  dartdoc: any
+  benchmark_harness: '>=1.0.0 <2.0.0'
   build_runner: ^1.1.2
   build_test: ^0.10.2
+  dartdoc: any
+  grinder: ^0.8.3
+  ml_tech: ^0.0.5
+  mockito: ^3.0.0
+  test: ^1.2.0
