@@ -8,7 +8,7 @@ import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:xrange/zrange.dart';
+import 'package:quiver/iterables.dart';
 
 abstract class BaseMatrix with
     IterableMixin<Iterable<double>>,
@@ -103,30 +103,26 @@ abstract class BaseMatrix with
   Vector getColumn(int index) => _dataManager.getColumn(index);
 
   @override
-  Matrix submatrix({ZRange rows, ZRange columns}) {
-    rows ??= ZRange.closedOpen(0, rowsNum);
-    columns ??= ZRange.closedOpen(0, columnsNum);
-    final rowsNumber = rows.length;
-    final columnsLength = columns.length;
-    final matrixSource = List<List<double>>(rowsNumber);
-    for (final i in rows.values()) {
-      matrixSource[i - rows.firstValue] =
-          _dataManager.getValues(i * columnsNum + columns.firstValue,
-              columnsLength);
-    }
-    return Matrix.fromList(matrixSource, dtype: dtype);
-  }
+  Matrix sample({
+    Iterable<int> rowIndices = const [],
+    Iterable<int> columnIndices = const [],
+  }) {
+    final rowsNumber = rowIndices.isEmpty
+        ? rowsNum
+        : rowIndices.length;
 
-  @override
-  Matrix pick({Iterable<ZRange> rowRanges,
-    Iterable<ZRange> columnRanges}) {
-    rowRanges ??= [ZRange.closedOpen(0, rowsNum)];
-    columnRanges ??= [ZRange.closedOpen(0, columnsNum)];
-    final rows = _collectVectors(rowRanges, getRow);
-    final rowBasedMatrix = Matrix.fromRows(rows, dtype: dtype);
-    final columns =
-        _collectVectors(columnRanges, rowBasedMatrix.getColumn);
-    return Matrix.fromColumns(columns, dtype: dtype);
+    final targetMatrixSource = List<Vector>(rowsNumber);
+    for (final indexed in enumerate(rowIndices.isEmpty
+        ? count(0).take(rowsNum).map((i) => i.toInt())
+        : rowIndices)
+    ) {
+      final targetRowIndex = indexed.index;
+      final sourceRowIndex = indexed.value;
+      final sourceRow = getRow(sourceRowIndex);
+      targetMatrixSource[targetRowIndex] = columnIndices.isEmpty
+          ? sourceRow : sourceRow.sample(columnIndices);
+    }
+    return Matrix.fromRows(targetMatrixSource, dtype: dtype);
   }
 
   @override
@@ -365,11 +361,4 @@ abstract class BaseMatrix with
     final source = List<Vector>.generate(rowsNum, elementGenFn);
     return Matrix.fromRows(source, dtype: dtype);
   }
-
-  List<Vector> _collectVectors(
-      Iterable<ZRange> ranges,
-      Vector getVector(int i),
-  ) => ranges
-      .expand((range) => range.values().map((idx) => getVector(idx)))
-      .toList();
 }
