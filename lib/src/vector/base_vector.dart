@@ -8,7 +8,6 @@ import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/vector/common/simd_helper.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:xrange/zrange.dart';
 
 abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     implements Vector {
@@ -300,10 +299,12 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  Vector query(Iterable<int> indexes) {
-    final list = _typedListHelper.empty(indexes.length);
+  Vector sample(Iterable<int> indices) {
+    final list = _typedListHelper.empty(indices.length);
     int i = 0;
-    for (final idx in indexes) list[i++] = this[idx];
+    for (final idx in indices) {
+      list[i++] = this[idx];
+    }
     return Vector.fromList(list, dtype: dtype);
   }
 
@@ -326,19 +327,20 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  Vector subvectorByRange(ZRange range) =>
-      subvector(range.firstValue ?? 0, range.lastValue == null
-          ? null : range.lastValue + 1);
-
-  @override
   Vector subvector(int start, [int end]) {
-    if (start < 0) throw RangeError.range(start, 0, length - 1, '`start` cannot'
-        ' be negative');
-    if (end != null && start >= end) throw RangeError.range(start, 0,
-        length - 1, '`start` cannot be greater than or equal to `end`');
-    if (start >= length) throw RangeError.range(start, 0,
-        length - 1, '`start` cannot be greater than or equal to the vector'
-            'length');
+    if (start < 0) {
+      throw RangeError.range(start, 0, length - 1, '`start` cannot'
+          ' be negative');
+    }
+    if (end != null && start >= end) {
+      throw RangeError.range(start, 0,
+          length - 1, '`start` cannot be greater than or equal to `end`');
+    }
+    if (start >= length) {
+      throw RangeError.range(start, 0,
+          length - 1, '`start` cannot be greater than or equal to the vector'
+              'length');
+    }
     final collection = _typedListHelper
         .getBufferAsList((_innerSimdList as TypedData).buffer, start,
         (end == null || end > length ? length : end) - start);

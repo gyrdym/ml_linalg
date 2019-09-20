@@ -498,9 +498,9 @@ void main() {
     test('should create a vector using elements on specific inidces from '
         'given list', () {
       final vector = Float32Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
-      final query = vector.query([1, 1, 0, 3]);
+      final query = vector.sample([1, 1, 0, 3]);
       expect(query, equals([3.0, 3.0, 10.0, 7.0]));
-      expect(() => vector.query([20, 0, 1]), throwsRangeError);
+      expect(() => vector.sample([20, 0, 1]), throwsRangeError);
     });
 
     test('`unique` method', () {
@@ -652,51 +652,6 @@ void main() {
       final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
       final actual = () => vector.subvector(4, 4);
       expect(actual, throwsRangeError);
-    });
-  });
-
-  group('Float32x4Vector.subvectorByRange', () {
-    test('should return a proper vector using closed range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.closed(1, 3));
-      expect(actual, equals([2.0, 3.0, 4.0]));
-    });
-
-    test('should return a proper vector using open range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.open(1, 3));
-      expect(actual, equals([3.0]));
-    });
-
-    test('should return a proper vector using open-closed range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.openClosed(1, 3));
-      expect(actual, equals([3.0, 4.0]));
-    });
-
-    test('should return a proper vector using closed-open range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.closedOpen(1, 3));
-      expect(actual, equals([2.0, 3.0]));
-    });
-
-    test('should return a proper vector using upper boundless range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.atLeast(2));
-      expect(actual, equals([3.0, 4.0, 5.0]));
-    });
-
-    test('should return a proper vector using lower boundless range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.atMost(2));
-      expect(actual, equals([1.0, 2.0, 3.0]));
-    });
-
-    test('should return a copy of the vector using absolutely boundless '
-        'range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.all());
-      expect(actual, equals([1.0, 2.0, 3.0, 4.0, 5.0]));
     });
   });
 
