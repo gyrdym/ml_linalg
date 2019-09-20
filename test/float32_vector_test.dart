@@ -4,10 +4,9 @@ import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
+import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 import 'package:xrange/zrange.dart';
-
-import 'unit_test_helpers/float_iterable_almost_equal_to.dart';
 
 void main() {
   group('Float32Vector', () {
@@ -464,7 +463,7 @@ void main() {
       final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
       final actual = vector.normalize(Norm.euclidean);
       final expected = [0.134, 0.269, 0.404, 0.539, 0.674];
-      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expect(actual, iterableAlmostEqualTo(expected, 1e-3));
       expect(actual.norm(Norm.euclidean), closeTo(1.0, 1e-3));
     });
 
@@ -472,7 +471,7 @@ void main() {
       final vector = Float32Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0]);
       final actual = vector.normalize(Norm.manhattan);
       final expected = [1 / 15, -2 / 15, 3 / 15, -4 / 15, 5 / 15];
-      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expect(actual, iterableAlmostEqualTo(expected, 1e-3));
       expect(actual.norm(Norm.manhattan), closeTo(1.0, 1e-3));
     });
 
@@ -480,7 +479,7 @@ void main() {
       final vector = Float32Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
       final actual = vector.rescale(); // min = -4, diff = 9
       final expected = [5 / 9, 2 / 9, 7 / 9, 0.0, 1.0, 4 / 9];
-      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expect(actual, iterableAlmostEqualTo(expected, 1e-3));
       expected.forEach((element) => expect(element, inInclusiveRange(0, 1)));
     });
 
