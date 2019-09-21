@@ -239,23 +239,16 @@ abstract class BaseMatrix with
   }
 
   @override
-  Iterable<Vector> get rows =>
-      _generateVectors(_dataManager.rowIndices, getRow);
+  Iterable<Vector> get rows => _dataManager.rowIndices.map(getRow);
 
   @override
-  Iterable<Vector> get columns =>
-      _generateVectors(_dataManager.colIndices, getColumn);
+  Iterable<Vector> get columns => _dataManager.colIndices.map(getColumn);
 
   @override
   Matrix fastMap<T>(T mapper(T element)) {
     final source = List.generate(
         rowsNum, (int i) => getRow(i).fastMap(mapper));
     return Matrix.fromRows(source, dtype: dtype);
-  }
-
-  Iterable<Vector> _generateVectors(Iterable<int> indices,
-      Vector genFn(int idx)) sync * {
-    for (final i in indices) yield genFn(i);
   }
 
   double _findExtrema(double callback(Vector vector)) {
