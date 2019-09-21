@@ -8,7 +8,7 @@
 - `Vector`: 
     - `randomFilled` constructor api changed, `min` and `max` args are of `num` type now
     - `fromList` constructor api changed, from now as a source expected `List<num>` instead of `List<doublet>`
-    - `filled` constructor api changed, from now sampling value is a `num` instead of `duble`
+    - `filled` constructor api changed, from now sampling value is a `num` instead of `double`
 - Dart sdk constraint returned to 2.2.0
 
 ## 11.0.0
