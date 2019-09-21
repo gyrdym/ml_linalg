@@ -42,7 +42,7 @@ packages:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.6"
+    version: "1.2.0"
   build_cli_annotations:
     dependency: transitive
     description:
@@ -70,21 +70,21 @@ packages:
       name: build_resolvers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.7"
+    version: "1.0.8"
   build_runner:
     dependency: "direct dev"
     description:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.7.1"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.0"
   build_test:
     dependency: "direct dev"
     description:
@@ -553,7 +553,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.9"
+    version: "1.6.10"
   test_api:
     dependency: transitive
     description:
@@ -567,7 +567,7 @@ packages:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.9"
+    version: "0.2.9+1"
   timing:
     dependency: transitive
     description:
@@ -588,7 +588,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "2.0.0"
   vm_service_lib:
     dependency: transitive
     description:
@@ -637,6 +637,6 @@ packages:
       name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.16"
+    version: "2.2.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"

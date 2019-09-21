@@ -1,5 +1,12 @@
 # Changelog
 
+## 12.0.0
+- `Matrix`: 
+    - `pick` method removed
+    - `submatrix` method replaced with `sample` method
+    - `[]` operator returns `Vector` from now
+- Dart sdk constraint returned to 2.2.0
+
 ## 11.0.0
 - Dart sdk constraint changed: from 2.2.0 to 2.4.0
 - `Matrix`: `pick` method refactored
