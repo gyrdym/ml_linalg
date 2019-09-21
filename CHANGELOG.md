@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.0.1
+- `xrange` package version locked
+
 ## 12.0.0
 - `Matrix`: 
     - `pick` method removed
