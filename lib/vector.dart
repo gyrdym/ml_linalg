@@ -12,7 +12,7 @@ abstract class Vector implements Iterable<double> {
   ///
   /// It converts the collection of [double]-type elements into a collection of
   /// [Float32x4] elements.
-  factory Vector.fromList(List<double> source, {DType dtype = DType.float32}) {
+  factory Vector.fromList(List<num> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
         return Float32Vector.fromList(source);
@@ -33,7 +33,7 @@ abstract class Vector implements Iterable<double> {
   }
 
   /// Creates a vector of length equal to [length], filled with [value].
-  factory Vector.filled(int length, double value,
+  factory Vector.filled(int length, num value,
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:

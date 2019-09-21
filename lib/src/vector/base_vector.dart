@@ -13,7 +13,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     implements Vector {
 
   BaseVector.fromList(
-    List<double> source,
+    List<num> source,
     this._bytesPerElement,
     this._bucketSize,
     this._typedListHelper,
@@ -51,7 +51,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   BaseVector.filled(
     this.length,
-    double value,
+    num value,
     this._bytesPerElement,
     this._bucketSize,
     this._typedListHelper,
@@ -436,12 +436,12 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     return Vector.fromList(source, dtype: dtype);
   }
 
-  void _setByteData(double generateValue(int i)) {
+  void _setByteData(num generateValue(int i)) {
     final byteData = _source.asByteData();
     var byteOffset = -_bytesPerElement;
     for (int i = 0; i < length; i++) {
       _typedListHelper.setValue(byteData, byteOffset += _bytesPerElement,
-          generateValue(i));
+          generateValue(i).toDouble());
     }
   }
 
