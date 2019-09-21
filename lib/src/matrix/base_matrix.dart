@@ -87,8 +87,7 @@ abstract class BaseMatrix with
   }
 
   @override
-  List<double> operator [](int index) => _dataManager
-      .getValues(index * columnsNum, columnsNum);
+  Vector operator [](int index) => getRow(index);
 
   @override
   Matrix transpose() {

@@ -78,8 +78,9 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// Returns a number of matrix columns
   int get columnsNum;
 
-  /// Returns a matrix row on an index equals [index]
-  List<double> operator [](int index);
+  /// Returns a matrix row on an [index] (the operator is an alias for
+  /// [getRow] method)
+  Vector operator [](int index);
 
   /// Performs sum of the matrix and a matrix/ a vector/ a scalar/ whatever
   Matrix operator +(Object value);
