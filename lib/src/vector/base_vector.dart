@@ -35,8 +35,8 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._typedListHelper,
     this._simdHelper,
     {
-      double min = 0,
-      double max = 1,
+      num min = 0,
+      num max = 1,
     }
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),

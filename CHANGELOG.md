@@ -5,6 +5,7 @@
     - `pick` method removed
     - `submatrix` method replaced with `sample` method
     - `[]` operator returns `Vector` from now
+- `Vector`: `randomFilled` constructor api changed, `min` and `max` args are of `num` type now
 - Dart sdk constraint returned to 2.2.0
 
 ## 11.0.0

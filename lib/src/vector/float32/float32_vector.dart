@@ -85,8 +85,8 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
   /// of created vector with a random value
   Float32Vector.randomFilled(int length, {
     int seed,
-    double min,
-    double max,
+    num min,
+    num max,
     TypedListHelperFactory typedListFactoryFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
