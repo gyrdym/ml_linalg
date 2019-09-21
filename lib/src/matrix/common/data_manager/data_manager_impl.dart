@@ -16,14 +16,14 @@ class DataManagerImpl implements DataManager {
       this._typedListHelper,
   ) :
         rowsNum = source.length,
-        columnsNum = getLengthOfFirstOrZero<List<double>>(source),
+        columnsNum = getLengthOfFirstOrZero(source),
         _rowsIndicesRange = ZRange.closedOpen(0, source.length),
         _colsIndicesRange = ZRange
-            .closedOpen(0, getLengthOfFirstOrZero<List<double>>(source)),
+            .closedOpen(0, getLengthOfFirstOrZero(source)),
         _rowsCache = List<Vector>(source.length),
-        _colsCache = List<Vector>(getLengthOfFirstOrZero<List<double>>(source)),
+        _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
-            getLengthOfFirstOrZero<List<double>>(source) * bytesPerElement) {
+            getLengthOfFirstOrZero(source) * bytesPerElement) {
     _updateByteDataBy2dimIterable(source, (i, j) => i * columnsNum + j,
         bytesPerElement);
   }
@@ -35,14 +35,14 @@ class DataManagerImpl implements DataManager {
       this._typedListHelper,
   ) :
         rowsNum = source.length,
-        columnsNum = getLengthOfFirstOrZero<Vector>(source),
+        columnsNum = getLengthOfFirstOrZero(source),
         _rowsIndicesRange = ZRange.closedOpen(0, source.length),
         _colsIndicesRange = ZRange
-            .closedOpen(0, getLengthOfFirstOrZero<Vector>(source)),
+            .closedOpen(0, getLengthOfFirstOrZero(source)),
         _rowsCache = source.toList(growable: false),
-        _colsCache = List<Vector>(getLengthOfFirstOrZero<Vector>(source)),
+        _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
-            getLengthOfFirstOrZero<Vector>(source) * bytesPerElement) {
+            getLengthOfFirstOrZero(source) * bytesPerElement) {
     _updateByteDataBy2dimIterable(source, (i, j) => i * columnsNum + j,
         bytesPerElement);
   }
@@ -53,15 +53,15 @@ class DataManagerImpl implements DataManager {
       this._dtype,
       this._typedListHelper,
   ) :
-        rowsNum = getLengthOfFirstOrZero<Vector>(source),
+        rowsNum = getLengthOfFirstOrZero(source),
         columnsNum = source.length,
         _rowsIndicesRange = ZRange
-            .closedOpen(0, getLengthOfFirstOrZero<Vector>(source)),
+            .closedOpen(0, getLengthOfFirstOrZero(source)),
         _colsIndicesRange = ZRange.closedOpen(0, source.length),
-        _rowsCache = List<Vector>(getLengthOfFirstOrZero<Vector>(source)),
+        _rowsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _colsCache = source.toList(growable: false),
         _data = ByteData(source.length *
-            getLengthOfFirstOrZero<Vector>(source) * bytesPerElement) {
+            getLengthOfFirstOrZero(source) * bytesPerElement) {
     _updateByteDataBy2dimIterable(source, (i, j) => j * columnsNum + i,
         bytesPerElement);
   }

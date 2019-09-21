@@ -11,7 +11,7 @@ class Float32x4MatrixFromListBenchmark extends BenchmarkBase {
   Float32x4MatrixFromListBenchmark() :
         super('Matrix initialization, from list');
 
-  final _source = List<List<double>>.filled(numOfRows,
+  final _source = List.filled(numOfRows,
       Vector
           .randomFilled(numOfColumns, min: -10000, max: 10000)
           .toList(),
