@@ -4,14 +4,13 @@ import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
+import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
-import 'package:xrange/zrange.dart';
-
-import 'unit_test_helpers/float_iterable_almost_equal_to.dart';
 
 void main() {
-  group('Float32Vector', () {
-    group('`fromList` constructor', () {
+  group('Float32Vector', ()
+  {
+    group('fromList', () {
       test('should create a vector from dynamic-length list, length is '
           'greater than 4', () {
         final vector1 = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
@@ -48,7 +47,7 @@ void main() {
       });
     });
 
-    group('`fromSIMDList` constructor', () {
+    group('fromSIMDList', () {
       final typedList = Float32x4List.fromList([
         Float32x4(1.0, 2.0, 3.0, 4.0),
         Float32x4(5.0, 6.0, 7.0, 8.0),
@@ -74,7 +73,7 @@ void main() {
       });
     });
 
-    group('`filled` constructor', () {
+    group('filled', () {
       test('should create a vector filled with the passed value', () {
         final vector = Float32Vector.filled(10, 2.0);
         expect(
@@ -83,7 +82,7 @@ void main() {
       });
     });
 
-    group('`randomFilled` constructor', () {
+    group('randomFilled', () {
       test('should create a vector filled with random values from range'
           '[-5; -1)', () {
         final vector = Float32Vector.randomFilled(200, min: -5, max: -1);
@@ -117,7 +116,7 @@ void main() {
       });
     });
 
-    group('`zero` constructor', () {
+    group('zero', () {
       test('should fill a newly created vector with zeroes, case 1', () {
         final vector = Float32Vector.zero(10);
         expect(
@@ -137,9 +136,7 @@ void main() {
         expect(vector.length, equals(2));
       });
     });
-  });
 
-  group('Float32Vector', () {
     Float32Vector vector1;
     Float32Vector vector2;
 
@@ -464,7 +461,7 @@ void main() {
       final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
       final actual = vector.normalize(Norm.euclidean);
       final expected = [0.134, 0.269, 0.404, 0.539, 0.674];
-      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expect(actual, iterableAlmostEqualTo(expected, 1e-3));
       expect(actual.norm(Norm.euclidean), closeTo(1.0, 1e-3));
     });
 
@@ -472,7 +469,7 @@ void main() {
       final vector = Float32Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0]);
       final actual = vector.normalize(Norm.manhattan);
       final expected = [1 / 15, -2 / 15, 3 / 15, -4 / 15, 5 / 15];
-      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expect(actual, iterableAlmostEqualTo(expected, 1e-3));
       expect(actual.norm(Norm.manhattan), closeTo(1.0, 1e-3));
     });
 
@@ -480,7 +477,7 @@ void main() {
       final vector = Float32Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
       final actual = vector.rescale(); // min = -4, diff = 9
       final expected = [5 / 9, 2 / 9, 7 / 9, 0.0, 1.0, 4 / 9];
-      expect(actual, vectorAlmostEqualTo(expected, 1e-3));
+      expect(actual, iterableAlmostEqualTo(expected, 1e-3));
       expected.forEach((element) => expect(element, inInclusiveRange(0, 1)));
     });
 
@@ -499,9 +496,9 @@ void main() {
     test('should create a vector using elements on specific inidces from '
         'given list', () {
       final vector = Float32Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
-      final query = vector.query([1, 1, 0, 3]);
+      final query = vector.sample([1, 1, 0, 3]);
       expect(query, equals([3.0, 3.0, 10.0, 7.0]));
-      expect(() => vector.query([20, 0, 1]), throwsRangeError);
+      expect(() => vector.sample([20, 0, 1]), throwsRangeError);
     });
 
     test('`unique` method', () {
@@ -525,245 +522,252 @@ void main() {
       expect(unique, equals([10.0, 3.0, 4.0, 0.0, 7.0, 12.0, 9.0]));
     });
 
-    test('`max` method, more than four elements', () {
-      final vector = Float32Vector.fromList([10.0, 12.0, 4.0, 7.0, 9.0, 12.0]);
-      expect(vector.max(), 12.0);
+    group('max', () {
+      test('should find a minimal element for the vector with more than 4 '
+          'elements', () {
+        final vector = Float32Vector.fromList([10.0, 12.0, 4.0, 7.0, 9.0, 12.0]);
+        expect(vector.max(), 12.0);
+      });
+
+      test('should find a minimal element for the vector with 4 elements', () {
+        final vector = Float32Vector.fromList([10.0, 11.0, -4.0, 0.0]);
+        expect(vector.max(), 11.0);
+      });
+
+      test('should find a minimal element for the vector with less than 4 '
+          'elements', () {
+        final vector = Float32Vector.fromList([7.0, -4.0, 0.0]);
+        expect(vector.max(), 7.0);
+      });
     });
 
-    test('`max` method, four elements', () {
-      final vector = Float32Vector.fromList([10.0, 11.0, -4.0, 0.0]);
-      expect(vector.max(), 11.0);
+    group('min', () {
+      test('should find a minimal element for the vector with more than 4 '
+          'elements', () {
+        final vector = Float32Vector.fromList([10.0, 1.0, 4.0, 7.0, 9.0, 1.0]);
+        expect(vector.min(), 1.0);
+      });
+
+      test('should find a minimal element for the vector with 4 '
+          'elements', () {
+        final vector = Float32Vector.fromList([10.0, 0.0, 4.0, 7.0]);
+        expect(vector.min(), 0.0);
+      });
+
+      test('should find a minimal element for the vector with length that is '
+          'less than 4', () {
+        final vector = Float32Vector.fromList([10.0, 1.0, 4.0]);
+        expect(vector.min(), 1.0);
+      });
     });
 
-    test('`max` method, less than four elements', () {
-      final vector = Float32Vector.fromList([7.0, -4.0, 0.0]);
-      expect(vector.max(), 7.0);
+    group('[]', () {
+      test('should provide indexed access ([] operator, case 1)', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+        expect(vector[0], 1.0);
+        expect(vector[1], 2.0);
+        expect(vector[2], 3.0);
+        expect(vector[3], 4.0);
+        expect(vector[4], 5.0);
+        expect(() => vector[-1], throwsRangeError);
+        expect(() => vector[5], throwsRangeError);
+        expect(() => vector[100], throwsRangeError);
+      });
+
+      test('should provide indexed access ([] operator, case 2)', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0]);
+        expect(vector[0], 1.0);
+        expect(vector[1], 2.0);
+        expect(vector[2], 3.0);
+        expect(vector[3], 4.0);
+        expect(() => vector[-1], throwsRangeError);
+        expect(() => vector[4], throwsRangeError);
+        expect(() => vector[100], throwsRangeError);
+      });
+
+      test('should provide indexed access ([] operator, case 3)', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0]);
+        expect(vector[0], 1.0);
+        expect(vector[1], 2.0);
+        expect(vector[2], 3.0);
+        expect(() => vector[-1], throwsRangeError);
+        expect(() => vector[3], throwsRangeError);
+        expect(() => vector[100], throwsRangeError);
+      });
+
+      test('should provide indexed access ([] operator, case 4)', () {
+        final vector = Float32Vector.fromList([1.0, 2.0]);
+        expect(vector[0], 1.0);
+        expect(vector[1], 2.0);
+        expect(() => vector[-1], throwsRangeError);
+        expect(() => vector[2], throwsRangeError);
+        expect(() => vector[100], throwsRangeError);
+      });
+
+      test('should provide indexed access ([] operator, case 5)', () {
+        final vector = Float32Vector.fromList([1.0]);
+        expect(vector[0], 1.0);
+        expect(() => vector[-1], throwsRangeError);
+        expect(() => vector[1], throwsRangeError);
+        expect(() => vector[100], throwsRangeError);
+      });
     });
 
-    test('`min` method, more than four elements', () {
-      final vector = Float32Vector.fromList([10.0, 1.0, 4.0, 7.0, 9.0, 1.0]);
-      expect(vector.min(), 1.0);
+    group('subvector', () {
+      test('should cut out a subvector (`end` exclusive)', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+        final actual = vector.subvector(1, 4);
+        final expected = [2.0, 3.0, 4.0];
+        expect(actual, expected);
+      });
+
+      test('should cut out a subvector of length 1 if `start` is equal to the '
+          'last index of the vector', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+        final actual = vector.subvector(4, 5);
+        final expected = [5.0];
+        expect(actual, expected);
+      });
+
+      test('should cut out rest of the vector if `end` is not specified', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
+        final actual = vector.subvector(1);
+        final expected = [2.0, 3.0, 4.0, 5.0, 7.0];
+        expect(actual, expected);
+      });
+
+      test('should cut out rest of the vector if `end` is specified and greater'
+          'that the vector length', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
+        final actual = vector.subvector(1, 20);
+        final expected = [2.0, 3.0, 4.0, 5.0, 7.0];
+        expect(actual, expected);
+      });
+
+      test('should throw a range error if `start` is negative', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
+        final actual = () => vector.subvector(-1, 20);
+        expect(actual, throwsRangeError);
+      });
+
+      test('should throw a range error if `start` is greater than `end`', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
+        final actual = () => vector.subvector(3, 2);
+        expect(actual, throwsRangeError);
+      });
+
+      test('should throw a range error if `start` is equal to the `end`', () {
+        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+        final actual = () => vector.subvector(4, 4);
+        expect(actual, throwsRangeError);
+      });
     });
 
-    test('`min` method, four elements', () {
-      final vector = Float32Vector.fromList([10.0, 0.0, 4.0, 7.0]);
-      expect(vector.min(), 0.0);
-    });
+    group('hashCode', () {
+      test('should return the same hashcode for equal vectors, case 1', () {
+        final hash1 = Float32Vector
+            .fromList([0, 0, 0, 0, 1])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([0, 0, 0, 0, 1])
+            .hashCode;
+        expect(hash1, equals(hash2));
+      });
 
-    test('`min` method, less than four elements', () {
-      final vector = Float32Vector.fromList([10.0, 1.0, 4.0]);
-      expect(vector.min(), 1.0);
-    });
+      test('should return the same hashcode for equal vectors, case 2', () {
+        final hash1 = Float32Vector
+            .fromList([-10, double.infinity, 345, 20, 1])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([-10, double.infinity, 345, 20, 1])
+            .hashCode;
+        expect(hash1, equals(hash2));
+      });
 
-    test('should provide indexed access ([] operator, case 1)', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector[0], 1.0);
-      expect(vector[1], 2.0);
-      expect(vector[2], 3.0);
-      expect(vector[3], 4.0);
-      expect(vector[4], 5.0);
-      expect(() => vector[-1], throwsRangeError);
-      expect(() => vector[5], throwsRangeError);
-      expect(() => vector[100], throwsRangeError);
-    });
+      test('should return the same hashcode for equal vectors, case 3', () {
+        final hash1 = Float32Vector
+            .fromList([0, 0, 0, 0, 0])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([0, 0, 0, 0, 0])
+            .hashCode;
+        expect(hash1, equals(hash2));
+      });
 
-    test('should provide indexed access ([] operator, case 2)', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0]);
-      expect(vector[0], 1.0);
-      expect(vector[1], 2.0);
-      expect(vector[2], 3.0);
-      expect(vector[3], 4.0);
-      expect(() => vector[-1], throwsRangeError);
-      expect(() => vector[4], throwsRangeError);
-      expect(() => vector[100], throwsRangeError);
-    });
+      test('should return the same hashcode for equal vectors, case 4', () {
+        final hash1 = Float32Vector
+            .fromList([])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([])
+            .hashCode;
+        expect(hash1, equals(hash2));
+      });
 
-    test('should provide indexed access ([] operator, case 3)', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0]);
-      expect(vector[0], 1.0);
-      expect(vector[1], 2.0);
-      expect(vector[2], 3.0);
-      expect(() => vector[-1], throwsRangeError);
-      expect(() => vector[3], throwsRangeError);
-      expect(() => vector[100], throwsRangeError);
-    });
+      test('should return the same hashcode for equal vectors, case 5', () {
+        final hash1 = Float32Vector
+            .fromList([100])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([100])
+            .hashCode;
+        expect(hash1, equals(hash2));
+      });
 
-    test('should provide indexed access ([] operator, case 4)', () {
-      final vector = Float32Vector.fromList([1.0, 2.0]);
-      expect(vector[0], 1.0);
-      expect(vector[1], 2.0);
-      expect(() => vector[-1], throwsRangeError);
-      expect(() => vector[2], throwsRangeError);
-      expect(() => vector[100], throwsRangeError);
-    });
+      test(
+          'should return a different hashcode for unequal vectors, case 1', () {
+        final hash1 = Float32Vector
+            .fromList([0, 0, 0, 1, 0])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([0, 0, 0, 0, 1])
+            .hashCode;
+        expect(hash1, isNot(equals(hash2)));
+      });
 
-    test('should provide indexed access ([] operator, case 5)', () {
-      final vector = Float32Vector.fromList([1.0]);
-      expect(vector[0], 1.0);
-      expect(() => vector[-1], throwsRangeError);
-      expect(() => vector[1], throwsRangeError);
-      expect(() => vector[100], throwsRangeError);
-    });
-  });
+      test(
+          'should return a different hashcode for unequal vectors, case 2', () {
+        final hash1 = Float32Vector
+            .fromList([0, 0, 0, 10, 0])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([0, 0, 0, 1, 0, 0])
+            .hashCode;
+        expect(hash1, isNot(equals(hash2)));
+      });
 
-  group('Float32x4Vector.subvector', () {
-    test('should cut out a subvector (`end` exclusive)', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvector(1, 4);
-      final expected = [2.0, 3.0, 4.0];
-      expect(actual, expected);
-    });
+      test(
+          'should return a different hashcode for unequal vectors, case 3', () {
+        final hash1 = Float32Vector
+            .fromList([-32, 12, 0, 10, 0])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([32, 12, 0, 10, 0])
+            .hashCode;
+        expect(hash1, isNot(equals(hash2)));
+      });
 
-    test('should cut out a subvector of length 1 if `start` is equal to the '
-        'last index of the vector', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvector(4, 5);
-      final expected = [5.0];
-      expect(actual, expected);
-    });
+      test(
+          'should return a different hashcode for unequal vectors, case 4', () {
+        final hash1 = Float32Vector
+            .fromList([32, 5, 46, 78, 9])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([3, 25, 46, 7, 89])
+            .hashCode;
+        expect(hash1, isNot(equals(hash2)));
+      });
 
-    test('should cut out rest of the vector if `end` is not specified', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
-      final actual = vector.subvector(1);
-      final expected = [2.0, 3.0, 4.0, 5.0, 7.0];
-      expect(actual, expected);
-    });
-
-    test('should cut out rest of the vector if `end` is specified and greater'
-        'that the vector length', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
-      final actual = vector.subvector(1, 20);
-      final expected = [2.0, 3.0, 4.0, 5.0, 7.0];
-      expect(actual, expected);
-    });
-
-    test('should throw a range error if `start` is negative', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
-      final actual = () => vector.subvector(-1, 20);
-      expect(actual, throwsRangeError);
-    });
-
-    test('should throw a range error if `start` is greater than `end`', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
-      final actual = () => vector.subvector(3, 2);
-      expect(actual, throwsRangeError);
-    });
-
-    test('should throw a range error if `start` is equal to the `end`', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = () => vector.subvector(4, 4);
-      expect(actual, throwsRangeError);
-    });
-  });
-
-  group('Float32x4Vector.subvectorByRange', () {
-    test('should return a proper vector using closed range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.closed(1, 3));
-      expect(actual, equals([2.0, 3.0, 4.0]));
-    });
-
-    test('should return a proper vector using open range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.open(1, 3));
-      expect(actual, equals([3.0]));
-    });
-
-    test('should return a proper vector using open-closed range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.openClosed(1, 3));
-      expect(actual, equals([3.0, 4.0]));
-    });
-
-    test('should return a proper vector using closed-open range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.closedOpen(1, 3));
-      expect(actual, equals([2.0, 3.0]));
-    });
-
-    test('should return a proper vector using upper boundless range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.atLeast(2));
-      expect(actual, equals([3.0, 4.0, 5.0]));
-    });
-
-    test('should return a proper vector using lower boundless range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.atMost(2));
-      expect(actual, equals([1.0, 2.0, 3.0]));
-    });
-
-    test('should return a copy of the vector using absolutely boundless '
-        'range', () {
-      final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector.subvectorByRange(ZRange.all());
-      expect(actual, equals([1.0, 2.0, 3.0, 4.0, 5.0]));
-    });
-  });
-
-  group('Float32x4Vector.hashCode', () {
-    test('should return the same hashcode for equal vectors, case 1', () {
-      final hash1 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
-      final hash2 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
-      expect(hash1, equals(hash2));
-    });
-
-    test('should return the same hashcode for equal vectors, case 2', () {
-      final hash1 = Float32Vector.fromList([-10, double.infinity, 345, 20, 1])
-          .hashCode;
-      final hash2 = Float32Vector.fromList([-10, double.infinity, 345, 20, 1])
-          .hashCode;
-      expect(hash1, equals(hash2));
-    });
-
-    test('should return the same hashcode for equal vectors, case 3', () {
-      final hash1 = Float32Vector.fromList([0, 0, 0, 0, 0]).hashCode;
-      final hash2 = Float32Vector.fromList([0, 0, 0, 0, 0]).hashCode;
-      expect(hash1, equals(hash2));
-    });
-
-    test('should return the same hashcode for equal vectors, case 4', () {
-      final hash1 = Float32Vector.fromList([]).hashCode;
-      final hash2 = Float32Vector.fromList([]).hashCode;
-      expect(hash1, equals(hash2));
-    });
-
-    test('should return the same hashcode for equal vectors, case 5', () {
-      final hash1 = Float32Vector.fromList([100]).hashCode;
-      final hash2 = Float32Vector.fromList([100]).hashCode;
-      expect(hash1, equals(hash2));
-    });
-
-    test('should return a different hashcode for unequal vectors, case 1', () {
-      final hash1 = Float32Vector.fromList([0, 0, 0, 1, 0]).hashCode;
-      final hash2 = Float32Vector.fromList([0, 0, 0, 0, 1]).hashCode;
-      expect(hash1, isNot(equals(hash2)));
-    });
-
-    test('should return a different hashcode for unequal vectors, case 2', () {
-      final hash1 = Float32Vector.fromList([0, 0, 0, 10, 0]).hashCode;
-      final hash2 = Float32Vector.fromList([0, 0, 0, 1, 0, 0]).hashCode;
-      expect(hash1, isNot(equals(hash2)));
-    });
-
-    test('should return a different hashcode for unequal vectors, case 3', () {
-      final hash1 = Float32Vector.fromList([-32, 12, 0, 10, 0]).hashCode;
-      final hash2 = Float32Vector.fromList([32, 12, 0, 10, 0]).hashCode;
-      expect(hash1, isNot(equals(hash2)));
-    });
-
-    test('should return a different hashcode for unequal vectors, case 4', () {
-      final hash1 = Float32Vector.fromList([32, 5, 46, 78, 9]).hashCode;
-      final hash2 = Float32Vector.fromList([3, 25, 46, 7, 89]).hashCode;
-      expect(hash1, isNot(equals(hash2)));
-    });
-
-    test('should return a different hashcode for unequal vectors, case 5', () {
-      final hash1 = Float32Vector.fromList([32.04999923706055, 0.5, 2.0, 11.5])
-          .hashCode;
-      final hash2 = Float32Vector.fromList([32.0, 49999237060550.5, 2.0, 11.5])
-          .hashCode;
-      expect(hash1, isNot(equals(hash2)));
+      test(
+          'should return a different hashcode for unequal vectors, case 5', () {
+        final hash1 = Float32Vector
+            .fromList([32.04999923706055, 0.5, 2.0, 11.5])
+            .hashCode;
+        final hash2 = Float32Vector
+            .fromList([32.0, 49999237060550.5, 2.0, 11.5])
+            .hashCode;
+        expect(hash1, isNot(equals(hash2)));
+      });
     });
   });
 }

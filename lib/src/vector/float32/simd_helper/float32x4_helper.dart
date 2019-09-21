@@ -65,7 +65,7 @@ class Float32x4Helper implements SimdHelper<Float32x4, Float32x4List> {
       math.min(math.min(a.x, a.y), math.min(a.z, a.w));
 
   @override
-  List<double> simdValueToList(Float32x4 a) => <double>[a.x, a.y, a.z, a.w];
+  List<double> simdValueToList(Float32x4 a) => [a.x, a.y, a.z, a.w];
 
   @override
   Float32x4List getBufferAsSimdList(ByteBuffer buffer) =>

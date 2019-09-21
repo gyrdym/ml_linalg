@@ -1,2 +1,2 @@
-int getLengthOfFirstOrZero<T extends Iterable<double>>(List<T> collection) =>
+int getLengthOfFirstOrZero(Iterable<Iterable> collection) =>
     collection.isNotEmpty ? collection.first.length : 0;

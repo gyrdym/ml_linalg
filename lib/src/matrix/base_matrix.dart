@@ -8,7 +8,7 @@ import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:xrange/zrange.dart';
+import 'package:quiver/iterables.dart';
 
 abstract class BaseMatrix with
     IterableMixin<Iterable<double>>,
@@ -87,12 +87,11 @@ abstract class BaseMatrix with
   }
 
   @override
-  List<double> operator [](int index) => _dataManager
-      .getValues(index * columnsNum, columnsNum);
+  Vector operator [](int index) => getRow(index);
 
   @override
   Matrix transpose() {
-    final source = List<Vector>.generate(rowsNum, getRow);
+    final source = List.generate(rowsNum, getRow);
     return Matrix.fromColumns(source, dtype: dtype);
   }
 
@@ -103,30 +102,26 @@ abstract class BaseMatrix with
   Vector getColumn(int index) => _dataManager.getColumn(index);
 
   @override
-  Matrix submatrix({ZRange rows, ZRange columns}) {
-    rows ??= ZRange.closedOpen(0, rowsNum);
-    columns ??= ZRange.closedOpen(0, columnsNum);
-    final rowsNumber = rows.length;
-    final columnsLength = columns.length;
-    final matrixSource = List<List<double>>(rowsNumber);
-    for (final i in rows.values()) {
-      matrixSource[i - rows.firstValue] =
-          _dataManager.getValues(i * columnsNum + columns.firstValue,
-              columnsLength);
-    }
-    return Matrix.fromList(matrixSource, dtype: dtype);
-  }
+  Matrix sample({
+    Iterable<int> rowIndices = const [],
+    Iterable<int> columnIndices = const [],
+  }) {
+    final rowsNumber = rowIndices.isEmpty
+        ? rowsNum
+        : rowIndices.length;
 
-  @override
-  Matrix pick({Iterable<ZRange> rowRanges,
-    Iterable<ZRange> columnRanges}) {
-    rowRanges ??= [ZRange.closedOpen(0, rowsNum)];
-    columnRanges ??= [ZRange.closedOpen(0, columnsNum)];
-    final rows = _collectVectors(rowRanges, getRow);
-    final rowBasedMatrix = Matrix.fromRows(rows, dtype: dtype);
-    final columns =
-        _collectVectors(columnRanges, rowBasedMatrix.getColumn);
-    return Matrix.fromColumns(columns, dtype: dtype);
+    final targetMatrixSource = List<Vector>(rowsNumber);
+    for (final indexed in enumerate(rowIndices.isEmpty
+        ? count(0).take(rowsNum).map((i) => i.toInt())
+        : rowIndices)
+    ) {
+      final targetRowIndex = indexed.index;
+      final sourceRowIndex = indexed.value;
+      final sourceRow = getRow(sourceRowIndex);
+      targetMatrixSource[targetRowIndex] = columnIndices.isEmpty
+          ? sourceRow : sourceRow.sample(columnIndices);
+    }
+    return Matrix.fromRows(targetMatrixSource, dtype: dtype);
   }
 
   @override
@@ -143,12 +138,12 @@ abstract class BaseMatrix with
 
   @override
   Matrix mapColumns(Vector mapper(Vector columns)) =>
-      Matrix.fromColumns(List<Vector>.generate(columnsNum,
+      Matrix.fromColumns(List.generate(columnsNum,
               (int i) => mapper(getColumn(i))), dtype: dtype);
 
   @override
   Matrix mapRows(Vector mapper(Vector row)) =>
-      Matrix.fromRows(List<Vector>.generate(rowsNum,
+      Matrix.fromRows(List.generate(rowsNum,
               (int i) => mapper(getRow(i))), dtype: dtype);
 
   @override
@@ -244,23 +239,16 @@ abstract class BaseMatrix with
   }
 
   @override
-  Iterable<Vector> get rows =>
-      _generateVectors(_dataManager.rowIndices, getRow);
+  Iterable<Vector> get rows => _dataManager.rowIndices.map(getRow);
 
   @override
-  Iterable<Vector> get columns =>
-      _generateVectors(_dataManager.colIndices, getColumn);
+  Iterable<Vector> get columns => _dataManager.colIndices.map(getColumn);
 
   @override
   Matrix fastMap<T>(T mapper(T element)) {
-    final source = List<Vector>.generate(
+    final source = List.generate(
         rowsNum, (int i) => getRow(i).fastMap(mapper));
     return Matrix.fromRows(source, dtype: dtype);
-  }
-
-  Iterable<Vector> _generateVectors(Iterable<int> indices,
-      Vector genFn(int idx)) sync * {
-    for (final i in indices) yield genFn(i);
   }
 
   double _findExtrema(double callback(Vector vector)) {
@@ -290,7 +278,7 @@ abstract class BaseMatrix with
               'matrix ${this} mismatch');
     }
     final generateElement = (int i) => vector.dot(getRow(i));
-    final source = List<double>.generate(rowsNum, generateElement);
+    final source = List.generate(rowsNum, generateElement);
     final vectorColumn = Vector.fromList(source, dtype: dtype);
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }
@@ -362,14 +350,7 @@ abstract class BaseMatrix with
     // TODO: use vectorized type (e.g. Float32x4) instead of `double`
     // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));
-    final source = List<Vector>.generate(rowsNum, elementGenFn);
+    final source = List.generate(rowsNum, elementGenFn);
     return Matrix.fromRows(source, dtype: dtype);
   }
-
-  List<Vector> _collectVectors(
-      Iterable<ZRange> ranges,
-      Vector getVector(int i),
-  ) => ranges
-      .expand((range) => range.values().map((idx) => getVector(idx)))
-      .toList();
 }
