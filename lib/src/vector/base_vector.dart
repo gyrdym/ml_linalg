@@ -431,7 +431,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
               'vector length is not allowed: vector length: $length, matrix '
               'row number: ${matrix.rowsNum}');
     }
-    final source = List<double>.generate(
+    final source = List.generate(
         matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
     return Vector.fromList(source, dtype: dtype);
   }

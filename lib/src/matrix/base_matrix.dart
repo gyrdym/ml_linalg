@@ -91,7 +91,7 @@ abstract class BaseMatrix with
 
   @override
   Matrix transpose() {
-    final source = List<Vector>.generate(rowsNum, getRow);
+    final source = List.generate(rowsNum, getRow);
     return Matrix.fromColumns(source, dtype: dtype);
   }
 
@@ -138,12 +138,12 @@ abstract class BaseMatrix with
 
   @override
   Matrix mapColumns(Vector mapper(Vector columns)) =>
-      Matrix.fromColumns(List<Vector>.generate(columnsNum,
+      Matrix.fromColumns(List.generate(columnsNum,
               (int i) => mapper(getColumn(i))), dtype: dtype);
 
   @override
   Matrix mapRows(Vector mapper(Vector row)) =>
-      Matrix.fromRows(List<Vector>.generate(rowsNum,
+      Matrix.fromRows(List.generate(rowsNum,
               (int i) => mapper(getRow(i))), dtype: dtype);
 
   @override
@@ -248,7 +248,7 @@ abstract class BaseMatrix with
 
   @override
   Matrix fastMap<T>(T mapper(T element)) {
-    final source = List<Vector>.generate(
+    final source = List.generate(
         rowsNum, (int i) => getRow(i).fastMap(mapper));
     return Matrix.fromRows(source, dtype: dtype);
   }
@@ -285,7 +285,7 @@ abstract class BaseMatrix with
               'matrix ${this} mismatch');
     }
     final generateElement = (int i) => vector.dot(getRow(i));
-    final source = List<double>.generate(rowsNum, generateElement);
+    final source = List.generate(rowsNum, generateElement);
     final vectorColumn = Vector.fromList(source, dtype: dtype);
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }
@@ -357,7 +357,7 @@ abstract class BaseMatrix with
     // TODO: use vectorized type (e.g. Float32x4) instead of `double`
     // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));
-    final source = List<Vector>.generate(rowsNum, elementGenFn);
+    final source = List.generate(rowsNum, elementGenFn);
     return Matrix.fromRows(source, dtype: dtype);
   }
 }
