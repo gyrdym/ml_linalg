@@ -47,7 +47,7 @@
         - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
-        - [Matrix indexing](#matrix-indexing)
+        - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
 - [Contacts](#contacts)
 
@@ -565,16 +565,33 @@ print(matrix1 - matrix2);
   // -23.0
 ````
 
-#### Matrix indexing
-&nbsp;&nbsp;&nbsp;&nbsp;The library's matrix interface offers `pick` method, that is supposed to return a new matrix, 
-consisting of different segments of a source matrix (like in Pandas dataframe in Python, e.g. `loc` method). It's 
-possible to build a new matrix from certain columns and vectors and they should not be necessarily subsequent. 
-&nbsp;&nbsp;&nbsp;&nbsp;For example, one needs to create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, 
-it's needed to access the matrix this way:
+#### Matrix indexing and sampling
+&nbsp;&nbsp;&nbsp;&nbsp;To access a certain row vector of the matrix one may use `[]` operator:
 
 ````Dart
 import 'package:ml_linalg/linalg.dart';
-import 'package:xrange/zrange.dart';
+
+final matrix = Matrix.fromList([
+    [11.0, 12.0, 13.0, 14.0],
+    [15.0, 16.0, 0.0, 18.0],
+    [21.0, 22.0, -23.0, 24.0],
+    [24.0, 32.0, 53.0, 74.0],
+  ]);
+
+final row = matrix[2];
+
+print(row); // [21.0, 22.0, -23.0, 24.0]
+```` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;The library's matrix interface offers `sample` method, that is supposed to return a new matrix, 
+consisting of different segments of a source matrix. It's possible to build a new matrix from certain columns and 
+vectors and they should not be necessarily subsequent.
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;For example, one needs to create a matrix from rows 1, 3, 5 and columns 1 and 3. To do so, 
+it's needed to perform the following:
+
+````Dart
+import 'package:ml_linalg/linalg.dart';
 
 final matrix = Matrix.fromList([
 //| 1 |         | 3 |                
@@ -584,9 +601,9 @@ final matrix = Matrix.fromList([
   [16.0,  1.0,  -18.0,   3.0,   11.0],
   [112.0, 10.0,  34.0,   2.0,   10.0], // 5 Range(4, 5)
 ]);
-final result = matrix.pick(
-  rowRanges: [ZRange.closedOpen(0, 1), ZRange.closedOpen(2, 3), ZRange.closedOpen(4, 5)],
-  columnRanges: [ZRange.closedOpen(0, 1), ZRange.closedOpen(2, 3)],
+final result = matrix.sample(
+  rowIndices: [0, 2, 4],
+  columnIndices: [0, 2],
 );
 print(result);
 /*

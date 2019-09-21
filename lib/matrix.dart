@@ -4,7 +4,6 @@ import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:xrange/zrange.dart';
 
 /// An algebraic matrix
 abstract class Matrix  implements Iterable<Iterable<double>> {
@@ -79,8 +78,9 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// Returns a number of matrix columns
   int get columnsNum;
 
-  /// Returns a matrix row on an index equals [index]
-  List<double> operator [](int index);
+  /// Returns a matrix row on an [index] (the operator is an alias for
+  /// [getRow] method)
+  Vector operator [](int index);
 
   /// Performs sum of the matrix and a matrix/ a vector/ a scalar/ whatever
   Matrix operator +(Object value);
@@ -100,11 +100,12 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// Performs transposition of the matrix
   Matrix transpose();
 
-  /// Cuts out a part of the matrix bounded by [rows] and [columns] range
-  Matrix submatrix({ZRange rows, ZRange columns});
-
-  /// Creates a new matrix, consisted of different segments of the matrix
-  Matrix pick({Iterable<ZRange> rowRanges, Iterable<ZRange> columnRanges});
+  /// Cuts out a part of the matrix bounded by [rowIndices] and [columnIndices]
+  /// range
+  Matrix sample({
+    Iterable<int> rowIndices,
+    Iterable<int> columnIndices,
+  });
 
   /// Returns a column of the matrix, resided on [index]
   Vector getColumn(int index);

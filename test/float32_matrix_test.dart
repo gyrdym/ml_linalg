@@ -7,7 +7,6 @@ import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
-import 'package:xrange/zrange.dart';
 
 void main() {
   group('Float32x4Matrix', () {
@@ -193,136 +192,6 @@ void main() {
       final column2 = matrix.getColumn(1);
 
       expect(identical(column1, column2), isTrue);
-    });
-
-    test('should cut out a submatrix with respect to given intervals, rows and '
-        'columns range ends are excluded', () {
-      final matrix = Float32Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-        [24.0, 32.0, 53.0, 74.0],
-      ]);
-      final submatrix = matrix.submatrix(
-          rows: ZRange.closedOpen(1, 3),
-          columns: ZRange.closedOpen(1, 2),
-      );
-      final expected = [
-        [16.0],
-        [22.0],
-      ];
-      expect(submatrix, expected);
-    });
-
-    test('should cut out a submatrix with respect to given intervals, rows and '
-            'columns range ends are included', () {
-      final matrix = Float32Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-        [24.0, 32.0, 53.0, 74.0],
-      ]);
-      final submatrix = matrix.submatrix(
-          rows: ZRange.closed(1, 3),
-          columns: ZRange.closed(1, 2),
-      );
-      final expected = [
-        [16.0, 17.0],
-        [22.0, 23.0],
-        [32.0, 53.0],
-      ];
-      expect(submatrix, expected);
-    });
-
-    test('should cut out a submatrix with respect to given intervals, just '
-        'rows range end is included', () {
-      final matrix = Float32Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-        [24.0, 32.0, 53.0, 74.0],
-      ]);
-      final submatrix = matrix.submatrix(
-          rows: ZRange.closed(1, 3),
-          columns: ZRange.closedOpen(1, 2),
-      );
-      final expected = [
-        [16.0],
-        [22.0],
-        [32.0],
-      ];
-      expect(submatrix, expected);
-    });
-
-    test('should cut out a submatrix with respect to given intervals, just '
-            'columns range end is included', () {
-      final matrix = Float32Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-        [24.0, 32.0, 53.0, 74.0],
-      ]);
-      final submatrix = matrix.submatrix(
-          rows: ZRange.closedOpen(1, 3),
-          columns: ZRange.closed(1, 2),
-      );
-      final expected = [
-        [16.0, 17.0],
-        [22.0, 23.0],
-      ];
-      expect(submatrix, expected);
-    });
-
-    test('should cut out a submatrix with respect to given intervals, both '
-        'rows and columns ranges are unspecified', () {
-      final matrix = Float32Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-        [24.0, 32.0, 53.0, 74.0],
-      ]);
-      final submatrix = matrix.submatrix();
-      final expected = [
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-        [24.0, 32.0, 53.0, 74.0],
-      ];
-      expect(submatrix, expected);
-    });
-
-    test('should cut out a submatrix with respect to given intervals, rows '
-        'range is unspecified', () {
-      final matrix = Float32Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-        [24.0, 32.0, 53.0, 74.0],
-      ]);
-      final submatrix = matrix.submatrix(columns: ZRange.closedOpen(0, 2));
-      final expected = [
-        [11.0, 12.0],
-        [15.0, 16.0],
-        [21.0, 22.0],
-        [24.0, 32.0],
-      ];
-      expect(submatrix, expected);
-    });
-
-    test('should cut out a submatrix with respect to given intervals, columns '
-        'range is unspecified', () {
-      final matrix = Float32Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-        [24.0, 32.0, 53.0, 74.0],
-      ]);
-      final submatrix = matrix.submatrix(rows: ZRange.closedOpen(0, 2));
-      final expected = [
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-      ];
-      expect(submatrix, expected);
     });
 
     test('should reduce all the matrix rows into a single vector, without '
@@ -816,7 +685,7 @@ void main() {
     });
   });
 
-  group('Float32x4Matrix.uniqueRows', () {
+  group('uniqueRows', () {
     test('should return the same row vectors as the matrix rows if all the '
         'rows are unique', () {
       final matrix = Float32Matrix.fromList([
@@ -856,7 +725,7 @@ void main() {
     });
   });
 
-  group('Float32x4Matrix.insertColumn', () {
+  group('insertColumn', () {
     test('should insert a new column by column index', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -1079,7 +948,7 @@ void main() {
     });
   });
 
-  group('Float32x4Matrix.pick', () {
+  group('sample', () {
     test('should create a new matrix from its diffrent segments', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -1088,9 +957,9 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 2), ZRange.closedOpen(3, 4)],
-        columnRanges: [ZRange.closedOpen(1, 2), ZRange.closedOpen(3, 4)],
+      final actual = matrix.sample(
+        rowIndices: [0, 1, 3],
+        columnIndices: [1, 3],
       );
       final expected = [
         [8.0, 16.0],
@@ -1098,10 +967,11 @@ void main() {
         [1.0, 3.0],
       ];
       expect(actual, equals(expected));
+      expect(actual, isNot(same(matrix)));
     });
 
-    test('should create a new matrix from its diffrent segments (same row '
-        'ranges case)', () {
+    test('should create a new matrix from its diffrent segments even if there '
+        'are the same row indices in `rowIndices` parameter', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -1109,9 +979,9 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 2), ZRange.closedOpen(0, 2)],
-        columnRanges: [ZRange.closedOpen(1, 2), ZRange.closedOpen(3, 4)],
+      final actual = matrix.sample(
+        rowIndices: [0, 1, 0, 1],
+        columnIndices: [1, 3],
       );
       final expected = [
         [8.0, 16.0],
@@ -1120,10 +990,11 @@ void main() {
         [24.0, 32.0],
       ];
       expect(actual, equals(expected));
+      expect(actual, isNot(same(matrix)));
     });
 
-    test('should create a new matrix from its diffrent segments (same coulmn '
-        'ranges case)', () {
+    test('should create a new matrix from its diffrent segments even if there '
+        'are the same column indices in `columIndices` parameter', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -1131,9 +1002,9 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 2), ZRange.closedOpen(3, 4)],
-        columnRanges: [ZRange.closedOpen(1, 2), ZRange.closedOpen(1, 2)],
+      final actual = matrix.sample(
+        rowIndices: [0, 1, 3],
+        columnIndices: [1, 1],
       );
       final expected = [
         [8.0, 8.0],
@@ -1141,10 +1012,11 @@ void main() {
         [1.0, 1.0],
       ];
       expect(actual, equals(expected));
+      expect(actual, isNot(same(matrix)));
     });
 
-    test('should create a new matrix from its diffrent segments (one row '
-        'range, one column range)', () {
+    test('should throw a range error if one of the column indices is out of '
+        'bound)', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -1152,54 +1024,15 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 2)],
-        columnRanges: [ZRange.closedOpen(1, 2)],
-      );
-      final expected = [
-        [8.0],
-        [24.0],
-      ];
-      expect(actual, equals(expected));
-    });
-
-    test('should create a new matrix from its diffrent segments (one of the row '
-        'ranges is out of bound)', () {
-      final matrix = Float32Matrix.fromList([
-        [4.0, 8.0, 12.0, 16.0, 34.0],
-        [20.0, 24.0, 28.0, 32.0, 23.1],
-        [36.0, .0, -8.0, -12.0, 12.0],
-        [16.0, 1.0, -18.0, 3.0, 11.0],
-        [112.0, 10.0, 34.0, 2.0, 10.0],
-      ]);
-      final actual = () => matrix.pick(
-            // take all 5 rows (20 > 5) and add second row to them (range from
-            // 1 to 2)
-            rowRanges: [ZRange.closedOpen(0, 20), ZRange.closedOpen(1, 2)],
-            columnRanges: [ZRange.closedOpen(1, 2)],
+      final actual = () => matrix.sample(
+            rowIndices: [1],
+            columnIndices: [1, 2, 3, 4, 5],
           );
-      expect(actual, throwsRangeError,
-          reason: '0, 20 - is not a correct range');
-    });
-
-    test('should create a new matrix from its diffrent segments (one of the '
-        'column ranges is out of bound)', () {
-      final matrix = Float32Matrix.fromList([
-        [4.0, 8.0, 12.0, 16.0, 34.0],
-        [20.0, 24.0, 28.0, 32.0, 23.1],
-        [36.0, .0, -8.0, -12.0, 12.0],
-        [16.0, 1.0, -18.0, 3.0, 11.0],
-        [112.0, 10.0, 34.0, 2.0, 10.0],
-      ]);
-      final actual = () => matrix.pick(
-            rowRanges: [ZRange.closedOpen(1, 2)],
-            columnRanges: [ZRange.closedOpen(1, 6)],
-          );
-      expect(actual, throwsRangeError, reason: '1, 6 - is not a correct range');
+      expect(actual, throwsRangeError);
     });
 
     test('should create a new matrix from its diffrent segments (given row '
-        'range covers the whole rows range of the matrix)', () {
+        'indices cover the whole rows range of the matrix)', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -1207,9 +1040,9 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 5)],
-        columnRanges: [ZRange.closedOpen(1, 3)],
+      final actual = matrix.sample(
+        rowIndices: [0, 1, 2, 3, 4],
+        columnIndices: [1, 2],
       );
       final expected = [
         [8.0, 12.0],
@@ -1219,10 +1052,11 @@ void main() {
         [10.0, 34.0],
       ];
       expect(actual, equals(expected));
+      expect(actual, isNot(same(matrix)));
     });
 
     test('should create a new matrix from its diffrent segments (given column '
-        'range covers the whole columns range of the matrix)', () {
+        'indices cover the whole columns range of the matrix)', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -1230,66 +1064,19 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 2)],
-        columnRanges: [ZRange.closedOpen(0, 5)],
+      final actual = matrix.sample(
+        rowIndices: [0, 1],
+        columnIndices: [0, 1, 2, 3, 4],
       );
       final expected = [
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
       ];
       expect(actual, equals(expected));
+      expect(actual, isNot(same(matrix)));
     });
 
-    test('should create a new matrix from its diffrent segments (two or more '
-        'row ranges cover the whole rows range of the matrix are given)', () {
-      final matrix = Float32Matrix.fromList([
-        [4.0, 8.0, 12.0, 16.0, 34.0],
-        [20.0, 24.0, 28.0, 32.0, 23.0],
-        [36.0, .0, -8.0, -12.0, 12.0],
-        [16.0, 1.0, -18.0, 3.0, 11.0],
-        [112.0, 10.0, 34.0, 2.0, 10.0],
-      ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 5), ZRange.closedOpen(0, 5)],
-        columnRanges: [ZRange.closedOpen(2, 3)],
-      );
-      final expected = [
-        [12.0],
-        [28.0],
-        [-8.0],
-        [-18.0],
-        [34.0],
-        [12.0],
-        [28.0],
-        [-8.0],
-        [-18.0],
-        [34.0],
-      ];
-      expect(actual, equals(expected));
-    });
-
-    test('should create a new matrix from its diffrent segments (two or more '
-        'column ranges cover the whole columnss range of the matrix are '
-        'given)', () {
-      final matrix = Float32Matrix.fromList([
-        [4.0, 8.0, 12.0, 16.0, 34.0],
-        [20.0, 24.0, 28.0, 32.0, 23.0],
-        [36.0, .0, -8.0, -12.0, 12.0],
-        [16.0, 1.0, -18.0, 3.0, 11.0],
-        [112.0, 10.0, 34.0, 2.0, 10.0],
-      ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 1)],
-        columnRanges: [ZRange.closedOpen(0, 5), ZRange.closedOpen(0, 5)],
-      );
-      final expected = [
-        [4.0, 8.0, 12.0, 16.0, 34.0, 4.0, 8.0, 12.0, 16.0, 34.0],
-      ];
-      expect(actual, equals(expected));
-    });
-
-    test('should create a new matrix from its diffrent segments (columnRanges '
+    test('should create a new matrix from its diffrent segments (columnIndices '
         'parameter is omitted)', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -1298,17 +1085,18 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick(
-        rowRanges: [ZRange.closedOpen(0, 1), ZRange.closedOpen(3, 4)],
+      final actual = matrix.sample(
+        rowIndices: [0, 3],
       );
       final expected = [
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [16.0, 1.0, -18.0, 3.0, 11.0],
       ];
       expect(actual, equals(expected));
+      expect(actual, isNot(same(matrix)));
     });
 
-    test('should create a new matrix from its diffrent segments (rowRanges '
+    test('should create a new matrix from its diffrent segments (rowIndices '
         'parameter is omitted)', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -1317,8 +1105,8 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick(
-        columnRanges: [ZRange.closedOpen(0, 1), ZRange.closedOpen(3, 4)],
+      final actual = matrix.sample(
+        columnIndices: [0, 3],
       );
       final expected = [
         [4.0, 16.0],
@@ -1328,10 +1116,11 @@ void main() {
         [112.0, 2.0],
       ];
       expect(actual, equals(expected));
+      expect(actual, isNot(same(matrix)));
     });
 
     test('should create a new matrix from its diffrent segments (both '
-        'rowRanges and columnRanges parameters are omitted)', () {
+        'rowIndices and columnIndices parameters are omitted)', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -1339,7 +1128,7 @@ void main() {
         [16.0, 1.0, -18.0, 3.0, 11.0],
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ]);
-      final actual = matrix.pick();
+      final actual = matrix.sample();
       final expected = [
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -1348,10 +1137,11 @@ void main() {
         [112.0, 10.0, 34.0, 2.0, 10.0],
       ];
       expect(actual, equals(expected));
+      expect(actual, isNot(same(matrix)));
     });
   });
 
-  group('Float32x4Matrix.sort', () {
+  group('sort', () {
     test('should sort the matrix row-wise with asc direction', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -1437,7 +1227,7 @@ void main() {
     });
   });
 
-  group('Float32x4Matrix.toString()', () {
+  group('toString', () {
     test('should provide readable string representation', () {
       final matrix = Float32Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],

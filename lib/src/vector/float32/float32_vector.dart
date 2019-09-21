@@ -26,7 +26,7 @@ import 'package:ml_linalg/src/vector/float32/simd_helper/float32x4_helper_factor
 /// are performed with each floating point element simultaneously (in parallel)
 class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
   /// Creates a vector from collection
-  Float32Vector.fromList(List<double> source, {
+  Float32Vector.fromList(List<num> source, {
     TypedListHelperFactory typedListHelperFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -54,7 +54,7 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
   /// of created vector with a [value]
-  Float32Vector.filled(int length, double value, {
+  Float32Vector.filled(int length, num value, {
     TypedListHelperFactory typedListHelperFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -85,8 +85,8 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
   /// of created vector with a random value
   Float32Vector.randomFilled(int length, {
     int seed,
-    double min,
-    double max,
+    num min,
+    num max,
     TypedListHelperFactory typedListFactoryFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),

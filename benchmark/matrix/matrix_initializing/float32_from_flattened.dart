@@ -1,4 +1,4 @@
-// Approx. 4.7 seconds (MacBook Air mid 2017)
+// Approx. 5 seconds (MacBook Air mid 2017), Dart VM version: 2.5.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
@@ -9,7 +9,7 @@ const numOfColumns = 1000;
 
 class Float32x4MatrixFromFlattenedBenchmark extends BenchmarkBase {
   Float32x4MatrixFromFlattenedBenchmark() :
-        super('Matrix initialization, from rows');
+        super('Matrix initialization, from flattened list');
 
   List<double> _source;
 
