@@ -44,7 +44,6 @@
         - [Matrix column wise reduce](#matrix-column-wise-reduce)
         - [Matrix row wise map](#matrix-row-wise-map)
         - [Matrix column wise map](#matrix-column-wise-map)
-        - [Submatrix](#submatrix-taking-a-lower-dimension-matrix-of-the-current-matrix)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
         - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
@@ -514,25 +513,6 @@ print(matrix1 - matrix2);
   //  [3.0, 4.0, 5.0, 6.0],
   //  [7.0, 8.0, 9.0, 10.0],
   // ]
-````
-
-##### Submatrix (taking a lower dimension matrix of the current matrix)
-````Dart
-  import 'package:ml_linalg/linalg.dart';
-  import 'package:xrange/zrange.dart';
-
-  final matrix = Matrix.fromList([
-    [11.0, 12.0, 13.0, 14.0],
-    [15.0, 16.0, 17.0, 18.0],
-    [21.0, 22.0, 23.0, 24.0],
-    [24.0, 32.0, 53.0, 74.0],
-  ]);
-  final submatrix = matrix.submatrix(rows: ZRange.closedOpen(0, 2));
-  print(submatrix);
-  // [
-  //  [11.0, 12.0, 13.0, 14.0],
-  //  [15.0, 16.0, 17.0, 18.0],
-  //];
 ````
 
 ##### Getting max value of the matrix

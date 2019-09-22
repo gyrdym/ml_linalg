@@ -161,7 +161,7 @@ packages:
       name: coveralls
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.4.0"
+    version: "5.5.0"
   crypto:
     dependency: transitive
     description:
@@ -267,6 +267,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.3"
+  injector:
+    dependency: transitive
+    description:
+      name: injector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.8"
   intl:
     dependency: transitive
     description:
@@ -630,7 +637,7 @@ packages:
       name: xrange
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.6"
+    version: "0.0.8"
   yaml:
     dependency: transitive
     description:
@@ -639,4 +646,4 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=2.4.0 <3.0.0"
+  dart: ">=2.5.0 <3.0.0"
