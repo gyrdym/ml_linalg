@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.0.2
+- `xrange` 0.0.7 version supported (`integers` function used instead of `ZRange`)
+
 ## 12.0.1
 - `xrange` package version locked
 

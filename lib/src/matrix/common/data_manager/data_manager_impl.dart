@@ -6,7 +6,7 @@ import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:xrange/zrange.dart';
+import 'package:xrange/integers.dart';
 
 class DataManagerImpl implements DataManager {
   DataManagerImpl.fromList(
@@ -17,9 +17,9 @@ class DataManagerImpl implements DataManager {
   ) :
         rowsNum = source.length,
         columnsNum = getLengthOfFirstOrZero(source),
-        _rowsIndicesRange = ZRange.closedOpen(0, source.length),
-        _colsIndicesRange = ZRange
-            .closedOpen(0, getLengthOfFirstOrZero(source)),
+        rowIndices = integers(0, source.length, upperClosed: false),
+        colIndices = integers(0, getLengthOfFirstOrZero(source),
+            upperClosed: false),
         _rowsCache = List<Vector>(source.length),
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
@@ -36,9 +36,9 @@ class DataManagerImpl implements DataManager {
   ) :
         rowsNum = source.length,
         columnsNum = getLengthOfFirstOrZero(source),
-        _rowsIndicesRange = ZRange.closedOpen(0, source.length),
-        _colsIndicesRange = ZRange
-            .closedOpen(0, getLengthOfFirstOrZero(source)),
+        rowIndices = integers(0, source.length, upperClosed: false),
+        colIndices = integers(0, getLengthOfFirstOrZero(source),
+            upperClosed: false),
         _rowsCache = source.toList(growable: false),
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
@@ -55,9 +55,9 @@ class DataManagerImpl implements DataManager {
   ) :
         rowsNum = getLengthOfFirstOrZero(source),
         columnsNum = source.length,
-        _rowsIndicesRange = ZRange
-            .closedOpen(0, getLengthOfFirstOrZero(source)),
-        _colsIndicesRange = ZRange.closedOpen(0, source.length),
+        rowIndices = integers(0, getLengthOfFirstOrZero(source),
+            upperClosed: false),
+        colIndices = integers(0, source.length, upperClosed: false),
         _rowsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _colsCache = source.toList(growable: false),
         _data = ByteData(source.length *
@@ -76,8 +76,8 @@ class DataManagerImpl implements DataManager {
   ) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
-        _rowsIndicesRange = ZRange.closedOpen(0, rowsNum),
-        _colsIndicesRange = ZRange.closedOpen(0, colsNum),
+        rowIndices = integers(0, rowsNum, upperClosed: false),
+        colIndices = integers(0, colsNum, upperClosed: false),
         _rowsCache = List<Vector>(rowsNum),
         _colsCache = List<Vector>(colsNum),
         _data = ByteData(rowsNum * colsNum * bytesPerElement) {
@@ -95,8 +95,12 @@ class DataManagerImpl implements DataManager {
   @override
   final int rowsNum;
 
-  final ZRange _rowsIndicesRange;
-  final ZRange _colsIndicesRange;
+  @override
+  final Iterable<int> rowIndices;
+
+  @override
+  final Iterable<int> colIndices;
+
   final List<Vector> _rowsCache;
   final List<Vector> _colsCache;
   final ByteData _data;
@@ -107,12 +111,6 @@ class DataManagerImpl implements DataManager {
   @override
   Iterator<Iterable<double>> get iterator =>
       MatrixIterator(_data, rowsNum, columnsNum, _typedListHelper);
-
-  @override
-  Iterable<int> get colIndices => _colsIndicesRange.values();
-
-  @override
-  Iterable<int> get rowIndices => _rowsIndicesRange.values();
 
   @override
   List<double> getValues(int index, int length) {
