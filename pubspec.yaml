@@ -1,6 +1,6 @@
 name: ml_linalg
 description: SIMD-based linear algebra (1 operation on 4 float32 values, 1 operation on 2 float64 values)
-version: 12.0.1
+version: 12.0.2
 author: Ilia Gyrdymov <ilgyrd@gmail.com>
 homepage: https://github.com/gyrdym/ml_linalg
 
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   quiver: '>=2.0.0 <3.0.0'
-  xrange: 0.0.6
+  xrange: 0.0.8
 
 dev_dependencies:
   benchmark_harness: '>=1.0.0 <2.0.0'
