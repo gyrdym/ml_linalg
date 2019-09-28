@@ -1,5 +1,10 @@
 # Changelog
 
+## 12.1.0
+- `Matrix`:
+    - `rowIndices` field added to the interface
+    - `columnIndices` field added to the interface
+
 ## 12.0.2
 - `xrange` 0.0.8 version supported (`integers` function used instead of `ZRange`)
 
