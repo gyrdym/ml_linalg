@@ -5,7 +5,7 @@ abstract class DataManager {
   int get columnsNum;
   Iterator<Iterable<double>> get iterator;
   Iterable<int> get rowIndices;
-  Iterable<int> get colIndices;
+  Iterable<int> get columnIndices;
   Vector getColumn(int index);
   Vector getRow(int index);
   List<double> getValues(int index, int length);
