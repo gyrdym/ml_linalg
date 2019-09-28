@@ -66,11 +66,17 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
 
   DType get dtype;
 
-  /// Returns a generator of immutable row vectors of the matrix
+  /// Returns a lazy iterable of immutable row vectors of the matrix
   Iterable<Vector> get rows;
 
-  /// Returns a generator of immutable column vectors of the matrix
+  /// Returns a lazy iterable of immutable column vectors of the matrix
   Iterable<Vector> get columns;
+
+  /// Returns a lazy iterable of row indices
+  Iterable<int> get rowIndices;
+
+  /// Return a lazy iterable of column indices
+  Iterable<int> get columnIndices;
 
   /// Returns a number of matrix row
   int get rowsNum;

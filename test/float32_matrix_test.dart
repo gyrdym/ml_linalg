@@ -1321,4 +1321,40 @@ void main() {
       expect(actual, expected);
     });
   });
+
+  group('rowIndices', () {
+    test('should contain zero-based ordered iterable of row indices', () {
+      final matrix = Float32Matrix.fromList([
+        [  1,   2,   3,   4],
+        [ 10,  20,  30,  40],
+        [100, 200, 300, 400],
+      ]);
+
+      expect(matrix.rowIndices, equals([0, 1, 2]));
+    });
+
+    test('should contain empty iterable if the matrix is empty', () {
+      final matrix = Float32Matrix.fromList([]);
+
+      expect(matrix.rowIndices, isEmpty);
+    });
+  });
+
+  group('columnIndices', () {
+    test('should contain zero-based iterable of ordered column indices', () {
+      final matrix = Float32Matrix.fromList([
+        [  1,   2,   3,   4],
+        [ 10,  20,  30,  40],
+        [100, 200, 300, 400],
+      ]);
+
+      expect(matrix.columnIndices, equals([0, 1, 2, 3]));
+    });
+
+    test('should contain empty iterable if the matrix is empty', () {
+      final matrix = Float32Matrix.fromList([]);
+
+      expect(matrix.columnIndices, isEmpty);
+    });
+  });
 }

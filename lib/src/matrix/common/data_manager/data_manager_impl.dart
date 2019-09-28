@@ -18,7 +18,7 @@ class DataManagerImpl implements DataManager {
         rowsNum = source.length,
         columnsNum = getLengthOfFirstOrZero(source),
         rowIndices = integers(0, source.length, upperClosed: false),
-        colIndices = integers(0, getLengthOfFirstOrZero(source),
+        columnIndices = integers(0, getLengthOfFirstOrZero(source),
             upperClosed: false),
         _rowsCache = List<Vector>(source.length),
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
@@ -37,7 +37,7 @@ class DataManagerImpl implements DataManager {
         rowsNum = source.length,
         columnsNum = getLengthOfFirstOrZero(source),
         rowIndices = integers(0, source.length, upperClosed: false),
-        colIndices = integers(0, getLengthOfFirstOrZero(source),
+        columnIndices = integers(0, getLengthOfFirstOrZero(source),
             upperClosed: false),
         _rowsCache = source.toList(growable: false),
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
@@ -57,7 +57,7 @@ class DataManagerImpl implements DataManager {
         columnsNum = source.length,
         rowIndices = integers(0, getLengthOfFirstOrZero(source),
             upperClosed: false),
-        colIndices = integers(0, source.length, upperClosed: false),
+        columnIndices = integers(0, source.length, upperClosed: false),
         _rowsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _colsCache = source.toList(growable: false),
         _data = ByteData(source.length *
@@ -77,7 +77,7 @@ class DataManagerImpl implements DataManager {
         rowsNum = rowsNum,
         columnsNum = colsNum,
         rowIndices = integers(0, rowsNum, upperClosed: false),
-        colIndices = integers(0, colsNum, upperClosed: false),
+        columnIndices = integers(0, colsNum, upperClosed: false),
         _rowsCache = List<Vector>(rowsNum),
         _colsCache = List<Vector>(colsNum),
         _data = ByteData(rowsNum * colsNum * bytesPerElement) {
@@ -99,7 +99,7 @@ class DataManagerImpl implements DataManager {
   final Iterable<int> rowIndices;
 
   @override
-  final Iterable<int> colIndices;
+  final Iterable<int> columnIndices;
 
   final List<Vector> _rowsCache;
   final List<Vector> _colsCache;

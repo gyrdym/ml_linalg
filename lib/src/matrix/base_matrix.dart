@@ -242,7 +242,13 @@ abstract class BaseMatrix with
   Iterable<Vector> get rows => _dataManager.rowIndices.map(getRow);
 
   @override
-  Iterable<Vector> get columns => _dataManager.colIndices.map(getColumn);
+  Iterable<Vector> get columns => _dataManager.columnIndices.map(getColumn);
+
+  @override
+  Iterable<int> get rowIndices => _dataManager.rowIndices;
+
+  @override
+  Iterable<int> get columnIndices => _dataManager.columnIndices;
 
   @override
   Matrix fastMap<T>(T mapper(T element)) {
@@ -287,7 +293,7 @@ abstract class BaseMatrix with
     checkColumnsAndRowsNumber(this, matrix);
     final source = List<double>(rowsNum * matrix.columnsNum);
     for (final i in _dataManager.rowIndices) {
-      for (final j in (matrix as BaseMatrix)._dataManager.colIndices) {
+      for (final j in (matrix as BaseMatrix)._dataManager.columnIndices) {
         final element = getRow(i).dot(matrix.getColumn(j));
         source[i * matrix.columnsNum + j] = element;
       }
