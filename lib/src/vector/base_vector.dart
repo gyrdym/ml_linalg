@@ -211,6 +211,18 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
+  Vector pow(num exponent) {
+    if (exponent is int) {
+      return _elementWisePow(exponent);
+    }
+    // TODO: refactor using SIMD calculations
+    return Vector.fromList(
+      map((el) => math.pow(el, exponent)).toList(),
+      dtype: dtype,
+    );
+  }
+
+  @override
   Vector toIntegerPower(int power) => _elementWisePow(power);
 
   /// Returns a vector filled with absolute values of an each component of
