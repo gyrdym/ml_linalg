@@ -17,7 +17,7 @@ abstract class Vector implements Iterable<double> {
       case DType.float32:
         return Float32Vector.fromList(source);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -28,7 +28,7 @@ abstract class Vector implements Iterable<double> {
         return Float32Vector.fromSimdList(source as Float32x4List,
             actualLength);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -39,7 +39,7 @@ abstract class Vector implements Iterable<double> {
       case DType.float32:
         return Float32Vector.filled(length, value);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -49,7 +49,7 @@ abstract class Vector implements Iterable<double> {
       case DType.float32:
         return Float32Vector.zero(length);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -64,7 +64,7 @@ abstract class Vector implements Iterable<double> {
         return Float32Vector.randomFilled(length, seed: seed,
             max: max, min: min);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -85,9 +85,14 @@ abstract class Vector implements Iterable<double> {
   /// Element-wise division
   Vector operator /(Object value);
 
+  /// Returns a new [Vector] containing elements of this [Vector] raised to the
+  /// [exponent]
+  Vector pow(num exponent);
+
   /// Creates a new [Vector] containing elements of this [Vector] raised to
-  /// the integer [power]
-  Vector toIntegerPower(int power);
+  /// the integer [exponent]
+  @deprecated
+  Vector toIntegerPower(int exponent);
 
   /// Returns a new vector with absolute value of each vector element
   Vector abs();

@@ -1,5 +1,10 @@
 # Changelog
 
+## 12.2.0
+- `Vector`: 
+    - `pow` method added
+    - `toIntegerPower` method deprecated
+
 ## 12.1.0
 - `Matrix`:
     - `rowIndices` field added to the interface
