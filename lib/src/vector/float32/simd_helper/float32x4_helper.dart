@@ -26,6 +26,9 @@ class Float32x4Helper implements SimdHelper<Float32x4, Float32x4List> {
   Float32x4 abs(Float32x4 a) => a.abs();
 
   @override
+  Float32x4 sqrt(Float32x4 value) => value.sqrt();
+
+  @override
   bool areValuesEqual(Float32x4 a, Float32x4 b) =>
     a.equal(b).signMask == 15;
 

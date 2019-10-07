@@ -663,25 +663,10 @@ void main() {
       });
     });
 
-    group('pow', () {
+    group('sqrt', () {
       test('should raise each element to the integer power', () {
-        final vector = Float32Vector.fromList([1, 2, 3]);
-        expect(vector.pow(3), equals([1, 8, 27]));
-      });
-
-      test('should raise each element to the power that is equal to 0', () {
-        final vector = Float32Vector.fromList([1, 2, 3]);
-        expect(vector.pow(0), equals([1, 1, 1]));
-      });
-
-      test('should raise each element to the power that is equal to 1', () {
-        final vector = Float32Vector.fromList([1, 2, 3]);
-        expect(vector.pow(1), equals([1, 2, 3]));
-      });
-
-      test('should raise each element to the real power', () {
-        final vector = Float32Vector.fromList([25, 16, 9]);
-        expect(vector.pow(1/2), equals([5, 4, 3]));
+        final vector = Float32Vector.fromList([4, 25, 9]);
+        expect(vector.sqrt(), equals([2, 5, 3]));
       });
     });
 
