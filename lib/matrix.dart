@@ -161,6 +161,12 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// Extracts non-repeated matrix rows and pack them into matrix
   Matrix uniqueRows();
 
+  /// Returns mean values of matrix column/rows
+  Vector mean([Axis axis = Axis.columns]);
+
+  /// Returns standard deviation values of matrix column/rows
+  Vector deviation([Axis axis = Axis.columns]);
+
   /// Returns a new matrix with sorted elements from [this] matrix
   Matrix sort(double selectSortValue(Vector vector), [Axis axis = Axis.rows,
     SortDirection sortDir = SortDirection.asc]);
