@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.2.0
+- `Vector`: 
+    - `sqrt` method added
+
 ## 12.1.0
 - `Matrix`:
     - `rowIndices` field added to the interface
