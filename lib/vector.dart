@@ -89,6 +89,10 @@ abstract class Vector implements Iterable<double> {
   /// [Vector]
   Vector sqrt();
 
+  /// Returns a new [Vector] where elements are the elements from this [Vector]
+  /// divided by [scalar]
+  Vector scalarDiv(num scalar);
+
   /// Creates a new [Vector] containing elements of this [Vector] raised to
   /// the integer [exponent]
   Vector toIntegerPower(int exponent);

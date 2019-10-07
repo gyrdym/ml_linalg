@@ -17,6 +17,8 @@ abstract class BaseMatrix with
   BaseMatrix(this._dataManager);
 
   final DataManager _dataManager;
+  final Map<Axis, Vector> _meansCache = {};
+  final Map<Axis, Vector> _deviationCache = {};
 
   @override
   int get rowsNum => _dataManager.rowsNum;
@@ -155,6 +157,50 @@ abstract class BaseMatrix with
     }
     return Matrix.fromRows(checked, dtype: dtype);
   }
+
+  @override
+  Vector mean([Axis axis = Axis.columns]) {
+    switch (axis) {
+      case Axis.columns:
+        return _meansCache[axis] ??= _mean(rows, rowsNum);
+
+      case Axis.rows:
+        return _meansCache[axis] ??= _mean(columns, columnsNum);
+
+      default:
+        throw UnimplementedError('Means calculation for axis $axis is not '
+            'supported yet');
+    }
+  }
+
+  Vector _mean(Iterable<Vector> vectors, int vectorsNum) =>
+      vectors
+          .reduce((summed, vector) => summed + vector)
+          .scalarDiv(vectorsNum);
+
+  @override
+  Vector deviation([Axis axis = Axis.columns]) {
+    final means = mean(axis);
+
+    switch (axis) {
+      case Axis.columns:
+        return _deviationCache[axis] ??= _deviation(rows, means, rowsNum);
+
+      case Axis.rows:
+        return _deviationCache[axis] ??= _deviation(columns, means, columnsNum);
+
+      default:
+        throw UnimplementedError('Deviation calculation for axis $axis is not '
+            'supported yet');
+    }
+  }
+
+  Vector _deviation(Iterable<Vector> vectors, Vector means, int vectorsNum) =>
+      vectors
+          .map((vector) => (vector - means) * (vector - means))
+          .reduce((summed, vector) => summed + vector)
+          .scalarDiv(vectorsNum)
+          .sqrt();
 
   @override
   Vector toVector() {

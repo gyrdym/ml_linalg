@@ -220,6 +220,9 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   Vector sqrt() => _elementWiseSelfOperation((el, [_]) => _simdHelper.sqrt(el));
 
   @override
+  Vector scalarDiv(num scalar) => this / scalar;
+
+  @override
   Vector toIntegerPower(int power) => _elementWisePow(power);
 
   @override
