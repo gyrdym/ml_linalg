@@ -663,6 +663,18 @@ void main() {
       });
     });
 
+    group('sqrt', () {
+      test('should extract square root of each element', () {
+        final vector = Float32Vector.fromList([4, 25, 9]);
+        expect(vector.sqrt(), equals([2, 5, 3]));
+      });
+
+      test('should return NaN value for negative elements', () {
+        final vector = Float32Vector.fromList([-4, -25, -9]);
+        expect(vector.sqrt(), equals([isNaN, isNaN, isNaN]));
+      });
+    });
+
     group('hashCode', () {
       test('should return the same hashcode for equal vectors, case 1', () {
         final hash1 = Float32Vector

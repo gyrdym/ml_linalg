@@ -18,6 +18,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
+    this._simdExponent,
   ) :
         length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
@@ -34,6 +35,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
+    this._simdExponent,
     {
       num min = 0,
       num max = 1,
@@ -56,6 +58,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
+    this._simdExponent,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _source = _getBuffer(
@@ -70,6 +73,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
+    this._simdExponent,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _source = _getBuffer(
@@ -85,6 +89,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
+    this._simdExponent,
   ) : 
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _source = (data as TypedData).buffer {
@@ -106,6 +111,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   final int _numOfBuckets;
   final SimdHelper<E, S> _simdHelper;
   final TypedListHelper _typedListHelper;
+  final E _simdExponent;
 
   @override
   Iterator<double> get iterator => _innerTypedList.iterator;
@@ -211,10 +217,11 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
+  Vector sqrt() => _elementWiseSelfOperation((el, [_]) => _simdHelper.sqrt(el));
+
+  @override
   Vector toIntegerPower(int power) => _elementWisePow(power);
 
-  /// Returns a vector filled with absolute values of an each component of
-  /// [this] vector
   @override
   Vector abs() =>
       _abs ??= _elementWiseSelfOperation((E element, [int i]) =>
@@ -375,7 +382,7 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   /// Returns a SIMD value raised to the integer power
-  E _simdToIntPow(E lane, int power) {
+  E _simdToIntPow(E lane, num power) {
     if (power == 0) {
       return _simdHelper.createFilled(1.0);
     }

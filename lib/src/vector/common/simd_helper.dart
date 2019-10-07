@@ -22,6 +22,10 @@ abstract class SimdHelper<E, S extends List<E>> {
   /// returns an absolute value of given [a]
   E abs(E a);
 
+  /// returns a new simd value, where elements are square roots of elements form
+  /// [value]
+  E sqrt(E value);
+
   /// performs summation of all components of passed simd value [a]
   double sumLanes(E a);
 
