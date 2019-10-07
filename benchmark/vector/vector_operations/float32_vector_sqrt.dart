@@ -5,14 +5,14 @@ import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
 
 const amountOfElements = 10000000;
 
-class VectorPowValueBenchmark extends BenchmarkBase {
-  VectorPowValueBenchmark()
-      : super('Vector pow method, $amountOfElements elements');
+class VectorSqrtBenchmark extends BenchmarkBase {
+  VectorSqrtBenchmark()
+      : super('Vector sqrt method, $amountOfElements elements');
 
   Float32Vector vector;
 
   static void main() {
-    VectorPowValueBenchmark().report();
+    VectorSqrtBenchmark().report();
   }
 
   @override
@@ -31,5 +31,5 @@ class VectorPowValueBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  VectorPowValueBenchmark.main();
+  VectorSqrtBenchmark.main();
 }
