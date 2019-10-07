@@ -1,4 +1,4 @@
-import 'dart:core';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
@@ -36,6 +36,7 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
       bucketSize,
       typedListHelperFactory.create(),
       simdHelperFactory.create(),
+      simdExponent,
   );
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
@@ -50,6 +51,7 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListHelperFactory.create(),
     simdHelperFactory.create(),
+    simdExponent,
   );
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
@@ -65,6 +67,7 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListHelperFactory.create(),
     simdHelperFactory.create(),
+    simdExponent,
   );
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
@@ -79,14 +82,15 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
+    simdExponent,
   );
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
   /// of created vector with a random value
   Float32Vector.randomFilled(int length, {
     int seed,
-    num min,
-    num max,
+    num min = 0,
+    num max = 1,
     TypedListHelperFactory typedListFactoryFactory =
       const Float32ListHelperFactory(),
     Float32x4HelperFactory simdHelperFactory = const Float32x4HelperFactory(),
@@ -97,10 +101,12 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
+    simdExponent,
     min: min,
     max: max,
   );
 
+  static final simdExponent = Float32x4.splat(math.e);
   static const bucketSize = 4;
   static const bytesPerElement = Float32List.bytesPerElement;
 

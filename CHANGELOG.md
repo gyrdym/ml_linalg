@@ -2,8 +2,7 @@
 
 ## 12.2.0
 - `Vector`: 
-    - `pow` method added
-    - `toIntegerPower` method deprecated
+    - `sqrt` method added
 
 ## 12.1.0
 - `Matrix`:

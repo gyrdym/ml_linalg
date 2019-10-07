@@ -85,13 +85,12 @@ abstract class Vector implements Iterable<double> {
   /// Element-wise division
   Vector operator /(Object value);
 
-  /// Returns a new [Vector] containing elements of this [Vector] raised to the
-  /// [exponent]
-  Vector pow(num exponent);
+  /// Returns a new [Vector] consisting of square roots of elements of this
+  /// [Vector]
+  Vector sqrt();
 
   /// Creates a new [Vector] containing elements of this [Vector] raised to
   /// the integer [exponent]
-  @deprecated
   Vector toIntegerPower(int exponent);
 
   /// Returns a new vector with absolute value of each vector element
