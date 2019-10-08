@@ -160,6 +160,10 @@ abstract class BaseMatrix with
 
   @override
   Vector mean([Axis axis = Axis.columns]) {
+    if (columnsNum == 0 && rowsNum == 0) {
+      return Vector.empty();
+    }
+
     switch (axis) {
       case Axis.columns:
         return _meansCache[axis] ??= _mean(rows, rowsNum);

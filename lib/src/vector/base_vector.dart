@@ -18,7 +18,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
-    this._simdExponent,
   ) :
         length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
@@ -35,7 +34,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
-    this._simdExponent,
     {
       num min = 0,
       num max = 1,
@@ -58,7 +56,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
-    this._simdExponent,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _source = _getBuffer(
@@ -73,7 +70,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
-    this._simdExponent,
   ) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _source = _getBuffer(
@@ -89,12 +85,21 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     this._bucketSize,
     this._typedListHelper,
     this._simdHelper,
-    this._simdExponent,
   ) : 
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _source = (data as TypedData).buffer {
     _cachedInnerSimdList = data;
   }
+
+  BaseVector.empty(
+    this._bytesPerElement,
+    this._bucketSize,
+    this._typedListHelper,
+    this._simdHelper,
+  ) :
+        length = 0,
+        _numOfBuckets = 0,
+        _source = _getBuffer(0, _bytesPerElement);
 
   static int _getNumOfBuckets(int length, int bucketSize) =>
       (length / bucketSize).ceil();
@@ -111,7 +116,6 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   final int _numOfBuckets;
   final SimdHelper<E, S> _simdHelper;
   final TypedListHelper _typedListHelper;
-  final E _simdExponent;
 
   @override
   Iterator<double> get iterator => _innerTypedList.iterator;

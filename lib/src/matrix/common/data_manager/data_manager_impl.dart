@@ -15,7 +15,9 @@ class DataManagerImpl implements DataManager {
       this._dtype,
       this._typedListHelper,
   ) :
-        rowsNum = source.length,
+        rowsNum = source.isNotEmpty && source.first.isEmpty
+            ? 0
+            : source.length,
         columnsNum = getLengthOfFirstOrZero(source),
         rowIndices = integers(0, source.length, upperClosed: false),
         columnIndices = integers(0, getLengthOfFirstOrZero(source),
@@ -34,7 +36,9 @@ class DataManagerImpl implements DataManager {
       this._dtype,
       this._typedListHelper,
   ) :
-        rowsNum = source.length,
+        rowsNum = source.isNotEmpty && source.first.isEmpty
+            ? 0
+            : source.length,
         columnsNum = getLengthOfFirstOrZero(source),
         rowIndices = integers(0, source.length, upperClosed: false),
         columnIndices = integers(0, getLengthOfFirstOrZero(source),
@@ -54,7 +58,9 @@ class DataManagerImpl implements DataManager {
       this._typedListHelper,
   ) :
         rowsNum = getLengthOfFirstOrZero(source),
-        columnsNum = source.length,
+        columnsNum = source.isNotEmpty && source.first.isEmpty
+            ? 0
+            : source.length,
         rowIndices = integers(0, getLengthOfFirstOrZero(source),
             upperClosed: false),
         columnIndices = integers(0, source.length, upperClosed: false),

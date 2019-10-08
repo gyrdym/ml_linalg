@@ -52,6 +52,16 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
     }
   }
 
+  /// Creates a matrix of shape 0 x 0 (no rows, no columns)
+  factory Matrix.empty({DType dtype = DType.float32}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.empty();
+      default:
+        throw UnimplementedError();
+    }
+  }
+
   /// Creates a matrix from flattened list of length equal to
   /// [rowsNum] * [columnsNum]
   factory Matrix.fromFlattenedList(List<double> source, int rowsNum,
