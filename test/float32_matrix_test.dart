@@ -9,7 +9,7 @@ import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Float32x4Matrix', () {
+  group('Float32Matrix', () {
     test('should create an instance based on given list', () {
       final actual = Float32Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0, 5.0],
