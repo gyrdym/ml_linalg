@@ -1,4 +1,3 @@
-import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
@@ -25,6 +24,13 @@ class Float32Matrix extends BaseMatrix {
   Float32Matrix.rows(List<Vector> source) :
         super(DataManagerImpl.fromRows(
           source,
+          Float32List.bytesPerElement,
+          DType.float32,
+          Float32ListHelper()));
+
+  Float32Matrix.empty() :
+        super(DataManagerImpl.fromList(
+          [<double>[]],
           Float32List.bytesPerElement,
           DType.float32,
           Float32ListHelper()));

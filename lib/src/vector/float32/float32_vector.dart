@@ -36,7 +36,6 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
       bucketSize,
       typedListHelperFactory.create(),
       simdHelperFactory.create(),
-      simdExponent,
   );
 
   /// Creates a vector from SIMD-typed (Float32x4, Float64x2) list
@@ -51,7 +50,6 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListHelperFactory.create(),
     simdHelperFactory.create(),
-    simdExponent,
   );
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
@@ -67,7 +65,6 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListHelperFactory.create(),
     simdHelperFactory.create(),
-    simdExponent,
   );
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
@@ -82,7 +79,6 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
-    simdExponent,
   );
 
   /// Creates a SIMD-vector with length equals [length] and fills all elements
@@ -101,9 +97,20 @@ class Float32Vector extends BaseVector<Float32x4, Float32x4List> {
     bucketSize,
     typedListFactoryFactory.create(),
     simdHelperFactory.create(),
-    simdExponent,
     min: min,
     max: max,
+  );
+
+  Float32Vector.empty({
+    TypedListHelperFactory typedListFactoryFactory =
+      const Float32ListHelperFactory(),
+    Float32x4HelperFactory simdHelperFactory =
+      const Float32x4HelperFactory(),
+  }) : super.empty(
+    bytesPerElement,
+    bucketSize,
+    typedListFactoryFactory.create(),
+    simdHelperFactory.create(),
   );
 
   static final simdExponent = Float32x4.splat(math.e);
