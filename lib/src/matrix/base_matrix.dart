@@ -160,8 +160,8 @@ abstract class BaseMatrix with
 
   @override
   Vector mean([Axis axis = Axis.columns]) {
-    if (columnsNum == 0 && rowsNum == 0) {
-      return Vector.empty();
+    if (columnsNum == 0 || rowsNum == 0) {
+      return Vector.empty(dtype: dtype);
     }
 
     switch (axis) {
@@ -184,6 +184,10 @@ abstract class BaseMatrix with
 
   @override
   Vector deviation([Axis axis = Axis.columns]) {
+    if (columnsNum == 0 || rowsNum == 0) {
+      return Vector.empty(dtype: dtype);
+    }
+
     final means = mean(axis);
 
     switch (axis) {

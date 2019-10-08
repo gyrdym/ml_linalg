@@ -4,8 +4,8 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
-void matrixMeanTestGroupFactory(DType dtype, String groupName) =>
-    group(groupName, () {
+void matrixMeanTestGroupFactory(DType dtype, String groupDescription) =>
+    group(groupDescription, () {
       test('should calculate mean values column-wise', () {
         final matrix = Matrix.fromList([
           [10, 20, 30, 40, 0,  -10],
@@ -16,6 +16,7 @@ void matrixMeanTestGroupFactory(DType dtype, String groupName) =>
 
         expect(means,
             iterableAlmostEqualTo([20, 36.66, 43.33, 40, 0 , -70], 1e-2));
+        expect(means.dtype, dtype);
       });
 
       test('should calculate mean values column-wise for a matrix with just one '
@@ -31,6 +32,7 @@ void matrixMeanTestGroupFactory(DType dtype, String groupName) =>
         final means = matrix.mean(Axis.columns);
 
         expect(means, equals([15]));
+        expect(means.dtype, dtype);
       });
 
       test('should calculate mean values column-wise for a matrix with just one '
@@ -41,13 +43,15 @@ void matrixMeanTestGroupFactory(DType dtype, String groupName) =>
         final means = matrix.mean(Axis.columns);
 
         expect(means, equals([10, 20, 30, 40, 0,  -10]));
+        expect(means.dtype, dtype);
       });
 
       test('should calculate mean values column-wise for an empty matrix', () {
         final matrix = Matrix.empty(dtype: dtype);
         final means = matrix.mean(Axis.columns);
 
-        expect(means, equals(<num>[]));
+        expect(means, isEmpty);
+        expect(means.dtype, dtype);
       });
 
       test('should calculate mean values row-wise', () {
@@ -61,6 +65,7 @@ void matrixMeanTestGroupFactory(DType dtype, String groupName) =>
 
         expect(means,
             iterableAlmostEqualTo([0, 32.5, 7.5, 1], 1e-3));
+        expect(means.dtype, dtype);
       });
 
       test('should calculate mean values row-wise for a matrix with just one '
@@ -76,6 +81,7 @@ void matrixMeanTestGroupFactory(DType dtype, String groupName) =>
         final means = matrix.mean(Axis.rows);
 
         expect(means, equals([10, 20, 30, 40, 0,  -10]));
+        expect(means.dtype, dtype);
       });
 
       test('should calculate mean values row-wise for a matrix with just one '
@@ -86,12 +92,14 @@ void matrixMeanTestGroupFactory(DType dtype, String groupName) =>
         final means = matrix.mean(Axis.rows);
 
         expect(means, equals([15]));
+        expect(means.dtype, dtype);
       });
 
       test('should calculate mean values row-wise for an empty matrix', () {
         final matrix = Matrix.empty(dtype: dtype);
         final means = matrix.mean(Axis.rows);
 
-        expect(means, equals(<num>[]));
+        expect(means, isEmpty);
+        expect(means.dtype, dtype);
       });
     });
