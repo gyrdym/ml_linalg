@@ -169,10 +169,10 @@ abstract class BaseMatrix with
 
     switch (axis) {
       case Axis.columns:
-        return _meansCache[axis] ??= _mean(columns, rowsNum);
+        return _meansCache[axis] ??= _mean(columns);
 
       case Axis.rows:
-        return _meansCache[axis] ??= _mean(rows, columnsNum);
+        return _meansCache[axis] ??= _mean(rows);
 
       default:
         throw UnimplementedError('Mean values calculation for axis $axis is not '
@@ -180,11 +180,10 @@ abstract class BaseMatrix with
     }
   }
 
-  Vector _mean(Iterable<Vector> vectors, int vectorsNum) =>
+  Vector _mean(Iterable<Vector> vectors) =>
       Vector.fromList(
         vectors.map((vector) => vector.mean()).toList(),
-        dtype: dtype,
-      );
+        dtype: dtype);
 
   @override
   Vector deviation([Axis axis = Axis.columns]) {
