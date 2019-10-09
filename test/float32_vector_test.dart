@@ -613,56 +613,6 @@ void main() {
       });
     });
 
-    group('subvector', () {
-      test('should cut out a subvector (`end` exclusive)', () {
-        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-        final actual = vector.subvector(1, 4);
-        final expected = [2.0, 3.0, 4.0];
-        expect(actual, expected);
-      });
-
-      test('should cut out a subvector of length 1 if `start` is equal to the '
-          'last index of the vector', () {
-        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-        final actual = vector.subvector(4, 5);
-        final expected = [5.0];
-        expect(actual, expected);
-      });
-
-      test('should cut out rest of the vector if `end` is not specified', () {
-        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
-        final actual = vector.subvector(1);
-        final expected = [2.0, 3.0, 4.0, 5.0, 7.0];
-        expect(actual, expected);
-      });
-
-      test('should cut out rest of the vector if `end` is specified and greater'
-          'that the vector length', () {
-        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
-        final actual = vector.subvector(1, 20);
-        final expected = [2.0, 3.0, 4.0, 5.0, 7.0];
-        expect(actual, expected);
-      });
-
-      test('should throw a range error if `start` is negative', () {
-        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
-        final actual = () => vector.subvector(-1, 20);
-        expect(actual, throwsRangeError);
-      });
-
-      test('should throw a range error if `start` is greater than `end`', () {
-        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 7.0]);
-        final actual = () => vector.subvector(3, 2);
-        expect(actual, throwsRangeError);
-      });
-
-      test('should throw a range error if `start` is equal to the `end`', () {
-        final vector = Float32Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-        final actual = () => vector.subvector(4, 4);
-        expect(actual, throwsRangeError);
-      });
-    });
-
     group('sqrt', () {
       test('should extract square root of each element', () {
         final vector = Float32Vector.fromList([4, 25, 9]);
