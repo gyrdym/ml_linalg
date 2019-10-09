@@ -1,5 +1,14 @@
 # Changelog
 
+## 12.3.0
+- `Matrix`:
+    - `mean` method added
+    - `deviation` method added
+    - `hasData` getter added
+    - `empty` constructor added
+- `Vector`:
+    - `empty` constructor added
+
 ## 12.2.0
 - `Vector`: 
     - `sqrt` method added
