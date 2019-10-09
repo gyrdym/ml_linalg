@@ -68,6 +68,16 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
+  /// Creates a vector of zero length
+  factory Vector.empty({DType dtype = DType.float32}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Vector.empty();
+      default:
+        throw UnimplementedError('Vector of $dtype type is not implemented yet');
+    }
+  }
+
   DType get dtype;
 
   /// Returns an element by its position in the vector
@@ -88,6 +98,10 @@ abstract class Vector implements Iterable<double> {
   /// Returns a new [Vector] consisting of square roots of elements of this
   /// [Vector]
   Vector sqrt();
+
+  /// Returns a new [Vector] where elements are the elements from this [Vector]
+  /// divided by [scalar]
+  Vector scalarDiv(num scalar);
 
   /// Creates a new [Vector] containing elements of this [Vector] raised to
   /// the integer [exponent]
