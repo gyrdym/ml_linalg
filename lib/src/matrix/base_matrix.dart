@@ -5,7 +5,7 @@ import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
+import 'package:ml_linalg/src/matrix/common/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
@@ -16,7 +16,7 @@ abstract class BaseMatrix with
 
   BaseMatrix(this._dataManager);
 
-  final DataManager _dataManager;
+  final MatrixDataManager _dataManager;
   final Map<Axis, Vector> _meansCache = {};
   final Map<Axis, Vector> _deviationCache = {};
 
