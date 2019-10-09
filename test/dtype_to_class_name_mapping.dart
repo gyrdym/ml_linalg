@@ -6,6 +6,6 @@ const dtypeToMatrixClassName = {
 };
 
 const dtypeToVectorClassName = {
-  DType.float32: 'Vector32Matrix',
-  DType.float64: 'Vector64Matrix',
+  DType.float32: 'Float32Vector',
+  DType.float64: 'Float64Vector',
 };

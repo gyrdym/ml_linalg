@@ -163,31 +163,32 @@ abstract class BaseMatrix with
 
   @override
   Vector mean([Axis axis = Axis.columns]) {
-    if (columnsNum == 0 || rowsNum == 0) {
+    if (!hasData) {
       return Vector.empty(dtype: dtype);
     }
 
     switch (axis) {
       case Axis.columns:
-        return _meansCache[axis] ??= _mean(rows, rowsNum);
+        return _meansCache[axis] ??= _mean(columns, rowsNum);
 
       case Axis.rows:
-        return _meansCache[axis] ??= _mean(columns, columnsNum);
+        return _meansCache[axis] ??= _mean(rows, columnsNum);
 
       default:
-        throw UnimplementedError('Means calculation for axis $axis is not '
-            'supported yet');
+        throw UnimplementedError('Mean values calculation for axis $axis is not '
+            'implemented yet');
     }
   }
 
   Vector _mean(Iterable<Vector> vectors, int vectorsNum) =>
-      vectors
-          .reduce((summed, vector) => summed + vector)
-          .scalarDiv(vectorsNum);
+      Vector.fromList(
+        vectors.map((vector) => vector.mean()).toList(),
+        dtype: dtype,
+      );
 
   @override
   Vector deviation([Axis axis = Axis.columns]) {
-    if (columnsNum == 0 || rowsNum == 0) {
+    if (!hasData) {
       return Vector.empty(dtype: dtype);
     }
 
