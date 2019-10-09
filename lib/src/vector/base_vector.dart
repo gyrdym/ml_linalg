@@ -270,7 +270,12 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   }
 
   @override
-  double mean() => sum() / length;
+  double mean() {
+    if (isEmpty) {
+      throw _emptyVectorException;
+    }
+    return sum() / length;
+  }
 
   @override
   double norm([Norm norm = Norm.euclidean]) {
@@ -336,7 +341,12 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
 
   @override
   double operator [](int index) {
-    if (index >= length) throw RangeError.index(index, this);
+    if (isEmpty) {
+      throw _emptyVectorException;
+    }
+    if (index >= length) {
+      throw RangeError.index(index, this);
+    }
     return _innerTypedList[index];
   }
 
@@ -414,7 +424,9 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
   /// Returns a vector as a result of applying to [this] any element-wise
   /// operation with a vector (e.g. vector addition)
   Vector _elementWiseVectorOperation(Vector arg, E operation(E a, E b)) {
-    if (arg.length != length) throw _mismatchLengthError();
+    if (arg.length != length) {
+      throw _mismatchLengthError;
+    }
     final other = (arg as BaseVector<E, S>);
     final source = _simdHelper.createList(_numOfBuckets);
     for (int i = 0; i < _numOfBuckets; i++) {
@@ -459,6 +471,9 @@ abstract class BaseVector<E, S extends List<E>> with IterableMixin<double>
     }
   }
 
-  RangeError _mismatchLengthError() =>
+  Exception get _emptyVectorException =>
+      Exception('The vector is empty');
+
+  RangeError get _mismatchLengthError =>
       RangeError('Vectors length must be equal');
 }
