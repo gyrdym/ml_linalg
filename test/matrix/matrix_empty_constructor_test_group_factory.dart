@@ -23,8 +23,8 @@ void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
           expect(matrix.columns, isEmpty);
         });
 
-        test('should throw exception if one tries to access matrix elements '
-            'by index', () {
+        test('should create a matrix that throws an exception if one tries to '
+            'access its elements by index', () {
           final matrix = Matrix.empty(dtype: dtype);
 
           expect(() => matrix.getRow(0), throwsException);
