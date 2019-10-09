@@ -5,7 +5,7 @@ import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
+import 'package:ml_linalg/src/matrix/common/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
@@ -16,13 +16,18 @@ abstract class BaseMatrix with
 
   BaseMatrix(this._dataManager);
 
-  final DataManager _dataManager;
+  final MatrixDataManager _dataManager;
+  final Map<Axis, Vector> _meansCache = {};
+  final Map<Axis, Vector> _deviationCache = {};
 
   @override
   int get rowsNum => _dataManager.rowsNum;
 
   @override
   int get columnsNum => _dataManager.columnsNum;
+
+  @override
+  bool get hasData => _dataManager.hasData;
 
   @override
   Iterator<Iterable<double>> get iterator => _dataManager.iterator;
@@ -155,6 +160,58 @@ abstract class BaseMatrix with
     }
     return Matrix.fromRows(checked, dtype: dtype);
   }
+
+  @override
+  Vector mean([Axis axis = Axis.columns]) {
+    if (!hasData) {
+      return Vector.empty(dtype: dtype);
+    }
+
+    switch (axis) {
+      case Axis.columns:
+        return _meansCache[axis] ??= _mean(columns);
+
+      case Axis.rows:
+        return _meansCache[axis] ??= _mean(rows);
+
+      default:
+        throw UnimplementedError('Mean values calculation for axis $axis is not '
+            'implemented yet');
+    }
+  }
+
+  Vector _mean(Iterable<Vector> vectors) =>
+      Vector.fromList(
+        vectors.map((vector) => vector.mean()).toList(),
+        dtype: dtype);
+
+  @override
+  Vector deviation([Axis axis = Axis.columns]) {
+    if (!hasData) {
+      return Vector.empty(dtype: dtype);
+    }
+
+    final means = mean(axis);
+
+    switch (axis) {
+      case Axis.columns:
+        return _deviationCache[axis] ??= _deviation(rows, means, rowsNum);
+
+      case Axis.rows:
+        return _deviationCache[axis] ??= _deviation(columns, means, columnsNum);
+
+      default:
+        throw UnimplementedError('Deviation calculation for axis $axis is not '
+            'supported yet');
+    }
+  }
+
+  Vector _deviation(Iterable<Vector> vectors, Vector means, int vectorsNum) =>
+      vectors
+          .map((vector) => (vector - means) * (vector - means))
+          .reduce((summed, vector) => summed + vector)
+          .scalarDiv(vectorsNum)
+          .sqrt();
 
   @override
   Vector toVector() {

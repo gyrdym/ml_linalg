@@ -1,25 +1,25 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/src/common/helper/get_2d_iterable_length.dart';
+import 'package:ml_linalg/src/common/helper/get_zero_based_indices.dart';
 import 'package:ml_linalg/src/common/helper/get_length_of_first_or_zero.dart';
 import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
-import 'package:ml_linalg/src/matrix/common/data_manager/data_manager.dart';
+import 'package:ml_linalg/src/matrix/common/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_iterator.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:xrange/integers.dart';
 
-class DataManagerImpl implements DataManager {
-  DataManagerImpl.fromList(
+class MatrixDataManagerImpl implements MatrixDataManager {
+  MatrixDataManagerImpl.fromList(
       List<List<double>> source,
       int bytesPerElement,
       this._dtype,
       this._typedListHelper,
   ) :
-        rowsNum = source.length,
+        rowsNum = get2dIterableLength(source),
         columnsNum = getLengthOfFirstOrZero(source),
-        rowIndices = integers(0, source.length, upperClosed: false),
-        columnIndices = integers(0, getLengthOfFirstOrZero(source),
-            upperClosed: false),
+        rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
+        columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         _rowsCache = List<Vector>(source.length),
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
@@ -28,17 +28,16 @@ class DataManagerImpl implements DataManager {
         bytesPerElement);
   }
 
-  DataManagerImpl.fromRows(
+  MatrixDataManagerImpl.fromRows(
       List<Vector> source,
       int bytesPerElement,
       this._dtype,
       this._typedListHelper,
   ) :
-        rowsNum = source.length,
+        rowsNum = get2dIterableLength(source),
         columnsNum = getLengthOfFirstOrZero(source),
-        rowIndices = integers(0, source.length, upperClosed: false),
-        columnIndices = integers(0, getLengthOfFirstOrZero(source),
-            upperClosed: false),
+        rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
+        columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         _rowsCache = source.toList(growable: false),
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
@@ -47,17 +46,16 @@ class DataManagerImpl implements DataManager {
         bytesPerElement);
   }
 
-  DataManagerImpl.fromColumns(
+  MatrixDataManagerImpl.fromColumns(
       List<Vector> source,
       int bytesPerElement,
       this._dtype,
       this._typedListHelper,
   ) :
         rowsNum = getLengthOfFirstOrZero(source),
-        columnsNum = source.length,
-        rowIndices = integers(0, getLengthOfFirstOrZero(source),
-            upperClosed: false),
-        columnIndices = integers(0, source.length, upperClosed: false),
+        columnsNum = get2dIterableLength(source),
+        rowIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
+        columnIndices = getZeroBasedIndices(get2dIterableLength(source)),
         _rowsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _colsCache = source.toList(growable: false),
         _data = ByteData(source.length *
@@ -66,7 +64,7 @@ class DataManagerImpl implements DataManager {
         bytesPerElement);
   }
 
-  DataManagerImpl.fromFlattened(
+  MatrixDataManagerImpl.fromFlattened(
       List<double> source,
       int rowsNum,
       int colsNum,
@@ -76,8 +74,8 @@ class DataManagerImpl implements DataManager {
   ) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
-        rowIndices = integers(0, rowsNum, upperClosed: false),
-        columnIndices = integers(0, colsNum, upperClosed: false),
+        rowIndices = getZeroBasedIndices(rowsNum),
+        columnIndices = getZeroBasedIndices(colsNum),
         _rowsCache = List<Vector>(rowsNum),
         _colsCache = List<Vector>(colsNum),
         _data = ByteData(rowsNum * colsNum * bytesPerElement) {
@@ -113,7 +111,13 @@ class DataManagerImpl implements DataManager {
       MatrixIterator(_data, rowsNum, columnsNum, _typedListHelper);
 
   @override
+  bool get hasData => rowsNum > 0 && columnsNum > 0;
+
+  @override
   List<double> getValues(int index, int length) {
+    if (!hasData) {
+      throw Exception('Matrix is empty');
+    }
     if (index  >= rowsNum * columnsNum) {
       throw RangeError.range(index, 0, rowsNum * columnsNum);
     }
@@ -122,6 +126,9 @@ class DataManagerImpl implements DataManager {
 
   @override
   Vector getRow(int index) {
+    if (!hasData) {
+      throw Exception('Matrix is empty');
+    }
     _rowsCache[index] ??= Vector.fromList(getValues(index * columnsNum,
         columnsNum), dtype: _dtype);
     return _rowsCache[index];
@@ -129,6 +136,9 @@ class DataManagerImpl implements DataManager {
 
   @override
   Vector getColumn(int index) {
+    if (!hasData) {
+      throw Exception('Matrix is empty');
+    }
     if (_colsCache[index] == null) {
       final result = List<double>(rowsNum);
       for (final i in rowIndices) {
