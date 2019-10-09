@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/common/helper/get_2d_iterable_length.dart';
-import 'package:ml_linalg/src/common/helper/get_indices.dart';
+import 'package:ml_linalg/src/common/helper/get_zero_based_indices.dart';
 import 'package:ml_linalg/src/common/helper/get_length_of_first_or_zero.dart';
 import 'package:ml_linalg/src/common/typed_list_helper/typed_list_helper.dart';
 import 'package:ml_linalg/src/matrix/common/data_manager/matrix_data_manager.dart';
@@ -18,8 +18,8 @@ class MatrixDataManagerImpl implements MatrixDataManager {
   ) :
         rowsNum = get2dIterableLength(source),
         columnsNum = getLengthOfFirstOrZero(source),
-        rowIndices = getIndices(get2dIterableLength(source)),
-        columnIndices = getIndices(getLengthOfFirstOrZero(source)),
+        rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
+        columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         _rowsCache = List<Vector>(source.length),
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
@@ -36,8 +36,8 @@ class MatrixDataManagerImpl implements MatrixDataManager {
   ) :
         rowsNum = get2dIterableLength(source),
         columnsNum = getLengthOfFirstOrZero(source),
-        rowIndices = getIndices(get2dIterableLength(source)),
-        columnIndices = getIndices(getLengthOfFirstOrZero(source)),
+        rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
+        columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         _rowsCache = source.toList(growable: false),
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
@@ -54,8 +54,8 @@ class MatrixDataManagerImpl implements MatrixDataManager {
   ) :
         rowsNum = getLengthOfFirstOrZero(source),
         columnsNum = get2dIterableLength(source),
-        rowIndices = getIndices(getLengthOfFirstOrZero(source)),
-        columnIndices = getIndices(get2dIterableLength(source)),
+        rowIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
+        columnIndices = getZeroBasedIndices(get2dIterableLength(source)),
         _rowsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _colsCache = source.toList(growable: false),
         _data = ByteData(source.length *
@@ -74,8 +74,8 @@ class MatrixDataManagerImpl implements MatrixDataManager {
   ) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
-        rowIndices = getIndices(rowsNum),
-        columnIndices = getIndices(colsNum),
+        rowIndices = getZeroBasedIndices(rowsNum),
+        columnIndices = getZeroBasedIndices(colsNum),
         _rowsCache = List<Vector>(rowsNum),
         _colsCache = List<Vector>(colsNum),
         _data = ByteData(rowsNum * colsNum * bytesPerElement) {
