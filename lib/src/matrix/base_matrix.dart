@@ -27,6 +27,9 @@ abstract class BaseMatrix with
   int get columnsNum => _dataManager.columnsNum;
 
   @override
+  bool get hasData => _dataManager.hasData;
+
+  @override
   Iterator<Iterable<double>> get iterator => _dataManager.iterator;
 
   @override

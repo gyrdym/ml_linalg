@@ -19,7 +19,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
       case DType.float32:
         return Float32Matrix.fromList(source);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -33,7 +33,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
       case DType.float32:
         return Float32Matrix.rows(source);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -48,7 +48,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
       case DType.float32:
         return Float32Matrix.columns(source);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -58,7 +58,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
       case DType.float32:
         return Float32Matrix.empty();
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -70,10 +70,11 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
       case DType.float32:
         return Float32Matrix.flattened(source, rowsNum, columnsNum);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
   }
 
+  /// A data type of [Matrix] elements
   DType get dtype;
 
   /// Returns a lazy iterable of immutable row vectors of the matrix
@@ -93,6 +94,10 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
 
   /// Returns a number of matrix columns
   int get columnsNum;
+
+  /// Returns `true` if the [Matrix] is not empty. Use it instead of `isEmpty`
+  /// getter from [Iterable] interface, since the latter may return falsy true
+  bool get hasData;
 
   /// Returns a matrix row on an [index] (the operator is an alias for
   /// [getRow] method)
