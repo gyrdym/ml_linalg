@@ -87,6 +87,28 @@ class MatrixDataManagerImpl implements MatrixDataManager {
     _updateByteDataByFlattenedIterable(source);
   }
 
+  MatrixDataManagerImpl.diagonal(
+      List<double> source,
+      int bytesPerElement,
+      this._dtype,
+      this._typedListHelper,
+      ) :
+        rowsNum = source.length,
+        columnsNum = source.length,
+        rowIndices = getZeroBasedIndices(source.length),
+        columnIndices = getZeroBasedIndices(source.length),
+        _rowsCache = List<Vector>(source.length),
+        _colsCache = List<Vector>(source.length),
+        _data = ByteData(source.length * source.length * bytesPerElement) {
+    for (int i = 0; i < rowsNum; i++) {
+      for (int j = 0; j < columnsNum; j++) {
+        final value = i == j ? source[i] : 0.0;
+        _typedListHelper
+            .setValue(_data, (i * columnsNum + j) * bytesPerElement, value);
+      }
+    }
+  }
+
   @override
   final int columnsNum;
 

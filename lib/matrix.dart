@@ -74,6 +74,16 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
     }
   }
 
+  /// Creates a diagonal matrix with diagonal elements from [source]
+  factory Matrix.diagonal(List<double> source, {DType dtype = DType.float32}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.diagonal(source);
+      default:
+        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+    }
+  }
+
   /// A data type of [Matrix] elements
   DType get dtype;
 
