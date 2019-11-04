@@ -2,12 +2,12 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:test/test.dart';
 
-import '../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_class_name_mapping.dart';
 
 void matrixDiagonalConstructorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixClassName[dtype], () {
       group('diagonal constructor', () {
-        test('should create a matrix with all zero elements but diagonal '
+        test('should create a matrix with all zero elements but main diagonal '
             'ones', () {
           final source = [1.0, 2.0, 3.0, 4.0, 5.0];
           final matrix = Matrix.diagonal(source, dtype: dtype);

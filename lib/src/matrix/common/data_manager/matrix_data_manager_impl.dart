@@ -100,13 +100,24 @@ class MatrixDataManagerImpl implements MatrixDataManager {
         _rowsCache = List<Vector>(source.length),
         _colsCache = List<Vector>(source.length),
         _data = ByteData(source.length * source.length * bytesPerElement) {
-    for (int i = 0; i < rowsNum; i++) {
-      for (int j = 0; j < columnsNum; j++) {
-        final value = i == j ? source[i] : 0.0;
-        _typedListHelper
-            .setValue(_data, (i * columnsNum + j) * bytesPerElement, value);
-      }
-    }
+    _updateByteDataForDiagonalMatrix(bytesPerElement, (i) => source[i]);
+  }
+
+  MatrixDataManagerImpl.scalar(
+      double scalar,
+      int size,
+      int bytesPerElement,
+      this._dtype,
+      this._typedListHelper,
+      ) :
+        rowsNum = size,
+        columnsNum = size,
+        rowIndices = getZeroBasedIndices(size),
+        columnIndices = getZeroBasedIndices(size),
+        _rowsCache = List<Vector>(size),
+        _colsCache = List<Vector>(size),
+        _data = ByteData(size * size * bytesPerElement) {
+    _updateByteDataForDiagonalMatrix(bytesPerElement, (i) => scalar);
   }
 
   @override
@@ -176,17 +187,28 @@ class MatrixDataManagerImpl implements MatrixDataManager {
       _typedListHelper.getBufferAsList(_data.buffer).setAll(0, values);
 
   void _updateByteDataBy2dimIterable(Iterable<Iterable<double>> rows,
-      int accessor(int i, int j), int bytesPerElement) {
+      int flatten2dIndices(int i, int j), int bytesPerElement) {
     var i = 0;
     var j = 0;
     for (final row in rows) {
       for (final value in row) {
         _typedListHelper
-            .setValue(_data, accessor(i, j) * bytesPerElement, value);
+            .setValue(_data, flatten2dIndices(i, j) * bytesPerElement, value);
         j++;
       }
       i++;
       j = 0;
+    }
+  }
+
+  void _updateByteDataForDiagonalMatrix(int bytesPerElement,
+      double generateValue(int i)) {
+    for (int i = 0; i < rowsNum; i++) {
+      for (int j = 0; j < columnsNum; j++) {
+        final value = i == j ? generateValue(i) : 0.0;
+        _typedListHelper
+            .setValue(_data, (i * columnsNum + j) * bytesPerElement, value);
+      }
     }
   }
 }
