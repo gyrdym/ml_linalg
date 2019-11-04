@@ -1,5 +1,11 @@
 # Changelog
 
+## 12.4.0
+- `Matrix`:
+    - `Matrix.diagonal` constructor added (for creation diagonal matrices)
+    - `Matrix.scalar` constructor added (for creation scalar matrices)
+    - `Matrix.identity` constructor added (for creation identity matrices)
+
 ## 12.3.0
 - `Matrix`:
     - `mean` method added

@@ -8,8 +8,7 @@ import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Float32Vector', ()
-  {
+  group('Float32Vector', () {
     group('fromList', () {
       test('should create a vector from dynamic-length list, length is '
           'greater than 4', () {
