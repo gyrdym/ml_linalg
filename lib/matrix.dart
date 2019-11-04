@@ -83,7 +83,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// print(matrix);
   /// ````
   ///
-  /// The output will be:
+  /// The output:
   ///
   /// ```
   /// Matrix 5 x 5:
@@ -111,7 +111,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// print(matrix);
   /// ````
   ///
-  /// The output will be:
+  /// The output:
   ///
   /// ```
   /// Matrix 5 x 5:
@@ -139,7 +139,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// print(matrix);
   /// ````
   ///
-  /// The output will be:
+  /// The output:
   ///
   /// ```
   /// Matrix 5 x 5:

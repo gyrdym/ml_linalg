@@ -33,6 +33,9 @@
         - [Vector rescaling (min-max normalization)](#vector-rescaling-min-max-normalization)
 - [Matrices](#matrices)
     - [Matrix operations](#matrix-operations-examples)
+        - [Creation of diagonal matrix](#creation-of-diagonal-matrix)
+        - [Creation of scalar matrix](#creation-of-scalar-matrix)
+        - [Creation of identity matrix](#creation-of-identity-matrix)
         - [Sum of a matrix and another matrix](#sum-of-a-matrix-and-another-matrix)
         - [Sum of a matrix and a scalar](#sum-of-a-matrix-and-a-scalar)
         - [Multiplication of a matrix and a vector](#multiplication-of-a-matrix-and-a-vector)
@@ -315,6 +318,66 @@ as vectors and also they implement `Iterable`, to be precise - `Iterable<Iterabl
 to use them as a regular iterable collection.
 
 #### Matrix operations examples
+
+##### Creation of diagonal matrix
+````dart
+import 'package:ml_linalg/matrix.dart';
+
+final matrix = Matrix.diagonal([1, 2, 3, 4, 5]);
+
+print(matrix);
+````
+  
+The output:
+
+```
+Matrix 5 x 5:
+(1.0, 0.0, 0.0, 0.0, 0.0)
+(0.0, 2.0, 0.0, 0.0, 0.0)
+(0.0, 0.0, 3.0, 0.0, 0.0)
+(0.0, 0.0, 0.0, 4.0, 0.0)
+(0.0, 0.0, 0.0, 0.0, 5.0)
+```
+
+##### Creation of scalar matrix
+````dart
+import 'package:ml_linalg/matrix.dart';
+
+final matrix = Matrix.scalar(3, 5);
+
+print(matrix);
+````
+  
+The output:
+
+```
+Matrix 5 x 5:
+(3.0, 0.0, 0.0, 0.0, 0.0)
+(0.0, 3.0, 0.0, 0.0, 0.0)
+(0.0, 0.0, 3.0, 0.0, 0.0)
+(0.0, 0.0, 0.0, 3.0, 0.0)
+(0.0, 0.0, 0.0, 0.0, 3.0)
+```
+
+##### Creation of identity matrix
+````dart
+import 'package:ml_linalg/matrix.dart';
+
+final matrix = Matrix.identity(5);
+
+print(matrix);
+````
+  
+The output:
+
+```
+Matrix 5 x 5:
+(1.0, 0.0, 0.0, 0.0, 0.0)
+(0.0, 1.0, 0.0, 0.0, 0.0)
+(0.0, 0.0, 1.0, 0.0, 0.0)
+(0.0, 0.0, 0.0, 1.0, 0.0)
+(0.0, 0.0, 0.0, 0.0, 1.0)
+```
 
 ##### Sum of a matrix and another matrix
 ````Dart
