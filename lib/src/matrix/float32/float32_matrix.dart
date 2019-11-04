@@ -45,6 +45,21 @@ class Float32Matrix extends BaseMatrix {
           DType.float32,
           Float32ListHelper()));
 
+  Float32Matrix.diagonal(List<double> source) :
+        super(MatrixDataManagerImpl.diagonal(
+          source,
+          Float32List.bytesPerElement,
+          DType.float32,
+          Float32ListHelper()));
+
+  Float32Matrix.scalar(double scalar, int size) :
+        super(MatrixDataManagerImpl.scalar(
+          scalar,
+          size,
+          Float32List.bytesPerElement,
+          DType.float32,
+          Float32ListHelper()));
+
   @override
   final DType dtype = DType.float32;
 }
