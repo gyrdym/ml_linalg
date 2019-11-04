@@ -75,7 +75,24 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   }
 
   /// Creates a matrix, where elements from [source] are the elements for the
-  /// matrix main diagonal
+  /// matrix main diagonal, the rest of the elements are zero
+  ///
+  /// ````dart
+  /// final matrix = Matrix.diagonal([1, 2, 3, 4, 5]);
+  ///
+  /// print(matrix);
+  /// ````
+  ///
+  /// The output will be:
+  ///
+  /// ```
+  /// Matrix 5 x 5:
+  /// (1.0, 0.0, 0.0, 0.0, 0.0)
+  /// (0.0, 2.0, 0.0, 0.0, 0.0)
+  /// (0.0, 0.0, 3.0, 0.0, 0.0)
+  /// (0.0, 0.0, 0.0, 4.0, 0.0)
+  /// (0.0, 0.0, 0.0, 0.0, 5.0)
+  /// ```
   factory Matrix.diagonal(List<double> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
@@ -85,8 +102,25 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
     }
   }
 
-  /// Creates a matrix of [size] * [size] dimension, where the all main
-  /// diagonal elements are equal to [scalar]
+  /// Creates a matrix of [size] * [size] dimension, where all the main
+  /// diagonal elements are equal to [scalar], the rest of the elements are 0
+  ///
+  /// ````dart
+  /// final matrix = Matrix.scalar(3, 5);
+  ///
+  /// print(matrix);
+  /// ````
+  ///
+  /// The output will be:
+  ///
+  /// ```
+  /// Matrix 5 x 5:
+  /// (3.0, 0.0, 0.0, 0.0, 0.0)
+  /// (0.0, 3.0, 0.0, 0.0, 0.0)
+  /// (0.0, 0.0, 3.0, 0.0, 0.0)
+  /// (0.0, 0.0, 0.0, 3.0, 0.0)
+  /// (0.0, 0.0, 0.0, 0.0, 3.0)
+  /// ```
   factory Matrix.scalar(double scalar, int size, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
@@ -96,8 +130,25 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
     }
   }
 
-  /// Creates a matrix of [size] * [size] dimension, where the all main
-  /// diagonal elements are equal to 1
+  /// Creates a matrix of [size] * [size] dimension, where all the main
+  /// diagonal elements are equal to 1, the rest of the elements are 0
+  ///
+  /// ````dart
+  /// final matrix = Matrix.identity(5);
+  ///
+  /// print(matrix);
+  /// ````
+  ///
+  /// The output will be:
+  ///
+  /// ```
+  /// Matrix 5 x 5:
+  /// (1.0, 0.0, 0.0, 0.0, 0.0)
+  /// (0.0, 1.0, 0.0, 0.0, 0.0)
+  /// (0.0, 0.0, 1.0, 0.0, 0.0)
+  /// (0.0, 0.0, 0.0, 1.0, 0.0)
+  /// (0.0, 0.0, 0.0, 0.0, 1.0)
+  /// ```
   factory Matrix.identity(int size, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
