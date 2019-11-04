@@ -53,7 +53,7 @@
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
 - [Contacts](#contacts)
 
-### Linear algebra
+## Linear algebra
 
 &nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics that is working with vectors and 
 matrices. 
@@ -70,7 +70,7 @@ out-of-the-box library, Dart-based implementation of vectors and matrices has to
 &nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there are SIMD data types. Namely support of SIMD computational architecture
 served as a source of inspiration for creating this library.
 
-### What is SIMD?
+## What is SIMD?
 
 &nbsp;&nbsp;&nbsp;&nbsp;SIMD stands for `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
 operations in parallel on huge amount of data. For instance, one has two arrays: 
@@ -92,9 +92,9 @@ operations on several operands in parallel, thus element-wise sum of two arrays 
     <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
 </p>
 
-### Vectors
+## Vectors
 
-#### A couple of words about the underlying architecture
+### A couple of words about the underlying architecture
     
 &nbsp;&nbsp;&nbsp;&nbsp;The library contains a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) - 
 [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart). 
@@ -125,9 +125,9 @@ print(map[Vector.fromList([1, 2, 3, 4, 5])]); // true
 print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 5]).hashCode); // true
 ```
 
-#### Vector operations examples
+### Vector operations examples
 
-##### Vectors sum
+#### Vectors sum
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -137,7 +137,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
-##### Vectors subtraction
+#### Vectors subtraction
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -147,7 +147,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
 
-##### Element wise vector by vector multiplication
+#### Element wise vector by vector multiplication
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -157,7 +157,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
-##### Element wise vector by vector division
+#### Element wise vector by vector division
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -167,7 +167,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
 ````
 
-##### Euclidean norm
+#### Euclidean norm
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -176,7 +176,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // sqrt(2^2 + 3^2 + 4^2 + 5^2 + 6^2) = sqrt(90) ~~ 9.48
 ````
 
-##### Manhattan norm
+#### Manhattan norm
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -185,7 +185,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0
 ````
 
-##### Mean value
+#### Mean value
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -194,7 +194,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // (2 + 3 + 4 + 5 + 6) / 5 = 4.0
 ````
 
-##### Sum of all vector elements
+#### Sum of all vector elements
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -203,7 +203,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0 (equivalent to Manhattan norm)
 ````
 
-##### Dot product of two vectors
+#### Dot product of two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -213,7 +213,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // 1.0 * 2.0 + 2.0 * 3.0 + 3.0 * 4.0 + 4.0 * 5.0 + 5.0 * 6.0 = 70.0
 ````
 
-##### Sum of a vector and a scalar
+#### Sum of a vector and a scalar
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -223,7 +223,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result.toList()); // [6.0, 7.0, 8.0, 9.0, 10.0]
 ````
 
-##### Subtraction of a scalar from a vector
+#### Subtraction of a scalar from a vector
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -233,7 +233,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result.toList()); // [-4.0, -3.0, -2.0, -1.0, 0.0]
 ````
 
-##### Multiplication (scaling) of a vector by a scalar
+#### Multiplication (scaling) of a vector by a scalar
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -243,7 +243,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
-##### Division (scaling) of a vector by a scalar value
+#### Division (scaling) of a vector by a scalar value
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -253,7 +253,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
-##### Euclidean distance between two vectors
+#### Euclidean distance between two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -263,7 +263,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // ~~2.23
 ````
 
-##### Manhattan distance between two vectors
+#### Manhattan distance between two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -273,7 +273,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // 5.0
 ````
 
-##### Cosine distance between two vectors
+#### Cosine distance between two vectors
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -283,7 +283,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // 0.00506
 ````
 
-##### Vector normalization using Euclidean norm
+#### Vector normalization using Euclidean norm
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -292,7 +292,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // [0.134, 0.269, 0.404, 0.539, 0.674]
 ````
 
-##### Vector normalization using Manhattan norm
+#### Vector normalization using Manhattan norm
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -301,7 +301,7 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // [0.066, -0.133, 0.200, -0.266, 0.333]
 ````
 
-##### Vector rescaling (min-max normalization)
+#### Vector rescaling (min-max normalization)
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -310,16 +310,16 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
   print(result); // [0.555, 0.222, 0.777, 0.0, 1.0, 0.444]
 ````
 
-### Matrices
+## Matrices
 
 &nbsp;&nbsp;&nbsp;&nbsp;Along with SIMD vectors, the library presents SIMD-based Matrices. One can use the matrices via 
 [Matrix factory](https://github.com/gyrdym/ml_linalg/blob/master/lib/matrix.dart). The matrices are immutable as well 
 as vectors and also they implement `Iterable`, to be precise - `Iterable<Iterable<double>>` interface, thus it's possible 
 to use them as a regular iterable collection.
 
-#### Matrix operations examples
+### Matrix operations examples
 
-##### Creation of diagonal matrix
+#### Creation of diagonal matrix
 ````dart
 import 'package:ml_linalg/matrix.dart';
 
@@ -339,7 +339,7 @@ Matrix 5 x 5:
 (0.0, 0.0, 0.0, 0.0, 5.0)
 ```
 
-##### Creation of scalar matrix
+#### Creation of scalar matrix
 ````dart
 import 'package:ml_linalg/matrix.dart';
 
@@ -359,7 +359,7 @@ Matrix 5 x 5:
 (0.0, 0.0, 0.0, 0.0, 3.0)
 ```
 
-##### Creation of identity matrix
+#### Creation of identity matrix
 ````dart
 import 'package:ml_linalg/matrix.dart';
 
@@ -379,7 +379,7 @@ Matrix 5 x 5:
 (0.0, 0.0, 0.0, 0.0, 1.0)
 ```
 
-##### Sum of a matrix and another matrix
+#### Sum of a matrix and another matrix
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -401,7 +401,7 @@ print(matrix1 + matrix2);
 // ];
 ````
 
-##### Sum of a matrix and a scalar
+#### Sum of a matrix and a scalar
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -418,7 +418,7 @@ print(matrix + 7);
 //  ];
 ````
 
-##### Multiplication of a matrix and a vector
+#### Multiplication of a matrix and a vector
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -437,7 +437,7 @@ print(matrix + 7);
   //]
 ````
 
-##### Multiplication of a matrix and another matrix
+#### Multiplication of a matrix and another matrix
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -461,7 +461,7 @@ print(matrix + 7);
   //]
 ````
 
-##### Multiplication of a matrix and a scalar
+#### Multiplication of a matrix and a scalar
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -478,7 +478,7 @@ print(matrix * 3);
 // ];
 ````
 
-##### Element wise matrices subtraction
+#### Element wise matrices subtraction
 ````Dart
 import 'package:ml_linalg/linalg.dart';
 
@@ -500,7 +500,7 @@ print(matrix1 - matrix2);
 // ];
 ````
 
-##### Matrix transposition
+#### Matrix transposition
 ````Dart
   import 'package:ml_linalg/linalg.dart';
   
@@ -519,7 +519,7 @@ print(matrix1 - matrix2);
   //]
 ````
  
-##### Matrix row wise reduce
+#### Matrix row wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -531,7 +531,7 @@ print(matrix1 - matrix2);
   print(reduced); // [6.0, 8.0, 10.0, 12.0]
 ````
 
-##### Matrix column wise reduce
+#### Matrix column wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -544,7 +544,7 @@ print(matrix1 - matrix2);
   print(result); // [50, 66, 90]
 ````
 
-##### Matrix row wise map
+#### Matrix row wise map
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -561,7 +561,7 @@ print(matrix1 - matrix2);
   // ]
 ````
 
-##### Matrix column wise map
+#### Matrix column wise map
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -578,7 +578,7 @@ print(matrix1 - matrix2);
   // ]
 ````
 
-##### Getting max value of the matrix
+#### Getting max value of the matrix
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -593,7 +593,7 @@ print(matrix1 - matrix2);
   // 74.0
 ````
 
-##### Getting min value of the matrix
+#### Getting min value of the matrix
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
