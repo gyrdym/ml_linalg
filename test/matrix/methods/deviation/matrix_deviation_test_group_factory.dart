@@ -3,7 +3,7 @@ import 'package:ml_linalg/linalg.dart';
 import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
-import '../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_class_name_mapping.dart';
 
 void matrixDeviationTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixClassName[dtype], () {
