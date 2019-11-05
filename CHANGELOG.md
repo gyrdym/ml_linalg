@@ -1,5 +1,10 @@
 # Changelog
 
+## 12.5.1
+- `Axis`: documentation added
+- `DType`: documentation added
+- `Matrix`: documentation extended and corrected
+
 ## 12.5.0
 - `Matrix`:
     - `Matrix.row` constructor added
