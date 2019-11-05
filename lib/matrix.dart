@@ -158,7 +158,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
     }
   }
 
-  /// Creates a matrix, consisting of just one row (aka row vector)
+  /// Creates a matrix, consisting of just one row (aka `Row matrix`)
   ///
   /// ````dart
   /// final matrix = Matrix.row([1, 2, 3, 4, 5]);
@@ -182,7 +182,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
     }
   }
 
-  /// Creates a matrix, consisting of just one column (aka column vector)
+  /// Creates a matrix, consisting of just one column (aka `Column matrix`)
   ///
   /// ````dart
   /// final matrix = Matrix.column([1, 2, 3, 4, 5]);
@@ -292,7 +292,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
 
   /// Tries to convert the matrix to a vector.
   ///
-  /// It fails, if the [columnsNum] and [rowsNum] are greater than `1`
+  /// It fails, if both [columnsNum] and [rowsNum] are greater than `1`
   Vector toVector();
 
   /// Returns max value of the matrix
