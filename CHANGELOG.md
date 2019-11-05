@@ -1,5 +1,10 @@
 # Changelog
 
+## 12.5.0
+- `Matrix`:
+    - `Matrix.row` constructor added
+    - `Matrix.column` constructor added
+
 ## 12.4.0
 - `Matrix`:
     - `Matrix.diagonal` constructor added (for creation diagonal matrices)

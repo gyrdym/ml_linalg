@@ -158,6 +158,58 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
     }
   }
 
+  /// Creates a matrix, consisting of just one row (aka `Row matrix`)
+  ///
+  /// ````dart
+  /// final matrix = Matrix.row([1, 2, 3, 4, 5]);
+  ///
+  /// print(matrix);
+  /// ````
+  ///
+  /// The output:
+  ///
+  /// ```
+  /// Matrix 1 x 5:
+  /// (1.0, 2.0, 3.0, 4.0, 5.0)
+  /// ```
+  factory Matrix.row(List<double> source, {DType dtype = DType.float32}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.rows([Vector.fromList(source, dtype: dtype)]);
+      default:
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
+    }
+  }
+
+  /// Creates a matrix, consisting of just one column (aka `Column matrix`)
+  ///
+  /// ````dart
+  /// final matrix = Matrix.column([1, 2, 3, 4, 5]);
+  ///
+  /// print(matrix);
+  /// ````
+  ///
+  /// The output:
+  ///
+  /// ```
+  /// Matrix 5 x 1:
+  /// (1.0)
+  /// (2.0)
+  /// (3.0)
+  /// (4.0)
+  /// (5.0)
+  /// ```
+  factory Matrix.column(List<double> source, {DType dtype = DType.float32}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.columns([Vector.fromList(source, dtype: dtype)]);
+      default:
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
+    }
+  }
+
   /// A data type of [Matrix] elements
   DType get dtype;
 
@@ -205,8 +257,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// Performs transposition of the matrix
   Matrix transpose();
 
-  /// Cuts out a part of the matrix bounded by [rowIndices] and [columnIndices]
-  /// range
+  /// Samples a new [Matrix] from parts of this [Matrix]
   Matrix sample({
     Iterable<int> rowIndices,
     Iterable<int> columnIndices,
@@ -241,8 +292,7 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
 
   /// Tries to convert the matrix to a vector.
   ///
-  /// It fails, if the matrix's both numbers of columns and rows are greater
-  /// than `1`
+  /// It fails, if both [columnsNum] and [rowsNum] are greater than `1`
   Vector toVector();
 
   /// Returns max value of the matrix

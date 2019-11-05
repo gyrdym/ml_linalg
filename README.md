@@ -36,6 +36,8 @@
         - [Creation of diagonal matrix](#creation-of-diagonal-matrix)
         - [Creation of scalar matrix](#creation-of-scalar-matrix)
         - [Creation of identity matrix](#creation-of-identity-matrix)
+        - [Creation of column matrix](#creation-of-column-matrix)
+        - [Creation of row matrix](#creation-of-row-matrix)
         - [Sum of a matrix and another matrix](#sum-of-a-matrix-and-another-matrix)
         - [Sum of a matrix and a scalar](#sum-of-a-matrix-and-a-scalar)
         - [Multiplication of a matrix and a vector](#multiplication-of-a-matrix-and-a-vector)
@@ -377,6 +379,39 @@ Matrix 5 x 5:
 (0.0, 0.0, 1.0, 0.0, 0.0)
 (0.0, 0.0, 0.0, 1.0, 0.0)
 (0.0, 0.0, 0.0, 0.0, 1.0)
+```
+
+#### Creation of column matrix
+````dart
+final matrix = Matrix.column([1, 2, 3, 4, 5]);
+
+print(matrix);
+````
+
+The output:
+
+```
+Matrix 5 x 1:
+(1.0)
+(2.0)
+(3.0)
+(4.0)
+(5.0)
+```
+
+#### Creation of row matrix
+
+````dart
+final matrix = Matrix.row([1, 2, 3, 4, 5]);
+
+print(matrix);
+````
+
+The output:
+
+```
+Matrix 1 x 5:
+(1.0, 2.0, 3.0, 4.0, 5.0)
 ```
 
 #### Sum of a matrix and another matrix
