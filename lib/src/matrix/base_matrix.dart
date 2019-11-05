@@ -221,7 +221,7 @@ abstract class BaseMatrix with
       return getRow(0);
     }
     throw Exception(
-        'Cannot convert a ${rowsNum}x${columnsNum} matrix into a vector');
+        'Cannot convert ${rowsNum} x ${columnsNum} matrix into a vector');
   }
 
   @override
