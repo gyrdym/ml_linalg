@@ -216,10 +216,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     } else if (value is Matrix) {
       return _matrixMul(value);
 
-    } else if (value is double) {
+    } else if (value is num) {
       final source = Float32x4List(_numOfBuckets);
       for (int i = 0; i < _numOfBuckets; i++) {
-        source[i] = _innerSimdList[i].scale(value);
+        source[i] = _innerSimdList[i].scale(value.toDouble());
       }
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
@@ -239,6 +239,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         source[i] = _innerSimdList[i] / other._innerSimdList[i];
       }
       return Vector.fromSimdList(source, length, dtype: dtype);
+
     } else if (value is num) {
       final source = Float32x4List(_numOfBuckets);
       for (int i = 0; i < _numOfBuckets; i++) {
@@ -246,11 +247,18 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       }
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
+
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
 
   @override
-  Vector sqrt() => _elementWiseSelfOperation((el, [_]) => el.sqrt());
+  Vector sqrt() {
+    final source = Float32x4List(_numOfBuckets);
+    for (int i = 0; i < _numOfBuckets; i++) {
+      source[i] = _innerSimdList[i].sqrt();
+    }
+    return Vector.fromSimdList(source, length, dtype: dtype);
+  }
 
   @override
   Vector scalarDiv(num scalar) => this / scalar;
@@ -259,8 +267,16 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Vector toIntegerPower(int power) => _elementWisePow(power);
 
   @override
-  Vector abs() =>
-      _abs ??= _elementWiseSelfOperation((element, [int i]) => element.abs());
+  Vector abs() {
+    if (_abs == null) {
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i].abs();
+      }
+      _abs = Vector.fromSimdList(source, length, dtype: dtype);
+    }
+    return _abs;
+  }
 
   @override
   double dot(Vector vector) => (this * vector).sum();
@@ -441,12 +457,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
 
     return lane * sqrX;
-  }
-
-  Vector _elementWiseSelfOperation(Float32x4 operation(Float32x4 element, [int index])) {
-    final source = _innerSimdList.map(operation).toList(growable: false);
-    return Vector.fromSimdList(Float32x4List.fromList(source), length,
-        dtype: dtype);
   }
 
   /// Returns a vector as a result of applying to [this] element-wise raising
