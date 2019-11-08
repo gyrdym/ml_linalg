@@ -11,6 +11,7 @@ import 'package:ml_linalg/src/vector/float32x4_helper.dart';
 import 'package:ml_linalg/vector.dart';
 
 const _bytesPerElement = Float32List.bytesPerElement;
+const _bytesPerSimdElement = Float32x4List.bytesPerElement;
 const _bucketSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
 
 /// Vector with SIMD (single instruction, multiple data) architecture support
@@ -34,10 +35,12 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.fromList(List<num> source) :
         length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
-        _buffer = _getBuffer(
-            _getNumOfBuckets(source.length, _bucketSize) * _bucketSize,
-            _bytesPerElement) {
-    _setByteData((i) => source[i]);
+        _buffer = ByteData(_getNumOfBuckets(source.length, _bucketSize) *
+            _bytesPerSimdElement).buffer {
+    for (int i = 0; i < length; i++) {
+      _buffer.asByteData().setFloat32(_bytesPerElement * i,
+        source[i].toDouble(), Endian.host);
+    }
   }
 
   Float32x4Vector.randomFilled(this.length, int seed, {
@@ -45,29 +48,35 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     num max = 1,
   }) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _buffer = _getBuffer(
-            _getNumOfBuckets(length, _bucketSize) * _bucketSize,
-            _bytesPerElement) {
+        _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
+            _bytesPerSimdElement).buffer {
     final generator = math.Random(seed);
     final diff = (max - min).abs();
     final realMin = math.min(min, max);
-    _setByteData((i) => generator.nextDouble() * diff + realMin);
+
+    for (int i = 0; i < length; i++) {
+      _buffer.asByteData().setFloat32(_bytesPerElement * i,
+        generator.nextDouble() * diff + realMin, Endian.host);
+    }
   }
 
   Float32x4Vector.filled(this.length, num value) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _buffer = _getBuffer(
-            _getNumOfBuckets(length, _bucketSize) * _bucketSize,
-            _bytesPerElement) {
-    _setByteData((_) => value);
+        _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
+            _bytesPerSimdElement).buffer {
+    for (int i = 0; i < length; i++) {
+      _buffer.asByteData().setFloat32(_bytesPerElement * i, value.toDouble(),
+          Endian.host);
+    }
   }
 
   Float32x4Vector.zero(this.length) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _buffer = _getBuffer(
-            _getNumOfBuckets(length, _bucketSize) * _bucketSize,
-            _bytesPerElement) {
-    _setByteData((_) => 0.0);
+        _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
+            _bytesPerSimdElement).buffer {
+    for (int i = 0; i < length; i++) {
+      _buffer.asByteData().setFloat32(_bytesPerElement * i, 0.0, Endian.host);
+    }
   }
 
   Float32x4Vector.fromSimdList(Float32x4List data, this.length) :
@@ -79,13 +88,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.empty() :
         length = 0,
         _numOfBuckets = 0,
-        _buffer = _getBuffer(0, _bytesPerElement);
+        _buffer = ByteData(0).buffer;
 
   static int _getNumOfBuckets(int length, int bucketSize) =>
       (length / bucketSize).ceil();
-
-  static ByteBuffer _getBuffer(int length, int bytesPerElement) =>
-      ByteData(length * bytesPerElement).buffer;
 
   @override
   final int length;
@@ -146,51 +152,99 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector operator +(Object value) {
-    if (value is Vector) {
-      return _elementWiseVectorOperation(value, (a, b) => a + b);
-    } else if (value is Matrix) {
-      final other = value.toVector();
-      return _elementWiseVectorOperation(other, (a, b) => a + b);
+    if (value is Vector || value is Matrix) {
+      final other = (value is Matrix ? value.toVector() : value) as Float32x4Vector;
+      if (other.length != length) {
+        throw _mismatchLengthError;
+      }
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i] + other._innerSimdList[i];
+      }
+      return Vector.fromSimdList(source, length, dtype: dtype);
+
     } else if (value is num) {
-      return _elementWiseScalarOperation<Float32x4>(
-          Float32x4.splat(value.toDouble()), (a, b) => a + b);
+      final arg = Float32x4.splat(value.toDouble());
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i] + arg;
+      }
+      return Vector.fromSimdList(source, length, dtype: dtype);
     }
+
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
 
   @override
   Vector operator -(Object value) {
-    if (value is Vector) {
-      return _elementWiseVectorOperation(value, (a, b) => a - b);
-    } else if (value is Matrix) {
-      final other = value.toVector();
-      return _elementWiseVectorOperation(other, (a, b) => a - b);
+    if (value is Vector || value is Matrix) {
+      final other = (value is Matrix ? value.toVector() : value) as Float32x4Vector;
+      if (other.length != length) {
+        throw _mismatchLengthError;
+      }
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i] - other._innerSimdList[i];
+      }
+      return Vector.fromSimdList(source, length, dtype: dtype);
+
     } else if (value is num) {
-      return _elementWiseScalarOperation<Float32x4>(
-          Float32x4.splat(value.toDouble()), (a, b) => a - b);
+      final arg = Float32x4.splat(value.toDouble());
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i] - arg;
+      }
+      return Vector.fromSimdList(source, length, dtype: dtype);
     }
+
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
 
   @override
   Vector operator *(Object value) {
     if (value is Vector) {
-      return _elementWiseVectorOperation(value, (a, b) => a * b);
+      final other = value as Float32x4Vector;
+      if (other.length != length) {
+        throw _mismatchLengthError;
+      }
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i] * other._innerSimdList[i];
+      }
+      return Vector.fromSimdList(source, length, dtype: dtype);
+
     } else if (value is Matrix) {
       return _matrixMul(value);
-    } else if (value is num) {
-      return _elementWiseScalarOperation<double>(value.toDouble(),
-          (a, b) => a.scale(b));
+
+    } else if (value is double) {
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i].scale(value);
+      }
+      return Vector.fromSimdList(source, length, dtype: dtype);
     }
+
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
 
   @override
   Vector operator /(Object value) {
     if (value is Vector) {
-      return _elementWiseVectorOperation(value, (a, b) => a / b);
+      final other = value as Float32x4Vector;
+      if (other.length != length) {
+        throw _mismatchLengthError;
+      }
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i] / other._innerSimdList[i];
+      }
+      return Vector.fromSimdList(source, length, dtype: dtype);
     } else if (value is num) {
-      return _elementWiseScalarOperation<double>(1 / value, (a, b) => a.scale(b));
+      final source = Float32x4List(_numOfBuckets);
+      for (int i = 0; i < _numOfBuckets; i++) {
+        source[i] = _innerSimdList[i].scale(1 / value);
+      }
+      return Vector.fromSimdList(source, length, dtype: dtype);
     }
     throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
   }
@@ -389,29 +443,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     return lane * sqrX;
   }
 
-  Vector _elementWiseScalarOperation<T>(T arg,
-      Float32x4 operation(Float32x4 a, T b)) {
-    final source = _innerSimdList.map((value) => operation(value, arg))
-        .toList(growable: false);
-    return Vector.fromSimdList(Float32x4List.fromList(source), length,
-        dtype: dtype);
-  }
-
-  /// Returns a vector as a result of applying to [this] any element-wise
-  /// operation with a vector (e.g. vector addition)
-  Vector _elementWiseVectorOperation(Vector arg,
-      Float32x4 operation(Float32x4 a, Float32x4 b)) {
-    if (arg.length != length) {
-      throw _mismatchLengthError;
-    }
-    final other = arg as Float32x4Vector;
-    final source = Float32x4List(_numOfBuckets);
-    for (int i = 0; i < _numOfBuckets; i++) {
-      source[i] = operation(_innerSimdList[i], other._innerSimdList[i]);
-    }
-    return Vector.fromSimdList(source, length, dtype: dtype);
-  }
-
   Vector _elementWiseSelfOperation(Float32x4 operation(Float32x4 element, [int index])) {
     final source = _innerSimdList.map(operation).toList(growable: false);
     return Vector.fromSimdList(Float32x4List.fromList(source), length,
@@ -437,18 +468,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     final source = List.generate(
         matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
     return Vector.fromList(source, dtype: dtype);
-  }
-
-  void _setByteData(num generateValue(int i)) {
-    final byteData = _buffer.asByteData();
-    var byteOffset = -_bytesPerElement;
-    for (int i = 0; i < length; i++) {
-      byteData.setFloat32(
-          byteOffset += _bytesPerElement,
-          generateValue(i).toDouble(),
-          Endian.host,
-      );
-    }
   }
 
   Exception get _emptyVectorException =>
