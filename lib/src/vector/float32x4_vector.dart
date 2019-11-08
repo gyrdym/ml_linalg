@@ -14,23 +14,6 @@ const _bytesPerElement = Float32List.bytesPerElement;
 const _bytesPerSimdElement = Float32x4List.bytesPerElement;
 const _bucketSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
 
-/// Vector with SIMD (single instruction, multiple data) architecture support
-///
-/// An entity, that extends this class, may have potentially infinite length
-/// (in terms of vector algebra - number of dimensions). Vector components are
-/// contained in a special typed data structure, that allow to perform vector
-/// operations extremely fast due to hardware assisted computations.
-///
-/// Let's assume some considerations:
-///
-/// - High performance of vector operations is provided by SIMD types of Dart
-/// language
-///
-/// - Each SIMD-typed value is a "cell", that contains several floating point
-/// values (2 or 4).
-///
-/// - Sequence of SIMD-values forms a "computation lane", where computations
-/// are performed with each floating point element simultaneously (in parallel)
 class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.fromList(List<num> source) :
         length = source.length,
@@ -131,7 +114,8 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         return false;
       }
       for (int i = 0; i < _numOfBuckets; i++) {
-        if (_innerSimdList[i].equal(other._innerSimdList[i]).signMask != 15) {
+        if (!_simdHelper.areLanesEqual(_innerSimdList[i],
+            other._innerSimdList[i])) {
           return false;
         }
       }
@@ -462,10 +446,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   /// Returns a vector as a result of applying to [this] element-wise raising
   /// to the integer power
   Vector _elementWisePow(int exp) {
-    final source = _innerSimdList.map((value) => _simdToIntPow(value, exp))
-        .toList(growable: false);
-    return Vector.fromSimdList(Float32x4List.fromList(source), length,
-        dtype: dtype);
+    final source = Float32x4List(_numOfBuckets);
+    for (int i = 0; i < _numOfBuckets; i++) {
+      source[i] = _simdToIntPow(_innerSimdList[i], exp);
+    }
+    return Vector.fromSimdList(source, length, dtype: dtype);
   }
 
   Vector _matrixMul(Matrix matrix) {

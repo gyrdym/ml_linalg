@@ -7,6 +7,9 @@ class Float32x4Helper implements SimdHelper<Float32x4> {
   const Float32x4Helper();
 
   @override
+  bool areLanesEqual(Float32x4 a, Float32x4 b) => a.equal(b).signMask == 15;
+
+  @override
   double sumLanes(Float32x4 a) =>
       (a.x.isNaN ? 0.0 : a.x) +
       (a.y.isNaN ? 0.0 : a.y) +

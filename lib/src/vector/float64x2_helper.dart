@@ -7,6 +7,9 @@ class Float64x2Helper implements SimdHelper<Float64x2> {
   const Float64x2Helper();
 
   @override
+  bool areLanesEqual(Float64x2 a, Float64x2 b) => a.x == b.x && a.y == b.y;
+
+  @override
   double sumLanes(Float64x2 a) =>
       (a.x.isNaN ? 0.0 : a.x) + (a.y.isNaN ? 0.0 : a.y);
 
