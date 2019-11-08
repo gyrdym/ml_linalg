@@ -7,9 +7,9 @@ import 'vector/vector_initializing/float32_random_filled.dart';
 import 'vector/vector_operations/float32_vector_max.dart';
 import 'vector/vector_operations/float32_vector_random_access.dart';
 import 'vector/vector_operations/float32_vector_unique.dart';
-import 'vector/vector_operations/float32_vectors_add.dart';
+import 'vector/vector_operations/float32_vector_vector_add.dart';
 import 'vector/vector_operations/float32_vectors_equality.dart';
-import 'vector/vector_operations/float32_vectors_multiplication.dart';
+import 'vector/vector_operations/float32_vector_vector_multiplication.dart';
 
 void main() {
   // Vector's benchmarks
