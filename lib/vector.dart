@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
+import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 
 import 'norm.dart';
 
@@ -15,7 +15,7 @@ abstract class Vector implements Iterable<double> {
   factory Vector.fromList(List<num> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Vector.fromList(source);
+        return Float32x4Vector.fromList(source);
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
@@ -25,7 +25,7 @@ abstract class Vector implements Iterable<double> {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Vector.fromSimdList(source as Float32x4List,
+        return Float32x4Vector.fromSimdList(source as Float32x4List,
             actualLength);
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
@@ -37,7 +37,7 @@ abstract class Vector implements Iterable<double> {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Vector.filled(length, value);
+        return Float32x4Vector.filled(length, value);
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
@@ -47,7 +47,7 @@ abstract class Vector implements Iterable<double> {
   factory Vector.zero(int length, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Vector.zero(length);
+        return Float32x4Vector.zero(length);
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
@@ -58,11 +58,10 @@ abstract class Vector implements Iterable<double> {
   /// If [min] greater than [max] when [min] becomes [max]
   /// generated from randomizer with seed, equal to [seed].
   factory Vector.randomFilled(int length,
-      {int seed, num min = 0, num max = 1, DType dtype = DType.float32}) {
+      {int seed = 1, num min = 0, num max = 1, DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Vector.randomFilled(length, seed: seed,
-            max: max, min: min);
+        return Float32x4Vector.randomFilled(length, seed, max: max, min: min);
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
@@ -72,7 +71,7 @@ abstract class Vector implements Iterable<double> {
   factory Vector.empty({DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Vector.empty();
+        return Float32x4Vector.empty();
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
@@ -149,7 +148,7 @@ abstract class Vector implements Iterable<double> {
   /// Returns rescaled (min-max normed) version of this vector
   Vector rescale();
 
-  Vector fastMap<E>(E mapper(E element));
+  Vector fastMap<T>(T mapper(T element));
 
   /// Returns a new vector formed by a specific part of [this] vector
   Vector subvector(int start, [int end]);

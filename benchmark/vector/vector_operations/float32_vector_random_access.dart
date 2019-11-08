@@ -1,7 +1,7 @@
-// Approx. 0.6 microsecond (MacBook Air mid 2017)
+// Approx. 1 microsecond (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:ml_linalg/src/vector/float32/float32_vector.dart';
+import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 
 const amountOfElements = 10000000;
 
@@ -9,7 +9,7 @@ class VectorRandomAccessBenchmark extends BenchmarkBase {
   VectorRandomAccessBenchmark()
       : super('Vector random access, $amountOfElements elements');
 
-  Float32Vector vector;
+  Float32x4Vector vector;
 
   static void main() {
     VectorRandomAccessBenchmark().report();
@@ -31,7 +31,7 @@ class VectorRandomAccessBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector = Float32Vector.filled(amountOfElements, 10);
+    vector = Float32x4Vector.filled(amountOfElements, 10);
   }
 
   void tearDown() {
