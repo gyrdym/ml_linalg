@@ -1,4 +1,6 @@
 abstract class SimdHelper<E> {
+  bool areLanesEqual(E a, E b);
+
   /// performs summation of all components of passed simd value [a]
   double sumLanes(E a);
 

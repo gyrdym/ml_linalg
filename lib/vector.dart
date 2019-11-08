@@ -6,7 +6,12 @@ import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 
 import 'norm.dart';
 
-/// An algebraic vector (ordered set of elements).
+/// An algebraic vector with SIMD (single instruction, multiple data)
+/// architecture support
+///
+/// The vector's components are contained in a special typed data structure,
+/// that allows to perform vector operations extremely fast due to hardware
+/// assisted computations.
 abstract class Vector implements Iterable<double> {
   /// Creates a vector from a collection [source].
   ///

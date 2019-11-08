@@ -22,7 +22,8 @@ class VectorMaxValueBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector = Float32x4Vector.randomFilled(amountOfElements, 1);
+    vector = Float32x4Vector.randomFilled(amountOfElements, 1,
+        min: -1000, max: 1000);
   }
 
   void tearDown() {
