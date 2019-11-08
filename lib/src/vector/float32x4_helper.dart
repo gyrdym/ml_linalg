@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/common/simd_helper.dart';
+import 'package:ml_linalg/src/vector/simd_helper.dart';
 
-class Float32x4Helper implements SimdHelper<Float32x4, Float32x4List> {
+class Float32x4Helper implements SimdHelper<Float32x4> {
   const Float32x4Helper();
 
   @override

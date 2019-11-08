@@ -6,7 +6,7 @@ import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
-import 'package:ml_linalg/src/vector/common/simd_helper.dart';
+import 'package:ml_linalg/src/vector/simd_helper.dart';
 import 'package:ml_linalg/src/vector/float32x4_helper.dart';
 import 'package:ml_linalg/vector.dart';
 

@@ -1,4 +1,4 @@
-abstract class SimdHelper<E, S extends List<E>> {
+abstract class SimdHelper<E> {
   /// performs summation of all components of passed simd value [a]
   double sumLanes(E a);
 
