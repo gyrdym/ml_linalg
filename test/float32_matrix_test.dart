@@ -580,7 +580,7 @@ void main() {
       expect(actual.columnsNum, 4);
     });
 
-    test('should finds its max value', () {
+    test('should find its max value', () {
       final matrix = Float32Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
@@ -592,7 +592,7 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('should finds its min value', () {
+    test('should find its min value', () {
       final matrix = Float32Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
