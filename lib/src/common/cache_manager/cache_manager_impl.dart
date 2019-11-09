@@ -1,20 +1,19 @@
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 
 class CacheManagerImpl implements CacheManager {
-  CacheManagerImpl(this._isCacheDisabled);
-
   final _cache = <String, dynamic>{};
-  final bool _isCacheDisabled;
 
   @override
-  T retrieve<T>(String cachedValueName, T Function() calculateIfAbsent) {
+  T retrieve<T>(String cachedValueName, T Function() calculateIfAbsent, {
+    bool skipCaching = false,
+  }) {
     var value = _cache[cachedValueName] as T;
 
     if (value == null) {
       value = calculateIfAbsent();
 
-      if (!_isCacheDisabled) {
-        value = value;
+      if (!skipCaching) {
+        _cache[cachedValueName] = value;
       }
     }
 

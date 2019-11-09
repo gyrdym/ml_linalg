@@ -2,7 +2,7 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
-import '../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_class_name_mapping.dart';
 
 void vectorEmptyConstructorTestGroupFactory(DType dtype) =>
     group(dtypeToVectorClassName[dtype], () {
@@ -11,6 +11,7 @@ void vectorEmptyConstructorTestGroupFactory(DType dtype) =>
           final vector = Vector.empty(dtype: dtype);
           expect(vector.length, 0);
           expect(vector.isEmpty, isTrue);
+          expect(vector.dtype, dtype);
         });
 
         test('should create a vector that throws an exception if one tries to'

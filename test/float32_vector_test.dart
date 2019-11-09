@@ -9,43 +9,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    group('fromList', () {
-      test('should create a vector from dynamic-length list, length is '
-          'greater than 4', () {
-        final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-        expect(vector1, equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
-        expect(vector1.length, equals(6));
-      });
-
-      test('should create a vector from dynamic-length list, length is less '
-          'than 4', () {
-        final vector = Float32x4Vector.fromList([1.0, 2.0]);
-        expect(vector, equals([1.0, 2.0]));
-        expect(vector.length, equals(2));
-      });
-
-      test('should create a vector from fixed-length list, length is greater '
-          'than 4', () {
-        final vector = Float32x4Vector.fromList(List.filled(11, 1.0));
-        expect(vector,
-            equals([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]));
-        expect(vector.length, 11);
-      });
-
-      test('should create a vector from fixed-length list, length is less '
-          'than 4', () {
-        final vector = Float32x4Vector.fromList(List.filled(1, 2.0));
-        expect(vector, equals([2.0]));
-        expect(vector.length, 1);
-      });
-
-      test('should create a vector from an empty list', () {
-        final vector = Float32x4Vector.fromList([]);
-        expect(vector, equals(<double>[]));
-        expect(vector.length, 0);
-      });
-    });
-
     group('fromSIMDList', () {
       final typedList = Float32x4List.fromList([
         Float32x4(1.0, 2.0, 3.0, 4.0),
