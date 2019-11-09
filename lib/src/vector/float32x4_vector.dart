@@ -8,7 +8,6 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager_impl.dart';
-import 'package:ml_linalg/src/vector/fields_to_be_chached.dart';
 import 'package:ml_linalg/src/vector/simd_helper.dart';
 import 'package:ml_linalg/src/vector/float32x4_helper.dart';
 import 'package:ml_linalg/vector.dart';
@@ -20,7 +19,6 @@ const _bucketSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement
 class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.fromList(List<num> source, {bool disableCache = false}) :
         length = source.length,
-        _isCacheDisabled = disableCache,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(source.length, _bucketSize) *
             _bytesPerSimdElement).buffer {
@@ -36,7 +34,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     bool disableCache = false,
   }) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _isCacheDisabled = disableCache,
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
     final generator = math.Random(seed);
@@ -51,7 +48,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   Float32x4Vector.filled(this.length, num value, {bool disableCache = false}) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _isCacheDisabled = disableCache,
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
     for (int i = 0; i < length; i++) {
@@ -62,7 +58,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   Float32x4Vector.zero(this.length, {bool disableCache = false}) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _isCacheDisabled = disableCache,
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
     for (int i = 0; i < length; i++) {
@@ -74,14 +69,13 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     bool disableCache = false
   }) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _isCacheDisabled = disableCache,
+
         _buffer = data.buffer {
     _cachedInnerSimdList = data;
   }
 
   Float32x4Vector.empty() :
         length = 0,
-        _isCacheDisabled = false,
         _numOfBuckets = 0,
         _buffer = ByteData(0).buffer;
 
@@ -92,7 +86,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   final int length;
 
   final CacheManager _cacheManager = CacheManagerImpl(true);
-  final bool _isCacheDisabled;
   final SimdHelper _simdHelper = const Float32x4Helper();
   final ByteBuffer _buffer;
   final int _numOfBuckets;
@@ -111,14 +104,9 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
   // Vector's cache
-  final Map<Norm, double> _cachedNorms = {};
-  double _cachedMaxValue;
-  double _cachedMinValue;
   Vector _cachedNormalized;
   Vector _cachedRescaled;
   Vector _cachedUnique;
-  Vector _cachedAbs;
-  Vector _cachedSquared;
   double _cachedSum;
   int _hash;
 
@@ -251,7 +239,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  Vector sqrt() => _cacheManager.retrieve<Vector>(squaredVector, () {
+  Vector sqrt() => _cacheManager.retrieve<Vector>('sqrt', () {
     final source = Float32x4List(_numOfBuckets);
     for (int i = 0; i < _numOfBuckets; i++) {
       source[i] = _innerSimdList[i].sqrt();
@@ -266,7 +254,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Vector toIntegerPower(int power) => _elementWisePow(power);
 
   @override
-  Vector abs() => _cacheManager.retrieve<Vector>(squaredVector, () {
+  Vector abs() => _cacheManager.retrieve<Vector>('abs', () {
     final source = Float32x4List(_numOfBuckets);
     for (int i = 0; i < _numOfBuckets; i++) {
       source[i] = _innerSimdList[i].abs();
@@ -318,27 +306,25 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  double norm([Norm norm = Norm.euclidean]) {
-    if (!_cachedNorms.containsKey(norm)) {
-      final power = _getPowerByNormType(norm);
-      if (power == 1) {
-        return abs().sum();
-      }
-      _cachedNorms[norm] = math.pow(toIntegerPower(power)
-          .sum(), 1 / power) as double;
-    }
-    return _cachedNorms[norm];
-  }
+  double norm([Norm norm = Norm.euclidean]) =>
+      _cacheManager.retrieve<double>('norm_$norm', () {
+        final power = _getPowerByNormType(norm);
+        if (power == 1) {
+          return abs().sum();
+        }
+        return math.pow(toIntegerPower(power)
+            .sum(), 1 / power) as double;
+      });
 
   @override
-  double max() =>
-      _cachedMaxValue ??= _findExtrema(-double.infinity, _simdHelper.getMaxLane,
-          (a, b) => a.max(b), math.max);
+  double max() => _cacheManager.retrieve<double>('max', () =>
+      _findExtrema(-double.infinity, _simdHelper.getMaxLane,
+              (a, b) => a.max(b), math.max));
 
   @override
-  double min() =>
-      _cachedMinValue ??= _findExtrema(double.infinity, _simdHelper.getMinLane,
-              (a, b) => a.min(b), math.min);
+  double min() => _cacheManager.retrieve<double>('min', () =>
+      _findExtrema(double.infinity, _simdHelper.getMinLane,
+              (a, b) => a.min(b), math.min));
 
   double _findExtrema(double initialValue,
       double getExtremalLane(Float32x4 bucket),

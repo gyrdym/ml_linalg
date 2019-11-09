@@ -5,19 +5,19 @@ import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 
 const amountOfElements = 10000000;
 
-class VectorMaxValueBenchmark extends BenchmarkBase {
-  VectorMaxValueBenchmark()
-      : super('Vector max value, $amountOfElements elements');
+class VectorMinValueBenchmark extends BenchmarkBase {
+  VectorMinValueBenchmark()
+      : super('Vector min value, $amountOfElements elements');
 
   Float32x4Vector vector;
 
   static void main() {
-    VectorMaxValueBenchmark().report();
+    VectorMinValueBenchmark().report();
   }
 
   @override
   void run() {
-    vector.max();
+    vector.min();
   }
 
   @override
@@ -32,5 +32,5 @@ class VectorMaxValueBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  VectorMaxValueBenchmark.main();
+  VectorMinValueBenchmark.main();
 }
