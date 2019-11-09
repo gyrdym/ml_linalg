@@ -1,7 +1,7 @@
 // Approx. 0.5 second (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:ml_linalg/src/vector/float32x4_vector.dart';
+import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;
 
@@ -9,7 +9,7 @@ class VectorAbsBenchmark extends BenchmarkBase {
   VectorAbsBenchmark()
       : super('Vector abs, $amountOfElements elements');
 
-  Float32x4Vector vector;
+  Vector vector;
 
   static void main() {
     VectorAbsBenchmark().report();
@@ -17,13 +17,16 @@ class VectorAbsBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.abs();
+    vector.abs(skipCaching: true);
   }
 
   @override
   void setup() {
-    vector = Float32x4Vector.randomFilled(amountOfElements, 1,
-        min: -1000, max: 2000, disableCache: true);
+    vector = Vector.randomFilled(amountOfElements,
+      seed: 1,
+      min: -1000,
+      max: 1000,
+    );
   }
 
   void tearDown() {

@@ -1,8 +1,7 @@
 // Approx. 4.7 sec (MacBook Air mid 2017), Dart VM version: 2.5.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:ml_linalg/linalg.dart';
-import 'package:ml_linalg/src/vector/float32x4_vector.dart';
+import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;
 
@@ -11,9 +10,11 @@ class VectorFromListBenchmark extends BenchmarkBase {
       : super('Vector initialization (fromList), '
       '$amountOfElements elements');
 
-  final _source = Vector
-      .randomFilled(amountOfElements, min: -10000, max: 10000)
-      .toList();
+  final _source = Vector.randomFilled(amountOfElements,
+    seed: 1,
+    min: -1000,
+    max: 1000,
+  ).toList();
 
   static void main() {
     VectorFromListBenchmark().report();
@@ -21,7 +22,7 @@ class VectorFromListBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    Float32x4Vector.fromList(_source);
+    Vector.fromList(_source);
   }
 }
 

@@ -2,9 +2,13 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/norm.dart';
+import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
+import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
+import 'package:ml_linalg/src/vector/float64x2_vector.gen.dart';
 
-import 'norm.dart';
+final _cacheManagerFactory = dependencies.getDependency<CacheManagerFactory>();
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
 /// architecture support
@@ -17,42 +21,85 @@ abstract class Vector implements Iterable<double> {
   ///
   /// It converts the collection of [double]-type elements into a collection of
   /// [Float32x4] elements.
-  factory Vector.fromList(List<num> source, {DType dtype = DType.float32}) {
+  factory Vector.fromList(List<num> source, {
+    DType dtype = DType.float32,
+  }) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.fromList(source);
+        return Float32x4Vector.fromList(source, _cacheManagerFactory.create());
+
+      case DType.float64:
+        return Float64x2Vector.fromList(source, _cacheManagerFactory.create());
+
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
 
-  factory Vector.fromSimdList(List source, int actualLength,
-      {DType dtype = DType.float32}) {
+  factory Vector.fromSimdList(List source, int actualLength, {
+    DType dtype = DType.float32,
+  }) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.fromSimdList(source as Float32x4List,
-            actualLength);
+        return Float32x4Vector.fromSimdList(
+          source as Float32x4List,
+          actualLength,
+          _cacheManagerFactory.create(),
+        );
+
+      case DType.float64:
+        return Float64x2Vector.fromSimdList(
+          source as Float64x2List,
+          actualLength,
+          _cacheManagerFactory.create(),
+        );
+
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
 
   /// Creates a vector of length equal to [length], filled with [value].
-  factory Vector.filled(int length, num value,
-      {DType dtype = DType.float32}) {
+  factory Vector.filled(int length, num value, {
+    DType dtype = DType.float32,
+  }) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.filled(length, value);
+        return Float32x4Vector.filled(
+          length,
+          value,
+          _cacheManagerFactory.create(),
+        );
+
+      case DType.float64:
+        return Float64x2Vector.filled(
+          length,
+          value,
+          _cacheManagerFactory.create(),
+        );
+
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
 
   /// Creates a vector of length equal to [length], filled with zeroes.
-  factory Vector.zero(int length, {DType dtype = DType.float32}) {
+  factory Vector.zero(int length, {
+    DType dtype = DType.float32,
+  }) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.zero(length);
+        return Float32x4Vector.zero(
+          length,
+          _cacheManagerFactory.create(),
+        );
+
+      case DType.float64:
+        return Float64x2Vector.zero(
+          length,
+          _cacheManagerFactory.create(),
+        );
+
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
@@ -62,11 +109,31 @@ abstract class Vector implements Iterable<double> {
   /// which are bound by interval from [min] (inclusive) tp [max] (exclusive).
   /// If [min] greater than [max] when [min] becomes [max]
   /// generated from randomizer with seed, equal to [seed].
-  factory Vector.randomFilled(int length,
-      {int seed = 1, num min = 0, num max = 1, DType dtype = DType.float32}) {
+  factory Vector.randomFilled(int length, {
+    int seed = 1,
+    num min = 0,
+    num max = 1,
+    DType dtype = DType.float32,
+  }) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.randomFilled(length, seed, max: max, min: min);
+        return Float32x4Vector.randomFilled(
+          length,
+          seed,
+          _cacheManagerFactory.create(),
+          max: max,
+          min: min,
+        );
+
+      case DType.float64:
+        return Float64x2Vector.randomFilled(
+          length,
+          seed,
+          _cacheManagerFactory.create(),
+          max: max,
+          min: min,
+        );
+
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
@@ -76,7 +143,11 @@ abstract class Vector implements Iterable<double> {
   factory Vector.empty({DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.empty();
+        return Float32x4Vector.empty(_cacheManagerFactory.create());
+
+      case DType.float64:
+        return Float64x2Vector.empty(_cacheManagerFactory.create());
+
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
@@ -101,7 +172,7 @@ abstract class Vector implements Iterable<double> {
 
   /// Returns a new [Vector] consisting of square roots of elements of this
   /// [Vector]
-  Vector sqrt();
+  Vector sqrt({bool skipCaching});
 
   /// Returns a new [Vector] where elements are the elements from this [Vector]
   /// divided by [scalar]
@@ -112,7 +183,7 @@ abstract class Vector implements Iterable<double> {
   Vector toIntegerPower(int exponent);
 
   /// Returns a new vector with absolute value of each vector element
-  Vector abs();
+  Vector abs({bool skipCaching});
 
   /// Returns a dot (inner) product of [this] and [vector]
   double dot(Vector vector);
@@ -145,13 +216,13 @@ abstract class Vector implements Iterable<double> {
   Vector sample(Iterable<int> indices);
 
   /// Returns a new vector composed of the vector's unique elements
-  Vector unique();
+  Vector unique({bool skipCaching});
 
   /// Returns a new vector with normalized values of [this] vector
-  Vector normalize([Norm norm = Norm.euclidean]);
+  Vector normalize([Norm norm = Norm.euclidean, bool skipCaching]);
 
   /// Returns rescaled (min-max normed) version of this vector
-  Vector rescale();
+  Vector rescale({bool skipCaching});
 
   Vector fastMap<T>(T mapper(T element));
 
