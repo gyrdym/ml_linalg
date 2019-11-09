@@ -9,15 +9,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    group('filled', () {
-      test('should create a vector filled with the passed value', () {
-        final vector = Float32x4Vector.filled(10, 2.0);
-        expect(
-            vector, equals([2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]));
-        expect(vector.length, equals(10));
-      });
-    });
-
     group('randomFilled', () {
       test('should create a vector filled with random values from range'
           '[-5; -1)', () {
