@@ -6,6 +6,9 @@ import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
+import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
+import 'package:ml_linalg/src/common/cache_manager/cache_manager_impl.dart';
+import 'package:ml_linalg/src/vector/fields_to_be_chached.dart';
 import 'package:ml_linalg/src/vector/simd_helper.dart';
 import 'package:ml_linalg/src/vector/float32x4_helper.dart';
 import 'package:ml_linalg/vector.dart';
@@ -88,6 +91,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   @override
   final int length;
 
+  final CacheManager _cacheManager = CacheManagerImpl(true);
   final bool _isCacheDisabled;
   final SimdHelper _simdHelper = const Float32x4Helper();
   final ByteBuffer _buffer;
@@ -247,23 +251,13 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  Vector sqrt() {
-    var squared = _cachedSquared;
-
-    if (squared == null) {
-      final source = Float32x4List(_numOfBuckets);
-      for (int i = 0; i < _numOfBuckets; i++) {
-        source[i] = _innerSimdList[i].sqrt();
-      }
-      squared = Vector.fromSimdList(source, length, dtype: dtype);
-
-      if (!_isCacheDisabled) {
-        _cachedSquared = squared;
-      }
+  Vector sqrt() => _cacheManager.retrieve<Vector>(squaredVector, () {
+    final source = Float32x4List(_numOfBuckets);
+    for (int i = 0; i < _numOfBuckets; i++) {
+      source[i] = _innerSimdList[i].sqrt();
     }
-
-    return squared;
-  }
+    return Vector.fromSimdList(source, length, dtype: dtype);
+  });
 
   @override
   Vector scalarDiv(num scalar) => this / scalar;
@@ -272,23 +266,13 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Vector toIntegerPower(int power) => _elementWisePow(power);
 
   @override
-  Vector abs() {
-    var abs = _cachedAbs;
-
-    if (abs == null) {
-      final source = Float32x4List(_numOfBuckets);
-      for (int i = 0; i < _numOfBuckets; i++) {
-        source[i] = _innerSimdList[i].abs();
-      }
-      abs = Vector.fromSimdList(source, length, dtype: dtype);
-
-      if (!_isCacheDisabled) {
-        _cachedAbs = abs;
-      }
+  Vector abs() => _cacheManager.retrieve<Vector>(squaredVector, () {
+    final source = Float32x4List(_numOfBuckets);
+    for (int i = 0; i < _numOfBuckets; i++) {
+      source[i] = _innerSimdList[i].abs();
     }
-
-    return _cachedAbs;
-  }
+    return Vector.fromSimdList(source, length, dtype: dtype);
+  });
 
   @override
   double dot(Vector vector) => (this * vector).sum();
