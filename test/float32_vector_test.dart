@@ -31,56 +31,6 @@ void main() {
       expect(actual.length, equals(5));
     });
 
-    test('should compare with another vector and return `true` if vectors are'
-        'equal', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector1 == vector2, isTrue);
-    });
-
-    test('should compare with another vector and return `true` if vectors are'
-        'have all zero values', () {
-      final vector1 = Float32x4Vector.fromList([0.0, 0.0, 0.0, 0.0, 0.0]);
-      final vector2 = Float32x4Vector.fromList([0.0, 0.0, 0.0, 0.0, 0.0]);
-      expect(vector1 == vector2, isTrue);
-    });
-
-    test('should compare with another vector and return `false` if vectors are'
-        'different', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 30.0, 4.0, 5.0]);
-      expect(vector1 == vector2, isFalse);
-    });
-
-    test('should compare with another vector and return `false` if vectors are'
-        'have opposite values', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([-1.0, -2.0, -3.0, -4.0, -5.0]);
-      expect(vector1 == vector2, isFalse);
-    });
-
-    test('should compare with another vector and return `false` if one vector'
-        'have all zero values', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([0.0, 0.0, 0.0, 0.0, 0.0]);
-      expect(vector1 == vector2, isFalse);
-    });
-
-    test('should compare with another vector and return `false` if vectors '
-        'have different lengths', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector1 == vector2, isFalse);
-    });
-
-    test('should compare with another object and return `false` if another '
-        'object is not a vector', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      final vector2 = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
-      // ignore: unrelated_type_equality_checks
-      expect(vector1 == vector2, isFalse);
-    });
-
     test('should throw an exception if one tries to sum vectors of different '
         'lengths', () {
       final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
