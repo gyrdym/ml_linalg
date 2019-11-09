@@ -22,51 +22,9 @@ void main() {
       vector2 = null;
     });
 
-    test('should perform addition of another vector', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector1 + vector2;
-      final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
-      expect(actual, equals(expected));
-      expect(actual.length, equals(5));
-    });
-
-    test('should throw an exception if one tries to sum vectors of different '
-        'lengths', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector1 + vector2, throwsRangeError);
-    });
-
-    test('should perform addition of a column matrix', () {
-      final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final matrix = Float32Matrix.fromList([
-        [1.0],
-        [2.0],
-        [3.0],
-        [4.0],
-        [5.0],
-      ]);
-      final actual = vector + matrix;
-      final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
-      expect(actual, equals(expected));
-      expect(actual.length, equals(5));
-    });
-
-    test('should perform addition of a rows matrix', () {
-      final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final matrix = Float32Matrix.fromList([
-        [1.0, 2.0, 3.0, 4.0, 5.0]
-      ]);
-      final actual = vector + matrix;
-      final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
-      expect(actual, equals(expected));
-      expect(actual.length, equals(5));
-    });
-
     test('should perform a subtraction of another vector', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
       final result = vector1 - vector2;
       expect(result, equals([0.0, 0.0, 0.0, 0.0, 0.0]));
       expect(result.length, equals(5));
@@ -74,8 +32,8 @@ void main() {
 
     test('should throw an exception if one tries to subtract a vector of '
         'different length', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+      final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+      final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
       expect(() => vector1 - vector2, throwsRangeError);
     });
 
