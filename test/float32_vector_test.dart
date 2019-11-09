@@ -9,27 +9,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    group('zero', () {
-      test('should fill a newly created vector with zeroes, case 1', () {
-        final vector = Float32x4Vector.zero(10);
-        expect(
-            vector, equals([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]));
-        expect(vector.length, equals(10));
-      });
-
-      test('should fill a newly created vector with zeroes, case 1', () {
-        final vector = Float32x4Vector.zero(1);
-        expect(vector, equals([0.0]));
-        expect(vector.length, equals(1));
-      });
-
-      test('should fill a newly created vector with zeroes, case 1', () {
-        final vector = Float32x4Vector.zero(2);
-        expect(vector, equals([0.0, 0.0]));
-        expect(vector.length, equals(2));
-      });
-    });
-
     Float32x4Vector vector1;
     Float32x4Vector vector2;
 
