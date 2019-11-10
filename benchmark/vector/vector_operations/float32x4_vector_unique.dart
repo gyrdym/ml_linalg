@@ -1,18 +1,19 @@
 // Approx. 0.3 second (MacBook Air 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 100000;
 
-class VectorUniqueBenchmark extends BenchmarkBase {
-  VectorUniqueBenchmark()
-      : super('Vector unnique elements obtaining, $amountOfElements elements');
+class Float32x4VectorUniqueBenchmark extends BenchmarkBase {
+  Float32x4VectorUniqueBenchmark()
+      : super('Vector `unnique` method; $amountOfElements elements');
 
   Vector vector;
 
   static void main() {
-    VectorUniqueBenchmark().report();
+    Float32x4VectorUniqueBenchmark().report();
   }
 
   @override
@@ -26,10 +27,11 @@ class VectorUniqueBenchmark extends BenchmarkBase {
       seed: 1,
       min: -1000,
       max: 1000,
+      dtype: DType.float32,
     );
   }
 }
 
 void main() {
-  VectorUniqueBenchmark.main();
+  Float32x4VectorUniqueBenchmark.main();
 }

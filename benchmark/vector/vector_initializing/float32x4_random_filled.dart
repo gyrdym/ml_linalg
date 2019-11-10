@@ -5,13 +5,13 @@ import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;
 
-class VectorRandomFilledBenchmark extends BenchmarkBase {
-  const VectorRandomFilledBenchmark()
+class Float32x4VectorRandomFilledBenchmark extends BenchmarkBase {
+  const Float32x4VectorRandomFilledBenchmark()
       : super('Vector initialization (random filled), '
       '$amountOfElements elements');
 
   static void main() {
-    const VectorRandomFilledBenchmark().report();
+    const Float32x4VectorRandomFilledBenchmark().report();
   }
 
   @override
@@ -25,5 +25,5 @@ class VectorRandomFilledBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  VectorRandomFilledBenchmark.main();
+  Float32x4VectorRandomFilledBenchmark.main();
 }
