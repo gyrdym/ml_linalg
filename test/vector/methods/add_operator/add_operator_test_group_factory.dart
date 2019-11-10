@@ -59,5 +59,15 @@ void vectorAddOperatorTestGroupFactory(DType dtype) =>
           expect(actual.length, equals(5));
           expect(actual.dtype, dtype);
         });
+
+        test('should perform addition with a scalar', () {
+          final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
+              dtype: dtype);
+          final result = vector1 + 13.0;
+
+          expect(result != vector1, isTrue);
+          expect(result.length, equals(5));
+          expect(result, equals([14.0, 15.0, 16.0, 17.0, 18.0]));
+        });
       });
     });

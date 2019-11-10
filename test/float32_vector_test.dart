@@ -7,48 +7,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    Vector vector1;
-    Vector vector2;
-
-    setUp(() {
-      vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-    });
-
-    tearDown(() {
-      vector1 = null;
-      vector2 = null;
-    });
-
-    test('should be multiplied by a scalar', () {
-      final result = vector1 * 2.0;
-      expect(result != vector1, isTrue);
-      expect(result.length, equals(5));
-      expect(result, equals([2.0, 4.0, 6.0, 8.0, 10.0]));
-    });
-
-    test('should be divided by a scalar', () {
-      final result = vector1 / 2.0;
-      expect(result != vector1, isTrue);
-      expect(result.length, equals(5));
-      expect(result, equals([0.5, 1.0, 1.5, 2.0, 2.5]));
-    });
-
-    test('should perform addition of a scalar', () {
-      final result = vector1 + 13.0;
-      expect(result != vector1, isTrue);
-      expect(result.length, equals(5));
-      expect(result, equals([14.0, 15.0, 16.0, 17.0, 18.0]));
-    });
-
-    test('should perform substruction of a scalar', () {
-      final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final result = vector - 13.0;
-      expect(result != vector, isTrue);
-      expect(result.length, equals(5));
-      expect(result, equals([-12.0, -11.0, -10.0, -9.0, -8.0]));
-    });
-
     test('should find Euclidean distance (from vector to the same vector)', () {
       final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0]);
       final distance = vector.distanceTo(vector);
