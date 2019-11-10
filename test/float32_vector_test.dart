@@ -22,21 +22,6 @@ void main() {
       vector2 = null;
     });
 
-    test('should perform division by another vector', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final actual = vector1 / vector2;
-      expect(actual, equals([1.0, 1.0, 1.0, 1.0, 1.0]));
-      expect(actual.length, equals(5));
-    });
-
-    test('should throw an error if one tries to divide it by a vector of '
-        'different length', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector1 / vector2, throwsRangeError);
-    });
-
     test('should map an existing vector to a new one processing 4 elements in '
         'a time', () {
       final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
