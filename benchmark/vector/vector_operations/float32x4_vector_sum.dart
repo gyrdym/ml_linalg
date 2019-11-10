@@ -18,7 +18,7 @@ class Float32x4VectorSumBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.sum();
+    vector.sum(skipCaching: true);
   }
 
   @override

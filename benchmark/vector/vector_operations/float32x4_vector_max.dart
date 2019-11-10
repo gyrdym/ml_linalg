@@ -18,7 +18,7 @@ class Float32x4VectorMaxValueBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.max();
+    vector.max(skipCaching: true);
   }
 
   @override

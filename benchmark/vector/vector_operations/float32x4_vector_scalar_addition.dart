@@ -8,7 +8,7 @@ const amountOfElements = 10000000;
 
 class Float32x4VectorAndScalarAdditionBenchmark extends BenchmarkBase {
   Float32x4VectorAndScalarAdditionBenchmark()
-      : super('`+` operator, operands: vector, scalar; '
+      : super('Vector `+` operator, operands: vector, scalar; '
       '$amountOfElements elements');
 
   Vector vector;

@@ -2,6 +2,7 @@
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;
@@ -18,7 +19,7 @@ class Float32x4VectorNormBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.norm();
+    vector.norm(Norm.euclidean, true);
   }
 
   @override

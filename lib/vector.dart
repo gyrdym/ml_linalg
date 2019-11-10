@@ -172,7 +172,7 @@ abstract class Vector implements Iterable<double> {
 
   /// Returns a new [Vector] consisting of square roots of elements of this
   /// [Vector]
-  Vector sqrt({bool skipCaching});
+  Vector sqrt({bool skipCaching = false});
 
   /// Returns a new [Vector] where elements are the elements from this [Vector]
   /// divided by [scalar]
@@ -183,7 +183,7 @@ abstract class Vector implements Iterable<double> {
   Vector toIntegerPower(int exponent);
 
   /// Returns a new vector with absolute value of each vector element
-  Vector abs({bool skipCaching});
+  Vector abs({bool skipCaching = false});
 
   /// Returns a dot (inner) product of [this] and [vector]
   double dot(Vector vector);
@@ -197,32 +197,32 @@ abstract class Vector implements Iterable<double> {
   double getCosine(Vector other);
 
   /// Returns a mean value of [this] vector
-  double mean();
+  double mean({bool skipCaching = false});
 
   /// Calculates vector norm (magnitude)
-  double norm([Norm norm = Norm.euclidean]);
+  double norm([Norm norm = Norm.euclidean, bool skipCaching = false]);
 
   /// Returns sum of all elements
-  double sum();
+  double sum({bool skipCaching = false});
 
   /// Returns maximum element
-  double max();
+  double max({bool skipCaching = false});
 
   /// Returns maximum element
-  double min();
+  double min({bool skipCaching = false});
 
   /// Returns a new vector composed of elements which are located on the passed
   /// indexes
   Vector sample(Iterable<int> indices);
 
   /// Returns a new vector composed of the vector's unique elements
-  Vector unique({bool skipCaching});
+  Vector unique({bool skipCaching = false});
 
   /// Returns a new vector with normalized values of [this] vector
-  Vector normalize([Norm norm = Norm.euclidean, bool skipCaching]);
+  Vector normalize([Norm norm = Norm.euclidean, bool skipCaching = false]);
 
   /// Returns rescaled (min-max normed) version of this vector
-  Vector rescale({bool skipCaching});
+  Vector rescale({bool skipCaching = false});
 
   Vector fastMap<T>(T mapper(T element));
 

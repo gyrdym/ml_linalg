@@ -262,8 +262,9 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   double dot(Vector vector) => (this * vector).sum();
 
   @override
-  double sum() => _cacheManager.retrieve('sum',
-          () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)));
+  double sum({bool skipCaching = false}) => _cacheManager.retrieve('sum',
+          () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
+      skipCaching: skipCaching);
 
   @override
   double distanceTo(Vector other, {
@@ -293,33 +294,34 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  double mean() {
+  double mean({bool skipCaching = false}) {
     if (isEmpty) {
       throw _emptyVectorException;
     }
-    return sum() / length;
+    return _cacheManager.retrieve('mean', () => sum() / length,
+        skipCaching: skipCaching);
   }
 
   @override
-  double norm([Norm norm = Norm.euclidean]) =>
-      _cacheManager.retrieve<double>('norm_$norm', () {
+  double norm([Norm norm = Norm.euclidean, bool skipCaching = false]) =>
+      _cacheManager.retrieve('norm_$norm', () {
         final power = _getPowerByNormType(norm);
         if (power == 1) {
           return abs().sum();
         }
         return math.pow(toIntegerPower(power)
             .sum(), 1 / power) as double;
-      });
+      }, skipCaching: skipCaching);
 
   @override
-  double max() => _cacheManager.retrieve<double>('max', () =>
+  double max({bool skipCaching = false}) => _cacheManager.retrieve('max', () =>
       _findExtrema(-double.infinity, _simdHelper.getMaxLane,
-              (a, b) => a.max(b), math.max));
+              (a, b) => a.max(b), math.max), skipCaching: skipCaching);
 
   @override
-  double min() => _cacheManager.retrieve<double>('min', () =>
+  double min({bool skipCaching = false}) => _cacheManager.retrieve('min', () =>
       _findExtrema(double.infinity, _simdHelper.getMinLane,
-              (a, b) => a.min(b), math.min));
+              (a, b) => a.min(b), math.min), skipCaching: skipCaching);
 
   double _findExtrema(double initialValue,
       double getExtremalLane(Float32x4 bucket),
