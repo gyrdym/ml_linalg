@@ -1,24 +1,26 @@
 // Approx. 0.5 sec (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;
 
-class VectorAndScalarAdditionBenchmark extends BenchmarkBase {
-  VectorAndScalarAdditionBenchmark()
-      : super('Vector and scalar addition, $amountOfElements elements');
+class Float32x4VectorAndScalarSubtractionBenchmark extends BenchmarkBase {
+  Float32x4VectorAndScalarSubtractionBenchmark()
+      : super('`-` operator, operands: vector, scalar; '
+      '$amountOfElements elements');
 
   Vector vector;
 
   static void main() {
-    VectorAndScalarAdditionBenchmark().report();
+    Float32x4VectorAndScalarSubtractionBenchmark().report();
   }
 
   @override
   void run() {
     // ignore: unnecessary_statements
-    vector + 1246;
+    vector - 100246;
   }
 
   @override
@@ -27,10 +29,11 @@ class VectorAndScalarAdditionBenchmark extends BenchmarkBase {
       seed: 1,
       min: -1000,
       max: 1000,
+      dtype: DType.float32,
     );
   }
 }
 
 void main() {
-  VectorAndScalarAdditionBenchmark.main();
+  Float32x4VectorAndScalarSubtractionBenchmark.main();
 }

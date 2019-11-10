@@ -1,19 +1,21 @@
 // Approx. 0.6 second (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;
 
-class VectorMulBenchmark extends BenchmarkBase {
-  VectorMulBenchmark()
-      : super('Vectors multiplication, $amountOfElements elements');
+class Float32x4VectorAndVectorMultiplicationBenchmark extends BenchmarkBase {
+  Float32x4VectorAndVectorMultiplicationBenchmark()
+      : super('`*` operator, operands: vector, vector; '
+      '$amountOfElements elements');
 
   Vector vector1;
   Vector vector2;
 
   static void main() {
-    VectorMulBenchmark().report();
+    Float32x4VectorAndVectorMultiplicationBenchmark().report();
   }
 
   @override
@@ -28,15 +30,17 @@ class VectorMulBenchmark extends BenchmarkBase {
       seed: 1,
       min: -1000,
       max: 1000,
+      dtype: DType.float32,
     );
     vector2 = Vector.randomFilled(amountOfElements,
       seed: 1,
       min: -1000,
       max: 1000,
+      dtype: DType.float32,
     );
   }
 }
 
 void main() {
-  VectorMulBenchmark.main();
+  Float32x4VectorAndVectorMultiplicationBenchmark.main();
 }

@@ -1,23 +1,24 @@
 // Approx. 0.4 second (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;
 
-class VectorMinValueBenchmark extends BenchmarkBase {
-  VectorMinValueBenchmark()
-      : super('Vector min value, $amountOfElements elements');
+class Float32x4VectorMaxValueBenchmark extends BenchmarkBase {
+  Float32x4VectorMaxValueBenchmark()
+      : super('Vector `max` method; $amountOfElements elements');
 
   Vector vector;
 
   static void main() {
-    VectorMinValueBenchmark().report();
+    Float32x4VectorMaxValueBenchmark().report();
   }
 
   @override
   void run() {
-    vector.min();
+    vector.max();
   }
 
   @override
@@ -26,10 +27,11 @@ class VectorMinValueBenchmark extends BenchmarkBase {
       seed: 1,
       min: -1000,
       max: 1000,
+      dtype: DType.float32,
     );
   }
 }
 
 void main() {
-  VectorMinValueBenchmark.main();
+  Float32x4VectorMaxValueBenchmark.main();
 }
