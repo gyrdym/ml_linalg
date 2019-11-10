@@ -4,12 +4,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    test('should find vector norm', () {
-      final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector.norm(Norm.euclidean), equals(closeTo(7.41, 1e-2)));
-      expect(vector.norm(Norm.manhattan), equals(15.0));
-    });
-
     test('should normalize itself (eucleadean norm)', () {
       final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
       final actual = vector.normalize(Norm.euclidean);
