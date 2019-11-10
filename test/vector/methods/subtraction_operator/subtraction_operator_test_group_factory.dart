@@ -8,7 +8,7 @@ import '../../../dtype_to_class_name_mapping.dart';
 void vectorSubtractionOperatorTestGroupFactory(DType dtype) =>
     group(dtypeToVectorClassName[dtype], () {
       group('- operator', () {
-        test('should perform subtraction of another vector', () {
+        test('should perform subtraction with another vector', () {
           final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
           final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
           final result = vector1 - vector2;
@@ -26,7 +26,7 @@ void vectorSubtractionOperatorTestGroupFactory(DType dtype) =>
           expect(() => vector1 - vector2, throwsRangeError);
         });
 
-        test('should perform subtraction of a column matrix', () {
+        test('should perform subtraction with a column matrix', () {
           final vector = Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0]);
           final matrix = Matrix.fromList([
             [1.0],
@@ -44,7 +44,7 @@ void vectorSubtractionOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should perform subtraction of a row matrix', () {
+        test('should perform subtraction with a row matrix', () {
           final vector = Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0], dtype: dtype);
           final matrix = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0, 5.0]
@@ -56,6 +56,17 @@ void vectorSubtractionOperatorTestGroupFactory(DType dtype) =>
           expect(actual, equals(expected));
           expect(actual.length, equals(5));
           expect(actual.dtype, dtype);
+        });
+
+        test('should perform subtruction with a scalar', () {
+          final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
+              dtype: dtype);
+          final result = vector - 13.0;
+
+          expect(result != vector, isTrue);
+          expect(result.length, equals(5));
+          expect(result, equals([-12.0, -11.0, -10.0, -9.0, -8.0]));
+          expect(result.dtype, dtype);
         });
       });
     });

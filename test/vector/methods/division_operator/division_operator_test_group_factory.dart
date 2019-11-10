@@ -28,5 +28,15 @@ void vectorDivisionOperatorTestGroupFactory(DType dtype) =>
 
           expect(() => vector1 / vector2, throwsRangeError);
         });
+
+        test('should perform division by a scalar', () {
+          final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
+              dtype: dtype);
+          final result = vector / 2.0;
+
+          expect(result != vector, isTrue);
+          expect(result.length, equals(5));
+          expect(result, equals([0.5, 1.0, 1.5, 2.0, 2.5]));
+        });
       });
     });
