@@ -22,58 +22,6 @@ void main() {
       vector2 = null;
     });
 
-    test('should perform a subtraction of another vector', () {
-      final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final result = vector1 - vector2;
-      expect(result, equals([0.0, 0.0, 0.0, 0.0, 0.0]));
-      expect(result.length, equals(5));
-    });
-
-    test('should throw an exception if one tries to subtract a vector of '
-        'different length', () {
-      final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector1 - vector2, throwsRangeError);
-    });
-
-    test('should perform subtraction of a column matrix', () {
-      final vector = Float32x4Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0]);
-      final matrix = Float32Matrix.fromList([
-        [1.0],
-        [2.0],
-        [3.0],
-        [4.0],
-        [5.0],
-      ]);
-      final actual = vector - matrix;
-      final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
-      expect(actual, equals(expected));
-      expect(actual.length, equals(5));
-    });
-
-    test('should perform subtraction of a row matrix', () {
-      final vector = Float32x4Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0]);
-      final matrix = Float32Matrix.fromList([
-        [1.0, 2.0, 3.0, 4.0, 5.0]
-      ]);
-      final actual = vector - matrix;
-      final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
-      expect(actual, equals(expected));
-      expect(actual.length, equals(5));
-    });
-
-    test('should perform subtraction of a row matrix', () {
-      final vector = Float32x4Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0]);
-      final matrix = Float32Matrix.fromList([
-        [1.0, 2.0, 3.0, 4.0, 5.0]
-      ]);
-      final actual = vector - matrix;
-      final expected = [1.0, 4.0, 9.0, 11.0, 13.0];
-      expect(actual, equals(expected));
-      expect(actual.length, equals(5));
-    });
-
     test('should perform multiplication by another vector', () {
       final actual = vector1 * vector2;
       expect(actual, equals([1.0, 4.0, 9.0, 16.0, 25.0]));
