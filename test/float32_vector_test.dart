@@ -4,14 +4,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    test('should rescale its every element into range [0...1]', () {
-      final vector = Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
-      final actual = vector.rescale(); // min = -4, diff = 9
-      final expected = [5 / 9, 2 / 9, 7 / 9, 0.0, 1.0, 4 / 9];
-      expect(actual, iterableAlmostEqualTo(expected, 1e-3));
-      expected.forEach((element) => expect(element, inInclusiveRange(0, 1)));
-    });
-
     test('should find vector elements sum', () {
       final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
       expect(vector.sum(), equals(15.0));
