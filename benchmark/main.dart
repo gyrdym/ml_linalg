@@ -39,13 +39,13 @@ void main() {
   Float32x4VectorRandomAccessBenchmark.main();
   Float32x4VectorAndScalarDivisionBenchmark.main();
   Float32x4VectorAndScalarAdditionBenchmark.main();
-  Float32x4VectorAndScalarMultiplicationBenchmark.main();
+  Float32x4VectorAndVectorAdditionBenchmark.main();
   Float32x4VectorAndScalarSubtractionBenchmark.main();
+  Float32x4VectorAndScalarMultiplicationBenchmark.main();
+  Float32x4VectorAndVectorMultiplicationBenchmark.main();
   Float32x4VectorSqrtBenchmark.main();
   Float32x4VectorSumBenchmark.main();
   Float32x4VectorUniqueBenchmark.main();
-  Float32x4VectorAndVectorAdditionBenchmark.main();
-  Float32x4VectorAndVectorMultiplicationBenchmark.main();
   Float32x4VectorEqualityOperatorBenchmark.main();
 
   // Matrix benchmarks

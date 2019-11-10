@@ -18,7 +18,7 @@ class Float32x4VectorMinValueBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.min();
+    vector.min(skipCaching: true);
   }
 
   @override

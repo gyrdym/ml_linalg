@@ -8,7 +8,7 @@ const amountOfElements = 10000000;
 
 class Float32x4VectorAndScalarDivisionBenchmark extends BenchmarkBase {
   Float32x4VectorAndScalarDivisionBenchmark()
-      : super('`/` operator, operands: vector, scalar; '
+      : super('Vector `/` operator, operands: vector, scalar; '
       '$amountOfElements elements');
 
   Vector vector;

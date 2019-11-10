@@ -8,7 +8,7 @@ const amountOfElements = 100000;
 
 class Float32x4VectorUniqueBenchmark extends BenchmarkBase {
   Float32x4VectorUniqueBenchmark()
-      : super('Vector `unnique` method; $amountOfElements elements');
+      : super('Vector `unique` method; $amountOfElements elements');
 
   Vector vector;
 

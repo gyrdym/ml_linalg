@@ -8,7 +8,7 @@ const amountOfElements = 10000000;
 
 class Float32x4VectorRandomAccessBenchmark extends BenchmarkBase {
   Float32x4VectorRandomAccessBenchmark()
-      : super('`[]` operator; $amountOfElements elements');
+      : super('Vector `[]` operator; $amountOfElements elements');
 
   Vector vector;
 
