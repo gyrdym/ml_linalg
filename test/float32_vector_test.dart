@@ -22,44 +22,6 @@ void main() {
       vector2 = null;
     });
 
-    test('should perform multiplication by another vector', () {
-      final actual = vector1 * vector2;
-      expect(actual, equals([1.0, 4.0, 9.0, 16.0, 25.0]));
-      expect(actual.length, equals(5));
-    });
-
-    test('should throw an error if one tries to multiple by a vector of '
-        'different length', () {
-      final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      expect(() => vector1 * vector2, throwsRangeError);
-    });
-
-    test('should perform multiplication by a matrix', () {
-      final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0]);
-      final matrix = Float32Matrix.fromList([
-        [2.0, 3.0],
-        [4.0, 5.0],
-        [6.0, 7.0],
-      ]);
-      final actual = vector * matrix;
-      final expected = [28.0, 34.0];
-      expect(actual, equals(expected));
-      expect(actual.length, equals(2));
-    });
-
-    test('should throw an exception if one tries to multiple by an '
-        'inappropriate matrix', () {
-      final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0]);
-      final matrix = Float32Matrix.fromList([
-        [2.0, 3.0],
-        [4.0, 5.0],
-      ]);
-      final actual = () => vector * matrix;
-      expect(actual, throwsException,
-          reason: 'the matrix has different row number than the vector');
-    });
-
     test('should perform division by another vector', () {
       final vector1 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
       final vector2 = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
