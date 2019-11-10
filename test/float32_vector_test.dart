@@ -1,62 +1,9 @@
-import 'dart:typed_data';
-
-import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/linalg.dart';
 import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    test('should find Euclidean distance (from vector to the same vector)', () {
-      final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0]);
-      final distance = vector.distanceTo(vector);
-      expect(distance, equals(0.0),
-          reason: 'Wrong vector distance calculation');
-    });
-
-    test('should find euclidean distance', () {
-      final vector1 = Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
-      final vector2 = Vector.fromList([1.0, 3.0, 2.0, 11.5, 10.0, 15.5]);
-      expect(vector1.distanceTo(vector2, distance: Distance.euclidean),
-          equals(10.88577052853862));
-    });
-
-    test('should find manhattan distance', () {
-      final vector1 = Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
-      final vector2 = Vector.fromList([1.0, 3.0, 2.0, 11.5, 10.0, 15.5]);
-      expect(vector1.distanceTo(vector2, distance: Distance.manhattan),
-          equals(20.0));
-    });
-
-    test('should find cosine distance (the same vectors)', () {
-      final vector1 = Vector.fromList([1.0, 0.0]);
-      final vector2 = Vector.fromList([1.0, 0.0]);
-      expect(vector1.distanceTo(vector2, distance: Distance.cosine),
-          equals(0.0));
-    });
-
-    test('should find cosine distance (different vectors)', () {
-      final vector1 = Vector.fromList([4.0, 3.0]);
-      final vector2 = Vector.fromList([2.0, 4.0]);
-      expect(vector1.distanceTo(vector2, distance: Distance.cosine),
-          closeTo(0.1055, 1e-4));
-    });
-
-    test('should find cosine distance (different vectors with negative '
-        'elements)', () {
-      final vector1 = Vector.fromList([4.0, -3.0]);
-      final vector2 = Vector.fromList([-2.0, 4.0]);
-      expect(vector1.distanceTo(vector2, distance: Distance.cosine),
-          closeTo(1.8944, 1e-4));
-    });
-
-    test('should find cosine distance (one of two vectors is zero-vector)', () {
-      final vector1 = Vector.fromList([0.0, 0.0]);
-      final vector2 = Vector.fromList([-2.0, 4.0]);
-      expect(() => vector1.distanceTo(vector2, distance: Distance.cosine),
-          throwsException);
-    });
-
     test('should find vector norm', () {
       final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
       expect(vector.norm(Norm.euclidean), equals(closeTo(7.41, 1e-2)));
