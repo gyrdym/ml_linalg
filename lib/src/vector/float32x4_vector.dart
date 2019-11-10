@@ -101,8 +101,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
-  int _hash;
-
   @override
   bool operator ==(Object other) {
     if (other is Float32x4Vector) {
@@ -121,15 +119,18 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  int get hashCode => _cacheManager.retrieve('hash',
-          () => length > 0 ? _generateHash() : 0);
+  int get hashCode => _cacheManager.retrieve('hash', () {
+    if (isEmpty) {
+      return 0;
+    }
 
-  int _generateHash() {
     int i = 0;
-    final simdHash = _innerSimdList.reduce(
+
+    final summed = _innerSimdList.reduce(
             (sum, element) => sum + element.scale((31 * (i++)) * 1.0));
-    return _simdHelper.sumLanesForHash(simdHash) ~/ 1;
-  }
+
+    return length + _simdHelper.sumLanesForHash(summed).hashCode;
+  }, skipCaching: false);
 
   @override
   Vector operator +(Object value) {
