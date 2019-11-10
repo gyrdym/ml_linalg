@@ -20,11 +20,6 @@ void main() {
       vector2 = null;
     });
 
-    test('should perform dot product with another vector', () {
-      final result = vector1.dot(vector2);
-      expect(result, equals(55.0));
-    });
-
     test('should be multiplied by a scalar', () {
       final result = vector1 * 2.0;
       expect(result != vector1, isTrue);
