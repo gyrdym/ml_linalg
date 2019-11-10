@@ -27,7 +27,8 @@ void vectorSubtractionOperatorTestGroupFactory(DType dtype) =>
         });
 
         test('should perform subtraction with a column matrix', () {
-          final vector = Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0]);
+          final vector = Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0],
+              dtype: DType.float32);
           final matrix = Matrix.fromList([
             [1.0],
             [2.0],

@@ -59,7 +59,8 @@ void vectorMultiplicationOperatorTestGroupFactory(DType dtype) =>
         });
 
         test('should perform multiplication with a scalar', () {
-          final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+          final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
+              dtype: dtype);
           final result = vector * 2.0;
 
           expect(result != vector, isTrue);
