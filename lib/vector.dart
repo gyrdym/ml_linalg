@@ -20,7 +20,23 @@ abstract class Vector implements Iterable<double> {
   /// Creates a vector from a collection [source].
   ///
   /// It converts the collection of [double]-type elements into a collection of
-  /// [Float32x4] elements.
+  /// elements of a special type.
+  ///
+  /// A simple usage example:
+  ///
+  /// ````dart
+  /// import 'package:ml_linalg/vector.dart';
+  ///
+  /// final vector = Vector.fromList([1, 2, 3, 4, 5], dtype: DType.float32);
+  ///
+  /// print(vector);
+  /// ````
+  ///
+  /// the output will be:
+  ///
+  /// ```
+  /// (1.0, 2.0, 3.0, 4.0, 5.0)
+  /// ```
   factory Vector.fromList(List<num> source, {
     DType dtype = DType.float32,
   }) {
@@ -36,6 +52,31 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
+  /// Creates a vector from simd-typed collection. It accepts only
+  /// [Float32x4List] or [Float64x2List] list as a source.
+  ///
+  /// A simple usage example:
+  ///
+  /// ````dart
+  /// import 'dart:typed_data';
+  /// import 'package:ml_linalg/vector.dart';
+  ///
+  /// final source1 = Float64x2List.fromList([1, 2, 3, 4, 5]);
+  /// final source2 = Float32x4List.fromList([1, 2, 3, 4, 5]);
+  ///
+  /// final vector1 = Vector.fromSimdList(source1, dtype: DType.float64);
+  /// final vector2 = Vector.fromSimdList(source2, dtype: DType.float32);
+  ///
+  /// print(vector1);
+  /// print(vector2);
+  /// ````
+  ///
+  /// the output will be:
+  ///
+  /// ```
+  /// (1.0, 2.0, 3.0, 4.0, 5.0)
+  /// (1.0, 2.0, 3.0, 4.0, 5.0)
+  /// ```
   factory Vector.fromSimdList(List source, int actualLength, {
     DType dtype = DType.float32,
   }) {
@@ -59,7 +100,7 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
-  /// Creates a vector of length equal to [length], filled with [value].
+  /// Creates a vector of length equal to [length] filled with [value].
   factory Vector.filled(int length, num value, {
     DType dtype = DType.float32,
   }) {
