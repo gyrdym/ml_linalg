@@ -236,58 +236,6 @@ void main() {
       });
     });
 
-    group('[]', () {
-      test('should provide indexed access ([] operator, case 1)', () {
-        final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-        expect(vector[0], 1.0);
-        expect(vector[1], 2.0);
-        expect(vector[2], 3.0);
-        expect(vector[3], 4.0);
-        expect(vector[4], 5.0);
-        expect(() => vector[-1], throwsRangeError);
-        expect(() => vector[5], throwsRangeError);
-        expect(() => vector[100], throwsRangeError);
-      });
-
-      test('should provide indexed access ([] operator, case 2)', () {
-        final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0, 4.0]);
-        expect(vector[0], 1.0);
-        expect(vector[1], 2.0);
-        expect(vector[2], 3.0);
-        expect(vector[3], 4.0);
-        expect(() => vector[-1], throwsRangeError);
-        expect(() => vector[4], throwsRangeError);
-        expect(() => vector[100], throwsRangeError);
-      });
-
-      test('should provide indexed access ([] operator, case 3)', () {
-        final vector = Float32x4Vector.fromList([1.0, 2.0, 3.0]);
-        expect(vector[0], 1.0);
-        expect(vector[1], 2.0);
-        expect(vector[2], 3.0);
-        expect(() => vector[-1], throwsRangeError);
-        expect(() => vector[3], throwsRangeError);
-        expect(() => vector[100], throwsRangeError);
-      });
-
-      test('should provide indexed access ([] operator, case 4)', () {
-        final vector = Float32x4Vector.fromList([1.0, 2.0]);
-        expect(vector[0], 1.0);
-        expect(vector[1], 2.0);
-        expect(() => vector[-1], throwsRangeError);
-        expect(() => vector[2], throwsRangeError);
-        expect(() => vector[100], throwsRangeError);
-      });
-
-      test('should provide indexed access ([] operator, case 5)', () {
-        final vector = Float32x4Vector.fromList([1.0]);
-        expect(vector[0], 1.0);
-        expect(() => vector[-1], throwsRangeError);
-        expect(() => vector[1], throwsRangeError);
-        expect(() => vector[100], throwsRangeError);
-      });
-    });
-
     group('sqrt', () {
       test('should extract square root of each element', () {
         final vector = Float32x4Vector.fromList([4, 25, 9]);
