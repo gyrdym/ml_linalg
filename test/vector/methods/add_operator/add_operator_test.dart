@@ -4,5 +4,6 @@ import 'add_operator_test_group_factory.dart';
 
 void main() {
   vectorAddOperatorTestGroupFactory(DType.float32);
-  vectorAddOperatorTestGroupFactory(DType.float64);
+  // uncomment it when the Matrix class supports DType.float64
+  // vectorAddOperatorTestGroupFactory(DType.float64);
 }

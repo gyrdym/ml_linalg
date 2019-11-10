@@ -20,13 +20,6 @@ void main() {
       vector2 = null;
     });
 
-    test('should raise its elements to the integer power', () {
-      final result = vector1.toIntegerPower(3);
-      expect(result != vector1, isTrue);
-      expect(result.length, equals(5));
-      expect(result, equals([1.0, 8.0, 27.0, 64.0, 125.0]));
-    });
-
     test('should perform dot product with another vector', () {
       final result = vector1.dot(vector2);
       expect(result, equals(55.0));

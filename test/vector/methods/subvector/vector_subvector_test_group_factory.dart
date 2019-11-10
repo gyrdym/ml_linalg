@@ -6,7 +6,7 @@ import '../../../dtype_to_class_name_mapping.dart';
 
 void vectorSubvectorTestGroupFactory(DType dtype) =>
     group(dtypeToVectorClassName[dtype], () {
-      group('subvector', () {
+      group('subvector method', () {
         test('should cut out a subvector (`end` exclusive)', () {
           final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
               dtype: dtype);
