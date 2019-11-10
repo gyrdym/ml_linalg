@@ -4,11 +4,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    test('should find vector elements sum', () {
-      final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
-      expect(vector.sum(), equals(15.0));
-    });
-
     test('should find vector elements absolute value', () {
       final vector = Vector.fromList([-3.0, 4.5, -12.0, -23.5, 44.0]);
       final result = vector.abs();
