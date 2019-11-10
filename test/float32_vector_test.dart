@@ -216,26 +216,6 @@ void main() {
       });
     });
 
-    group('min', () {
-      test('should find a minimal element for the vector with more than 4 '
-          'elements', () {
-        final vector = Float32x4Vector.fromList([10.0, 1.0, 4.0, 7.0, 9.0, 1.0]);
-        expect(vector.min(), 1.0);
-      });
-
-      test('should find a minimal element for the vector with 4 '
-          'elements', () {
-        final vector = Float32x4Vector.fromList([10.0, 0.0, 4.0, 7.0]);
-        expect(vector.min(), 0.0);
-      });
-
-      test('should find a minimal element for the vector with length that is '
-          'less than 4', () {
-        final vector = Float32x4Vector.fromList([10.0, 1.0, 4.0]);
-        expect(vector.min(), 1.0);
-      });
-    });
-
     group('sqrt', () {
       test('should extract square root of each element', () {
         final vector = Float32x4Vector.fromList([4, 25, 9]);
