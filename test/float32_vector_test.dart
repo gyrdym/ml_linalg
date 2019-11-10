@@ -4,13 +4,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Float32Vector', () {
-    test('should find vector elements absolute value', () {
-      final vector = Vector.fromList([-3.0, 4.5, -12.0, -23.5, 44.0]);
-      final result = vector.abs();
-      expect(result, equals([3.0, 4.5, 12.0, 23.5, 44.0]));
-      expect(result, isNot(vector));
-    });
-
     test('should create a vector using elements on specific inidces from '
         'given list', () {
       final vector = Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0]);
