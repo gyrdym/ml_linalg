@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/linalg.dart';
-import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
@@ -195,25 +194,6 @@ void main() {
       ]);
       final unique = vector.unique();
       expect(unique, equals([10.0, 3.0, 4.0, 0.0, 7.0, 12.0, 9.0]));
-    });
-
-    group('max', () {
-      test('should find a minimal element for the vector with more than 4 '
-          'elements', () {
-        final vector = Float32x4Vector.fromList([10.0, 12.0, 4.0, 7.0, 9.0, 12.0]);
-        expect(vector.max(), 12.0);
-      });
-
-      test('should find a minimal element for the vector with 4 elements', () {
-        final vector = Float32x4Vector.fromList([10.0, 11.0, -4.0, 0.0]);
-        expect(vector.max(), 11.0);
-      });
-
-      test('should find a minimal element for the vector with less than 4 '
-          'elements', () {
-        final vector = Float32x4Vector.fromList([7.0, -4.0, 0.0]);
-        expect(vector.max(), 7.0);
-      });
     });
 
     group('sqrt', () {
