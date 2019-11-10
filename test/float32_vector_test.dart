@@ -20,19 +20,6 @@ void main() {
       vector2 = null;
     });
 
-    test('should map an existing vector to a new one processing 4 elements in '
-        'a time', () {
-      final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-      int iteration = 0;
-      final actual = vector.fastMap((Float32x4 element) {
-        iteration++;
-        return element.scale(3.0);
-      });
-      final expected = [3.0, 6.0, 9.0, 12.0, 15.0, 18.0];
-      expect(iteration, equals(2));
-      expect(actual, equals(expected));
-    });
-
     test('should raise its elements to the integer power', () {
       final result = vector1.toIntegerPower(3);
       expect(result != vector1, isTrue);
