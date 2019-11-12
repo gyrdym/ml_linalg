@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.6.0
+- `Vector`: vector operations speed up
+- `Float64x2Vector`: `Float64x2Vector` class created 
+
 ## 12.5.1
 - `Axis`: documentation added
 - `DType`: documentation added

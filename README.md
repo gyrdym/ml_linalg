@@ -11,6 +11,7 @@
 - [What is SIMD](#what-is-simd)
 - [Vectors](#vectors)
 	- [A couple of words about the underlying architecture](#a-couple-of-words-about-the-underlying-architecture)
+	- [Vector benchmarks](#vector-benchmarks)
 	- [Vector operations](#vector-operations-examples)
         - [Vectors sum](#vectors-sum)
         - [Vectors subtraction](#vectors-subtraction)
@@ -88,7 +89,7 @@ manner:
 </p>
 
 &nbsp;&nbsp;&nbsp;&nbsp;We need to do 4 operations one by one in a row. Using SIMD architecture we may perform one mathematical 
-operations on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
+operation on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
 
 <p align="center">
     <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
@@ -98,20 +99,20 @@ operations on several operands in parallel, thus element-wise sum of two arrays 
 
 ### A couple of words about the underlying architecture
     
-&nbsp;&nbsp;&nbsp;&nbsp;The library contains a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) - 
-[Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart). 
-Most of operations in the vector class are performed in four "threads". This kind of parallelism is reached by special 
-128-bit processor registers, which are used directly by program code.
+&nbsp;&nbsp;&nbsp;&nbsp;The library contains two high performant vector classes, based on [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) 
+and [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) data types - 
+[Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.dart)  
 
-&nbsp;&nbsp;&nbsp;&nbsp;[Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart) 
-is hidden from the library's users. You can create a [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
-instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
+Most of element-wise operations in the first one are performed in four "threads" and in the second one - in two "threads".
 
-&nbsp;&nbsp;&nbsp;&nbsp;The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
-creation of a new vector instance (of course, if the operation is supposed to return `Vector`).
+&nbsp;&nbsp;&nbsp;&nbsp;Implementation of both classes is hidden from the library's users. You can create a 
+`Float32x4Vector` or a `Float64x2Vector` instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
-&nbsp;&nbsp;&nbsp;&nbsp;The class implements `Iterable<double>` interface - so it's possible to use it as a regular 
-iterable collection.
+&nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable - once created, the vector cannot be changed. All vector operations lead to 
+creation of a new vector instance (of course, if an operation is supposed to return `Vector`).
+
+&nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface - so it's possible to use them as regular 
+iterable collections.
 
 &nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for `HashMap` and similar data structures 
 and to look up a value by the vector-key, since the hash code is the same for equal vectors:
@@ -126,6 +127,26 @@ map[Vector.fromList([1, 2, 3, 4, 5])] = true;
 print(map[Vector.fromList([1, 2, 3, 4, 5])]); // true
 print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 5]).hashCode); // true
 ```
+
+### Vector benchmarks
+
+To see the performance gain provided by the library's vector classes, one may visit `benchmark` directory: one may find 
+there a baseline [benchamrk](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/baseline/regular_lists_addition.dart) - 
+element-wise addition of two regular List instances and a [benchmark](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/float32/vector_operations/float32x4_vector_vector_addition.dart)
+of a similar operation, but performed with two `Float32x4Vector` instances on the same amount of elements and compare 
+the timings:
+
+- Baseline benchmark (executed on Macbook Air mid 2017), 2 regular lists each with 10,000,000 elements:
+<p align="center">
+    <img height="290" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/vector_baseline_benchmark_timing.png"> 
+</p>
+
+- Actual benchmark (executed on Macbook Air mid 2017), 2 vectors each with 10,000,000 elements:
+<p align="center">
+    <img height="290" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/vector_actual_benchmark_timing.png"> 
+</p>
+
+It took 15 seconds to create a new regular list by summing the elements of two lists, and 0.7 second to sum two vectors.
 
 ### Vector operations examples
 
