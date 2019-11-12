@@ -36,13 +36,16 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
+    if (min >= max) {
+      throw ArgumentError.value(min, 'Argument `min` should be less than `max`');
+    }
+
     final generator = math.Random(seed);
-    final diff = (max - min).abs();
-    final realMin = math.min(min, max);
+    final diff = max - min;
 
     for (int i = 0; i < length; i++) {
       _buffer.asByteData().setFloat64(_bytesPerElement * i,
-        generator.nextDouble() * diff + realMin, Endian.host);
+        generator.nextDouble() * diff + min, Endian.host);
     }
   }
 
