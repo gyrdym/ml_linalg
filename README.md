@@ -146,6 +146,7 @@ the timings:
     <img height="290" src="https://raw.github.com/gyrdym/ml_linalg/matrix-speed-up/readme_resources/img/vector_actual_benchmark_timing.png"> 
 </p>
 
+It took 15 seconds to create a new regular list by summing the elements of two lists, and 0.7 second to sum two vectors.
 
 ### Vector operations examples
 
