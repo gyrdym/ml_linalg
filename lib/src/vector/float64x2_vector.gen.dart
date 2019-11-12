@@ -9,8 +9,7 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
-import 'package:ml_linalg/src/vector/simd_helper.dart';
-import 'package:ml_linalg/src/vector/float64x2_helper.dart';
+import 'package:ml_linalg/src/vector/simd_helper/simd_helper.dart';
 import 'package:ml_linalg/vector.dart';
 
 const _bytesPerElement = Float64List.bytesPerElement;
@@ -18,7 +17,8 @@ const _bytesPerSimdElement = Float64x2List.bytesPerElement;
 const _bucketSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
 
 class Float64x2Vector with IterableMixin<double> implements Vector {
-  Float64x2Vector.fromList(List<num> source, this._cacheManager) :
+  Float64x2Vector.fromList(List<num> source, this._cacheManager,
+      this._simdHelper) :
         length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(source.length, _bucketSize) *
@@ -29,10 +29,8 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float64x2Vector.randomFilled(this.length, int seed, this._cacheManager, {
-    num min = 0,
-    num max = 1,
-  }) :
+  Float64x2Vector.randomFilled(this.length, int seed, this._cacheManager,
+      this._simdHelper, {num min = 0, num max = 1}) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
@@ -49,9 +47,8 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float64x2Vector.filled(this.length, num value, this._cacheManager, {
-    bool disableCache = false,
-  }) :
+  Float64x2Vector.filled(this.length, num value, this._cacheManager,
+      this._simdHelper) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
@@ -61,7 +58,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float64x2Vector.zero(this.length, this._cacheManager) :
+  Float64x2Vector.zero(this.length, this._cacheManager, this._simdHelper) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
@@ -71,13 +68,13 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   }
 
   Float64x2Vector.fromSimdList(Float64x2List data, this.length,
-      this._cacheManager) :
+      this._cacheManager, this._simdHelper) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = data.buffer {
     _cachedInnerSimdList = data;
   }
 
-  Float64x2Vector.empty(this._cacheManager) :
+  Float64x2Vector.empty(this._cacheManager, this._simdHelper) :
         length = 0,
         _numOfBuckets = 0,
         _buffer = ByteData(0).buffer;
@@ -89,7 +86,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   final int length;
 
   final CacheManager _cacheManager;
-  final SimdHelper _simdHelper = const Float64x2Helper();
+  final SimdHelper _simdHelper;
   final ByteBuffer _buffer;
   final int _numOfBuckets;
 
@@ -124,7 +121,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  int get hashCode => _cacheManager.retrieve('hash', () {
+  int get hashCode => _cacheManager.retrieveValue('hash', () {
     if (isEmpty) {
       return 0;
     }
@@ -240,7 +237,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector sqrt({bool skipCaching = false}) =>
-      _cacheManager.retrieve<Vector>('sqrt', () {
+      _cacheManager.retrieveValue<Vector>('sqrt', () {
         final source = Float64x2List(_numOfBuckets);
         for (int i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].sqrt();
@@ -256,7 +253,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector abs({bool skipCaching = false}) =>
-      _cacheManager.retrieve<Vector>('abs', () {
+      _cacheManager.retrieveValue<Vector>('abs', () {
         final source = Float64x2List(_numOfBuckets);
         for (int i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].abs();
@@ -268,7 +265,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   double dot(Vector vector) => (this * vector).sum();
 
   @override
-  double sum({bool skipCaching = false}) => _cacheManager.retrieve('sum',
+  double sum({bool skipCaching = false}) => _cacheManager.retrieveValue('sum',
           () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
       skipCaching: skipCaching);
 
@@ -304,13 +301,13 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     if (isEmpty) {
       throw _emptyVectorException;
     }
-    return _cacheManager.retrieve('mean', () => sum() / length,
+    return _cacheManager.retrieveValue('mean', () => sum() / length,
         skipCaching: skipCaching);
   }
 
   @override
   double norm([Norm norm = Norm.euclidean, bool skipCaching = false]) =>
-      _cacheManager.retrieve('norm_$norm', () {
+      _cacheManager.retrieveValue('norm_$norm', () {
         final power = _getPowerByNormType(norm);
         if (power == 1) {
           return abs().sum();
@@ -320,12 +317,12 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       }, skipCaching: skipCaching);
 
   @override
-  double max({bool skipCaching = false}) => _cacheManager.retrieve('max', () =>
+  double max({bool skipCaching = false}) => _cacheManager.retrieveValue('max', () =>
       _findExtrema(-double.infinity, _simdHelper.getMaxLane,
               (a, b) => a.max(b), math.max), skipCaching: skipCaching);
 
   @override
-  double min({bool skipCaching = false}) => _cacheManager.retrieve('min', () =>
+  double min({bool skipCaching = false}) => _cacheManager.retrieveValue('min', () =>
       _findExtrema(double.infinity, _simdHelper.getMinLane,
               (a, b) => a.min(b), math.min), skipCaching: skipCaching);
 
@@ -360,7 +357,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector unique({bool skipCaching = false}) =>
-      _cacheManager.retrieve('unique', () => Vector.fromList(
+      _cacheManager.retrieveValue('unique', () => Vector.fromList(
                 Set<double>.from(this).toList(growable: false), dtype: dtype),
         skipCaching: skipCaching);
 
@@ -406,12 +403,12 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   @override
   Vector normalize([Norm normType = Norm.euclidean,
     bool skipCaching = false]) =>
-      _cacheManager.retrieve('normalize_$normType',
+      _cacheManager.retrieveValue('normalize_$normType',
               () => this / norm(normType), skipCaching: skipCaching);
 
   @override
   Vector rescale({bool skipCaching = false}) =>
-      _cacheManager.retrieve('rescale', () {
+      _cacheManager.retrieveValue('rescale', () {
         final minValue = min();
         final maxValue = max();
         return (this - minValue) / (maxValue - minValue);

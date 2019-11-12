@@ -4,7 +4,7 @@ class CacheManagerImpl implements CacheManager {
   final _cache = <String, dynamic>{};
 
   @override
-  T retrieve<T>(String cachedValueName, T Function() calculateIfAbsent, {
+  T retrieveValue<T>(String cachedValueName, T Function() calculateIfAbsent, {
     bool skipCaching = false,
   }) {
     var value = _cache[cachedValueName] as T;
