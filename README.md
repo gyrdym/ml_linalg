@@ -99,11 +99,11 @@ operation on several operands in parallel, thus element-wise sum of two arrays w
 
 ### A couple of words about the underlying architecture
     
-&nbsp;&nbsp;&nbsp;&nbsp;The library contains two high performant vector classes, based on [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) 
-and [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) data types - 
+&nbsp;&nbsp;&nbsp;&nbsp;The library contains two high performant vector classes, based on [Float32x4](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float32x4-class.html) 
+and [Float64x2](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float64x2-class.html) data types - 
 [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.dart)  
 
-Most of element-wise operations in the first one are performed in four "threads" and in the second one - in two "threads".
+&nbsp;&nbsp;&nbsp;&nbsp;Most of element-wise operations in the first one are performed in four "threads" and in the second one - in two "threads".
 
 &nbsp;&nbsp;&nbsp;&nbsp;Implementation of both classes is hidden from the library's users. You can create a 
 `Float32x4Vector` or a `Float64x2Vector` instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
@@ -130,9 +130,9 @@ print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 
 
 ### Vector benchmarks
 
-To see the performance gain provided by the library's vector classes, one may visit `benchmark` directory: one may find 
-there a baseline [benchamrk](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/baseline/regular_lists_addition.dart) - 
-element-wise addition of two regular List instances and a [benchmark](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/float32/vector_operations/float32x4_vector_vector_addition.dart)
+&nbsp;&nbsp;&nbsp;&nbsp;To see the performance gain provided by the library's vector classes, one may visit `benchmark` directory: one may find 
+there a baseline [benchmark](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/baseline/regular_lists_addition.dart) - 
+element-wise summation of two regular List instances and a [benchmark](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/float32/vector_operations/float32x4_vector_vector_addition.dart)
 of a similar operation, but performed with two `Float32x4Vector` instances on the same amount of elements and compare 
 the timings:
 
@@ -146,7 +146,8 @@ the timings:
     <img height="290" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/vector_actual_benchmark_timing.png"> 
 </p>
 
-It took 15 seconds to create a new regular list by summing the elements of two lists, and 0.7 second to sum two vectors.
+It took 15 seconds to create a new regular list by summing the elements of two lists, and 0.7 second to sum two vectors - 
+the difference is significant.
 
 ### Vector operations examples
 
