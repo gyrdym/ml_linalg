@@ -88,7 +88,7 @@ manner:
 </p>
 
 &nbsp;&nbsp;&nbsp;&nbsp;We need to do 4 operations one by one in a row. Using SIMD architecture we may perform one mathematical 
-operations on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
+operation on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
 
 <p align="center">
     <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
@@ -98,19 +98,19 @@ operations on several operands in parallel, thus element-wise sum of two arrays 
 
 ### A couple of words about the underlying architecture
     
-&nbsp;&nbsp;&nbsp;&nbsp;The library contains a high performance SIMD vector class, based on [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) - 
-[Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart). 
-Most of operations in the vector class are performed in four "threads". This kind of parallelism is reached by special 
-128-bit processor registers, which are used directly by program code.
+&nbsp;&nbsp;&nbsp;&nbsp;The library contains two high performant vector classes, based on [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) 
+and [Float32x4](https://api.dartlang.org/stable/2.2.0/dart-typed_data/Float32x4-class.html) data types - 
+[Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.dart)  
 
-&nbsp;&nbsp;&nbsp;&nbsp;[Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32/float32_vector.dart) 
-is hidden from the library's users. You can create a [Float32Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4/float32x4_vector.dart) 
-instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
+Most of element-wise operations in the first one are performed in four "threads" and in the second one - in two "threads".
 
-&nbsp;&nbsp;&nbsp;&nbsp;The vector is absolutely immutable - there is no way to change once created instance. All vector operations lead to 
-creation of a new vector instance (of course, if the operation is supposed to return `Vector`).
+&nbsp;&nbsp;&nbsp;&nbsp;Implementation of both classes is hidden from the library's users. You can create a 
+`Float32x4Vector` or a `Float64x2Vector` instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
-&nbsp;&nbsp;&nbsp;&nbsp;The class implements `Iterable<double>` interface - so it's possible to use it as a regular 
+&nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable - there is no way to change a once created instance. All vector operations lead to 
+creation of a new vector instance (of course, if an operation is supposed to return `Vector`).
+
+&nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface - so it's possible to use it as a regular 
 iterable collection.
 
 &nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for `HashMap` and similar data structures 
