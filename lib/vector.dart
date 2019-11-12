@@ -7,8 +7,10 @@ import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
 import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_linalg/src/vector/float64x2_vector.gen.dart';
+import 'package:ml_linalg/src/vector/simd_helper/simd_helper_factory.dart';
 
 final _cacheManagerFactory = dependencies.getDependency<CacheManagerFactory>();
+final _simdHelperFactory = dependencies.getDependency<SimdHelperFactory>();
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
 /// architecture support
@@ -39,10 +41,12 @@ abstract class Vector implements Iterable<double> {
   }) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.fromList(source, _cacheManagerFactory.create());
+        return Float32x4Vector.fromList(source, _cacheManagerFactory.create(),
+            _simdHelperFactory.createByDType(dtype));
 
       case DType.float64:
-        return Float64x2Vector.fromList(source, _cacheManagerFactory.create());
+        return Float64x2Vector.fromList(source, _cacheManagerFactory.create(),
+            _simdHelperFactory.createByDType(dtype));
 
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
@@ -83,6 +87,7 @@ abstract class Vector implements Iterable<double> {
           source as Float32x4List,
           actualLength,
           _cacheManagerFactory.create(),
+          _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
@@ -90,6 +95,7 @@ abstract class Vector implements Iterable<double> {
           source as Float64x2List,
           actualLength,
           _cacheManagerFactory.create(),
+          _simdHelperFactory.createByDType(dtype),
         );
 
       default:
@@ -123,6 +129,7 @@ abstract class Vector implements Iterable<double> {
           length,
           value,
           _cacheManagerFactory.create(),
+          _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
@@ -130,6 +137,7 @@ abstract class Vector implements Iterable<double> {
           length,
           value,
           _cacheManagerFactory.create(),
+          _simdHelperFactory.createByDType(dtype),
         );
 
       default:
@@ -162,12 +170,14 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.zero(
           length,
           _cacheManagerFactory.create(),
+          _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
         return Float64x2Vector.zero(
           length,
           _cacheManagerFactory.create(),
+          _simdHelperFactory.createByDType(dtype),
         );
 
       default:
@@ -209,6 +219,7 @@ abstract class Vector implements Iterable<double> {
           length,
           seed,
           _cacheManagerFactory.create(),
+          _simdHelperFactory.createByDType(dtype),
           max: max,
           min: min,
         );
@@ -218,6 +229,7 @@ abstract class Vector implements Iterable<double> {
           length,
           seed,
           _cacheManagerFactory.create(),
+          _simdHelperFactory.createByDType(dtype),
           max: max,
           min: min,
         );
@@ -247,10 +259,12 @@ abstract class Vector implements Iterable<double> {
   factory Vector.empty({DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.empty(_cacheManagerFactory.create());
+        return Float32x4Vector.empty(_cacheManagerFactory.create(),
+            _simdHelperFactory.createByDType(dtype));
 
       case DType.float64:
-        return Float64x2Vector.empty(_cacheManagerFactory.create());
+        return Float64x2Vector.empty(_cacheManagerFactory.create(),
+            _simdHelperFactory.createByDType(dtype));
 
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
@@ -333,7 +347,7 @@ abstract class Vector implements Iterable<double> {
   /// Returns a new vector from mapped elements of the original vector.
   /// Mapping function [mapper] should accept argument only of [Float32x4] or
   /// [Float64x2] data type (depends on [dtype] value, e.g. if [dtype] equals
-  /// [DType.float32] - the argument should gave [Float32x4] type). The data
+  /// [DType.float32] - the argument should be of [Float32x4] type). The data
   /// types mentioned above allow to perform mapping much faster comparing with
   /// the regular [map] method
   Vector fastMap<T>(T mapper(T element));

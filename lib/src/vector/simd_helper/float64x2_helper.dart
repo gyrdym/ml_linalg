@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/vector/simd_helper.dart';
+import 'package:ml_linalg/src/vector/simd_helper/simd_helper.dart';
 
 class Float64x2Helper implements SimdHelper<Float64x2> {
   const Float64x2Helper();

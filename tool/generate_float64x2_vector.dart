@@ -40,6 +40,5 @@ String _convertToFloat64x2Vector(String input) => input
     .replaceAll('Float32x4List', 'Float64x2List')
     .replaceAll('Float32x4', 'Float64x2')
     .replaceAll('Float32List', 'Float64List')
-    .replaceAll('float32x4_helper', 'float64x2_helper')
     .replaceAll('DType.float32', 'DType.float64')
     .replaceAll('setFloat32', 'setFloat64');
