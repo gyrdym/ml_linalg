@@ -1,7 +1,7 @@
-import 'matrix/matrix_initializing/float32_from_columns.dart';
-import 'matrix/matrix_initializing/float32_from_flattened.dart';
-import 'matrix/matrix_initializing/float32_from_list.dart';
-import 'matrix/matrix_initializing/float32_from_rows.dart';
+import 'matrix/float32/matrix_initializing/float32_from_columns.dart';
+import 'matrix/float32/matrix_initializing/float32_from_flattened.dart';
+import 'matrix/float32/matrix_initializing/float32_from_list.dart';
+import 'matrix/float32/matrix_initializing/float32_from_rows.dart';
 import 'vector/float32/vector_initializing/float32x4_from_list.dart';
 import 'vector/float32/vector_initializing/float32x4_random_filled.dart';
 import 'vector/float32/vector_operations/float32x4_vector_abs.dart';
