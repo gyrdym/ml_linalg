@@ -11,6 +11,7 @@ void vectorRandomFilledConstructorTestGroupFactory(DType dtype) =>
             '[-5; -1)', () {
           final vector = Vector.randomFilled(200, seed: 1, min: -5, max: -1,
               dtype: dtype);
+
           for (final element in vector) {
             expect(element, inClosedOpenRange(-5, -1));
           }
@@ -25,22 +26,16 @@ void vectorRandomFilledConstructorTestGroupFactory(DType dtype) =>
           }
         });
 
-        test('should create a vector filled with random values from range'
-            '[-5; -1) (min is greater than max)', () {
-          final vector = Vector.randomFilled(200, seed: 1, min: -1, max: -5,
-              dtype: dtype);
-          for (final element in vector) {
-            expect(element, inClosedOpenRange(-5, -1));
-          }
+        test('should throw an argument error if `min` argument equals '
+            '`max`', () {
+          expect(() => Vector.randomFilled(200, seed: 1, min: 2, max: 2,
+              dtype: dtype), throwsArgumentError);
         });
 
-        test('should create a vector filled with constant value if min equals '
-            'max', () {
-          final vector = Vector.randomFilled(200, seed: 1, min: 2, max: 2,
-              dtype: dtype);
-          for (final element in vector) {
-            expect(element, equals(2));
-          }
+        test('should throw an argument error if `min` argument greater that '
+            '`max`', () {
+          expect(() => Vector.randomFilled(200, seed: 1, min: 3, max: 2,
+              dtype: dtype), throwsArgumentError);
         });
       });
     });
