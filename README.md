@@ -101,7 +101,8 @@ operation on several operands in parallel, thus element-wise sum of two arrays w
     
 &nbsp;&nbsp;&nbsp;&nbsp;The library contains two high performant vector classes, based on [Float32x4](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float32x4-class.html) 
 and [Float64x2](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float64x2-class.html) data types - 
-[Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.dart)  
+[Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.gen.dart)  
+(the second one is generated from the source code of the first vector)
 
 &nbsp;&nbsp;&nbsp;&nbsp;Most of element-wise operations in the first one are performed in four "threads" and in the second one - in two "threads".
 
