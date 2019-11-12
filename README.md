@@ -107,11 +107,11 @@ Most of element-wise operations in the first one are performed in four "threads"
 &nbsp;&nbsp;&nbsp;&nbsp;Implementation of both classes is hidden from the library's users. You can create a 
 `Float32x4Vector` or a `Float64x2Vector` instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
-&nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable - there is no way to change a once created instance. All vector operations lead to 
+&nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable - once created, the vector cannot be changed. All vector operations lead to 
 creation of a new vector instance (of course, if an operation is supposed to return `Vector`).
 
-&nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface - so it's possible to use it as a regular 
-iterable collection.
+&nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface - so it's possible to use them as regular 
+iterable collections.
 
 &nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for `HashMap` and similar data structures 
 and to look up a value by the vector-key, since the hash code is the same for equal vectors:
