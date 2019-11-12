@@ -138,12 +138,12 @@ the timings:
 
 - Baseline benchmark (executed on Macbook Air mid 2017), 2 regular lists each with 10,000,000 elements:
 <p align="center">
-    <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/matrix-speed-up/readme_resources/img/vector_baseline_benchmark_timing.png"> 
+    <img height="300" src="https://raw.github.com/gyrdym/ml_linalg/matrix-speed-up/readme_resources/img/vector_baseline_benchmark_timing.png"> 
 </p>
 
 - Actual benchmark (executed on Macbook Air mid 2017), 2 vectors each with 10,000,000 elements:
 <p align="center">
-    <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/matrix-speed-up/readme_resources/img/vector_actual_benchmark_timing.png"> 
+    <img height="300" src="https://raw.github.com/gyrdym/ml_linalg/matrix-speed-up/readme_resources/img/vector_actual_benchmark_timing.png"> 
 </p>
 
 
