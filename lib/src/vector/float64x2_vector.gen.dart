@@ -237,7 +237,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector sqrt({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue<Vector>('sqrt', () {
+      _cacheManager.retrieveValue('sqrt', () {
         final source = Float64x2List(_numOfBuckets);
         for (int i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].sqrt();
@@ -253,7 +253,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector abs({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue<Vector>('abs', () {
+      _cacheManager.retrieveValue('abs', () {
         final source = Float64x2List(_numOfBuckets);
         for (int i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].abs();
