@@ -11,6 +11,7 @@
 - [What is SIMD](#what-is-simd)
 - [Vectors](#vectors)
 	- [A couple of words about the underlying architecture](#a-couple-of-words-about-the-underlying-architecture)
+	- [Vector benchmarks](#vector-benchmarks)
 	- [Vector operations](#vector-operations-examples)
         - [Vectors sum](#vectors-sum)
         - [Vectors subtraction](#vectors-subtraction)
@@ -126,6 +127,25 @@ map[Vector.fromList([1, 2, 3, 4, 5])] = true;
 print(map[Vector.fromList([1, 2, 3, 4, 5])]); // true
 print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 5]).hashCode); // true
 ```
+
+### Vector benchmarks
+
+To see the performance gain provided by the library's vector classes, one may visit `benchmark` directory: one may find 
+there a baseline [benchamrk](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/baseline/regular_lists_addition.dart) - 
+element-wise addition of two regular List instances and a [benchmark](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/float32/vector_operations/float32x4_vector_vector_addition.dart)
+of a similar operation, but performed with two `Float32x4Vector` instances on the same amount of elements and compare 
+the timings:
+
+- Baseline benchmark (executed on Macbook Air mid 2017), 2 regular lists each with 10,000,000 elements:
+<p align="center">
+    <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/matrix-speed-up/readme_resources/img/vector_baseline_benchmark_timing.png"> 
+</p>
+
+- Actual benchmark (executed on Macbook Air mid 2017), 2 vectors each with 10,000,000 elements:
+<p align="center">
+    <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/matrix-speed-up/readme_resources/img/vector_actual_benchmark_timing.png"> 
+</p>
+
 
 ### Vector operations examples
 
