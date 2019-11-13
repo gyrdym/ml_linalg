@@ -5,7 +5,7 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/matrix/matrix_impl.dart';
-import 'package:ml_linalg/src/matrix/float32_matrix_data_manager.dart';
+import 'package:ml_linalg/src/matrix/data_manager/float32_matrix_data_manager.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// An algebraic matrix with extended functionality, adapted for data science

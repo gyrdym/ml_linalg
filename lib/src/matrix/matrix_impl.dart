@@ -6,8 +6,8 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/matrix/common/matrix_data_manager.dart';
-import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
+import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
+import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
