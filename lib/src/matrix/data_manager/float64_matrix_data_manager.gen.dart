@@ -1,17 +1,19 @@
+/* This file is auto generated, do not change it manually */
+
 import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/src/matrix/common/matrix_data_manager.dart';
-import 'package:ml_linalg/src/matrix/float32_matrix_iterator.dart';
-import 'package:ml_linalg/src/matrix/helpers/get_2d_iterable_length.dart';
-import 'package:ml_linalg/src/matrix/helpers/get_length_of_first_or_zero.dart';
-import 'package:ml_linalg/src/matrix/helpers/get_zero_based_indices.dart';
+import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
+import 'package:ml_linalg/src/matrix/helper/get_2d_iterable_length.dart';
+import 'package:ml_linalg/src/matrix/helper/get_length_of_first_or_zero.dart';
+import 'package:ml_linalg/src/matrix/helper/get_zero_based_indices.dart';
+import 'package:ml_linalg/src/matrix/iterator/float64_matrix_iterator.gen.dart';
 import 'package:ml_linalg/vector.dart';
 
-const _bytesPerElement = Float32List.bytesPerElement;
+const _bytesPerElement = Float64List.bytesPerElement;
 
-class Float32MatrixDataManager implements MatrixDataManager {
-  Float32MatrixDataManager.fromList(List<List<double>> source) :
+class Float64MatrixDataManager implements MatrixDataManager {
+  Float64MatrixDataManager.fromList(List<List<double>> source) :
         rowsNum = get2dIterableLength(source),
         columnsNum = getLengthOfFirstOrZero(source),
         rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
@@ -22,7 +24,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
     var i = 0;
     var j = 0;
-    final dataAsList = _data.buffer.asFloat32List();
+    final dataAsList = _data.buffer.asFloat64List();
     for (final row in source) {
       for (final value in row) {
         dataAsList[i * columnsNum + j++] = value;
@@ -32,7 +34,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     }
   }
 
-  Float32MatrixDataManager.fromRows(List<Vector> source) :
+  Float64MatrixDataManager.fromRows(List<Vector> source) :
         rowsNum = get2dIterableLength(source),
         columnsNum = getLengthOfFirstOrZero(source),
         rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
@@ -43,7 +45,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
     var i = 0;
     var j = 0;
-    final dataAsList = _data.buffer.asFloat32List();
+    final dataAsList = _data.buffer.asFloat64List();
     for (final row in source) {
       for (final value in row) {
         dataAsList[i * columnsNum + j++] = value;
@@ -53,7 +55,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     }
   }
 
-  Float32MatrixDataManager.fromColumns(List<Vector> source) :
+  Float64MatrixDataManager.fromColumns(List<Vector> source) :
         rowsNum = getLengthOfFirstOrZero(source),
         columnsNum = get2dIterableLength(source),
         rowIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
@@ -64,7 +66,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
     var i = 0;
     var j = 0;
-    final dataAsList = _data.buffer.asFloat32List();
+    final dataAsList = _data.buffer.asFloat64List();
     for (final column in source) {
       for (final value in column) {
         dataAsList[j++ * columnsNum + i] = value;
@@ -74,7 +76,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     }
   }
 
-  Float32MatrixDataManager.fromFlattened(List<double> source, int rowsNum,
+  Float64MatrixDataManager.fromFlattened(List<double> source, int rowsNum,
       int colsNum) :
         rowsNum = rowsNum,
         columnsNum = colsNum,
@@ -82,7 +84,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(colsNum),
         _rowsCache = List<Vector>(rowsNum),
         _colsCache = List<Vector>(colsNum),
-        _data = Float32List.fromList(source).buffer.asByteData() {
+        _data = Float64List.fromList(source).buffer.asByteData() {
     if (source.length != rowsNum * colsNum) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowsNum x $colsNum, but given a collection of length '
@@ -90,7 +92,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     }
   }
 
-  Float32MatrixDataManager.diagonal(List<double> source) :
+  Float64MatrixDataManager.diagonal(List<double> source) :
         rowsNum = source.length,
         columnsNum = source.length,
         rowIndices = getZeroBasedIndices(source.length),
@@ -101,7 +103,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     _updateByteDataForDiagonalMatrix((i) => source[i]);
   }
 
-  Float32MatrixDataManager.scalar(double scalar, int size) :
+  Float64MatrixDataManager.scalar(double scalar, int size) :
         rowsNum = size,
         columnsNum = size,
         rowIndices = getZeroBasedIndices(size),
@@ -113,7 +115,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
   }
 
   @override
-  final DType dtype = DType.float32;
+  final DType dtype = DType.float64;
 
   @override
   final int columnsNum;
@@ -133,7 +135,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
 
   @override
   Iterator<Iterable<double>> get iterator =>
-      Float32MatrixIterator(_data, rowsNum, columnsNum);
+      Float64MatrixIterator(_data, rowsNum, columnsNum);
 
   @override
   bool get hasData => rowsNum > 0 && columnsNum > 0;
@@ -146,7 +148,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     if (indexFrom  >= rowsNum * columnsNum) {
       throw RangeError.range(indexFrom, 0, rowsNum * columnsNum);
     }
-    return _data.buffer.asFloat32List(indexFrom * _bytesPerElement, count);
+    return _data.buffer.asFloat64List(indexFrom * _bytesPerElement, count);
   }
 
   @override
@@ -179,7 +181,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     for (int i = 0; i < rowsNum; i++) {
       for (int j = 0; j < columnsNum; j++) {
         final value = i == j ? generateValue(i) : 0.0;
-        _data.setFloat32((i * columnsNum + j) * _bytesPerElement, value,
+        _data.setFloat64((i * columnsNum + j) * _bytesPerElement, value,
             Endian.host);
       }
     }
