@@ -49,8 +49,8 @@ void main() {
   Float32x4VectorEqualityOperatorBenchmark.main();
 
   // Matrix benchmarks
-  Float32x4MatrixFromColumnsBenchmark.main();
-  Float32x4MatrixFromFlattenedBenchmark.main();
-  Float32x4MatrixFromListBenchmark.main();
-  Float32x4MatrixFromRowsBenchmark.main();
+  Float32MatrixFromColumnsBenchmark.main();
+  Float32MatrixFromFlattenedBenchmark.main();
+  Float32MatrixFromListBenchmark.main();
+  Float32MatrixFromRowsBenchmark.main();
 }

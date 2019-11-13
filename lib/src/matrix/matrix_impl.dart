@@ -2,23 +2,26 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:ml_linalg/axis.dart';
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/matrix/common/data_manager/matrix_data_manager.dart';
+import 'package:ml_linalg/src/matrix/common/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/common/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
-abstract class BaseMatrix with
-    IterableMixin<Iterable<double>>,
-    MatrixValidatorMixin implements Matrix {
+class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
+    implements Matrix {
 
-  BaseMatrix(this._dataManager);
+  MatrixImpl(this._dataManager);
 
   final MatrixDataManager _dataManager;
   final Map<Axis, Vector> _meansCache = {};
   final Map<Axis, Vector> _deviationCache = {};
+
+  @override
+  DType get dtype => _dataManager.dtype;
 
   @override
   int get rowsNum => _dataManager.rowsNum;
@@ -317,7 +320,9 @@ abstract class BaseMatrix with
   double _findExtrema(double callback(Vector vector)) {
     int i = 0;
     final minValues = List<double>(rowsNum);
-    for (final row in rows) minValues[i++] = callback(row);
+    for (final row in rows) {
+      minValues[i++] = callback(row);
+    }
     return callback(Vector.fromList(minValues, dtype: dtype));
   }
 
@@ -350,7 +355,7 @@ abstract class BaseMatrix with
     checkColumnsAndRowsNumber(this, matrix);
     final source = List<double>(rowsNum * matrix.columnsNum);
     for (final i in _dataManager.rowIndices) {
-      for (final j in (matrix as BaseMatrix)._dataManager.columnIndices) {
+      for (final j in (matrix as MatrixImpl)._dataManager.columnIndices) {
         final element = getRow(i).dot(matrix.getColumn(j));
         source[i * matrix.columnsNum + j] = element;
       }

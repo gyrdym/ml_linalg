@@ -1,16 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/axis.dart';
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Float32Matrix', () {
+  group('Matrix', () {
     test('should create an instance based on given list', () {
-      final actual = Float32Matrix.fromList([
+      final actual = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0, 5.0],
         [6.0, 7.0, 8.0, 9.0, 0.0],
       ]);
@@ -25,7 +25,7 @@ void main() {
 
     test('should create an instance based on an empty list (`fromList` '
         'constructor)', () {
-      final actual = Float32Matrix.fromList([]);
+      final actual = Matrix.fromList([]);
       final expected = <double>[];
       expect(actual, equals(expected));
       expect(actual.rowsNum, 0);
@@ -34,7 +34,7 @@ void main() {
 
     test('should create an instance with predefined vectors as matrix '
         'rows', () {
-      final actual = Float32Matrix.rows([
+      final actual = Matrix.fromRows([
         Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]),
         Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0]),
       ]);
@@ -49,7 +49,7 @@ void main() {
 
     test('should create an instance based on an empty list (`rows` '
         'constructor)', () {
-      final actual = Float32Matrix.rows([]);
+      final actual = Matrix.fromRows([]);
       final expected = <double>[];
       expect(actual, equals(expected));
       expect(actual.rowsNum, 0);
@@ -58,7 +58,7 @@ void main() {
 
     test('should create an instance with predefined vectors as matrix columns',
         () {
-      final actual = Float32Matrix.columns([
+      final actual = Matrix.fromColumns([
         Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]),
         Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0]),
       ]);
@@ -76,7 +76,7 @@ void main() {
 
     test('should create an instance based on an empty list (`columns` '
         'constructor)', () {
-      final actual = Float32Matrix.columns([]);
+      final actual = Matrix.fromColumns([]);
       final expected = <double>[];
       expect(actual, equals(expected));
       expect(actual.rowsNum, 0);
@@ -85,7 +85,7 @@ void main() {
 
     test('should create an instance from flattened collection', () {
       final actual =
-          Float32Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
+          Matrix.fromFlattenedList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
       final expected = [
         [1.0, 2.0, 3.0],
         [4.0, 5.0, 6.0],
@@ -97,8 +97,7 @@ void main() {
 
     test('should create an instance based on an empty list (`flattened` '
         'constructor)', () {
-      final actual =
-      Float32Matrix.flattened([], 0, 0);
+      final actual = Matrix.fromFlattenedList([], 0, 0);
       final expected = <double>[];
       expect(actual.rowsNum, 0);
       expect(actual.columnsNum, 0);
@@ -107,12 +106,12 @@ void main() {
 
     test('should throw an error if one tries to create a matrix from flattened '
         'collection and with unproper specified dimensions', () {
-      expect(() => Float32Matrix.flattened([1.0, 2.0, 3.0, 4.0, 5.0], 2, 3),
+      expect(() => Matrix.fromFlattenedList([1.0, 2.0, 3.0, 4.0, 5.0], 2, 3),
           throwsException);
     });
 
     test('should provide indexed access to its elements', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0],
         [6.0, 7.0, 8.0]
       ]);
@@ -125,7 +124,7 @@ void main() {
     });
 
     test('should return required row as a vector', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
       ]);
@@ -140,7 +139,7 @@ void main() {
     });
 
     test('should cache repeatedly retrieving row vector', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -155,7 +154,7 @@ void main() {
     });
 
     test('should return required column as a vector', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
@@ -179,7 +178,7 @@ void main() {
     });
 
     test('should cache repeatedly retrieving column vector', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -195,7 +194,7 @@ void main() {
 
     test('should reduce all the matrix rows into a single vector, without '
         'initial reducer value', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
@@ -207,7 +206,7 @@ void main() {
 
     test('should reduce all the matrix rows into a single vector, with initial '
         'reducer value', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
@@ -220,7 +219,7 @@ void main() {
 
     test('should reduce all the matrix columns into a single vector, without '
         'initial reducer value', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
@@ -233,7 +232,7 @@ void main() {
 
     test('should reduce all the matrix columns into a single vector, with '
         'initial reducer value', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
@@ -245,7 +244,7 @@ void main() {
     });
 
     test('should perform column-wise mapping of the matrix to a new one', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
@@ -261,7 +260,7 @@ void main() {
     });
 
     test('should perform row-wise mapping of the matrix to a new one', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [11.0, 12.0, 13.0, 14.0],
         [15.0, 16.0, 17.0, 18.0],
         [21.0, 22.0, 23.0, 24.0],
@@ -277,7 +276,7 @@ void main() {
     });
 
     test('should perform multiplication by a vector', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -296,7 +295,7 @@ void main() {
 
     test('should throw an error if one tries to multiple by a vector of '
         'unproper length', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -306,12 +305,12 @@ void main() {
     });
 
     test('should perform multiplication of a matrix and another matrix', () {
-      final matrix1 = Float32Matrix.fromList([
+      final matrix1 = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final matrix2 = Float32Matrix.fromList([
+      final matrix2 = Matrix.fromList([
         [1.0, 2.0],
         [5.0, 6.0],
         [9.0, .0],
@@ -330,12 +329,12 @@ void main() {
 
     test('should throw an error if one tries to mult a matrix with another '
         'matrix of unproper dimensions', () {
-      final matrix1 = Float32Matrix.fromList([
+      final matrix1 = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final matrix2 = Float32Matrix.fromList([
+      final matrix2 = Matrix.fromList([
         [1.0, 2.0],
         [5.0, 6.0],
         [9.0, .0],
@@ -344,7 +343,7 @@ void main() {
     });
 
     test('should perform row-wise division by a vector', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 6.0, 20.0, 125.0],
         [10.0, 18.0, 28.0, 40.0],
         [18.0, .0, -12.0, -35.0],
@@ -362,7 +361,7 @@ void main() {
     });
 
     test('should perform column-wise division by a vector', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 6.0, 20.0, 120.0],
         [9.0, 18.0, 27.0, 45.0],
         [14.0, .0, -21.0, -35.0],
@@ -381,7 +380,7 @@ void main() {
 
     test('should throw an error if one tries to divide by a vector of '
         'unproper length', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -391,12 +390,12 @@ void main() {
     });
 
     test('should perform division of a matrix by another matrix', () {
-      final matrix1 = Float32Matrix.fromList([
+      final matrix1 = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final matrix2 = Float32Matrix.fromList([
+      final matrix2 = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, 1.0, -2.0, -3.0],
@@ -414,12 +413,12 @@ void main() {
 
     test('should throw an error if one tries to divide a matrix by another '
         'matrix of unproper dimensions', () {
-      final matrix1 = Float32Matrix.fromList([
+      final matrix1 = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final matrix2 = Float32Matrix.fromList([
+      final matrix2 = Matrix.fromList([
         [1.0, 2.0],
         [5.0, 6.0],
         [9.0, .0],
@@ -428,7 +427,7 @@ void main() {
     });
 
     test('should perform division of a matrix by a scalar', () {
-      final matrix1 = Float32Matrix.fromList([
+      final matrix1 = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -446,7 +445,7 @@ void main() {
     });
 
     test('should find a frobenius norm', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -457,7 +456,7 @@ void main() {
     });
 
     test('should transpose a matrix', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -476,7 +475,7 @@ void main() {
 
     test('should transpose a 1xN matrix', () {
       final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0]);
-      final matrix = Float32Matrix.rows([vector]);
+      final matrix = Matrix.fromRows([vector]);
       final actual = matrix.transpose();
       final expected = [
         [1.0],
@@ -491,7 +490,7 @@ void main() {
 
     test('should transpose a Nx1 matrix', () {
       final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0]);
-      final matrix = Float32Matrix.columns([vector]);
+      final matrix = Matrix.fromColumns([vector]);
       final actual = matrix.transpose();
       final expected = [
         [1.0, 2.0, 3.0, 4.0],
@@ -502,7 +501,7 @@ void main() {
     });
 
     test('should perform multiplication of a matrix and a scalar', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -519,12 +518,12 @@ void main() {
     });
 
     test('should perform matricies subtraction', () {
-      final matrix1 = Float32Matrix.fromList([
+      final matrix1 = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final matrix2 = Float32Matrix.fromList([
+      final matrix2 = Matrix.fromList([
         [10.0, 20.0, 30.0, 40.0],
         [-5.0, 16.0, 2.0, 18.0],
         [2.0, -1.0, -2.0, -7.0],
@@ -541,12 +540,12 @@ void main() {
     });
 
     test('should perform addition of a matrix', () {
-      final matrix1 = Float32Matrix.fromList([
+      final matrix1 = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
       ]);
-      final matrix2 = Float32Matrix.fromList([
+      final matrix2 = Matrix.fromList([
         [10.0, 20.0, 30.0, 40.0],
         [-5.0, 16.0, 2.0, 18.0],
         [2.0, -1.0, -2.0, -7.0],
@@ -563,7 +562,7 @@ void main() {
     });
 
     test('should perform addition of a scalar', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -580,7 +579,7 @@ void main() {
     });
 
     test('should find its max value', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -592,7 +591,7 @@ void main() {
     });
 
     test('should find its min value', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -604,7 +603,7 @@ void main() {
     });
 
     test('should map row wise its elements to a new matrix', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
         [9.0, .0, -2.0, -3.0],
@@ -622,7 +621,7 @@ void main() {
     });
 
     test('should convert itself to a vector column', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [1.0],
         [5.0],
         [9.0],
@@ -635,7 +634,7 @@ void main() {
     });
 
     test('should convert itself to a vector row', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0],
       ]);
       final row1 = matrix.toVector();
@@ -647,7 +646,7 @@ void main() {
 
     test('should throw an error if one tries to convert it into vector if its '
         'dimension is inappropriate', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0],
         [20.0, 24.0, 28.0, 32.0],
         [36.0, .0, -8.0, -12.0],
@@ -657,7 +656,7 @@ void main() {
     });
 
     test('should return rows', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0],
         [20.0, 24.0, 28.0, 32.0],
         [36.0, .0, -8.0, -12.0],
@@ -670,7 +669,7 @@ void main() {
     });
 
     test('should return columns', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0],
         [20.0, 24.0, 28.0, 32.0],
         [36.0, .0, -8.0, -12.0],
@@ -687,7 +686,7 @@ void main() {
   group('uniqueRows', () {
     test('should return the same row vectors as the matrix rows if all the '
         'rows are unique', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -706,7 +705,7 @@ void main() {
     });
 
     test('should return just unique rows', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -726,7 +725,7 @@ void main() {
 
   group('insertColumn', () {
     test('should insert a new column by column index', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -749,7 +748,7 @@ void main() {
     });
 
     test('should insert a new column at the very first index', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -770,7 +769,7 @@ void main() {
     });
 
     test('should set a new column at penultimate index', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -791,7 +790,7 @@ void main() {
     });
 
     test('should set a new column at very last index', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -812,7 +811,7 @@ void main() {
     });
 
     test('should insert new columns by column index', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -844,7 +843,7 @@ void main() {
     });
 
     test('should insert new columns at the very first index', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -872,7 +871,7 @@ void main() {
     });
 
     test('should set new columns at penultimate index', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -893,7 +892,7 @@ void main() {
     });
 
     test('should set new columns at very last index', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -921,7 +920,7 @@ void main() {
     });
 
     test('should throw an error if a new column has an invalid length', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -934,7 +933,7 @@ void main() {
 
     test('should throw an error if the passed column index is greater than or '
         'equal to the total number of new columns', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -949,7 +948,7 @@ void main() {
 
   group('sample', () {
     test('should create a new matrix from its diffrent segments', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -971,7 +970,7 @@ void main() {
 
     test('should create a new matrix from its diffrent segments even if there '
         'are the same row indices in `rowIndices` parameter', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -994,7 +993,7 @@ void main() {
 
     test('should create a new matrix from its diffrent segments even if there '
         'are the same column indices in `columIndices` parameter', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1016,7 +1015,7 @@ void main() {
 
     test('should throw a range error if one of the column indices is out of '
         'bound)', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1032,7 +1031,7 @@ void main() {
 
     test('should create a new matrix from its diffrent segments (given row '
         'indices cover the whole rows range of the matrix)', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.1],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1056,7 +1055,7 @@ void main() {
 
     test('should create a new matrix from its diffrent segments (given column '
         'indices cover the whole columns range of the matrix)', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1077,7 +1076,7 @@ void main() {
 
     test('should create a new matrix from its diffrent segments (columnIndices '
         'parameter is omitted)', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1097,7 +1096,7 @@ void main() {
 
     test('should create a new matrix from its diffrent segments (rowIndices '
         'parameter is omitted)', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1120,7 +1119,7 @@ void main() {
 
     test('should create a new matrix from its diffrent segments (both '
         'rowIndices and columnIndices parameters are omitted)', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1142,7 +1141,7 @@ void main() {
 
   group('sort', () {
     test('should sort the matrix row-wise with asc direction', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1163,7 +1162,7 @@ void main() {
     });
 
     test('should sort the matrix column-wise with asc direction', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1184,7 +1183,7 @@ void main() {
     });
 
     test('should sort the matrix row-wise with desc direction', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1205,7 +1204,7 @@ void main() {
     });
 
     test('should sort the matrix column-wise with desc direction', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1228,7 +1227,7 @@ void main() {
 
   group('toString', () {
     test('should provide readable string representation', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0],
         [36.0, .0, -8.0, -12.0, 12.0],
@@ -1247,7 +1246,7 @@ void main() {
 
     test('should provide readable string representation for Nx1 matrix, '
         'created from iterable', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0],
         [20.0],
         [36.0],
@@ -1267,7 +1266,7 @@ void main() {
     test('should provide readable string representation for Nx1 matrix, '
         'created from columns constructor', () {
       final vector = Vector.fromList([4.0, 20.0, 36.0, 16.0, 112.0]);
-      final matrix = Float32Matrix.columns([vector]);
+      final matrix = Matrix.fromColumns([vector]);
       final actual = matrix.toString();
       final expected = 'Matrix 5 x 1:\n'
           '(4.0)\n'
@@ -1280,7 +1279,7 @@ void main() {
 
     test('should provide readable string representation for 1xN matrix, '
         'created from iterable', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0],
       ]);
       final actual = matrix.toString();
@@ -1292,7 +1291,7 @@ void main() {
     test('should provide readable string representation for 1xN matrix, '
         'created from rows constructor', () {
       final vector = Vector.fromList([4.0, 8.0, 12.0, 16.0, 34.0]);
-      final matrix = Float32Matrix.rows([vector]);
+      final matrix = Matrix.fromRows([vector]);
       final actual = matrix.toString();
       final expected = 'Matrix 1 x 5:\n'
           '(4.0, 8.0, 12.0, 16.0, 34.0)\n';
@@ -1300,7 +1299,7 @@ void main() {
     });
 
     test('should cut string representation of big matrices', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [4.0, 8.0, 12.0, 16.0, 34.0, 21.0, 34.0],
         [20.0, 24.0, 28.0, 32.0, 23.0, 12.0, 124.0],
         [36.0, .0, -8.0, -12.0, 12.0, 43.0, 78.0],
@@ -1323,7 +1322,7 @@ void main() {
 
   group('rowIndices', () {
     test('should contain zero-based ordered iterable of row indices', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [  1,   2,   3,   4],
         [ 10,  20,  30,  40],
         [100, 200, 300, 400],
@@ -1333,7 +1332,7 @@ void main() {
     });
 
     test('should contain empty iterable if the matrix is empty', () {
-      final matrix = Float32Matrix.fromList([]);
+      final matrix = Matrix.fromList([]);
 
       expect(matrix.rowIndices, isEmpty);
     });
@@ -1341,7 +1340,7 @@ void main() {
 
   group('columnIndices', () {
     test('should contain zero-based iterable of ordered column indices', () {
-      final matrix = Float32Matrix.fromList([
+      final matrix = Matrix.fromList([
         [  1,   2,   3,   4],
         [ 10,  20,  30,  40],
         [100, 200, 300, 400],
@@ -1351,7 +1350,7 @@ void main() {
     });
 
     test('should contain empty iterable if the matrix is empty', () {
-      final matrix = Float32Matrix.fromList([]);
+      final matrix = Matrix.fromList([]);
 
       expect(matrix.columnIndices, isEmpty);
     });
