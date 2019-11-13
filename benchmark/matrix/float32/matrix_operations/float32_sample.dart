@@ -1,17 +1,19 @@
 // Approx. 6.3 second (MacBook Air mid 2017), Dart VM version: 2.5.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
+import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/vector.dart';
 
 const numOfRows = 10000;
 const numOfColumns = 1000;
 
-class Float32x4MatrixSampleBenchmark extends BenchmarkBase {
-  Float32x4MatrixSampleBenchmark() : super('Matrix sample method');
+class Float32MatrixSampleBenchmark extends BenchmarkBase {
+  Float32MatrixSampleBenchmark() : super('Matrix sample method');
 
-  final Float32Matrix _source = Float32Matrix.rows(
-      List<Vector>.filled(numOfRows, Vector.randomFilled(numOfColumns))
+  final Matrix _source = Matrix.fromRows(
+    List<Vector>.filled(numOfRows, Vector.randomFilled(numOfColumns)),
+    dtype: DType.float32,
   );
 
   final _rowIndices = Vector
@@ -25,7 +27,7 @@ class Float32x4MatrixSampleBenchmark extends BenchmarkBase {
       .toList();
 
   static void main() {
-    Float32x4MatrixSampleBenchmark().report();
+    Float32MatrixSampleBenchmark().report();
   }
 
   @override
@@ -38,5 +40,5 @@ class Float32x4MatrixSampleBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  Float32x4MatrixSampleBenchmark.main();
+  Float32MatrixSampleBenchmark.main();
 }

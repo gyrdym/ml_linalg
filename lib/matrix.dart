@@ -4,7 +4,8 @@ import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
+import 'package:ml_linalg/src/matrix/matrix_impl.dart';
+import 'package:ml_linalg/src/matrix/float32_matrix_data_manager.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// An algebraic matrix with extended functionality, adapted for data science
@@ -43,7 +44,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.fromList(source);
+        return MatrixImpl(Float32MatrixDataManager.fromList(source));
+
       default:
         throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
@@ -81,7 +83,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.rows(source);
+        return MatrixImpl(Float32MatrixDataManager.fromRows(source));
+
       default:
         throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
@@ -123,7 +126,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
       {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.columns(source);
+        return MatrixImpl(Float32MatrixDataManager.fromColumns(source));
+
       default:
         throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
@@ -151,7 +155,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   factory Matrix.empty({DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.empty();
+        return MatrixImpl(Float32MatrixDataManager.fromList([]));
+
       default:
         throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
@@ -185,7 +190,9 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
       int columnsNum, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.flattened(source, rowsNum, columnsNum);
+        return MatrixImpl(Float32MatrixDataManager.fromFlattened(
+            source, rowsNum, columnsNum));
+
       default:
         throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
@@ -217,7 +224,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   factory Matrix.diagonal(List<double> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.diagonal(source);
+        return MatrixImpl(Float32MatrixDataManager.diagonal(source));
+
       default:
         throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
@@ -249,7 +257,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   factory Matrix.scalar(double scalar, int size, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.scalar(scalar, size);
+        return MatrixImpl(Float32MatrixDataManager.scalar(scalar, size));
+
       default:
         throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
@@ -281,7 +290,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   factory Matrix.identity(int size, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.scalar(1.0, size);
+        return MatrixImpl(Float32MatrixDataManager.scalar(1.0, size));
+
       default:
         throw UnimplementedError('Matrix of type $dtype is not implemented yet');
     }
@@ -308,7 +318,10 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   factory Matrix.row(List<double> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.rows([Vector.fromList(source, dtype: dtype)]);
+        return MatrixImpl(Float32MatrixDataManager.fromRows(
+            [Vector.fromList(source, dtype: dtype)],
+        ));
+
       default:
         throw UnimplementedError(
             'Matrix of type $dtype is not implemented yet');
@@ -340,7 +353,10 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   factory Matrix.column(List<double> source, {DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.columns([Vector.fromList(source, dtype: dtype)]);
+        return MatrixImpl(Float32MatrixDataManager.fromColumns((
+            [Vector.fromList(source, dtype: dtype)]),
+        ));
+
       default:
         throw UnimplementedError(
             'Matrix of type $dtype is not implemented yet');

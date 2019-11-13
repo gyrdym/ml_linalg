@@ -352,6 +352,8 @@ abstract class Vector implements Iterable<double> {
   /// the regular [map] method
   Vector fastMap<T>(T mapper(T element));
 
+  void fastForEach<T>(void iteratorFn(T element, bool isLast, List<double> remains));
+
   /// Returns a new vector composed of values which indices are within the range
   /// [start] (inclusive) - [end] (exclusive)
   Vector subvector(int start, [int end]);

@@ -1,6 +1,8 @@
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
 abstract class MatrixDataManager {
+  DType get dtype;
   int get rowsNum;
   int get columnsNum;
   Iterator<Iterable<double>> get iterator;
