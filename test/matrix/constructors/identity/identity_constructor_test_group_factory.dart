@@ -2,10 +2,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void matrixIdentityConstructorTestGroupFactory(DType dtype) =>
-    group(dtypeToMatrixClassName[dtype], () {
+    group(dtypeToMatrixTestTitle[dtype], () {
       group('identity constructor', () {
         test('should create a matrix with main diagonal elements equal to 1, '
             'and the rest elements equal to 0', () {
@@ -21,6 +21,7 @@ void matrixIdentityConstructorTestGroupFactory(DType dtype) =>
             [0, 0, 0, 0, 0, 1, 0],
             [0, 0, 0, 0, 0, 0, 1],
           ]));
+          expect(matrix.dtype, dtype);
         });
       });
     });

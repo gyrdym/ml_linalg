@@ -4,10 +4,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void main() {
-  group(dtypeToVectorClassName[DType.float32], () {
+  group(dtypeToVectorTestTitle[DType.float32], () {
     group('fromSimdList constructor', () {
       final typedList = Float32x4List.fromList([
         Float32x4(1.0, 2.0, 3.0, 4.0),
@@ -38,7 +38,7 @@ void main() {
     });
   });
 
-  group(dtypeToVectorClassName[DType.float64], () {
+  group(dtypeToVectorTestTitle[DType.float64], () {
     group('fromSimdList constructor', () {
       final typedList = Float64x2List.fromList([
         Float64x2(1.0, 2.0),

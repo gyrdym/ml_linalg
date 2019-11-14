@@ -3,10 +3,10 @@ import 'package:ml_linalg/linalg.dart';
 import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void matrixDeviationTestGroupFactory(DType dtype) =>
-    group(dtypeToMatrixClassName[dtype], () {
+    group(dtypeToMatrixTestTitle[dtype], () {
       group('deviation', () {
         test('should calculate standard deviation for each column and return '
             'calculated values as a vector', () {

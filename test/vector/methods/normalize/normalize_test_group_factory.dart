@@ -4,10 +4,10 @@ import 'package:ml_linalg/vector.dart';
 import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void vectorNormalizeTestGroupFactory(DType dtype) =>
-    group(dtypeToVectorClassName[dtype], () {
+    group(dtypeToVectorTestTitle[dtype], () {
       group('normalize method', () {
         test('should normalize itself (Eucleadean norm)', () {
           final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],

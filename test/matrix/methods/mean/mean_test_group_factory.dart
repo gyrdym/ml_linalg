@@ -4,10 +4,10 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void matrixMeanTestGroupFactory(DType dtype) =>
-    group(dtypeToMatrixClassName[dtype], () {
+    group(dtypeToMatrixTestTitle[dtype], () {
       group('mean', () {
         test('should calculate mean values column-wise', () {
           final matrix = Matrix.fromList([

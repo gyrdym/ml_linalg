@@ -9,29 +9,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Matrix', () {
-    test('should create an instance based on given list', () {
-      final actual = Matrix.fromList([
-        [1.0, 2.0, 3.0, 4.0, 5.0],
-        [6.0, 7.0, 8.0, 9.0, 0.0],
-      ]);
-      final expected = [
-        [1.0, 2.0, 3.0, 4.0, 5.0],
-        [6.0, 7.0, 8.0, 9.0, 0.0],
-      ];
-      expect(actual, equals(expected));
-      expect(actual.rowsNum, 2);
-      expect(actual.columnsNum, 5);
-    });
-
-    test('should create an instance based on an empty list (`fromList` '
-        'constructor)', () {
-      final actual = Matrix.fromList([]);
-      final expected = <double>[];
-      expect(actual, equals(expected));
-      expect(actual.rowsNum, 0);
-      expect(actual.columnsNum, 0);
-    });
-
     test('should create an instance with predefined vectors as matrix '
         'rows', () {
       final actual = Matrix.fromRows([

@@ -2,10 +2,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void vectorFilledConstructorTestGroupFactory(DType dtype) =>
-    group(dtypeToVectorClassName[dtype], () {
+    group(dtypeToVectorTestTitle[dtype], () {
       group('filled constructor', () {
         test('should create a vector filled with the passed value', () {
           final vector = Vector.filled(10, 2.0, dtype: dtype);

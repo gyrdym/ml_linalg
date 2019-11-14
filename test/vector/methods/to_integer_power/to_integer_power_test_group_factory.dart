@@ -2,10 +2,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void vectorToIntegerPowerTestGroupFactory(DType dtype) =>
-    group(dtypeToVectorClassName[dtype], () {
+    group(dtypeToVectorTestTitle[dtype], () {
       group('toIntegerPower method', () {
         test('should raise vector elements to the integer power', () {
           final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],

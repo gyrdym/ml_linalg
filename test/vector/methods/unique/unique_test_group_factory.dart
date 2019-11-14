@@ -2,10 +2,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void vectorUniqueTestGroupFactory(DType dtype) =>
-    group(dtypeToVectorClassName[dtype], () {
+    group(dtypeToVectorTestTitle[dtype], () {
       group('unique method', () {
         test('`unique` method', () {
           final vector = Vector.fromList([
