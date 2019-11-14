@@ -4,10 +4,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void main() {
-  group(dtypeToVectorClassName[DType.float32], () {
+  group(dtypeToVectorTestTitle[DType.float32], () {
     group('fastMap method', () {
       test('should map an existing vector to a new one processing 4 elements in '
           'a time', () {
@@ -29,7 +29,7 @@ void main() {
     });
   });
 
-  group(dtypeToVectorClassName[DType.float64], () {
+  group(dtypeToVectorTestTitle[DType.float64], () {
     group('fastMap method', () {
       test('should map an existing vector to a new one processing 2 elements in '
           'a time', () {

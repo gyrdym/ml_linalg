@@ -2,10 +2,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
-    group(dtypeToMatrixClassName[dtype], () {
+    group(dtypeToMatrixTestTitle[dtype], () {
       group('empty constructor', () {
         test('should create a matrix with both rowsNum and columnsNum '
             'equal 0', () {
@@ -21,6 +21,7 @@ void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
 
           expect(matrix.rows, isEmpty);
           expect(matrix.columns, isEmpty);
+          expect(matrix.dtype, dtype);
         });
 
         test('should create a matrix that throws an exception if one tries to '
@@ -34,6 +35,8 @@ void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
 
           expect(() => matrix.getColumn(0), throwsException);
           expect(() => matrix.getColumn(20), throwsException);
+
+          expect(matrix.dtype, dtype);
         });
       });
     });

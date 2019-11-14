@@ -2,10 +2,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void matrixDiagonalConstructorTestGroupFactory(DType dtype) =>
-    group(dtypeToMatrixClassName[dtype], () {
+    group(dtypeToMatrixTestTitle[dtype], () {
       group('diagonal constructor', () {
         test('should create a matrix with all zero elements but main diagonal '
             'ones', () {
@@ -19,6 +19,7 @@ void matrixDiagonalConstructorTestGroupFactory(DType dtype) =>
             [0, 0, 0, 4, 0],
             [0, 0, 0, 0, 5],
           ]));
+          expect(matrix.dtype, dtype);
         });
 
         test('should create empty matrix if empty list is provided', () {
@@ -29,6 +30,7 @@ void matrixDiagonalConstructorTestGroupFactory(DType dtype) =>
           expect(matrix.rowsNum, 0);
           expect(matrix.columnsNum, 0);
           expect(matrix.hasData, isFalse);
+          expect(matrix.dtype, dtype);
         });
       });
     });

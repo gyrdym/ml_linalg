@@ -3,10 +3,10 @@ import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
-import '../../../dtype_to_class_name_mapping.dart';
+import '../../../dtype_to_title.dart';
 
 void vectorDistanceToTestGroupFactory(DType dtype) =>
-    group(dtypeToVectorClassName[dtype], () {
+    group(dtypeToVectorTestTitle[dtype], () {
       group('distanceTo method', () {
         test('should find Euclidean distance (from vector to the same vector)', () {
           final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0], dtype: dtype);
