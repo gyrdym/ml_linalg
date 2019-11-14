@@ -9,88 +9,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Matrix', () {
-    test('should provide indexed access to its elements', () {
-      final matrix = Matrix.fromList([
-        [1.0, 2.0, 3.0],
-        [6.0, 7.0, 8.0]
-      ]);
-      expect(matrix[0][0], 1.0);
-      expect(matrix[0][1], 2.0);
-      expect(matrix[0][2], 3.0);
-      expect(matrix[1][0], 6.0);
-      expect(matrix[1][1], 7.0);
-      expect(matrix[1][2], 8.0);
-    });
-
-    test('should return required row as a vector', () {
-      final matrix = Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-      ]);
-      final row1 = matrix.getRow(0);
-      final row2 = matrix.getRow(1);
-
-      expect(row1 is Vector, isTrue);
-      expect(row1, [11.0, 12.0, 13.0, 14.0]);
-
-      expect(row2 is Vector, isTrue);
-      expect(row2, [15.0, 16.0, 17.0, 18.0]);
-    });
-
-    test('should cache repeatedly retrieving row vector', () {
-      final matrix = Matrix.fromList([
-        [4.0, 8.0, 12.0, 16.0, 34.0],
-        [20.0, 24.0, 28.0, 32.0, 23.1],
-        [36.0, .0, -8.0, -12.0, 12.0],
-        [16.0, 1.0, -18.0, 3.0, 11.0],
-        [112.0, 10.0, 34.0, 2.0, 10.0],
-      ]);
-      // write value to the cache
-      final row1 = matrix.getRow(1);
-      final row2 = matrix.getRow(1);
-
-      expect(identical(row1, row2), isTrue);
-    });
-
-    test('should return required column as a vector', () {
-      final matrix = Matrix.fromList([
-        [11.0, 12.0, 13.0, 14.0],
-        [15.0, 16.0, 17.0, 18.0],
-        [21.0, 22.0, 23.0, 24.0],
-      ]);
-      final column1 = matrix.getColumn(0);
-      final column2 = matrix.getColumn(1);
-      final column3 = matrix.getColumn(2);
-      final column4 = matrix.getColumn(3);
-
-      expect(column1 is Vector, isTrue);
-      expect(column1, [11.0, 15.0, 21.0]);
-
-      expect(column2 is Vector, isTrue);
-      expect(column2, [12.0, 16.0, 22.0]);
-
-      expect(column3 is Vector, isTrue);
-      expect(column3, [13.0, 17.0, 23.0]);
-
-      expect(column4 is Vector, isTrue);
-      expect(column4, [14.0, 18.0, 24.0]);
-    });
-
-    test('should cache repeatedly retrieving column vector', () {
-      final matrix = Matrix.fromList([
-        [4.0, 8.0, 12.0, 16.0, 34.0],
-        [20.0, 24.0, 28.0, 32.0, 23.1],
-        [36.0, .0, -8.0, -12.0, 12.0],
-        [16.0, 1.0, -18.0, 3.0, 11.0],
-        [112.0, 10.0, 34.0, 2.0, 10.0],
-      ]);
-      // write value to the cache
-      final column1 = matrix.getColumn(1);
-      final column2 = matrix.getColumn(1);
-
-      expect(identical(column1, column2), isTrue);
-    });
-
     test('should reduce all the matrix rows into a single vector, without '
         'initial reducer value', () {
       final matrix = Matrix.fromList([
@@ -508,7 +426,7 @@ void main() {
         [9.0, .0, -2.0, -3.0],
       ]);
       final actual =
-          matrix.fastMap<Float32x4>((Float32x4 element) => element.scale(4.0));
+          matrix.fastMap((Float32x4 element) => element.scale(4.0));
       final expected = [
         [4.0, 8.0, 12.0, 16.0],
         [20.0, 24.0, 28.0, 32.0],
