@@ -6,7 +6,7 @@ import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
 import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
-import 'package:ml_linalg/src/vector/float64x2_vector.gen.dart';
+import 'package:ml_linalg/src/vector/float64x2_vector.dart';
 import 'package:ml_linalg/src/vector/simd_helper/simd_helper_factory.dart';
 
 final _cacheManagerFactory = dependencies.getDependency<CacheManagerFactory>();

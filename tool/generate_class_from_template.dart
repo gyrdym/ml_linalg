@@ -3,13 +3,18 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
+final _defaultMapping = {
+  RegExp('(F|f)loat32x4'): (Match match) => '${match.group(1)}loat64x2',
+  RegExp('(F|f)loat32'): (Match match) => '${match.group(1)}loat64',
+};
+
 Future<Null> generateClassFromTemplate(
     String targetFileName,
     String templateFileName,
-    Map<String, String> mapping,
-    [
+    {
+      Map<Pattern, String Function(Match)> mapping,
       String comment = '/* This file is auto generated, do not change it manually */\n\n',
-    ]
+    }
 ) async {
   final File libraryFile = File(targetFileName);
 
@@ -17,11 +22,16 @@ Future<Null> generateClassFromTemplate(
     await libraryFile.delete();
   }
 
-  await _processFile(targetFileName, templateFileName, mapping, comment);
+  await _processFile(
+    targetFileName,
+    templateFileName,
+    {}..addAll(mapping ?? {})..addAll(_defaultMapping),
+    comment,
+  );
 }
 
 Future<Null> _processFile(String targetFileName, String inputFileName,
-    Map<String, String> mapping, String comment) async {
+    Map<Pattern, String Function(Match)> mapping, String comment) async {
   final File inputFile = File(inputFileName);
 
   final String input = await inputFile.readAsString();
@@ -39,6 +49,6 @@ Future<Null> _processFile(String targetFileName, String inputFileName,
 }
 
 String _convertTemplateToTargetClass(String input,
-    Map<String, String> mapping) =>
+    Map<Pattern, String Function(Match)> mapping) =>
     mapping.entries.fold(input, (processedInput, entry) =>
-        processedInput.replaceAll(entry.key, entry.value));
+        processedInput.replaceAllMapped(entry.key, entry.value));
