@@ -7,6 +7,6 @@ Future<Null> generateFloat64x2Vector() => generateClassFromTemplate(
   'lib/src/vector/float32x4_vector.dart',
 );
 
-Future<Null> main() async {
+void main() async {
   await generateFloat64x2Vector();
 }

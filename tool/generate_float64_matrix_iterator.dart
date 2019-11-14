@@ -7,6 +7,6 @@ Future<Null> generateFloat64MatrixIterator() => generateClassFromTemplate(
   'lib/src/matrix/iterator/float32_matrix_iterator.dart',
 );
 
-Future<Null> main() async {
+void main() async {
   await generateFloat64MatrixIterator();
 }

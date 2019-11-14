@@ -7,6 +7,6 @@ Future<Null> generateFloat64MatrixDataManager() => generateClassFromTemplate(
   'lib/src/matrix/data_manager/float32_matrix_data_manager.dart',
 );
 
-Future<Null> main() async {
+void main() async {
   await generateFloat64MatrixDataManager();
 }
