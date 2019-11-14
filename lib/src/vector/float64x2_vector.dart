@@ -379,14 +379,21 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         ? _simdHelper.simdValueToList(_innerSimdList[_numOfBuckets - 1])
         : <double>[];
 
-    final lastFullBucketIdx = _isLastBucketNotFull
+    final _fullBucketsNumber = _isLastBucketNotFull
         ? _numOfBuckets - 1
         : _numOfBuckets;
 
     int counter = 0;
 
-    _innerSimdList.forEach((element) => iteratorFn(
-        element as T, counter++ == lastFullBucketIdx, remains));
+    _innerSimdList
+        .take(_fullBucketsNumber)
+        .forEach(
+          (element) => iteratorFn(
+            element as T,
+            ++counter == _fullBucketsNumber,
+            remains,
+          ),
+    );
   }
 
   @override
