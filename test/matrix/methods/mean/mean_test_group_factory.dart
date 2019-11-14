@@ -8,7 +8,7 @@ import '../../../dtype_to_title.dart';
 
 void matrixMeanTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
-      group('mean', () {
+      group('mean method', () {
         test('should calculate mean values column-wise', () {
           final matrix = Matrix.fromList([
             [10, 20, 30, 40, 0,  -10],

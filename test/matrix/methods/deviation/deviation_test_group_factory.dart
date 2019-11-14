@@ -7,7 +7,7 @@ import '../../../dtype_to_title.dart';
 
 void matrixDeviationTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
-      group('deviation', () {
+      group('deviation method', () {
         test('should calculate standard deviation for each column and return '
             'calculated values as a vector', () {
           final matrix = Matrix.fromList([
