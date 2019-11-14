@@ -16,10 +16,10 @@ Future<Null> generateClassFromTemplate(
       String comment = '/* This file is auto generated, do not change it manually */\n\n',
     }
 ) async {
-  final File libraryFile = File(targetFileName);
+  final targetFile = File(targetFileName);
 
-  if (libraryFile.existsSync()) {
-    await libraryFile.delete();
+  if (targetFile.existsSync()) {
+    await targetFile.delete();
   }
 
   await _processFile(
