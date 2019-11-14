@@ -11,6 +11,7 @@ void vectorEqualityOperatorTestGroupFactory(DType dtype) =>
             'are equal', () {
           final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
           final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+
           expect(vector1 == vector2, isTrue);
         });
 
@@ -18,6 +19,7 @@ void vectorEqualityOperatorTestGroupFactory(DType dtype) =>
             'only zero values', () {
           final vector1 = Vector.fromList([0.0, 0.0, 0.0, 0.0, 0.0], dtype: dtype);
           final vector2 = Vector.fromList([0.0, 0.0, 0.0, 0.0, 0.0], dtype: dtype);
+
           expect(vector1 == vector2, isTrue);
         });
 
@@ -25,6 +27,7 @@ void vectorEqualityOperatorTestGroupFactory(DType dtype) =>
             'are different', () {
           final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
           final vector2 = Vector.fromList([1.0, 2.0, 30.0, 4.0, 5.0], dtype: dtype);
+
           expect(vector1 == vector2, isFalse);
         });
 
@@ -32,6 +35,7 @@ void vectorEqualityOperatorTestGroupFactory(DType dtype) =>
             'opposite values', () {
           final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
           final vector2 = Vector.fromList([-1.0, -2.0, -3.0, -4.0, -5.0], dtype: dtype);
+
           expect(vector1 == vector2, isFalse);
         });
 
@@ -39,6 +43,7 @@ void vectorEqualityOperatorTestGroupFactory(DType dtype) =>
             'vector have all zero values', () {
           final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
           final vector2 = Vector.fromList([0.0, 0.0, 0.0, 0.0, 0.0], dtype: dtype);
+
           expect(vector1 == vector2, isFalse);
         });
 
@@ -46,6 +51,7 @@ void vectorEqualityOperatorTestGroupFactory(DType dtype) =>
             'have different lengths', () {
           final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], dtype: dtype);
           final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+
           expect(vector1 == vector2, isFalse);
         });
 

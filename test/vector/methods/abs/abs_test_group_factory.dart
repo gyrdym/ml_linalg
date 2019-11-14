@@ -14,7 +14,7 @@ void vectorAbsOperatorTestGroupFactory(DType dtype) =>
           final result = vector.abs();
 
           expect(result, equals([3.0, 4.5, 12.0, 23.5, 44.0]));
-          expect(result, isNot(vector));
+          expect(result, isNot(same(vector)));
           expect(result.dtype, dtype);
         });
       });
