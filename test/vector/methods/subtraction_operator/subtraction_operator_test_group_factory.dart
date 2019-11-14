@@ -28,7 +28,7 @@ void vectorSubtractionOperatorTestGroupFactory(DType dtype) =>
 
         test('should perform subtraction with a column matrix', () {
           final vector = Vector.fromList([2.0, 6.0, 12.0, 15.0, 18.0],
-              dtype: DType.float32);
+              dtype: dtype);
           final matrix = Matrix.fromList([
             [1.0],
             [2.0],
@@ -64,7 +64,7 @@ void vectorSubtractionOperatorTestGroupFactory(DType dtype) =>
               dtype: dtype);
           final result = vector - 13.0;
 
-          expect(result != vector, isTrue);
+          expect(result, isNot(same(vector)));
           expect(result.length, equals(5));
           expect(result, equals([-12.0, -11.0, -10.0, -9.0, -8.0]));
           expect(result.dtype, dtype);

@@ -34,7 +34,7 @@ void vectorDivisionOperatorTestGroupFactory(DType dtype) =>
               dtype: dtype);
           final result = vector / 2.0;
 
-          expect(result != vector, isTrue);
+          expect(result, isNot(same(vector)));
           expect(result.length, equals(5));
           expect(result, equals([0.5, 1.0, 1.5, 2.0, 2.5]));
         });
