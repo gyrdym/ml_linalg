@@ -368,33 +368,6 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  void fastForEach<T>(void iteratorFn(T element, bool isLast, List<double> remains)) {
-    if (isEmpty) {
-      return;
-    }
-
-    final remains = _isLastBucketNotFull
-        ? _simdHelper.simdValueToList(_innerSimdList[_numOfBuckets - 1])
-        : <double>[];
-
-    final _fullBucketsNumber = _isLastBucketNotFull
-        ? _numOfBuckets - 1
-        : _numOfBuckets;
-
-    int counter = 0;
-
-    _innerSimdList
-        .take(_fullBucketsNumber)
-        .forEach(
-          (element) => iteratorFn(
-            element as T,
-            ++counter == _fullBucketsNumber,
-            remains,
-          ),
-    );
-  }
-
-  @override
   double operator [](int index) {
     if (isEmpty) {
       throw _emptyVectorException;
