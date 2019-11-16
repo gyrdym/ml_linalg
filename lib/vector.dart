@@ -13,7 +13,8 @@ final _cacheManagerFactory = dependencies.getDependency<CacheManagerFactory>();
 final _simdHelperFactory = dependencies.getDependency<SimdHelperFactory>();
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
-/// architecture support
+/// architecture support and extended functionality, adapted for data science
+/// applications
 ///
 /// The vector's components are represented by special data type, that allows
 /// to perform vector operations extremely fast due to hardware assisted
@@ -350,9 +351,26 @@ abstract class Vector implements Iterable<double> {
   /// [DType.float32] - the argument should be of [Float32x4] type). The data
   /// types mentioned above allow to perform mapping much faster comparing with
   /// the regular [map] method
+  ///
+  /// ````dart
+  /// import 'dart:typed_data';
+  ///
+  /// import 'package:ml_linalg/vector.dart';
+  ///
+  /// final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+  ///   dtype: DType.float32);
+  ///
+  /// final mapped = vector.fastMap((Float32x4 element) => element.scale(3.0));
+  ///
+  /// print(mapped);
+  /// ````
+  ///
+  /// The output:
+  ///
+  /// ```
+  /// (3.0, 6.0, 9.0, 12.0, 15.0, 18.0)
+  /// ```
   Vector fastMap<T>(T mapper(T element));
-
-  void fastForEach<T>(void iteratorFn(T element, bool isLast, List<double> remains));
 
   /// Returns a new vector composed of values which indices are within the range
   /// [start] (inclusive) - [end] (exclusive)
