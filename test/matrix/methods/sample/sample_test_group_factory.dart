@@ -94,7 +94,7 @@ void matrixSampleTestGroupFactory(DType dtype) =>
         });
 
         test('should throw a range error if one of the column indices is out of '
-            'bound)', () {
+            'bound', () {
 
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
