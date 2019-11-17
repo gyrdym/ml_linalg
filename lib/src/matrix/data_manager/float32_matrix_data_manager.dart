@@ -62,14 +62,14 @@ class Float32MatrixDataManager implements MatrixDataManager {
         _colsCache = source,
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
-    var i = 0;
-    var j = 0;
     final dataAsList = _data.buffer.asFloat32List();
-    for (final column in source) {
+    for (int i = 0, j = 0; i < source.length; i++) {
+      final column = source[i];
+      // we use for..in here because `column` provides efficient
+      // Float32List.iterator
       for (final value in column) {
         dataAsList[j++ * columnsNum + i] = value;
       }
-      i++;
       j = 0;
     }
   }
@@ -98,7 +98,10 @@ class Float32MatrixDataManager implements MatrixDataManager {
         _rowsCache = List<Vector>(source.length),
         _colsCache = List<Vector>(source.length),
         _data = ByteData(source.length * source.length * _bytesPerElement) {
-    _updateByteDataForDiagonalMatrix((i) => source[i]);
+    for (int i = 0; i < rowsNum; i++) {
+      _data.setFloat32((i * columnsNum + i) * _bytesPerElement, source[i],
+          Endian.host);
+    }
   }
 
   Float32MatrixDataManager.scalar(double scalar, int size) :

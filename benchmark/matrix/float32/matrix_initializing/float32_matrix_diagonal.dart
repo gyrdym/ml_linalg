@@ -1,4 +1,4 @@
-// Approx. 2.5 second (MacBook Air mid 2017), Dart VM version: 2.5.0
+// Approx. 3 seconds (MacBook Air mid 2017), Dart VM version: 2.5.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
@@ -9,7 +9,7 @@ const size = 10000;
 
 class Float32MatrixDiagonalBenchmark extends BenchmarkBase {
   Float32MatrixDiagonalBenchmark() :
-        super('Matrix initialization, diagonal');
+        super('Matrix initialization (diagonal)');
 
   List<double> _source;
 

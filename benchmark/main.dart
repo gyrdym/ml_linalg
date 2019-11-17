@@ -1,4 +1,4 @@
-import 'matrix/float32/matrix_initializing/float32_from_columns.dart';
+import 'matrix/float32/matrix_initializing/float32_matrix_from_columns.dart';
 import 'matrix/float32/matrix_initializing/float32_from_flattened.dart';
 import 'matrix/float32/matrix_initializing/float32_from_list.dart';
 import 'matrix/float32/matrix_initializing/float32_from_rows.dart';
