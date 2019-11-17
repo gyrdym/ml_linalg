@@ -6,7 +6,9 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
+import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
+import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
@@ -14,11 +16,10 @@ import 'package:quiver/iterables.dart';
 class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     implements Matrix {
 
-  MatrixImpl(this._dataManager);
+  MatrixImpl(this._dataManager, this._cacheManager);
 
   final MatrixDataManager _dataManager;
-  final Map<Axis, Vector> _meansCache = {};
-  final Map<Axis, Vector> _deviationCache = {};
+  final CacheManager _cacheManager;
 
   @override
   DType get dtype => _dataManager.dtype;
@@ -172,10 +173,12 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
 
     switch (axis) {
       case Axis.columns:
-        return _meansCache[axis] ??= _mean(columns);
+        return _cacheManager
+            .retrieveValue(meansByColumnsKey, () => _mean(columns));
 
       case Axis.rows:
-        return _meansCache[axis] ??= _mean(rows);
+        return _cacheManager
+            .retrieveValue(meansByRowsKey, () => _mean(rows));
 
       default:
         throw UnimplementedError('Mean values calculation for axis $axis is not '
@@ -198,10 +201,12 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
 
     switch (axis) {
       case Axis.columns:
-        return _deviationCache[axis] ??= _deviation(rows, means, rowsNum);
+        return _cacheManager.retrieveValue(deviationByColumnsKey,
+                () => _deviation(rows, means, rowsNum));
 
       case Axis.rows:
-        return _deviationCache[axis] ??= _deviation(columns, means, columnsNum);
+        return _cacheManager.retrieveValue(deviationByRowsKey,
+                () => _deviation(columns, means, columnsNum));
 
       default:
         throw UnimplementedError('Deviation calculation for axis $axis is not '
