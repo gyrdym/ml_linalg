@@ -8,6 +8,7 @@ import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_linalg/src/vector/float64x2_vector.dart';
 import 'package:ml_linalg/src/vector/simd_helper/simd_helper_factory.dart';
+import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 
 final _cacheManagerFactory = dependencies.getDependency<CacheManagerFactory>();
 final _simdHelperFactory = dependencies.getDependency<SimdHelperFactory>();
@@ -42,12 +43,18 @@ abstract class Vector implements Iterable<double> {
   }) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.fromList(source, _cacheManagerFactory.create(),
-            _simdHelperFactory.createByDType(dtype));
+        return Float32x4Vector.fromList(
+          source,
+          _cacheManagerFactory.create(vectorCacheKeys),
+          _simdHelperFactory.createByDType(dtype),
+        );
 
       case DType.float64:
-        return Float64x2Vector.fromList(source, _cacheManagerFactory.create(),
-            _simdHelperFactory.createByDType(dtype));
+        return Float64x2Vector.fromList(
+          source,
+          _cacheManagerFactory.create(vectorCacheKeys),
+          _simdHelperFactory.createByDType(dtype),
+        );
 
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
@@ -87,7 +94,7 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.fromSimdList(
           source as Float32x4List,
           actualLength,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -95,7 +102,7 @@ abstract class Vector implements Iterable<double> {
         return Float64x2Vector.fromSimdList(
           source as Float64x2List,
           actualLength,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -129,7 +136,7 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.filled(
           length,
           value,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -137,7 +144,7 @@ abstract class Vector implements Iterable<double> {
         return Float64x2Vector.filled(
           length,
           value,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -170,14 +177,14 @@ abstract class Vector implements Iterable<double> {
       case DType.float32:
         return Float32x4Vector.zero(
           length,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
         return Float64x2Vector.zero(
           length,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -219,7 +226,7 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.randomFilled(
           length,
           seed,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
           max: max,
           min: min,
@@ -229,7 +236,7 @@ abstract class Vector implements Iterable<double> {
         return Float64x2Vector.randomFilled(
           length,
           seed,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
           max: max,
           min: min,
@@ -260,12 +267,16 @@ abstract class Vector implements Iterable<double> {
   factory Vector.empty({DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.empty(_cacheManagerFactory.create(),
-            _simdHelperFactory.createByDType(dtype));
+        return Float32x4Vector.empty(
+          _cacheManagerFactory.create(vectorCacheKeys),
+          _simdHelperFactory.createByDType(dtype),
+        );
 
       case DType.float64:
-        return Float64x2Vector.empty(_cacheManagerFactory.create(),
-            _simdHelperFactory.createByDType(dtype));
+        return Float64x2Vector.empty(
+          _cacheManagerFactory.create(vectorCacheKeys),
+          _simdHelperFactory.createByDType(dtype),
+        );
 
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');

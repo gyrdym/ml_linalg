@@ -8,6 +8,7 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/vector/simd_helper/simd_helper.dart';
+import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
 const _bytesPerElement = Float32List.bytesPerElement;
@@ -119,7 +120,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  int get hashCode => _cacheManager.retrieveValue('hash', () {
+  int get hashCode => _cacheManager.retrieveValue(hashKey, () {
     if (isEmpty) {
       return 0;
     }
@@ -235,7 +236,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector sqrt({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue('sqrt', () {
+      _cacheManager.retrieveValue(sqrtKey, () {
         final source = Float32x4List(_numOfBuckets);
         for (int i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].sqrt();
@@ -251,7 +252,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector abs({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue('abs', () {
+      _cacheManager.retrieveValue(absKey, () {
         final source = Float32x4List(_numOfBuckets);
         for (int i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].abs();
@@ -263,7 +264,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   double dot(Vector vector) => (this * vector).sum();
 
   @override
-  double sum({bool skipCaching = false}) => _cacheManager.retrieveValue('sum',
+  double sum({bool skipCaching = false}) => _cacheManager.retrieveValue(sumKey,
           () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
       skipCaching: skipCaching);
 
@@ -299,14 +300,14 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     if (isEmpty) {
       throw _emptyVectorException;
     }
-    return _cacheManager.retrieveValue('mean', () => sum() / length,
+    return _cacheManager.retrieveValue(meanKey, () => sum() / length,
         skipCaching: skipCaching);
   }
 
   @override
-  double norm([Norm norm = Norm.euclidean, bool skipCaching = false]) =>
-      _cacheManager.retrieveValue('norm_$norm', () {
-        final power = _getPowerByNormType(norm);
+  double norm([Norm normType = Norm.euclidean, bool skipCaching = false]) =>
+      _cacheManager.retrieveValue(getCacheKeyForNormByNormType(normType), () {
+        final power = _getPowerByNormType(normType);
         if (power == 1) {
           return abs().sum();
         }
@@ -315,14 +316,16 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       }, skipCaching: skipCaching);
 
   @override
-  double max({bool skipCaching = false}) => _cacheManager.retrieveValue('max', () =>
-      _findExtrema(-double.infinity, _simdHelper.getMaxLane,
-              (a, b) => a.max(b), math.max), skipCaching: skipCaching);
+  double max({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(maxKey, () =>
+          _findExtrema(-double.infinity, _simdHelper.getMaxLane,
+                  (a, b) => a.max(b), math.max), skipCaching: skipCaching);
 
   @override
-  double min({bool skipCaching = false}) => _cacheManager.retrieveValue('min', () =>
-      _findExtrema(double.infinity, _simdHelper.getMinLane,
-              (a, b) => a.min(b), math.min), skipCaching: skipCaching);
+  double min({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(minKey, () =>
+          _findExtrema(double.infinity, _simdHelper.getMinLane,
+                  (a, b) => a.min(b), math.min), skipCaching: skipCaching);
 
   double _findExtrema(double initialValue,
       double getExtremalLane(Float32x4 bucket),
@@ -355,7 +358,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector unique({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue('unique', () => Vector.fromList(
+      _cacheManager.retrieveValue(uniqueKey, () => Vector.fromList(
                 Set<double>.from(this).toList(growable: false), dtype: dtype),
         skipCaching: skipCaching);
 
@@ -395,18 +398,19 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
     final limit = end == null || end > length ? length : end;
     final collection = _innerTypedList.sublist(start, limit);
+
     return Vector.fromList(collection, dtype: dtype);
   }
 
   @override
   Vector normalize([Norm normType = Norm.euclidean,
     bool skipCaching = false]) =>
-      _cacheManager.retrieveValue('normalize_$normType',
+      _cacheManager.retrieveValue(getCacheKeyForNormalizeByNormType(normType),
               () => this / norm(normType), skipCaching: skipCaching);
 
   @override
   Vector rescale({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue('rescale', () {
+      _cacheManager.retrieveValue(rescaleKey, () {
         final minValue = min();
         final maxValue = max();
         return (this - minValue) / (maxValue - minValue);

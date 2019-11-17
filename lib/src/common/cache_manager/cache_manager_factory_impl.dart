@@ -6,5 +6,5 @@ class CacheManagerFactoryImpl implements CacheManagerFactory {
   const CacheManagerFactoryImpl();
 
   @override
-  CacheManager create() => CacheManagerImpl();
+  CacheManager create(Set<String> keys) => CacheManagerImpl(keys);
 }
