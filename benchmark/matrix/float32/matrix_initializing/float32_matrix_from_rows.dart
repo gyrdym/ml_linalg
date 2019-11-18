@@ -10,7 +10,7 @@ const numOfColumns = 1000;
 
 class Float32MatrixFromRowsBenchmark extends BenchmarkBase {
   Float32MatrixFromRowsBenchmark() :
-        super('Matrix initialization, from rows');
+        super('Matrix initialization (fromRows)');
 
   final _source =
     List<Vector>.filled(numOfColumns,

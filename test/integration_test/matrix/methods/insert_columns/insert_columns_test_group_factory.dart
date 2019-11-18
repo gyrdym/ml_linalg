@@ -243,7 +243,7 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
           ]));
         });
 
-        test('should throw an error if a new column has an invalid length', () {
+        test('should throw an error if new column has invalid length', () {
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -255,7 +255,7 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
           final newCol = Vector.fromList(
               [100.0, 200.0, 300.0, 400.0, 500.0, 1000.0], dtype: dtype);
 
-          expect(() => matrix.insertColumns(4, [newCol]), throwsRangeError);
+          expect(() => matrix.insertColumns(4, [newCol]), throwsException);
         });
 
         test('should throw an error if the passed column index is greater than or '
