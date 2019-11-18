@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.7.0
+- `Matrix`: constructors speed up
+- Float64-based matrix class added
+
 ## 12.6.0
 - `Vector`: vector operations speed up
 - `Float64x2Vector`: `Float64x2Vector` class created 
