@@ -60,11 +60,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.zero(this.length, this._cacheManager, this._simdHelper) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
-            _bytesPerSimdElement).buffer {
-    for (int i = 0; i < length; i++) {
-      _buffer.asByteData().setFloat32(_bytesPerElement * i, 0.0, Endian.host);
-    }
-  }
+            _bytesPerSimdElement).buffer;
 
   Float32x4Vector.fromSimdList(Float32x4List data, this.length,
       this._cacheManager, this._simdHelper) :

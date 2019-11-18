@@ -11,8 +11,8 @@ void matrixFromRowsConstructorTestGroupFactory(DType dtype) =>
         test('should create an instance with predefined vectors as matrix '
             'rows', () {
           final actual = Matrix.fromRows([
-            Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]),
-            Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0]),
+            Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype),
+            Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0], dtype: dtype),
           ], dtype: dtype);
 
           final expected = [

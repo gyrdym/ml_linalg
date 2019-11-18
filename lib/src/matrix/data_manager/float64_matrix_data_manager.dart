@@ -22,15 +22,11 @@ class Float64MatrixDataManager implements MatrixDataManager {
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
-    var i = 0;
-    var j = 0;
     final dataAsList = _data.buffer.asFloat64List();
-    for (final row in source) {
-      for (final value in row) {
-        dataAsList[i * columnsNum + j++] = value;
+    for (int i = 0, j = 0; i < source.length; i++) {
+      for (int j = 0; j < source[i].length; j++) {
+        dataAsList[i * columnsNum + j] = source[i][j];
       }
-      i++;
-      j = 0;
     }
   }
 
@@ -43,14 +39,20 @@ class Float64MatrixDataManager implements MatrixDataManager {
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
-    var i = 0;
-    var j = 0;
     final dataAsList = _data.buffer.asFloat64List();
-    for (final row in source) {
-      for (final value in row) {
+    for (int i = 0, j = 0; i < source.length; i++) {
+      final row = source[i];
+      if (row.dtype != dtype) {
+        throw Exception('Expected vector type: `$dtype`, '
+            'but given: ${row.dtype}');
+      }
+      if (row.length != columnsNum) {
+        throw Exception('Expected vector length: `$columnsNum`, '
+            'but given: ${row.length}');
+      }
+      for (final value in source[i]) {
         dataAsList[i * columnsNum + j++] = value;
       }
-      i++;
       j = 0;
     }
   }
@@ -64,14 +66,20 @@ class Float64MatrixDataManager implements MatrixDataManager {
         _colsCache = source,
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
-    var i = 0;
-    var j = 0;
     final dataAsList = _data.buffer.asFloat64List();
-    for (final column in source) {
+    for (int i = 0, j = 0; i < source.length; i++) {
+      final column = source[i];
+      if (column.dtype != dtype) {
+        throw Exception('Expected vector type: `$dtype`, '
+            'but given: ${column.dtype}');
+      }
+      if (column.length != rowsNum) {
+        throw Exception('Expected vector length: `$rowsNum`, '
+            'but given: ${column.length}');
+      }
       for (final value in column) {
         dataAsList[j++ * columnsNum + i] = value;
       }
-      i++;
       j = 0;
     }
   }
@@ -100,7 +108,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
         _rowsCache = List<Vector>(source.length),
         _colsCache = List<Vector>(source.length),
         _data = ByteData(source.length * source.length * _bytesPerElement) {
-    _updateByteDataForDiagonalMatrix((i) => source[i]);
+    for (int i = 0; i < rowsNum; i++) {
+      _data.setFloat64((i * columnsNum + i) * _bytesPerElement, source[i],
+          Endian.host);
+    }
   }
 
   Float64MatrixDataManager.scalar(double scalar, int size) :
@@ -111,7 +122,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
         _rowsCache = List<Vector>(size),
         _colsCache = List<Vector>(size),
         _data = ByteData(size * size * _bytesPerElement) {
-    _updateByteDataForDiagonalMatrix((i) => scalar);
+    for (int i = 0; i < size; i++) {
+      _data.setFloat64((i * columnsNum + i) * _bytesPerElement, scalar,
+          Endian.host);
+    }
   }
 
   @override
@@ -141,23 +155,17 @@ class Float64MatrixDataManager implements MatrixDataManager {
   bool get hasData => rowsNum > 0 && columnsNum > 0;
 
   @override
-  List<double> getValues(int indexFrom, int count) {
-    if (!hasData) {
-      throw Exception('Matrix is empty');
-    }
-    if (indexFrom  >= rowsNum * columnsNum) {
-      throw RangeError.range(indexFrom, 0, rowsNum * columnsNum);
-    }
-    return _data.buffer.asFloat64List(indexFrom * _bytesPerElement, count);
-  }
-
-  @override
   Vector getRow(int index) {
     if (!hasData) {
       throw Exception('Matrix is empty');
     }
-    _rowsCache[index] ??= Vector.fromList(getValues(index * columnsNum,
-        columnsNum), dtype: dtype);
+    final indexFrom = index * columnsNum;
+    if (indexFrom  >= rowsNum * columnsNum) {
+      throw RangeError.range(indexFrom, 0, rowsNum * columnsNum);
+    }
+    final values = _data.buffer.asFloat64List(
+        indexFrom * _bytesPerElement, columnsNum);
+    _rowsCache[index] ??= Vector.fromList(values, dtype: dtype);
     return _rowsCache[index];
   }
 
@@ -168,22 +176,12 @@ class Float64MatrixDataManager implements MatrixDataManager {
     }
     if (_colsCache[index] == null) {
       final result = List<double>(rowsNum);
-      for (final i in rowIndices) {
-        //@TODO: find a more efficient way to get the single value
-        result[i] = getValues(i * columnsNum + index, 1).first;
+      for (int i = 0; i < result.length; i++) {
+        result[i] = _data.getFloat64(
+            (i * columnsNum + index) * _bytesPerElement, Endian.host);
       }
       _colsCache[index] = Vector.fromList(result, dtype: dtype);
     }
     return _colsCache[index];
-  }
-
-  void _updateByteDataForDiagonalMatrix(double generateValue(int i)) {
-    for (int i = 0; i < rowsNum; i++) {
-      for (int j = 0; j < columnsNum; j++) {
-        final value = i == j ? generateValue(i) : 0.0;
-        _data.setFloat64((i * columnsNum + j) * _bytesPerElement, value,
-            Endian.host);
-      }
-    }
   }
 }

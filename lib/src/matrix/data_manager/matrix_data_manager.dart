@@ -11,5 +11,4 @@ abstract class MatrixDataManager {
   bool get hasData;
   Vector getColumn(int index);
   Vector getRow(int index);
-  List<double> getValues(int index, int length);
 }
