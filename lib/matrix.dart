@@ -4,12 +4,13 @@ import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/matrix/float32/float32_matrix.dart';
+import 'package:ml_linalg/src/di/dependencies.dart';
+import 'package:ml_linalg/src/matrix/matrix_factory.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// An algebraic matrix with extended functionality, adapted for data science
 /// applications
-abstract class Matrix  implements Iterable<Iterable<double>> {
+abstract class Matrix implements Iterable<Iterable<double>> {
   /// Creates a matrix from a two dimensional list, every nested list is a
   /// source for a matrix row.
   ///
@@ -39,15 +40,9 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// (6.0, 7.0, 8.0, 9.0, 0.0)
   /// ```
-  factory Matrix.fromList(List<List<double>> source,
-      {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.fromList(source);
-      default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.fromList(List<List<double>> source, {
+    DType dtype = DType.float32,
+  }) => dependencies.getDependency<MatrixFactory>().fromList(dtype, source);
 
   /// Creates a matrix with predefined row vectors
   ///
@@ -78,14 +73,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// (6.0, 7.0, 8.0, 9.0, 0.0)
   /// ```
-  factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.rows(source);
-      default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) =>
+      dependencies.getDependency<MatrixFactory>().fromRows(dtype, source);
 
   /// Creates a matrix with predefined column vectors
   ///
@@ -119,15 +108,9 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// (4.0, 9.0)
   /// (5.0, 0.0)
   /// ```
-  factory Matrix.fromColumns(List<Vector> source,
-      {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.columns(source);
-      default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.fromColumns(List<Vector> source, {
+    DType dtype = DType.float32,
+  }) => dependencies.getDependency<MatrixFactory>().fromColumns(dtype, source);
 
   /// Creates a matrix of shape 0 x 0 (no rows, no columns)
   ///
@@ -148,14 +131,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// ```
   /// Matrix 0 x 0
   /// ```
-  factory Matrix.empty({DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.empty();
-      default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.empty({DType dtype = DType.float32}) =>
+      dependencies.getDependency<MatrixFactory>().empty(dtype);
 
   /// Creates a matrix from flattened list of length equal to
   /// [rowsNum] * [columnsNum]
@@ -182,14 +159,10 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// (6.0, 7.0, 8.0, 9.0, 0.0)
   /// ```
   factory Matrix.fromFlattenedList(List<double> source, int rowsNum,
-      int columnsNum, {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.flattened(source, rowsNum, columnsNum);
-      default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
-    }
-  }
+      int columnsNum, {DType dtype = DType.float32}) =>
+      dependencies
+          .getDependency<MatrixFactory>()
+          .fromFlattenedList(dtype, source, rowsNum, columnsNum);
 
   /// Creates a matrix, where elements from [source] are the elements for the
   /// matrix main diagonal, the rest of the elements are zero
@@ -214,14 +187,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// (0.0, 0.0, 0.0, 4.0, 0.0)
   /// (0.0, 0.0, 0.0, 0.0, 5.0)
   /// ```
-  factory Matrix.diagonal(List<double> source, {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.diagonal(source);
-      default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.diagonal(List<double> source, {DType dtype = DType.float32}) =>
+      dependencies.getDependency<MatrixFactory>().diagonal(dtype, source);
 
   /// Creates a matrix of [size] * [size] dimension, where all the main
   /// diagonal elements are equal to [scalar], the rest of the elements are 0
@@ -246,14 +213,9 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// (0.0, 0.0, 0.0, 3.0, 0.0)
   /// (0.0, 0.0, 0.0, 0.0, 3.0)
   /// ```
-  factory Matrix.scalar(double scalar, int size, {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.scalar(scalar, size);
-      default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.scalar(double scalar, int size, {
+    DType dtype = DType.float32,
+  }) => dependencies.getDependency<MatrixFactory>().scalar(dtype, scalar, size);
 
   /// Creates a matrix of [size] * [size] dimension, where all the main
   /// diagonal elements are equal to 1, the rest of the elements are 0
@@ -278,14 +240,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// (0.0, 0.0, 0.0, 1.0, 0.0)
   /// (0.0, 0.0, 0.0, 0.0, 1.0)
   /// ```
-  factory Matrix.identity(int size, {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.scalar(1.0, size);
-      default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.identity(int size, {DType dtype = DType.float32}) =>
+      dependencies.getDependency<MatrixFactory>().identity(dtype, size);
 
   /// Creates a matrix, consisting of just one row (aka `Row matrix`)
   ///
@@ -305,15 +261,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// Matrix 1 x 5:
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// ```
-  factory Matrix.row(List<double> source, {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.rows([Vector.fromList(source, dtype: dtype)]);
-      default:
-        throw UnimplementedError(
-            'Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.row(List<double> source, {DType dtype = DType.float32}) =>
+      dependencies.getDependency<MatrixFactory>().row(dtype, source);
 
   /// Creates a matrix, consisting of just one column (aka `Column matrix`)
   ///
@@ -337,15 +286,8 @@ abstract class Matrix  implements Iterable<Iterable<double>> {
   /// (4.0)
   /// (5.0)
   /// ```
-  factory Matrix.column(List<double> source, {DType dtype = DType.float32}) {
-    switch (dtype) {
-      case DType.float32:
-        return Float32Matrix.columns([Vector.fromList(source, dtype: dtype)]);
-      default:
-        throw UnimplementedError(
-            'Matrix of type $dtype is not implemented yet');
-    }
-  }
+  factory Matrix.column(List<double> source, {DType dtype = DType.float32}) =>
+      dependencies.getDependency<MatrixFactory>().column(dtype, source);
 
   /// A data type of [Matrix] elements
   DType get dtype;

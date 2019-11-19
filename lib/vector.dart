@@ -6,14 +6,16 @@ import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
 import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
-import 'package:ml_linalg/src/vector/float64x2_vector.gen.dart';
+import 'package:ml_linalg/src/vector/float64x2_vector.dart';
 import 'package:ml_linalg/src/vector/simd_helper/simd_helper_factory.dart';
+import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 
 final _cacheManagerFactory = dependencies.getDependency<CacheManagerFactory>();
 final _simdHelperFactory = dependencies.getDependency<SimdHelperFactory>();
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
-/// architecture support
+/// architecture support and extended functionality, adapted for data science
+/// applications
 ///
 /// The vector's components are represented by special data type, that allows
 /// to perform vector operations extremely fast due to hardware assisted
@@ -41,12 +43,18 @@ abstract class Vector implements Iterable<double> {
   }) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.fromList(source, _cacheManagerFactory.create(),
-            _simdHelperFactory.createByDType(dtype));
+        return Float32x4Vector.fromList(
+          source,
+          _cacheManagerFactory.create(vectorCacheKeys),
+          _simdHelperFactory.createByDType(dtype),
+        );
 
       case DType.float64:
-        return Float64x2Vector.fromList(source, _cacheManagerFactory.create(),
-            _simdHelperFactory.createByDType(dtype));
+        return Float64x2Vector.fromList(
+          source,
+          _cacheManagerFactory.create(vectorCacheKeys),
+          _simdHelperFactory.createByDType(dtype),
+        );
 
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
@@ -86,7 +94,7 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.fromSimdList(
           source as Float32x4List,
           actualLength,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -94,7 +102,7 @@ abstract class Vector implements Iterable<double> {
         return Float64x2Vector.fromSimdList(
           source as Float64x2List,
           actualLength,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -128,7 +136,7 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.filled(
           length,
           value,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -136,7 +144,7 @@ abstract class Vector implements Iterable<double> {
         return Float64x2Vector.filled(
           length,
           value,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -169,14 +177,14 @@ abstract class Vector implements Iterable<double> {
       case DType.float32:
         return Float32x4Vector.zero(
           length,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
         return Float64x2Vector.zero(
           length,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
         );
 
@@ -218,7 +226,7 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.randomFilled(
           length,
           seed,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
           max: max,
           min: min,
@@ -228,7 +236,7 @@ abstract class Vector implements Iterable<double> {
         return Float64x2Vector.randomFilled(
           length,
           seed,
-          _cacheManagerFactory.create(),
+          _cacheManagerFactory.create(vectorCacheKeys),
           _simdHelperFactory.createByDType(dtype),
           max: max,
           min: min,
@@ -259,12 +267,16 @@ abstract class Vector implements Iterable<double> {
   factory Vector.empty({DType dtype = DType.float32}) {
     switch (dtype) {
       case DType.float32:
-        return Float32x4Vector.empty(_cacheManagerFactory.create(),
-            _simdHelperFactory.createByDType(dtype));
+        return Float32x4Vector.empty(
+          _cacheManagerFactory.create(vectorCacheKeys),
+          _simdHelperFactory.createByDType(dtype),
+        );
 
       case DType.float64:
-        return Float64x2Vector.empty(_cacheManagerFactory.create(),
-            _simdHelperFactory.createByDType(dtype));
+        return Float64x2Vector.empty(
+          _cacheManagerFactory.create(vectorCacheKeys),
+          _simdHelperFactory.createByDType(dtype),
+        );
 
       default:
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
@@ -350,6 +362,25 @@ abstract class Vector implements Iterable<double> {
   /// [DType.float32] - the argument should be of [Float32x4] type). The data
   /// types mentioned above allow to perform mapping much faster comparing with
   /// the regular [map] method
+  ///
+  /// ````dart
+  /// import 'dart:typed_data';
+  ///
+  /// import 'package:ml_linalg/vector.dart';
+  ///
+  /// final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+  ///   dtype: DType.float32);
+  ///
+  /// final mapped = vector.fastMap((Float32x4 element) => element.scale(3.0));
+  ///
+  /// print(mapped);
+  /// ````
+  ///
+  /// The output:
+  ///
+  /// ```
+  /// (3.0, 6.0, 9.0, 12.0, 15.0, 18.0)
+  /// ```
   Vector fastMap<T>(T mapper(T element));
 
   /// Returns a new vector composed of values which indices are within the range
