@@ -23,7 +23,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
     final dataAsList = _data.buffer.asFloat64List();
-    for (int i = 0, j = 0; i < source.length; i++) {
+    for (int i = 0; i < source.length; i++) {
       for (int j = 0; j < source[i].length; j++) {
         dataAsList[i * columnsNum + j] = source[i][j];
       }
@@ -40,20 +40,19 @@ class Float64MatrixDataManager implements MatrixDataManager {
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
     final dataAsList = _data.buffer.asFloat64List();
-    for (int i = 0, j = 0; i < source.length; i++) {
+    for (int i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
       if (row.dtype != dtype) {
-        throw Exception('Expected vector type: `$dtype`, '
-            'but given: ${row.dtype}');
+        throw Exception('Vectors of different type are provided, '
+            'expected vector type: `$dtype`, given: ${row.dtype}');
       }
       if (row.length != columnsNum) {
-        throw Exception('Expected vector length: `$columnsNum`, '
-            'but given: ${row.length}');
+        throw Exception('Vectors of different length are provided, expected '
+            'vector length: `$columnsNum`, given: ${row.length}');
       }
       for (final value in source[i]) {
         dataAsList[i * columnsNum + j++] = value;
       }
-      j = 0;
     }
   }
 
@@ -67,20 +66,19 @@ class Float64MatrixDataManager implements MatrixDataManager {
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
     final dataAsList = _data.buffer.asFloat64List();
-    for (int i = 0, j = 0; i < source.length; i++) {
+    for (int i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
       if (column.dtype != dtype) {
-        throw Exception('Expected vector type: `$dtype`, '
-            'but given: ${column.dtype}');
+        throw Exception('Vectors of different type are provided, expected '
+            'vector type: `$dtype`, given: ${column.dtype}');
       }
       if (column.length != rowsNum) {
-        throw Exception('Expected vector length: `$rowsNum`, '
-            'but given: ${column.length}');
+        throw Exception('Vectors of different length are provided, expected '
+            'vector length: `$rowsNum`, given: ${column.length}');
       }
       for (final value in column) {
         dataAsList[j++ * columnsNum + i] = value;
       }
-      j = 0;
     }
   }
 

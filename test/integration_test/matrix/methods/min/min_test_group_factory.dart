@@ -18,6 +18,7 @@ void matrixMinTestGroupFactory(DType dtype) =>
           final expected = -3.0;
 
           expect(actual, equals(expected));
+          expect(matrix.dtype, equals(dtype));
         });
       });
     });

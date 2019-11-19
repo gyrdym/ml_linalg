@@ -38,5 +38,17 @@ void matrixFromColumnsConstructorTestGroupFactory(DType dtype) =>
           expect(actual.columnsNum, 0);
           expect(actual.dtype, dtype);
         });
+
+        test('should throw an exception if list of vectors of not the same '
+            'length is provided', () {
+          final source = [
+            Vector.fromList([1, 2, 3], dtype: dtype),
+            Vector.fromList([1, 2, 3, 4], dtype: dtype),
+            Vector.fromList([9, 8, 7], dtype: dtype),
+          ];
+
+          expect(() => Matrix.fromColumns(source, dtype: dtype),
+              throwsException);
+        });
       });
     });

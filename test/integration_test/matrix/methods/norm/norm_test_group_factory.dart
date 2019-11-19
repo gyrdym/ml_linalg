@@ -19,6 +19,7 @@ void matrixNormTestGroupFactory(DType dtype) =>
           final expected = 17.2626;
 
           expect(norm, closeTo(expected, 0.6));
+          expect(matrix.dtype, dtype);
         });
       });
     });
