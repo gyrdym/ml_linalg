@@ -1,7 +1,7 @@
-import 'matrix/float32/matrix_initializing/float32_from_columns.dart';
-import 'matrix/float32/matrix_initializing/float32_from_flattened.dart';
-import 'matrix/float32/matrix_initializing/float32_from_list.dart';
-import 'matrix/float32/matrix_initializing/float32_from_rows.dart';
+import 'matrix/float32/matrix_initializing/float32_matrix_from_columns.dart';
+import 'matrix/float32/matrix_initializing/float32_matrix_from_flattened.dart';
+import 'matrix/float32/matrix_initializing/float32_matrix_from_list.dart';
+import 'matrix/float32/matrix_initializing/float32_matrix_from_rows.dart';
 import 'vector/float32/vector_initializing/float32x4_from_list.dart';
 import 'vector/float32/vector_initializing/float32x4_random_filled.dart';
 import 'vector/float32/vector_operations/float32x4_vector_abs.dart';
@@ -49,8 +49,8 @@ void main() {
   Float32x4VectorEqualityOperatorBenchmark.main();
 
   // Matrix benchmarks
-  Float32x4MatrixFromColumnsBenchmark.main();
-  Float32x4MatrixFromFlattenedBenchmark.main();
-  Float32x4MatrixFromListBenchmark.main();
-  Float32x4MatrixFromRowsBenchmark.main();
+  Float32MatrixFromColumnsBenchmark.main();
+  Float32MatrixFromFlattenedBenchmark.main();
+  Float32MatrixFromListBenchmark.main();
+  Float32MatrixFromRowsBenchmark.main();
 }
