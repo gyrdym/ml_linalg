@@ -14,10 +14,6 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Creates a matrix from a two dimensional list, every nested list is a
   /// source for a matrix row.
   ///
-  /// There is no check of nested lists length in the [source] due to
-  /// performance, keep it in mind, don't create a matrix from nested lists of
-  /// different length
-  ///
   /// A simple usage example:
   ///
   /// ````dart
@@ -46,10 +42,6 @@ abstract class Matrix implements Iterable<Iterable<double>> {
 
   /// Creates a matrix with predefined row vectors
   ///
-  /// There is no check of nested vectors length in the [source] due to
-  /// performance, keep it in mind, don't create a matrix from vectors lists of
-  /// different length
-  ///
   /// A simple usage example:
   ///
   /// ````dart
@@ -77,10 +69,6 @@ abstract class Matrix implements Iterable<Iterable<double>> {
       dependencies.getDependency<MatrixFactory>().fromRows(dtype, source);
 
   /// Creates a matrix with predefined column vectors
-  ///
-  /// There is no check of nested vectors length in the [source] due to
-  /// performance, keep it in mind, don't create a matrix from nested vectors of
-  /// different length
   ///
   /// A simple usage example:
   ///
