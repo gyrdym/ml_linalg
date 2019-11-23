@@ -24,6 +24,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
             getLengthOfFirstOrZero(source) * _bytesPerElement) {
     final dataAsList = _data.buffer.asFloat64List();
     for (int i = 0; i < source.length; i++) {
+      if (source[i].length != columnsNum) {
+        throw Exception('Wrong nested list length: ${source[i].length}, '
+            'expected length: ${columnsNum}');
+      }
       for (int j = 0; j < source[i].length; j++) {
         dataAsList[i * columnsNum + j] = source[i][j];
       }
