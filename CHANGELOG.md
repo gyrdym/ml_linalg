@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.7.1
+- `Matrix`: `fromList` constructor, check for length of nested lists added
+
 ## 12.7.0
 - `Matrix`: constructors speed up
 - Float64-based matrix class added
