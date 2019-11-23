@@ -33,5 +33,29 @@ void matrixFromListConstructorTestGroupFactory(DType dtype) =>
           expect(actual.columnsNum, 0);
           expect(actual.dtype, dtype);
         });
+
+        test('should throw an exception if nested lists of the source list are '
+            'of different length, case 1', () {
+          final source = <List<double>>[
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4],
+            [1, 2, 3],
+          ];
+          final actual = () => Matrix.fromList(source, dtype: dtype);
+
+          expect(actual, throwsException);
+        });
+
+        test('should throw an exception if nested lists of the source list are '
+            'of different length, case 2', () {
+          final source = <List<double>>[
+            [109, 782,  13, 224,  5],
+            [ 51,  22,  13,   4, 10],
+            [111, 209, 673,   4],
+          ];
+          final actual = () => Matrix.fromList(source, dtype: dtype);
+
+          expect(actual, throwsException);
+        });
       });
     });
