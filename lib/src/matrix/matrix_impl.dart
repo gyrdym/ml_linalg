@@ -10,6 +10,7 @@ import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
+import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
@@ -321,6 +322,9 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
         rowsNum, (int i) => getRow(i).fastMap(mapper));
     return Matrix.fromRows(source, dtype: dtype);
   }
+
+  @override
+  Map<String, dynamic> toJson() => matrixToJson(this);
 
   double _findExtrema(double callback(Vector vector)) {
     int i = 0;
