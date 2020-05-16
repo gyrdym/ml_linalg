@@ -6,7 +6,7 @@ import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/matrix/matrix_factory.dart';
-import 'package:ml_linalg/src/matrix/serialization/matrix_from_json.dart';
+import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// An algebraic matrix with extended functionality, adapted for data science

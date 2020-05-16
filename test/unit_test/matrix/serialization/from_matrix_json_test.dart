@@ -1,6 +1,6 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/common/dtype_serializer/dtype_encoded_values.dart';
-import 'package:ml_linalg/src/matrix/serialization/matrix_from_json.dart';
+import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 import 'package:ml_tech/unit_testing/matchers/iterable_2d_almost_equal_to.dart';
 import 'package:test/test.dart';
@@ -57,32 +57,24 @@ void main() {
     test('should restore a float32 matrix instance from json', () {
       final matrix = fromMatrixJson(validFloat32Json);
       expect(matrix.dtype, DType.float32);
-      expect(matrix, iterable2dAlmostEqualTo([
-        [1.0, 2.0, 4.0, 5.0],
-        [-100.0, 4.89, 191, -10000],
-        [33, -987, 90, 732],
-      ]));
+      expect(matrix, iterable2dAlmostEqualTo(data));
     });
 
     test('should restore a float64 matrix instance from json', () {
       final matrix = fromMatrixJson(validFloat64Json);
       expect(matrix.dtype, DType.float64);
-      expect(matrix, iterable2dAlmostEqualTo([
-        [1.0, 2.0, 4.0, 5.0],
-        [-100.0, 4.89, 191, -10000],
-        [33, -987, 90, 732],
-      ]));
+      expect(matrix, iterable2dAlmostEqualTo(data));
     });
 
     test('should restore a float32 matrix from json with empty data', () {
       final matrix = fromMatrixJson(validFloat32JsonWithEmptyData);
-      expect(matrix, <List<double>>[]);
+      expect(matrix, emptyData);
     });
 
     test('should restore a float32 matrix from json with data consisting of '
         'just empty row', () {
       final matrix = fromMatrixJson(validFloat32JsonWithEmptyRow);
-      expect(matrix, <List<double>>[]);
+      expect(matrix, emptyData);
     });
   });
 }

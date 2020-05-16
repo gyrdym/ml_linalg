@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/ml_linalg.svg)](https://pub.dartlang.org/packages/ml_linalg)
 [![Gitter Chat](https://badges.gitter.im/gyrdym/gyrdym.svg)](https://gitter.im/gyrdym/)
 
-**SIMD-based Linear algebra with Dart**
+**SIMD-based linear algebra and statistics for data science with Dart**
 
 **Table of contents**
 
@@ -62,26 +62,26 @@
 matrices. 
 
 &nbsp;&nbsp;&nbsp;&nbsp;Let's give a simple definition of Vector and Matrix. Vector is an ordered set of numbers, 
-representing a point in the space where the vector is directed from the origin. Matrix is a collection of vectors, used to 
-map vectors from one space to another.     
+representing a point in the space where the vector is directed from the origin. Matrix is a collection of vectors that 
+is used to map vectors from one space to another.     
 
-&nbsp;&nbsp;&nbsp;&nbsp;Vectors and matrices are extremely powerful tools, which can be used in real-life applications, such as machine 
-learning algorithms. There are many implementations of these great mathematical entities in a plenty of programming 
-languages, and as Dart offers developers good instrumentarium, e.g. highly optimized virtual machine and rich 
+&nbsp;&nbsp;&nbsp;&nbsp;Vectors and matrices are extremely powerful tools which can be used in real-life applications, 
+such as machine learning algorithms. There are many implementations of these great mathematical entities in a plenty of 
+programming languages, and as Dart offers developers good instrumentarium, e.g. highly optimized virtual machine and rich 
 out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite performant.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there are SIMD data types. Namely support of SIMD computational architecture
-served as a source of inspiration for creating this library.
+&nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there are SIMD data types. Namely support of SIMD 
+computational architecture served as a source of inspiration for creating this library.
 
 ## What is SIMD?
 
-&nbsp;&nbsp;&nbsp;&nbsp;SIMD stands for `Single instruction, multiple data` - it is a computer architecture, that allows to perform uniform 
-operations in parallel on huge amount of data. For instance, one has two arrays: 
+&nbsp;&nbsp;&nbsp;&nbsp;SIMD stands for `Single instruction, multiple data` - it's a computer architecture that allows 
+to perform uniform mathematical operations in parallel on a list-like data structure. For instance, one has two arrays: 
 
 - ![a = [10, 20, 30, 40]](https://latex.codecogs.com/gif.latex?a%20%3D%20%5B10%2C%2020%2C%2030%2C%2040%5D)
 - ![b = [50, 60, 70, 80]](https://latex.codecogs.com/gif.latex?b%20%3D%20%5B50%2C%2060%2C%2070%2C%2080%5D)
 
-and one needs to add these arrays element-wise. Using the regular architecture this operation could be done in this 
+and one needs to add these arrays element-wise. Using the regular architecture this operation could be done in the following 
 manner:
 
 <p align="center">
@@ -99,7 +99,7 @@ operation on several operands in parallel, thus element-wise sum of two arrays w
 
 ### A couple of words about the underlying architecture
     
-&nbsp;&nbsp;&nbsp;&nbsp;The library contains two high performant vector classes, based on [Float32x4](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float32x4-class.html) 
+&nbsp;&nbsp;&nbsp;&nbsp;The library contains two high performant vector classes based on [Float32x4](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float32x4-class.html) 
 and [Float64x2](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float64x2-class.html) data types - 
 [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.gen.dart) (the second one is generated from the source code of the first vector)
 
@@ -108,10 +108,10 @@ and [Float64x2](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float64x2-
 &nbsp;&nbsp;&nbsp;&nbsp;Implementation of both classes is hidden from the library's users. You can create a 
 `Float32x4Vector` or a `Float64x2Vector` instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
-&nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable - once created, the vector cannot be changed. All vector operations lead to 
-creation of a new vector instance (of course, if an operation is supposed to return `Vector`).
+&nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable: once created, the vector cannot be changed. All the vector operations 
+lead to creation of a new vector instance (of course, if an operation is supposed to return a `Vector`).
 
-&nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface - so it's possible to use them as regular 
+&nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface, so it's possible to use them as regular 
 iterable collections.
 
 &nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for `HashMap` and similar data structures 
@@ -126,14 +126,14 @@ map[Vector.fromList([1, 2, 3, 4, 5])] = true;
 
 print(map[Vector.fromList([1, 2, 3, 4, 5])]); // true
 print(Vector.fromList([1, 2, 3, 4, 5]).hashCode == Vector.fromList([1, 2, 3, 4, 5]).hashCode); // true
-```
+``` 
 
 ### Vector benchmarks
 
-&nbsp;&nbsp;&nbsp;&nbsp;To see the performance gain provided by the library's vector classes, one may visit `benchmark` directory: one may find 
+&nbsp;&nbsp;&nbsp;&nbsp;To see the performance benefits provided by the library's vector classes, one may visit `benchmark` directory: one may find 
 there a baseline [benchmark](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/baseline/regular_lists_addition.dart) - 
 element-wise summation of two regular List instances and a [benchmark](https://github.com/gyrdym/ml_linalg/blob/master/benchmark/vector/float32/vector_operations/float32x4_vector_vector_addition.dart)
-of a similar operation, but performed with two `Float32x4Vector` instances on the same amount of elements and compare 
+of a similar operation, but performed on two `Float32x4Vector` instances on the same amount of elements and compare 
 the timings:
 
 - Baseline benchmark (executed on Macbook Air mid 2017), 2 regular lists each with 10,000,000 elements:
@@ -338,8 +338,11 @@ the difference is significant.
 
 &nbsp;&nbsp;&nbsp;&nbsp;Along with SIMD vectors, the library presents SIMD-based Matrices. One can use the matrices via 
 [Matrix factory](https://github.com/gyrdym/ml_linalg/blob/master/lib/matrix.dart). The matrices are immutable as well 
-as vectors and also they implement `Iterable`, to be precise - `Iterable<Iterable<double>>` interface, thus it's possible 
+as vectors and also they implement `Iterable` interface (to be precise, `Iterable<Iterable<double>>`), thus it's possible 
 to use them as a regular iterable collection.
+
+Matrices are serializable, and that means that one can easily convert a Matrix instance to a json-serializable map 
+via `toJson` method, see the examples below.
 
 ### Matrix operations examples
 
@@ -683,7 +686,31 @@ final row = matrix[2];
 print(row); // [21.0, 22.0, -23.0, 24.0]
 ```` 
 
-&nbsp;&nbsp;&nbsp;&nbsp;The library's matrix interface offers `sample` method, that is supposed to return a new matrix, 
+#### Matrix serialization/deserialization
+&nbsp;&nbsp;&nbsp;&nbsp;To convert a matrix to json-serializable map one may use `toJson` method:
+
+````Dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix = Matrix.fromList([
+    [11.0, 12.0, 13.0, 14.0],
+    [15.0, 16.0, 0.0, 18.0],
+    [21.0, 22.0, -23.0, 24.0],
+    [24.0, 32.0, 53.0, 74.0],
+  ]);
+
+final serialized = matrix.toJson();
+````
+
+To restore a serialized matrix one may use `Matrix.fromJson` constructor:
+
+````Dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix = Matrix.fromJson(serialized);
+````
+
+&nbsp;&nbsp;&nbsp;&nbsp;The library's matrix interface offers `sample` method that is supposed to return a new matrix, 
 consisting of different segments of a source matrix. It's possible to build a new matrix from certain columns and 
 vectors and they should not be necessarily subsequent.
  

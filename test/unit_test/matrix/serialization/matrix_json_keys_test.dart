@@ -3,11 +3,11 @@ import 'package:test/test.dart';
 
 void main() {
   group('Matrix json keys', () {
-    test('should contain a key for dtype field', () {
+    test('should contain a proper key for dtype field', () {
       expect(matrixDTypeJsonKey, 'DT');
     });
 
-    test('should contain a key for data field', () {
+    test('should contain a proper key for data field', () {
       expect(matrixDataJsonKey, 'D');
     });
   });
