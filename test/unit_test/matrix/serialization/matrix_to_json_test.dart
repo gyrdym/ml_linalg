@@ -1,5 +1,6 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/src/common/dtype_serializer/dtype_encoded_values.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:test/test.dart';
@@ -20,7 +21,7 @@ void main() {
     test('should serialize float32 matrix', () {
       final encoded = matrixToJson(float32Matrix);
       expect(encoded, {
-        dTypeJsonKey: DType.float32,
+        dTypeJsonKey: dTypeFloat32EncodedValue,
         dataJsonKey: source,
       });
     });
@@ -28,7 +29,7 @@ void main() {
     test('should serialize float64 matrix', () {
       final encoded = matrixToJson(float64Matrix);
       expect(encoded, {
-        dTypeJsonKey: DType.float64,
+        dTypeJsonKey: dTypeFloat64EncodedValue,
         dataJsonKey: source,
       });
     });
@@ -36,7 +37,7 @@ void main() {
     test('should serialize empty matrix', () {
       final encoded = matrixToJson(float32EmptyMatrix);
       expect(encoded, {
-        dTypeJsonKey: DType.float32,
+        dTypeJsonKey: dTypeFloat32EncodedValue,
         dataJsonKey: emptySource,
       });
     });

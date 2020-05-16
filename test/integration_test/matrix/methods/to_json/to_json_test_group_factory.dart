@@ -1,5 +1,6 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
+import 'package:ml_linalg/src/common/dtype_serializer/dtype_to_json.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 import 'package:test/test.dart';
 
@@ -17,7 +18,7 @@ void toJsonTestGroupFactory(DType dtype) =>
           final matrix = Matrix.fromList(source, dtype: dtype);
           final actual = matrix.toJson();
           final expected = {
-            dTypeJsonKey: dtype,
+            dTypeJsonKey: dTypeToJson(dtype),
             dataJsonKey: source,
           };
 
