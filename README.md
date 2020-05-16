@@ -54,6 +54,7 @@
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
         - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
+        - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
 - [Contacts](#contacts)
 
 ## Linear algebra
@@ -61,7 +62,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics that is working with vectors and 
 matrices. 
 
-&nbsp;&nbsp;&nbsp;&nbsp;Let's give a simple definition of Vector and Matrix. Vector is an ordered set of numbers, 
+&nbsp;&nbsp;&nbsp;&nbsp;Let's give a simple definition of Vector and Matrix. Vector is an ordered set of numbers 
 representing a point in the space where the vector is directed from the origin. Matrix is a collection of vectors that 
 is used to map vectors from one space to another.     
 
@@ -101,7 +102,7 @@ operation on several operands in parallel, thus element-wise sum of two arrays w
     
 &nbsp;&nbsp;&nbsp;&nbsp;The library contains two high performant vector classes based on [Float32x4](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float32x4-class.html) 
 and [Float64x2](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float64x2-class.html) data types - 
-[Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.gen.dart) (the second one is generated from the source code of the first vector)
+[Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.gen.dart) (the second one is generated from the source code of the first vector's implementation)
 
 &nbsp;&nbsp;&nbsp;&nbsp;Most of element-wise operations in the first one are performed in four "threads" and in the second one - in two "threads".
 
@@ -109,7 +110,7 @@ and [Float64x2](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float64x2-
 `Float32x4Vector` or a `Float64x2Vector` instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
 
 &nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable: once created, the vector cannot be changed. All the vector operations 
-lead to creation of a new vector instance (of course, if an operation is supposed to return a `Vector`).
+lead to creation of a new vector instance (of course, if the operation is supposed to return a `Vector`).
 
 &nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface, so it's possible to use them as regular 
 iterable collections.
@@ -686,30 +687,6 @@ final row = matrix[2];
 print(row); // [21.0, 22.0, -23.0, 24.0]
 ```` 
 
-#### Matrix serialization/deserialization
-&nbsp;&nbsp;&nbsp;&nbsp;To convert a matrix to json-serializable map one may use `toJson` method:
-
-````Dart
-import 'package:ml_linalg/linalg.dart';
-
-final matrix = Matrix.fromList([
-    [11.0, 12.0, 13.0, 14.0],
-    [15.0, 16.0, 0.0, 18.0],
-    [21.0, 22.0, -23.0, 24.0],
-    [24.0, 32.0, 53.0, 74.0],
-  ]);
-
-final serialized = matrix.toJson();
-````
-
-To restore a serialized matrix one may use `Matrix.fromJson` constructor:
-
-````Dart
-import 'package:ml_linalg/linalg.dart';
-
-final matrix = Matrix.fromJson(serialized);
-````
-
 &nbsp;&nbsp;&nbsp;&nbsp;The library's matrix interface offers `sample` method that is supposed to return a new matrix, 
 consisting of different segments of a source matrix. It's possible to build a new matrix from certain columns and 
 vectors and they should not be necessarily subsequent.
@@ -765,6 +742,30 @@ print(updatedMatrix);
 // ]
 
 print(updatedMatrix == matrix); // false
+````
+
+#### Matrix serialization/deserialization
+&nbsp;&nbsp;&nbsp;&nbsp;To convert a matrix to a json-serializable map one may use `toJson` method:
+
+````Dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix = Matrix.fromList([
+    [11.0, 12.0, 13.0, 14.0],
+    [15.0, 16.0, 0.0, 18.0],
+    [21.0, 22.0, -23.0, 24.0],
+    [24.0, 32.0, 53.0, 74.0],
+  ]);
+
+final serialized = matrix.toJson();
+````
+
+To restore a serialized matrix one may use `Matrix.fromJson` constructor:
+
+````Dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix = Matrix.fromJson(serialized);
 ````
 
 ### Contacts
