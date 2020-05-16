@@ -158,6 +158,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
 
   @override
   Matrix uniqueRows() {
+    // TODO: consider using Set instead of List
     final checked = <Vector>[];
     for (final i in _dataManager.rowIndices) {
       final row = getRow(i);
