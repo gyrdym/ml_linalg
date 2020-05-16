@@ -5,6 +5,8 @@ export 'package:ml_linalg/matrix.dart';
 export 'package:ml_linalg/matrix_norm.dart';
 export 'package:ml_linalg/norm.dart';
 export 'package:ml_linalg/sort_direction.dart';
+export 'package:ml_linalg/src/common/dtype_serializer/dtype_to_json.dart';
+export 'package:ml_linalg/src/common/dtype_serializer/from_dtype_json.dart';
 export 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 export 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 export 'package:ml_linalg/vector.dart';

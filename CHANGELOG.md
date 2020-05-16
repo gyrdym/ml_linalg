@@ -1,5 +1,10 @@
 # Changelog
 
+## 12.8.1
+- `DType`:
+    - `dTypeToJson` helper function added to public API
+    - `fromDTypeJson` helper function added to public API
+
 ## 12.8.0
 - `Matrix`: 
     - `fromJson` constructor added
