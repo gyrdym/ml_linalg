@@ -21,7 +21,6 @@ class Float32x4VectorAndVectorAdditionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    // ignore: unnecessary_statements
     vector3 = vector1 + vector2;
   }
 
