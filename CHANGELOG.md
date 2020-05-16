@@ -1,5 +1,12 @@
 # Changelog
 
+## 12.8.0
+- `Matrix`: 
+    - `fromJson` constructor added
+    - `toJson` method added
+- `matrixToJson` helper function added to public API
+- `fromMatrixJson` helper function added to public API
+
 ## 12.7.1
 - `Matrix`: `fromList` constructor, check for length of nested lists added
 

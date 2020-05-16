@@ -12,6 +12,7 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
 
   List<double> list1;
   List<double> list2;
+  final result = List<double>(amountOfElements);
 
   static void main() {
     RegularListsAdditionBenchmark().report();
@@ -19,7 +20,6 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    final result = List<double>(amountOfElements);
     for (int i = 0; i < amountOfElements; i++) {
       result[i] = list1[i] + list2[i];
     }

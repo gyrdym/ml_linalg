@@ -6,6 +6,7 @@ import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/matrix/matrix_factory.dart';
+import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// An algebraic matrix with extended functionality, adapted for data science
@@ -252,6 +253,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.row(List<double> source, {DType dtype = DType.float32}) =>
       dependencies.getDependency<MatrixFactory>().row(dtype, source);
 
+  /// Returns a restored matrix from a serializable map
+  factory Matrix.fromJson(Map<String, dynamic> json) => fromMatrixJson(json);
+
   /// Creates a matrix, consisting of just one column (aka `Column matrix`)
   ///
   /// ````dart
@@ -425,4 +429,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Returns a new matrix with sorted elements from this [Matrix]
   Matrix sort(double selectSortValue(Vector vector), [Axis axis = Axis.rows,
     SortDirection sortDir = SortDirection.asc]);
+
+  /// Returns a serializable map
+  Map<String, dynamic> toJson();
 }
