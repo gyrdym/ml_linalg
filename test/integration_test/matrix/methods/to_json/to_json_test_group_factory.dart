@@ -18,8 +18,8 @@ void toJsonTestGroupFactory(DType dtype) =>
           final matrix = Matrix.fromList(source, dtype: dtype);
           final actual = matrix.toJson();
           final expected = {
-            dTypeJsonKey: dTypeToJson(dtype),
-            dataJsonKey: source,
+            matrixDTypeJsonKey: dTypeToJson(dtype),
+            matrixDataJsonKey: source,
           };
 
           expect(actual, expected);

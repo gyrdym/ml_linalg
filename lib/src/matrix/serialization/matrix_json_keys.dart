@@ -1,2 +1,2 @@
-const dTypeJsonKey = 'DT';
-const dataJsonKey = 'D';
+const matrixDTypeJsonKey = 'DT';
+const matrixDataJsonKey = 'D';

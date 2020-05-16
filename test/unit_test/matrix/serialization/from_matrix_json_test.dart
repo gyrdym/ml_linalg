@@ -17,31 +17,31 @@ void main() {
     final dataWithEmptyRow = <List<double>>[[]];
 
     final jsonWithoutData = {
-      dTypeJsonKey: dTypeFloat64EncodedValue,
+      matrixDTypeJsonKey: dTypeFloat64EncodedValue,
     };
 
     final jsonWithoutDType = {
-      dataJsonKey: data,
+      matrixDataJsonKey: data,
     };
 
     final validFloat32Json = {
-      dTypeJsonKey: dTypeFloat32EncodedValue,
-      dataJsonKey: data,
+      matrixDTypeJsonKey: dTypeFloat32EncodedValue,
+      matrixDataJsonKey: data,
     };
 
     final validFloat64Json = {
-      dTypeJsonKey: dTypeFloat64EncodedValue,
-      dataJsonKey: data,
+      matrixDTypeJsonKey: dTypeFloat64EncodedValue,
+      matrixDataJsonKey: data,
     };
 
     final validFloat32JsonWithEmptyData = {
-      dTypeJsonKey: dTypeFloat32EncodedValue,
-      dataJsonKey: emptyData,
+      matrixDTypeJsonKey: dTypeFloat32EncodedValue,
+      matrixDataJsonKey: emptyData,
     };
 
     final validFloat32JsonWithEmptyRow = {
-      dTypeJsonKey: dTypeFloat32EncodedValue,
-      dataJsonKey: dataWithEmptyRow,
+      matrixDTypeJsonKey: dTypeFloat32EncodedValue,
+      matrixDataJsonKey: dataWithEmptyRow,
     };
 
     test('should throw an error if data key is absent', () {
@@ -54,7 +54,7 @@ void main() {
       expect(actual, throwsException);
     });
 
-    test('should restore a float 32 matrix instance from json', () {
+    test('should restore a float32 matrix instance from json', () {
       final matrix = fromMatrixJson(validFloat32Json);
       expect(matrix.dtype, DType.float32);
       expect(matrix, iterable2dAlmostEqualTo([
@@ -64,7 +64,7 @@ void main() {
       ]));
     });
 
-    test('should restore a float 64 matrix instance from json', () {
+    test('should restore a float64 matrix instance from json', () {
       final matrix = fromMatrixJson(validFloat64Json);
       expect(matrix.dtype, DType.float64);
       expect(matrix, iterable2dAlmostEqualTo([
@@ -74,12 +74,12 @@ void main() {
       ]));
     });
 
-    test('should restore a float 32 matrix from json with empty data', () {
+    test('should restore a float32 matrix from json with empty data', () {
       final matrix = fromMatrixJson(validFloat32JsonWithEmptyData);
       expect(matrix, <List<double>>[]);
     });
 
-    test('should restore a float 32 matrix from json with data consisting of '
+    test('should restore a float32 matrix from json with data consisting of '
         'just empty row', () {
       final matrix = fromMatrixJson(validFloat32JsonWithEmptyRow);
       expect(matrix, <List<double>>[]);

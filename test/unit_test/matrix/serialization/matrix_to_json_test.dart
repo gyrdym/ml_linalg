@@ -21,24 +21,24 @@ void main() {
     test('should serialize float32 matrix', () {
       final encoded = matrixToJson(float32Matrix);
       expect(encoded, {
-        dTypeJsonKey: dTypeFloat32EncodedValue,
-        dataJsonKey: source,
+        matrixDTypeJsonKey: dTypeFloat32EncodedValue,
+        matrixDataJsonKey: source,
       });
     });
 
     test('should serialize float64 matrix', () {
       final encoded = matrixToJson(float64Matrix);
       expect(encoded, {
-        dTypeJsonKey: dTypeFloat64EncodedValue,
-        dataJsonKey: source,
+        matrixDTypeJsonKey: dTypeFloat64EncodedValue,
+        matrixDataJsonKey: source,
       });
     });
 
     test('should serialize empty matrix', () {
       final encoded = matrixToJson(float32EmptyMatrix);
       expect(encoded, {
-        dTypeJsonKey: dTypeFloat32EncodedValue,
-        dataJsonKey: emptySource,
+        matrixDTypeJsonKey: dTypeFloat32EncodedValue,
+        matrixDataJsonKey: emptySource,
       });
     });
   });
