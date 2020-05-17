@@ -4,11 +4,18 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 
 /// Restores a matrix instance from given [json]
 Matrix fromMatrixJson(Map<String, dynamic> json) {
-  final list = json[matrixDataJsonKey] as List<List<double>>;
+  final matrixSource = json[matrixDataJsonKey] as List<dynamic>;
 
-  if (list == null) {
+  if (matrixSource == null) {
     throw Exception('Provided json is missing `$matrixDataJsonKey` field');
   }
+
+  final double2dList = matrixSource
+      .map(
+          (dynamic row) => (row as List<dynamic>)
+              .map((dynamic element) => double.parse(element.toString()))
+              .toList(growable: false))
+      .toList(growable: false);
 
   final encodedDType = json[matrixDTypeJsonKey] as String;
 
@@ -18,5 +25,5 @@ Matrix fromMatrixJson(Map<String, dynamic> json) {
 
   final dType = fromDTypeJson(encodedDType);
 
-  return Matrix.fromList(list, dtype: dType);
+  return Matrix.fromList(double2dList, dtype: dType);
 }

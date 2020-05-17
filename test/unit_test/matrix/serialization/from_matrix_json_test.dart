@@ -13,6 +13,11 @@ void main() {
       [33, -987, 90, 732],
     ];
 
+    final dataWithNull = <List<double>>[
+      [123.0009863, null, 11.777209, 90003.112],
+      [-93.5678, 12, null, -10e2],
+    ];
+
     final emptyData = <List<double>>[];
     final dataWithEmptyRow = <List<double>>[[]];
 
@@ -42,6 +47,11 @@ void main() {
     final validFloat32JsonWithEmptyRow = {
       matrixDTypeJsonKey: dTypeFloat32EncodedValue,
       matrixDataJsonKey: dataWithEmptyRow,
+    };
+
+    final validFloat32JsonWithNullInData = {
+      matrixDTypeJsonKey: dTypeFloat32EncodedValue,
+      matrixDataJsonKey: dataWithNull,
     };
 
     test('should throw an error if data key is absent', () {
@@ -75,6 +85,11 @@ void main() {
         'just empty row', () {
       final matrix = fromMatrixJson(validFloat32JsonWithEmptyRow);
       expect(matrix, emptyData);
+    });
+
+    test('should throw an error if there are nulls in the data', () {
+      final actual = () => fromMatrixJson(validFloat32JsonWithNullInData);
+      expect(actual, throwsFormatException);
     });
   });
 }

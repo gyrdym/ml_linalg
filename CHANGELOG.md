@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.8.2
+- `fromMatrixJson`: dynamic type support added to parsing
+
 ## 12.8.1
 - `DType`:
     - `dTypeToJson` helper function added to public API
