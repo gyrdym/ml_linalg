@@ -7,6 +7,7 @@ import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
 import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_linalg/src/vector/float64x2_vector.dart';
+import 'package:ml_linalg/src/vector/serialization/from_vector_json.dart';
 import 'package:ml_linalg/src/vector/simd_helper/simd_helper_factory.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 
@@ -282,6 +283,8 @@ abstract class Vector implements Iterable<double> {
         throw UnimplementedError('Vector of $dtype type is not implemented yet');
     }
   }
+
+  factory Vector.fromJson(Map<String, dynamic> json) => fromVectorJson(json);
 
   /// Denotes a data type, used for representation of the vector's elements
   DType get dtype;
