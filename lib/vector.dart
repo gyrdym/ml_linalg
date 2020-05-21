@@ -389,4 +389,7 @@ abstract class Vector implements Iterable<double> {
   /// Returns a new vector composed of values which indices are within the range
   /// [start] (inclusive) - [end] (exclusive)
   Vector subvector(int start, [int end]);
+
+  /// Returns a json-serializable map
+  Map<String, dynamic> toJson();
 }
