@@ -32,6 +32,7 @@
         - [Vector normalization (using Euclidean norm)](#vector-normalization-using-euclidean-norm)
         - [Vector normalization (using Manhattan norm)](#vector-normalization-using-manhattan-norm)
         - [Vector rescaling (min-max normalization)](#vector-rescaling-min-max-normalization)
+        - [Vector serialization](#vector-serialization)
 - [Matrices](#matrices)
     - [Matrix operations](#matrix-operations-examples)
         - [Creation of diagonal matrix](#creation-of-diagonal-matrix)
@@ -333,6 +334,18 @@ the difference is significant.
   final vector = Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
   final result = vector.rescale();
   print(result); // [0.555, 0.222, 0.777, 0.0, 1.0, 0.444]
+````
+
+#### Vector serialization
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
+  final serialized = vector.toJson();
+  print(serialized); // it yields a serializable representation of the vector
+
+  final restoredVector = Vector.fromJson(serialized);
+  print(restoredVector); // [1.0, -2.0, 3.0, -4.0, 5.0, 0.0]
 ````
 
 ## Matrices

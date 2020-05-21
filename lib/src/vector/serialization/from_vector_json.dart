@@ -2,6 +2,7 @@ import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/src/common/dtype_serializer/dtype_encoded_values.dart';
 import 'package:ml_linalg/src/vector/vector_json_keys.dart';
 
+/// Restores a vector instance from the given [json]
 Vector fromVectorJson(Map<String, dynamic> json) {
   final source = (json[vectorDataJsonKey] as List)
       .map((dynamic value) => double.parse(value.toString()))
