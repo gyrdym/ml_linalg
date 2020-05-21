@@ -9,6 +9,7 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
+import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
 import 'package:ml_linalg/src/vector/simd_helper/simd_helper.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
@@ -413,6 +414,9 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         final maxValue = max();
         return (this - minValue) / (maxValue - minValue);
       }, skipCaching: skipCaching);
+
+  @override
+  Map<String, dynamic> toJson() => vectorToJson(this);
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2,
   /// Manhattan - 1)
