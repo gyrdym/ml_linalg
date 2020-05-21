@@ -1,5 +1,12 @@
 # Changelog
 
+## 12.9.0
+- `Vector`: 
+    - `fromJson` constructor added
+    - `toJson` method added
+- `vectorToJson` helper function added to public API
+- `fromVectorJson` helper function added to public API
+
 ## 12.8.2
 - `fromMatrixJson`: dynamic type support added to parsing
 

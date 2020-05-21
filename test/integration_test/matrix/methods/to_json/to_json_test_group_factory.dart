@@ -8,7 +8,7 @@ import '../../../../dtype_to_title.dart';
 
 void toJsonTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
-      group('toJson', () {
+      group('toJson method', () {
         test('should return a serializable map', () {
           final source = [
             [1.0, 2.0, 3.0, 4.0],
