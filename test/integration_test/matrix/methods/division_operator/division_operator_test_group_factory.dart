@@ -1,5 +1,7 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
+import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
@@ -7,7 +9,7 @@ import '../../../../dtype_to_title.dart';
 void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('/ operator', () {
-        test('should perform row-wise division a vector', () {
+        test('should perform row-wise division by a vector', () {
           final matrix = Matrix.fromList([
             [4.0, 6.0, 20.0, 125.0],
             [10.0, 18.0, 28.0, 40.0],
@@ -62,7 +64,24 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
           final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0],
               dtype: dtype);
 
-          expect(() => matrix / vector, throwsException);
+          expect(() => matrix / vector,
+              throwsA(isA<MatrixDivisionByVectorException>()));
+        });
+
+        test('should throw an error if one tries to divide a square matrix '
+            'by a vector', () {
+          final matrix = Matrix.fromList([
+            [1.0, 2.0, 3.0, 4.0],
+            [5.0, 6.0, 7.0, 8.0],
+            [9.0, .0, -2.0, -3.0],
+            [9.0, .0, -2.0, -3.0],
+          ], dtype: dtype);
+
+          final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0],
+              dtype: dtype);
+
+          expect(() => matrix / vector,
+              throwsA(isA<SquareMatrixDivisionByVectorException>()));
         });
 
         test('should perform division of a matrix by another matrix', () {
@@ -93,7 +112,7 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
         });
 
         test('should throw an error if one tries to divide a matrix by another '
-            'matrix of unproper dimensions', () {
+            'matrix of unproper shape', () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
             [5.0, 6.0, 7.0, 8.0],
