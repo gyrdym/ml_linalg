@@ -7,6 +7,8 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
+import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
+import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
@@ -33,6 +35,9 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
 
   @override
   bool get hasData => _dataManager.hasData;
+
+  @override
+  bool get isSquare => columnsNum == rowsNum;
 
   @override
   Iterator<Iterable<double>> get iterator => _dataManager.iterator;
@@ -370,18 +375,21 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
         source[i * matrix.columnsNum + j] = element;
       }
     }
-    return Matrix.fromFlattenedList(source, rowsNum, matrix.columnsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(source, rowsNum, matrix.columnsNum,
+        dtype: dtype);
   }
 
   Matrix _matrixByVectorDiv(Vector vector) {
+    if (isSquare) {
+      throw SquareMatrixDivisionByVectorException(rowsNum, columnsNum);
+    }
     if (vector.length == rowsNum) {
       return mapColumns((column) => column / vector);
     }
     if (vector.length == columnsNum) {
       return mapRows((row) => row / vector);
     }
-    throw Exception('Cannot divide the $rowsNum x $columnsNum matrix by a '
-        'vector of length equals ${vector.length}');
+    throw MatrixDivisionByVectorException(rowsNum, columnsNum, vector.length);
   }
 
   Matrix _matrixByMatrixDiv(Matrix matrix) {
