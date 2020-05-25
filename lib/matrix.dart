@@ -306,6 +306,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// getter from [Iterable] interface, since the latter may return falsy true
   bool get hasData;
 
+  /// Returns `true` if the [Matrix]'s [columnsNum] and [rowsNum] are equal
+  bool get isSquare;
+
   /// Returns a matrix row on an [index] (the operator is an alias for
   /// [getRow] method)
   Vector operator [](int index);
@@ -321,8 +324,22 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// whatever
   Matrix operator *(Object value);
 
-  /// Performs division of the matrix by a matrix/ a vector/ a scalar/
-  /// whatever
+  /// Performs division of the matrix by a matrix/ a vector/ a scalar
+  ///
+  /// If division by a matrix is taking place, each element of this [Matrix]
+  /// will be divided by each element of another matrix. If the other matrix has
+  /// a different shape, an exception will be thrown.
+  ///
+  /// If division by a vector is taking place, the direction of the division
+  /// will be automatically detected:
+  /// - if [rowsNum] is equal to the vector's length, the division will be
+  /// applied column-wise
+  /// - if [columnsNum] is equal to the vector's length, the division will be
+  /// applied row-wise
+  /// - if this [Matrix] is square, an exception will be thrown.
+  ///
+  /// If division by a scalar is taking place, each element of this [Matrix]
+  /// will be divided by the scalar
   Matrix operator /(Object value);
 
   /// Performs transposition of the matrix

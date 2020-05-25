@@ -1,5 +1,10 @@
 # Changelog
 
+## 12.10.0
+- `Matrix`:
+    - `Matrix.isSquare` getter added
+    - `division operator`: throwing exception added in case of square matrix 
+
 ## 12.9.0
 - `Vector`: 
     - `fromJson` constructor added
