@@ -1,5 +1,12 @@
 # Changelog
 
+## 12.11.0
+- `Matrix`:
+    - `Matrix.pow` method added
+- `Vector`:
+    - `Vector.toIntegerPower` is deprecated
+    - `Vector.pow` method added
+
 ## 12.10.0
 - `Matrix`:
     - `Matrix.isSquare` getter added

@@ -1,4 +1,4 @@
-// creation + hash code calculation: approx. 5.3 seconds (MacBook Air mid 2017)
+// creation + hash code calculation: approx. 4 seconds (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';

@@ -26,4 +26,10 @@ class Float64x2Helper implements SimdHelper<Float64x2> {
 
   @override
   List<double> simdValueToList(Float64x2 a) => [a.x, a.y];
+
+  @override
+  Float64x2 pow(Float64x2 a, num exponent) => Float64x2(
+    math.pow(a.x, exponent).toDouble(),
+    math.pow(a.y, exponent).toDouble(),
+  );
 }

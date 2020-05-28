@@ -8,11 +8,9 @@ import 'package:ml_linalg/src/di/dependencies.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_linalg/src/vector/float64x2_vector.dart';
 import 'package:ml_linalg/src/vector/serialization/from_vector_json.dart';
-import 'package:ml_linalg/src/vector/simd_helper/simd_helper_factory.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 
 final _cacheManagerFactory = dependencies.getDependency<CacheManagerFactory>();
-final _simdHelperFactory = dependencies.getDependency<SimdHelperFactory>();
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
 /// architecture support and extended functionality, adapted for data science
@@ -47,14 +45,12 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.fromList(
           source,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
         return Float64x2Vector.fromList(
           source,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       default:
@@ -96,7 +92,6 @@ abstract class Vector implements Iterable<double> {
           source as Float32x4List,
           actualLength,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
@@ -104,7 +99,6 @@ abstract class Vector implements Iterable<double> {
           source as Float64x2List,
           actualLength,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       default:
@@ -138,7 +132,6 @@ abstract class Vector implements Iterable<double> {
           length,
           value,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
@@ -146,7 +139,6 @@ abstract class Vector implements Iterable<double> {
           length,
           value,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       default:
@@ -179,14 +171,12 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.zero(
           length,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
         return Float64x2Vector.zero(
           length,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       default:
@@ -228,7 +218,6 @@ abstract class Vector implements Iterable<double> {
           length,
           seed,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
           max: max,
           min: min,
         );
@@ -238,7 +227,6 @@ abstract class Vector implements Iterable<double> {
           length,
           seed,
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
           max: max,
           min: min,
         );
@@ -270,13 +258,11 @@ abstract class Vector implements Iterable<double> {
       case DType.float32:
         return Float32x4Vector.empty(
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       case DType.float64:
         return Float64x2Vector.empty(
           _cacheManagerFactory.create(vectorCacheKeys),
-          _simdHelperFactory.createByDType(dtype),
         );
 
       default:
@@ -314,7 +300,14 @@ abstract class Vector implements Iterable<double> {
 
   /// Creates a new [Vector] containing elements of this [Vector] raised to
   /// the integer [power]
+  /// Deprecated, use [pow] instead
+  @deprecated
   Vector toIntegerPower(int power);
+
+  /// Creates a new [Vector] composed of elements of this [Vector] raised to
+  /// the [exponent]. Avoid raising a vector to a float power, since it is
+  /// a slow operation
+  Vector pow(num exponent);
 
   /// Returns a new vector where the elements are absolute values of the
   /// original vector's elements
@@ -363,7 +356,7 @@ abstract class Vector implements Iterable<double> {
   /// Mapping function [mapper] should accept argument only of [Float32x4] or
   /// [Float64x2] data type (depends on [dtype] value, e.g. if [dtype] equals
   /// [DType.float32] - the argument should be of [Float32x4] type). The data
-  /// types mentioned above allow to perform mapping much faster comparing with
+  /// types mentioned above allow to perform mapping much faster than
   /// the regular [map] method
   ///
   /// ````dart
