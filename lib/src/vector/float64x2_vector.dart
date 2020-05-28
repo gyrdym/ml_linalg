@@ -10,7 +10,7 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
-import 'package:ml_linalg/src/vector/simd_helper/simd_helper.dart';
+import 'package:ml_linalg/src/vector/simd_helper/float64x2_helper.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
@@ -19,8 +19,7 @@ const _bytesPerSimdElement = Float64x2List.bytesPerElement;
 const _bucketSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
 
 class Float64x2Vector with IterableMixin<double> implements Vector {
-  Float64x2Vector.fromList(List<num> source, this._cacheManager,
-      this._simdHelper) :
+  Float64x2Vector.fromList(List<num> source, this._cacheManager) :
         length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(source.length, _bucketSize) *
@@ -31,8 +30,8 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float64x2Vector.randomFilled(this.length, int seed, this._cacheManager,
-      this._simdHelper, {num min = 0, num max = 1}) :
+  Float64x2Vector.randomFilled(this.length, int seed, this._cacheManager, {
+    num min = 0, num max = 1}) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
@@ -49,8 +48,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float64x2Vector.filled(this.length, num value, this._cacheManager,
-      this._simdHelper) :
+  Float64x2Vector.filled(this.length, num value, this._cacheManager) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
@@ -60,19 +58,19 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float64x2Vector.zero(this.length, this._cacheManager, this._simdHelper) :
+  Float64x2Vector.zero(this.length, this._cacheManager) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer;
 
   Float64x2Vector.fromSimdList(Float64x2List data, this.length,
-      this._cacheManager, this._simdHelper) :
+      this._cacheManager) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = data.buffer {
     _cachedInnerSimdList = data;
   }
 
-  Float64x2Vector.empty(this._cacheManager, this._simdHelper) :
+  Float64x2Vector.empty(this._cacheManager) :
         length = 0,
         _numOfBuckets = 0,
         _buffer = ByteData(0).buffer;
@@ -84,7 +82,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   final int length;
 
   final CacheManager _cacheManager;
-  final SimdHelper _simdHelper;
+  final Float64x2Helper _simdHelper = const Float64x2Helper();
   final ByteBuffer _buffer;
   final int _numOfBuckets;
 
@@ -314,8 +312,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         if (power == 1) {
           return abs().sum();
         }
-        return math.pow(toIntegerPower(power)
-            .sum(), 1 / power) as double;
+        return math.pow(pow(power).sum(), 1 / power) as double;
       }, skipCaching: skipCaching);
 
   @override
@@ -435,6 +432,26 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
   }
 
+  Vector _elementWisePow(num exp) => exp is int
+      ? _elementWiseIntegerPow(exp)
+      : _elementWiseFloatPow(exp as double);
+
+  Vector _elementWiseIntegerPow(int exponent) {
+    final source = Float64x2List(_numOfBuckets);
+    for (int i = 0; i < _numOfBuckets; i++) {
+      source[i] = _simdToIntPow(_innerSimdList[i], exponent);
+    }
+    return Vector.fromSimdList(source, length, dtype: dtype);
+  }
+
+  Vector _elementWiseFloatPow(double exponent) {
+    final source = Float64x2List(_numOfBuckets);
+    for (int i = 0; i < _numOfBuckets; i++) {
+      source[i] = _simdToFloatPow(_innerSimdList[i], exponent);
+    }
+    return Vector.fromSimdList(source, length, dtype: dtype);
+  }
+
   /// Returns a SIMD value raised to the integer power
   Float64x2 _simdToIntPow(Float64x2 lane, num power) {
     if (power == 0) {
@@ -451,15 +468,8 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     return lane * sqrX;
   }
 
-  /// Returns a vector as a result of applying to [this] element-wise raising
-  /// to the integer power
-  Vector _elementWisePow(num exp) {
-    final source = Float64x2List(_numOfBuckets);
-    for (int i = 0; i < _numOfBuckets; i++) {
-      source[i] = _simdToIntPow(_innerSimdList[i], exp);
-    }
-    return Vector.fromSimdList(source, length, dtype: dtype);
-  }
+  Float64x2 _simdToFloatPow(Float64x2 lane, num exponent) =>
+      _simdHelper.pow(lane, exponent);
 
   Vector _matrixMul(Matrix matrix) {
     if (length != matrix.rowsNum) {

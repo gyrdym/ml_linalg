@@ -1,6 +1,6 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
-import 'package:ml_linalg/matrix_norm.dart';
+import 'package:ml_tech/unit_testing/matchers/iterable_2d_almost_equal_to.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
@@ -37,6 +37,22 @@ void matrixPowTestGroupFactory(DType dtype) =>
             [1.0, 1.0, 1.0, 1.0],
             [1.0, 1.0, 1.0, 1.0],
           ]);
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should raise all the matrix elements to float power', () {
+          final matrix = Matrix.fromList([
+            [1.0, 2.0, 3.0, 4.0],
+            [5.0, 6.0, 7.0, 8.0],
+            [9.0, 0.0, -2.0, -3.0],
+          ], dtype: dtype);
+          final raised = matrix.pow(3.75);
+
+          expect(raised, iterable2dAlmostEqualTo([
+            [      1.0,  13.4543,    61.5456,   181.0193],
+            [ 417.9626, 828.0702,  1476.1063,  2435.4961],
+            [3787.9951,      0.0, double.nan, double.nan],
+          ], 1e-2));
           expect(matrix.dtype, dtype);
         });
       });

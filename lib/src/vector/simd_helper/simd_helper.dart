@@ -16,4 +16,7 @@ abstract class SimdHelper<E> {
 
   /// converts simd value [a] to regular list
   List<double> simdValueToList(E a);
+
+  /// Raises all the lanes of [a] to the [exponent]
+  E pow(E a, num exponent);
 }
