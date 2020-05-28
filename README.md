@@ -56,6 +56,7 @@
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
         - [Matrix element-wise power](#matrix-element-wise-power)
+        - [Matrix element-wise exp](#matrix-element-wise-exp)
         - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
         - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
