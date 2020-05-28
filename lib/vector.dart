@@ -318,7 +318,7 @@ abstract class Vector implements Iterable<double> {
   @deprecated
   Vector toIntegerPower(int power);
 
-  /// Creates a new [Vector] containing elements of this [Vector] raised to
+  /// Creates a new [Vector] composed of elements of this [Vector] raised to
   /// the [exponent]
   Vector pow(num exponent);
 
