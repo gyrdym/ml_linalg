@@ -337,6 +337,13 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
           (column) => column.pow(exponent)).toList(), dtype: dtype);
 
   @override
+  Matrix exp() => _dataManager.areAllRowsCached
+      ? Matrix.fromRows(rows.map(
+          (row) => row.exp()).toList(), dtype: dtype)
+      : Matrix.fromColumns(columns.map(
+          (column) => column.exp()).toList(), dtype: dtype);
+
+  @override
   Map<String, dynamic> toJson() => matrixToJson(this);
 
   double _findExtrema(double callback(Vector vector)) {

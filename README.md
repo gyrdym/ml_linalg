@@ -22,6 +22,7 @@
         - [Mean value](#mean-value)
         - [Sum of all vector elements](#sum-of-all-vector-elements)
         - [Element-wise power](#element-wise-power)
+        - [Element-wise exp](#element-wise-exp)
         - [Dot product](#dot-product-of-two-vectors)
         - [Sum of a vector and a scalar](#sum-of-a-vector-and-a-scalar)
         - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
@@ -247,6 +248,16 @@ the difference is significant.
   final result = vector.pow(3);
   
   print(result); // [2 ^ 3 = 8.0, 3 ^ 3 = 27.0, 4 ^ 3 = 64.0, 5 ^3 = 125.0, 6 ^ 3 = 216.0]
+````
+
+### Element-wise exp
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final result = vector.exp();
+  
+  print(result); // [e ^ 2, e ^ 3, e ^ 4, e ^ 5, e ^ 6]
 ````
 
 #### Dot product of two vectors
@@ -728,6 +739,23 @@ print(matrix1 - matrix2);
   // [1 ^ 3 = 1,   2 ^ 3 = 8,   3 ^ 3 = 27 ]
   // [4 ^ 3 = 64,  5 ^ 3 = 125, 6 ^ 3 = 216]
   // [7 ^ 3 = 343, 8 ^ 3 = 512, 9 ^ 3 = 729]
+````
+
+#### Matrix element-wise exp
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = Matrix.fromList([
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    [7.0, 8.0, 9.0],
+  ]);
+  final result = matrix.exp();
+  
+  print(result);
+  // [e ^ 1, e ^ 2, e ^ 3]
+  // [e ^ 4, e ^ 5, e ^ 6]
+  // [e ^ 7, e ^ 8, e ^ 9]
 ````
 
 #### Matrix indexing and sampling
