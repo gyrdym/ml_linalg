@@ -1,5 +1,11 @@
 # Changelog
 
+## 12.12.0
+- `Matrix`:
+    - `Matrix.exp` method added
+- `Vector`:
+    - `Vector.exp` method added
+
 ## 12.11.0
 - `Matrix`:
     - `Matrix.pow` method added

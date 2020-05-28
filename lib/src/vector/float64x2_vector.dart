@@ -248,6 +248,16 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   Vector pow(num exponent) => _elementWisePow(exponent);
 
   @override
+  Vector exp() {
+    final source = Float64List(length);
+    for (int i = 0; i < length; i++) {
+      source[i] = math.exp(_innerTypedList[i]);
+    }
+
+    return Vector.fromList(source, dtype: dtype);
+  }
+
+  @override
   @deprecated
   Vector toIntegerPower(int power) => pow(power);
 
