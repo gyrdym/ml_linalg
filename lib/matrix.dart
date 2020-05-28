@@ -452,6 +452,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// power, since it is a slow operation
   Matrix pow(num exponent);
 
+  /// Creates a new [Matrix] composed of Euler's numbers raised to powers which
+  /// are the elements of this [Matrix]
+  Matrix exp();
+
   /// Returns a serializable map
   Map<String, dynamic> toJson();
 }

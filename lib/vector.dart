@@ -309,6 +309,10 @@ abstract class Vector implements Iterable<double> {
   /// a slow operation
   Vector pow(num exponent);
 
+  /// Creates a new [Vector] composed of Euler's numbers raised to powers which
+  /// are the elements of this [Vector]
+  Vector exp();
+
   /// Returns a new vector where the elements are absolute values of the
   /// original vector's elements
   Vector abs({bool skipCaching = false});
