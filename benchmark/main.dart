@@ -17,7 +17,7 @@ import 'vector/float32/vector_operations/float32x4_vector_scalar_multiplication.
 import 'vector/float32/vector_operations/float32x4_vector_scalar_subtraction.dart';
 import 'vector/float32/vector_operations/float32x4_vector_sqrt.dart';
 import 'vector/float32/vector_operations/float32x4_vector_sum.dart';
-import 'vector/float32/vector_operations/float32x4_vector_to_integer_power.dart';
+import 'vector/float32/vector_operations/float32x4_vector_pow.dart';
 import 'vector/float32/vector_operations/float32x4_vector_unique.dart';
 import 'vector/float32/vector_operations/float32x4_vector_vector_addition.dart';
 import 'vector/float32/vector_operations/float32x4_vector_vector_multiplication.dart';
@@ -32,7 +32,7 @@ void main() {
   // Vector's methods and operators
   Float32x4VectorAbsBenchmark.main();
   Float32x4VectorHashCodeBenchmark.main();
-  Float32x4VectorToIntegerPowerBenchmark.main();
+  Float32x4VectorPowBenchmark.main();
   Float32x4VectorMaxValueBenchmark.main();
   Float32x4VectorMinValueBenchmark.main();
   Float32x4VectorNormBenchmark.main();

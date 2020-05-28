@@ -1,4 +1,4 @@
-// Approx. 2 seconds (MacBook Air mid 2017)
+// Approx. 1.7 seconds (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
@@ -6,19 +6,19 @@ import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;
 
-class Float32x4VectorToIntegerPowerBenchmark extends BenchmarkBase {
-  Float32x4VectorToIntegerPowerBenchmark()
-      : super('Vector `toIntegerPower` method; $amountOfElements elements');
+class Float32x4VectorPowBenchmark extends BenchmarkBase {
+  Float32x4VectorPowBenchmark()
+      : super('Vector `pow` method; $amountOfElements elements');
 
   Vector vector;
 
   static void main() {
-    Float32x4VectorToIntegerPowerBenchmark().report();
+    Float32x4VectorPowBenchmark().report();
   }
 
   @override
   void run() {
-    vector.toIntegerPower(1234);
+    vector.pow(1234);
   }
 
   @override
@@ -33,5 +33,5 @@ class Float32x4VectorToIntegerPowerBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  Float32x4VectorToIntegerPowerBenchmark.main();
+  Float32x4VectorPowBenchmark.main();
 }

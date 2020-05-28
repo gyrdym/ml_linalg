@@ -305,7 +305,8 @@ abstract class Vector implements Iterable<double> {
   Vector toIntegerPower(int power);
 
   /// Creates a new [Vector] composed of elements of this [Vector] raised to
-  /// the [exponent]
+  /// the [exponent]. Avoid raising a vector to a float power, since it is
+  /// a slow operation
   Vector pow(num exponent);
 
   /// Returns a new vector where the elements are absolute values of the
@@ -355,7 +356,7 @@ abstract class Vector implements Iterable<double> {
   /// Mapping function [mapper] should accept argument only of [Float32x4] or
   /// [Float64x2] data type (depends on [dtype] value, e.g. if [dtype] equals
   /// [DType.float32] - the argument should be of [Float32x4] type). The data
-  /// types mentioned above allow to perform mapping much faster comparing with
+  /// types mentioned above allow to perform mapping much faster than
   /// the regular [map] method
   ///
   /// ````dart

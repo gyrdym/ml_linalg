@@ -448,7 +448,8 @@ abstract class Matrix implements Iterable<Iterable<double>> {
     SortDirection sortDir = SortDirection.asc]);
 
   /// Raise all the elements of the matrix to the power [exponent] and returns
-  /// a new [Matrix] with these elements
+  /// a new [Matrix] with these elements. Avoid raising a matrix to a float
+  /// power, since it is a slow operation
   Matrix pow(num exponent);
 
   /// Returns a serializable map
