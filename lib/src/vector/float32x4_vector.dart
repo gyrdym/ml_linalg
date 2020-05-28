@@ -245,7 +245,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Vector scalarDiv(num scalar) => this / scalar;
 
   @override
-  Vector toIntegerPower(int power) => _elementWisePow(power);
+  Vector pow(num exponent) => _elementWisePow(exponent);
+
+  @override
+  @deprecated
+  Vector toIntegerPower(int power) => pow(power);
 
   @override
   Vector abs({bool skipCaching = false}) =>
@@ -447,7 +451,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   /// Returns a vector as a result of applying to [this] element-wise raising
   /// to the integer power
-  Vector _elementWisePow(int exp) {
+  Vector _elementWisePow(num exp) {
     final source = Float32x4List(_numOfBuckets);
     for (int i = 0; i < _numOfBuckets; i++) {
       source[i] = _simdToIntPow(_innerSimdList[i], exp);

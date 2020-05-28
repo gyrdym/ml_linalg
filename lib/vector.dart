@@ -314,7 +314,13 @@ abstract class Vector implements Iterable<double> {
 
   /// Creates a new [Vector] containing elements of this [Vector] raised to
   /// the integer [power]
+  /// Deprecated, use [pow] instead
+  @deprecated
   Vector toIntegerPower(int power);
+
+  /// Creates a new [Vector] containing elements of this [Vector] raised to
+  /// the [exponent]
+  Vector pow(num exponent);
 
   /// Returns a new vector where the elements are absolute values of the
   /// original vector's elements
