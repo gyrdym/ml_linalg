@@ -11,4 +11,6 @@ abstract class MatrixDataManager {
   bool get hasData;
   Vector getColumn(int index);
   Vector getRow(int index);
+  bool get areAllRowsCached;
+  bool get areAllColumnsCached;
 }

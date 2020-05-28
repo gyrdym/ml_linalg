@@ -15,12 +15,13 @@
 	- [Vector operations](#vector-operations-examples)
         - [Vectors sum](#vectors-sum)
         - [Vectors subtraction](#vectors-subtraction)
-        - [Element wise vector by vector multiplication](#element-wise-vector-by-vector-multiplication)
-        - [Element wise vector by vector division](#element-wise-vector-by-vector-division)
+        - [Element-wise vector by vector multiplication](#element-wise-vector-by-vector-multiplication)
+        - [Element-wise vector by vector division](#element-wise-vector-by-vector-division)
         - [Euclidean norm](#euclidean-norm)
         - [Manhattan norm](#manhattan-norm)
         - [Mean value](#mean-value)
         - [Sum of all vector elements](#sum-of-all-vector-elements)
+        - [Element-wise power](#element-wise-power)
         - [Dot product](#dot-product-of-two-vectors)
         - [Sum of a vector and a scalar](#sum-of-a-vector-and-a-scalar)
         - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
@@ -45,14 +46,15 @@
         - [Multiplication of a matrix and a vector](#multiplication-of-a-matrix-and-a-vector)
         - [Multiplication of a matrix and another matrix](#multiplication-of-a-matrix-and-another-matrix)
         - [Multiplication of a matrix and a scalar](#multiplication-of-a-matrix-and-a-scalar)
-        - [Element wise matrices subtraction](#element-wise-matrices-subtraction)
+        - [Element-wise matrices subtraction](#element-wise-matrices-subtraction)
         - [Matrix transposition](#matrix-transposition)
-        - [Matrix row wise reduce](#matrix-row-wise-reduce)
-        - [Matrix column wise reduce](#matrix-column-wise-reduce)
-        - [Matrix row wise map](#matrix-row-wise-map)
-        - [Matrix column wise map](#matrix-column-wise-map)
+        - [Matrix row-wise reduce](#matrix-row-wise-reduce)
+        - [Matrix column-wise reduce](#matrix-column-wise-reduce)
+        - [Matrix row-wise map](#matrix-row-wise-map)
+        - [Matrix column-wise map](#matrix-column-wise-map)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
+        - [Matrix element-wise power](#matrix-element-wise-power)
         - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
         - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
@@ -160,6 +162,7 @@ the difference is significant.
   final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1 + vector2;
+
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
@@ -170,6 +173,7 @@ the difference is significant.
   final vector1 = Vector.fromList([4.0, 5.0, 6.0, 7.0, 8.0]);
   final vector2 = Vector.fromList([2.0, 3.0, 2.0, 3.0, 2.0]);
   final result = vector1 - vector2;
+
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
 
@@ -180,6 +184,7 @@ the difference is significant.
   final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1 * vector2;
+
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
@@ -190,6 +195,7 @@ the difference is significant.
   final vector1 = Vector.fromList([6.0, 12.0, 24.0, 48.0, 96.0]);
   final vector2 = Vector.fromList([3.0, 4.0, 6.0, 8.0, 12.0]);
   final result = vector1 / vector2;
+
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
 ````
 
@@ -197,8 +203,9 @@ the difference is significant.
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.norm();
+
   print(result); // sqrt(2^2 + 3^2 + 4^2 + 5^2 + 6^2) = sqrt(90) ~~ 9.48
 ````
 
@@ -206,8 +213,9 @@ the difference is significant.
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.norm(Norm.manhattan);
+
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0
 ````
 
@@ -215,8 +223,9 @@ the difference is significant.
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.mean();
+
   print(result); // (2 + 3 + 4 + 5 + 6) / 5 = 4.0
 ````
 
@@ -224,9 +233,20 @@ the difference is significant.
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.sum();
+  final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final result = vector.sum();
+
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0 (equivalent to Manhattan norm)
+````
+
+### Element-wise power
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final result = vector.pow(3);
+  
+  print(result); // [2 ^ 3 = 8.0, 3 ^ 3 = 27.0, 4 ^ 3 = 64.0, 5 ^3 = 125.0, 6 ^ 3 = 216.0]
 ````
 
 #### Dot product of two vectors
@@ -236,6 +256,7 @@ the difference is significant.
   final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.dot(vector2);
+
   print(result); // 1.0 * 2.0 + 2.0 * 3.0 + 3.0 * 4.0 + 4.0 * 5.0 + 5.0 * 6.0 = 70.0
 ````
 
@@ -243,9 +264,10 @@ the difference is significant.
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
   final result = vector1 + scalar;
+
   print(result.toList()); // [6.0, 7.0, 8.0, 9.0, 10.0]
 ````
 
@@ -253,9 +275,10 @@ the difference is significant.
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
-  final result = vector1 - scalar;
+  final result = vector - scalar;
+
   print(result.toList()); // [-4.0, -3.0, -2.0, -1.0, 0.0]
 ````
 
@@ -263,9 +286,10 @@ the difference is significant.
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
-  final result = vector1 * scalar;
+  final result = vector * scalar;
+
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
@@ -273,9 +297,10 @@ the difference is significant.
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
-  final vector1 = Vector.fromList([25.0, 50.0, 75.0, 100.0, 125.0]);
+  final vector = Vector.fromList([25.0, 50.0, 75.0, 100.0, 125.0]);
   final scalar = 5.0;
-  final result = vector1.scalarDiv(scalar);
+  final result = vector.scalarDiv(scalar);
+
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
@@ -286,6 +311,7 @@ the difference is significant.
   final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.distanceTo(vector2, distance: Distance.euclidean);
+
   print(result); // ~~2.23
 ````
 
@@ -296,6 +322,7 @@ the difference is significant.
   final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.distanceTo(vector2, distance: Distance.manhattan);
+
   print(result); // 5.0
 ````
 
@@ -306,6 +333,7 @@ the difference is significant.
   final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final vector2 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector1.distanceTo(vector2, distance: Distance.cosine);
+
   print(result); // 0.00506
 ````
 
@@ -315,6 +343,7 @@ the difference is significant.
 
   final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final result = vector.normalize(Norm.euclidean);
+
   print(result); // [0.134, 0.269, 0.404, 0.539, 0.674]
 ````
 
@@ -324,6 +353,7 @@ the difference is significant.
 
   final vector = Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0]);
   final result = vector.normalize(Norm.manhattan);
+
   print(result); // [0.066, -0.133, 0.200, -0.266, 0.333]
 ````
 
@@ -333,6 +363,7 @@ the difference is significant.
 
   final vector = Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
   final result = vector.rescale();
+
   print(result); // [0.555, 0.222, 0.777, 0.0, 1.0, 0.444]
 ````
 
@@ -680,6 +711,23 @@ print(matrix1 - matrix2);
   final minValue = matrix.min();
   print(minValue);
   // -23.0
+````
+
+#### Matrix element-wise power
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = Matrix.fromList([
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    [7.0, 8.0, 9.0],
+  ]);
+  final result = matrix.pow(3.0);
+  
+  print(result);
+  // [1 ^ 3 = 1,   2 ^ 3 = 8,   3 ^ 3 = 27 ]
+  // [4 ^ 3 = 64,  5 ^ 3 = 125, 6 ^ 3 = 216]
+  // [7 ^ 3 = 343, 8 ^ 3 = 512, 9 ^ 3 = 729]
 ````
 
 #### Matrix indexing and sampling
