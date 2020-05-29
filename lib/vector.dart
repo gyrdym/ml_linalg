@@ -334,8 +334,11 @@ abstract class Vector implements Iterable<double> {
   /// Calculates vector norm (magnitude)
   double norm([Norm norm = Norm.euclidean, bool skipCaching = false]);
 
-  /// Returns sum of all vector elements
+  /// Returns the sum of all vector elements
   double sum({bool skipCaching = false});
+
+  /// Returns the product of all the vector's elements
+  double prod();
 
   /// Returns maximum element among the all vector elements
   double max({bool skipCaching = false});

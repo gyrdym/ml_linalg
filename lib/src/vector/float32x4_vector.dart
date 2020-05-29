@@ -15,6 +15,7 @@ import 'package:ml_linalg/vector.dart';
 const _bytesPerElement = Float32List.bytesPerElement;
 const _bytesPerSimdElement = Float32x4List.bytesPerElement;
 const _bucketSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
+final _simdOnes = Float32x4.splat(1.0);
 
 class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.fromList(List<num> source, this._cacheManager) :
@@ -278,6 +279,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       skipCaching: skipCaching);
 
   @override
+  double prod({bool skipCaching = false}) => _cacheManager.retrieveValue(sumKey,
+      _findProduct, skipCaching: skipCaching);
+
+  @override
   double distanceTo(Vector other, {
     Distance distance = Distance.euclidean,
   }) {
@@ -334,6 +339,27 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       _cacheManager.retrieveValue(minKey, () =>
           _findExtrema(double.infinity, _simdHelper.getMinLane,
                   (a, b) => a.min(b), math.min), skipCaching: skipCaching);
+
+  double _findProduct() {
+    if (length == 0) {
+      return double.nan;
+    }
+
+    if (_isLastBucketNotFull) {
+      final fullBucketsList = _innerSimdList.take(_numOfBuckets - 1);
+      final product = fullBucketsList.isNotEmpty
+          ? fullBucketsList.reduce((result, value) => result * value)
+          : _simdOnes;
+
+      return _simdHelper.simdValueToList(_innerSimdList.last)
+          .take(length % _bucketSize)
+          .fold(_simdHelper.multLanes(product),
+              (result, value) => result * value);
+    }
+
+    return _simdHelper.multLanes(
+        _innerSimdList.reduce((result, value) => result * value));
+  }
 
   double _findExtrema(double initialValue,
       double getExtremalLane(Float32x4 bucket),

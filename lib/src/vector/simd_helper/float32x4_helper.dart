@@ -16,6 +16,8 @@ class Float32x4Helper implements SimdHelper<Float32x4> {
       (a.z.isNaN ? 0.0 : a.z) +
       (a.w.isNaN ? 0.0 : a.w);
 
+  double multLanes(Float32x4 a) => a.x * a.y * a.z * a.w;
+
   @override
   double sumLanesForHash(Float32x4 a) =>
       (a.x.isNaN || a.x.isInfinite ? 0.0 : a.x) +
