@@ -10,17 +10,14 @@ class Float64x2Helper implements SimdHelper<Float64x2> {
   bool areLanesEqual(Float64x2 a, Float64x2 b) => a.x == b.x && a.y == b.y;
 
   @override
-  double sumLanes(Float64x2 a) =>
-      (a.x.isNaN ? 0.0 : a.x) + (a.y.isNaN ? 0.0 : a.y);
+  double sumLanes(Float64x2 a) => a.x + a.y;
 
   @override
   double sumLanesForHash(Float64x2 a) =>
       (a.x.isNaN || a.x.isInfinite ? 0.0 : a.x) +
           (a.y.isNaN || a.y.isInfinite ? 0.0 : a.y);
 
-  double multLanes(Float64x2 a) =>
-      (a.x.isNaN ? 1.0 : a.x) *
-          (a.y.isNaN ? 1.0 : a.y);
+  double multLanes(Float64x2 a) => a.x * a.y;
 
   @override
   double getMaxLane(Float64x2 a) => math.max(a.x, a.y);

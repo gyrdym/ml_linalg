@@ -274,9 +274,15 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   double dot(Vector vector) => (this * vector).sum();
 
   @override
-  double sum({bool skipCaching = false}) => _cacheManager.retrieveValue(sumKey,
-          () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
-      skipCaching: skipCaching);
+  double sum({bool skipCaching = false}) {
+    if (isEmpty) {
+      return double.nan;
+    }
+
+    return _cacheManager.retrieveValue(sumKey,
+            () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
+        skipCaching: skipCaching);
+  }
 
   @override
   double prod({bool skipCaching = false}) => _cacheManager.retrieveValue(sumKey,
