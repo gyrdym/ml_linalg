@@ -124,8 +124,8 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     final rowsNumber = rowIndices.isEmpty
         ? rowsNum
         : rowIndices.length;
-
     final targetMatrixSource = List<Vector>(rowsNumber);
+
     for (final indexed in enumerate(rowIndices.isEmpty
         ? count(0).take(rowsNum).map((i) => i.toInt())
         : rowIndices)
@@ -133,9 +133,11 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
       final targetRowIndex = indexed.index;
       final sourceRowIndex = indexed.value;
       final sourceRow = getRow(sourceRowIndex);
+
       targetMatrixSource[targetRowIndex] = columnIndices.isEmpty
           ? sourceRow : sourceRow.sample(columnIndices);
     }
+
     return Matrix.fromRows(targetMatrixSource, dtype: dtype);
   }
 
@@ -330,18 +332,44 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   @override
-  Matrix pow(num exponent) => _dataManager.areAllRowsCached
-      ? Matrix.fromRows(rows.map(
-          (row) => row.pow(exponent)).toList(), dtype: dtype)
-      : Matrix.fromColumns(columns.map(
-          (column) => column.pow(exponent)).toList(), dtype: dtype);
+  Matrix pow(num exponent) => _cacheManager.retrieveValue(matrixPowKey,
+          () => _dataManager.areAllRowsCached
+              ? Matrix.fromRows(rows.map(
+                  (row) => row.pow(exponent)).toList(), dtype: dtype)
+              : Matrix.fromColumns(columns.map(
+                  (column) => column.pow(exponent)).toList(), dtype: dtype));
 
   @override
-  Matrix exp() => _dataManager.areAllRowsCached
-      ? Matrix.fromRows(rows.map(
-          (row) => row.exp()).toList(), dtype: dtype)
-      : Matrix.fromColumns(columns.map(
-          (column) => column.exp()).toList(), dtype: dtype);
+  Matrix exp() => _cacheManager.retrieveValue(matrixExpKey,
+          () => _dataManager.areAllRowsCached
+              ? Matrix.fromRows(rows.map(
+                  (row) => row.exp()).toList(), dtype: dtype)
+              : Matrix.fromColumns(columns.map(
+                  (column) => column.exp()).toList(), dtype: dtype));
+
+  @override
+  double sum() {
+    if (!hasData) {
+      return double.nan;
+    }
+
+    return _cacheManager.retrieveValue(matrixSumKey,
+            () => _dataManager.areAllRowsCached
+                ? rows.fold(0, (result, row) => result + row.sum())
+                : columns.fold(0, (result, column) => result + column.sum()));
+  }
+
+  @override
+  double prod() {
+    if (!hasData) {
+      return double.nan;
+    }
+
+    return _cacheManager.retrieveValue(matrixProdKey,
+            () => _dataManager.areAllRowsCached
+                ? rows.fold(0, (result, row) => result * row.prod())
+                : columns.fold(0, (result, column) => result * column.prod()));
+  }
 
   @override
   Map<String, dynamic> toJson() => matrixToJson(this);
