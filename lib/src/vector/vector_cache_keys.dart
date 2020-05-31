@@ -4,6 +4,7 @@ const hashKey = 'hash';
 const sqrtKey = 'sqrt';
 const absKey = 'abs';
 const sumKey = 'sum';
+const prodKey = 'prod';
 const meanKey = 'mean';
 const euclideanNormKey = 'euclidean_norm';
 const manhattanNormKey = 'manhattan_norm';
@@ -19,6 +20,7 @@ final vectorCacheKeys = Set<String>.from(<String>[
   sqrtKey,
   absKey,
   sumKey,
+  prodKey,
   meanKey,
   euclideanNormKey,
   manhattanNormKey,

@@ -55,5 +55,13 @@ void matrixPowTestGroupFactory(DType dtype) =>
           ], 1e-2));
           expect(matrix.dtype, dtype);
         });
+
+        test('should return empty matrix if the source matrix is empty', () {
+          final matrix = Matrix.fromList([], dtype: dtype);
+          final raised = matrix.pow(3.75);
+
+          expect(raised.hasData, isFalse);
+          expect(matrix.dtype, dtype);
+        });
       });
     });

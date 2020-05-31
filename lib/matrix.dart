@@ -456,6 +456,12 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// are the elements of this [Matrix]
   Matrix exp();
 
+  /// Returns the sum of all the matrix elements
+  double sum();
+
+  /// Returns the product of all the matrix elements
+  double prod();
+
   /// Returns a serializable map
   Map<String, dynamic> toJson();
 }

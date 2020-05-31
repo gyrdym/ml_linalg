@@ -1,5 +1,12 @@
 # Changelog
 
+## 12.13.0
+- `Matrix`:
+    - `Matrix.sum` method added
+    - `Matrix.prod` method added
+- `Vector`:
+    - `Vector.prod` method added
+
 ## 12.12.0
 - `Matrix`:
     - `Matrix.exp` method added
