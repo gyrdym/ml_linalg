@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.14.0
+- `Vector`:
+    - `Vector.mapToVector` method added
+
 ## 12.13.0
 - `Matrix`:
     - `Matrix.sum` method added

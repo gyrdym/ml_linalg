@@ -411,6 +411,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
+  Vector mapToVector(double mapper(double value)) =>
+      Vector.fromList(_innerTypedList.map(mapper).toList(), dtype: dtype);
+
+  @override
   double operator [](int index) {
     if (isEmpty) {
       throw _emptyVectorException;
