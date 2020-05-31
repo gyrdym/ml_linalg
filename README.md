@@ -21,6 +21,7 @@
         - [Manhattan norm](#manhattan-norm)
         - [Mean value](#mean-value)
         - [Sum of all vector elements](#sum-of-all-vector-elements)
+        - [Product of all vector elements](#product-of-all-vector-elements)
         - [Element-wise power](#element-wise-power)
         - [Element-wise exp](#element-wise-exp)
         - [Dot product](#dot-product-of-two-vectors)
@@ -57,6 +58,8 @@
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
         - [Matrix element-wise power](#matrix-element-wise-power)
         - [Matrix element-wise exp](#matrix-element-wise-exp)
+        - [Sum of all matrix elements](#sum-of-all-matrix-elements)
+        - [Product of all matrix elements](#product-of-all-matrix-elements)
         - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
         - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
@@ -238,7 +241,17 @@ the difference is significant.
   final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
   final result = vector.sum();
 
-  print(result); // 2 + 3 + 4 + 5 + 6 = 20.0 (equivalent to Manhattan norm)
+  print(result); // 2 + 3 + 4 + 5 + 6 = 20.0
+````
+
+#### Product of all vector elements
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
+  final result = vector.prod();
+
+  print(result); // 2 * 3 * 4 * 5 * 6 = 720
 ````
 
 ### Element-wise power
@@ -757,6 +770,34 @@ print(matrix1 - matrix2);
   // [e ^ 1, e ^ 2, e ^ 3]
   // [e ^ 4, e ^ 5, e ^ 6]
   // [e ^ 7, e ^ 8, e ^ 9]
+````
+
+#### Sum of all matrix elements
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = Matrix.fromList([
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    [7.0, 8.0, 9.0],
+  ]);
+  final result = matrix.sum();
+  
+  print(result); // 1.0 + 2.0 + 3.0 + 4.0 + 5.0 + 6.0 + 7.0 + 8.0 + 9.0
+````
+
+#### Product of all matrix elements
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final matrix = Matrix.fromList([
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    [7.0, 8.0, 9.0],
+  ]);
+  final result = matrix.product();
+  
+  print(result); // 1.0 * 2.0 * 3.0 * 4.0 * 5.0 * 6.0 * 7.0 * 8.0 * 9.0
 ````
 
 #### Matrix indexing and sampling

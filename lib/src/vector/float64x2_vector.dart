@@ -17,6 +17,7 @@ import 'package:ml_linalg/vector.dart';
 const _bytesPerElement = Float64List.bytesPerElement;
 const _bytesPerSimdElement = Float64x2List.bytesPerElement;
 const _bucketSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
+final _simdOnes = Float64x2.splat(1.0);
 
 class Float64x2Vector with IterableMixin<double> implements Vector {
   Float64x2Vector.fromList(List<num> source, this._cacheManager) :
@@ -275,9 +276,19 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   double dot(Vector vector) => (this * vector).sum();
 
   @override
-  double sum({bool skipCaching = false}) => _cacheManager.retrieveValue(sumKey,
-          () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
-      skipCaching: skipCaching);
+  double sum({bool skipCaching = false}) {
+    if (isEmpty) {
+      return double.nan;
+    }
+
+    return _cacheManager.retrieveValue(sumKey,
+            () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
+        skipCaching: skipCaching);
+  }
+
+  @override
+  double prod({bool skipCaching = false}) => _cacheManager.retrieveValue(sumKey,
+      _findProduct, skipCaching: skipCaching);
 
   @override
   double distanceTo(Vector other, {
@@ -336,6 +347,27 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       _cacheManager.retrieveValue(minKey, () =>
           _findExtrema(double.infinity, _simdHelper.getMinLane,
                   (a, b) => a.min(b), math.min), skipCaching: skipCaching);
+
+  double _findProduct() {
+    if (length == 0) {
+      return double.nan;
+    }
+
+    if (_isLastBucketNotFull) {
+      final fullBucketsList = _innerSimdList.take(_numOfBuckets - 1);
+      final product = fullBucketsList.isNotEmpty
+          ? fullBucketsList.reduce((result, value) => result * value)
+          : _simdOnes;
+
+      return _simdHelper.simdValueToList(_innerSimdList.last)
+          .take(length % _bucketSize)
+          .fold(_simdHelper.multLanes(product),
+              (result, value) => result * value);
+    }
+
+    return _simdHelper.multLanes(
+        _innerSimdList.reduce((result, value) => result * value));
+  }
 
   double _findExtrema(double initialValue,
       double getExtremalLane(Float64x2 bucket),
