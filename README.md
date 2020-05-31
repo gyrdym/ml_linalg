@@ -36,6 +36,7 @@
         - [Vector normalization (using Manhattan norm)](#vector-normalization-using-manhattan-norm)
         - [Vector rescaling (min-max normalization)](#vector-rescaling-min-max-normalization)
         - [Vector serialization](#vector-serialization)
+        - [Vector mapping](#vector-mapping)
 - [Matrices](#matrices)
     - [Matrix operations](#matrix-operations-examples)
         - [Creation of diagonal matrix](#creation-of-diagonal-matrix)
@@ -402,6 +403,19 @@ the difference is significant.
 
   final restoredVector = Vector.fromJson(serialized);
   print(restoredVector); // [1.0, -2.0, 3.0, -4.0, 5.0, 0.0]
+````
+
+#### Vector mapping
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0, 0.0]);
+  final mapped = vector.mapToVector((el) => el * 2);
+  
+  print(mapped); // [2.0, -4.0, 6.0, -8.0, 10.0, 0.0]
+  print(mapped is Vector); // true
+  print(identical(vector, mapped)); // false
 ````
 
 ## Matrices
