@@ -183,11 +183,11 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     switch (axis) {
       case Axis.columns:
         return _cacheManager
-            .retrieveValue(meansByColumnsKey, () => _mean(columns));
+            .retrieveValue(matrixMeansByColumnsKey, () => _mean(columns));
 
       case Axis.rows:
         return _cacheManager
-            .retrieveValue(meansByRowsKey, () => _mean(rows));
+            .retrieveValue(matrixMeansByRowsKey, () => _mean(rows));
 
       default:
         throw UnimplementedError('Mean values calculation for axis $axis is not '
@@ -210,11 +210,11 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
 
     switch (axis) {
       case Axis.columns:
-        return _cacheManager.retrieveValue(deviationByColumnsKey,
+        return _cacheManager.retrieveValue(matrixDeviationByColumnsKey,
                 () => _deviation(rows, means, rowsNum));
 
       case Axis.rows:
-        return _cacheManager.retrieveValue(deviationByRowsKey,
+        return _cacheManager.retrieveValue(matrixDeviationByRowsKey,
                 () => _deviation(columns, means, columnsNum));
 
       default:

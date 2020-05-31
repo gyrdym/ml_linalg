@@ -1,7 +1,5 @@
-import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
-import 'package:ml_linalg/sort_direction.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
@@ -48,7 +46,7 @@ void matrixSumTestGroupFactory(DType dtype) =>
           expect(result, equals(0));
         });
 
-        test('should return return double.nan if the matrix is empty', () {
+        test('should return double.nan if the matrix is empty', () {
           final result = Matrix.fromList([], dtype: dtype).sum();
 
           expect(result, isNaN);
