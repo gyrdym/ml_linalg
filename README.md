@@ -59,6 +59,7 @@
         - [Matrix element-wise power](#matrix-element-wise-power)
         - [Matrix element-wise exp](#matrix-element-wise-exp)
         - [Sum of all matrix elements](#sum-of-all-matrix-elements)
+        - [Product of all matrix elements](#product-of-all-matrix-elements)
         - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
         - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
