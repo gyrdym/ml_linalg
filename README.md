@@ -49,6 +49,7 @@
         - [Multiplication of a matrix and a vector](#multiplication-of-a-matrix-and-a-vector)
         - [Multiplication of a matrix and another matrix](#multiplication-of-a-matrix-and-another-matrix)
         - [Multiplication of a matrix and a scalar](#multiplication-of-a-matrix-and-a-scalar)
+        - [Hadamard product (element-wise matrices multiplication)](#hadamard-product-element-wise-matrices-multiplication)
         - [Element-wise matrices subtraction](#element-wise-matrices-subtraction)
         - [Matrix transposition](#matrix-transposition)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
