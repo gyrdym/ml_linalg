@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.16.0
+- `Matrix`:
+    - `Matrix.mapElements` method added
+
 ## 12.15.0
 - `Matrix`:
     - `Matrix.multiply` method added
