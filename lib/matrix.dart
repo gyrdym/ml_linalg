@@ -365,6 +365,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   Vector reduceRows(Vector combiner(Vector combine, Vector vector),
       {Vector initValue});
 
+  /// Performs element-wise mapping of this [Matrix] to a new one via passed
+  /// [mapper] function
+  Matrix mapElements(double mapper(double element));
+
   /// Performs column-wise mapping of this [Matrix] to a new one via passed
   /// [mapper] function
   Matrix mapColumns(Vector mapper(Vector column));

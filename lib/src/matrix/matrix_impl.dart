@@ -154,6 +154,12 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
       _reduce(combiner, rowsNum, getRow, initValue: initValue);
 
   @override
+  Matrix mapElements(double mapper(double element)) =>
+      _dataManager.areAllRowsCached
+          ? mapRows((row) => row.mapToVector(mapper))
+          : mapColumns((column) => column.mapToVector(mapper));
+
+  @override
   Matrix mapColumns(Vector mapper(Vector columns)) =>
       Matrix.fromColumns(List.generate(columnsNum,
               (int i) => mapper(getColumn(i))), dtype: dtype);
