@@ -27,8 +27,8 @@
         - [Dot product](#dot-product-of-two-vectors)
         - [Sum of a vector and a scalar](#sum-of-a-vector-and-a-scalar)
         - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
-        - [Multiplication (scaling) of a vector by a scalar](#multiplication-scaling-of-a-vector-by-a-scalar)
-        - [Division (scaling) of a vector by a scalar value](#division-scaling-of-a-vector-by-a-scalar-value)
+        - [Multiplication of a vector by a scalar](#multiplication-of-a-vector-by-a-scalar)
+        - [Division of a vector by a scalar value](#division-of-a-vector-by-a-scalar-value)
         - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
         - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
         - [Cosine distance between two vectors](#cosine-distance-between-two-vectors)
@@ -308,7 +308,7 @@ the difference is significant.
   print(result.toList()); // [-4.0, -3.0, -2.0, -1.0, 0.0]
 ````
 
-#### Multiplication (scaling) of a vector by a scalar
+#### Multiplication of a vector by a scalar
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -319,7 +319,7 @@ the difference is significant.
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
-#### Division (scaling) of a vector by a scalar value
+#### Division of a vector by a scalar value
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -619,6 +619,28 @@ print(matrix * 3);
 //   [3.0, 6.0, 9.0, 12.0],
 //   [15.0, 18.0, 21.0, 24.0],
 //   [27.0, .0, -6.0, -9.0],
+// ];
+````
+
+#### Hadamard product (element-wise matrices multiplication)
+````Dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix1 = Matrix.fromList([
+  [1.0, 2.0,  3.0,  4.0],
+  [5.0, 6.0,  7.0,  8.0],
+  [9.0, 0.0, -2.0, -3.0],
+]);
+final matrix2 = Matrix.fromList([
+  [7.0,   1.0,  9.0,  2.0],
+  [2.0,   4.0,  3.0, -8.0],
+  [0.0, -10.0, -2.0, -3.0],
+]);
+print(matrix1.multiply(matrix2));
+// [
+//   [ 7.0,  2.0, 27.0,   8.0],
+//   [10.0, 24.0, 21.0, -64.0],
+//   [ 0.0,  0.0,  4.0,   9.0],
 // ];
 ````
 
