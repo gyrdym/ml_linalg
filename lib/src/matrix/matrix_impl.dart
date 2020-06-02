@@ -348,6 +348,17 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
                   (column) => column.exp()).toList(), dtype: dtype));
 
   @override
+  Matrix multiply(Matrix other) {
+    checkShape(this, other, errorTitle: 'Cannot find Hadamard product');
+
+    return _dataManager.areAllRowsCached
+        ? Matrix.fromRows(zip([rows, other.rows]).map(
+            (pair) => pair.first * pair.last).toList(), dtype: dtype)
+        : Matrix.fromColumns(zip([columns, other.columns]).map(
+            (pair) => pair.first * pair.last).toList(), dtype: dtype);
+  }
+
+  @override
   double sum() {
     if (!hasData) {
       return double.nan;
@@ -435,20 +446,20 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   Matrix _matrixByMatrixDiv(Matrix matrix) {
-    checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix by matrix '
+    checkShape(this, matrix, errorTitle: 'Cannot perform matrix by matrix '
         'division');
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first / second);
   }
 
   Matrix _matrixAdd(Matrix matrix) {
-    checkDimensions(this, matrix, errorTitle: 'Cannot perform matrix addition');
+    checkShape(this, matrix, errorTitle: 'Cannot perform matrix addition');
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first + second);
   }
 
   Matrix _matrixSub(Matrix matrix) {
-    checkDimensions(this, matrix,
+    checkShape(this, matrix,
         errorTitle: 'Cannot perform matrix subtraction');
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first - second);

@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.15.0
+- `Matrix`:
+    - `Matrix.multiply` method added
+
 ## 12.14.0
 - `Vector`:
     - `Vector.mapToVector` method added

@@ -1,11 +1,11 @@
 import 'package:ml_linalg/matrix.dart';
 
 mixin MatrixValidatorMixin {
-  void checkDimensions(Matrix first, Matrix second,
+  void checkShape(Matrix first, Matrix second,
       {String errorTitle = 'Cannot perform the operation'}) {
     if (first.rowsNum != second.rowsNum ||
         first.columnsNum != second.columnsNum) {
-      throw Exception('${errorTitle}: the matrices have different dimensions - '
+      throw Exception('${errorTitle}: matrices have different shapes - '
           '(${first.rowsNum} x ${first.columnsNum}) and '
           '(${second.rowsNum} x ${second.columnsNum})');
     }

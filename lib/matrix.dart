@@ -456,6 +456,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// are the elements of this [Matrix]
   Matrix exp();
 
+  /// Performs Hadamard product - elemen-wise matrices multiplication
+  Matrix multiply(Matrix other);
+
   /// Returns the sum of all the matrix elements
   double sum();
 
