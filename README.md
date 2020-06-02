@@ -54,8 +54,9 @@
         - [Matrix transposition](#matrix-transposition)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)
-        - [Matrix row-wise map](#matrix-row-wise-map)
-        - [Matrix column-wise map](#matrix-column-wise-map)
+        - [Matrix row-wise mapping](#matrix-row-wise-mapping)
+        - [Matrix column-wise mapping](#matrix-column-wise-mapping)
+        - [Matrix element-wise mapping](#matrix-element-wise-mapping)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
         - [Matrix element-wise power](#matrix-element-wise-power)
@@ -256,7 +257,7 @@ the difference is significant.
   print(result); // 2 * 3 * 4 * 5 * 6 = 720
 ````
 
-### Element-wise power
+#### Element-wise power
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -266,7 +267,7 @@ the difference is significant.
   print(result); // [2 ^ 3 = 8.0, 3 ^ 3 = 27.0, 4 ^ 3 = 64.0, 5 ^3 = 125.0, 6 ^ 3 = 216.0]
 ````
 
-### Element-wise exp
+#### Element-wise exp
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -686,7 +687,7 @@ print(matrix1 - matrix2);
   //]
 ````
  
-#### Matrix row wise reduce
+#### Matrix row-wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -698,7 +699,7 @@ print(matrix1 - matrix2);
   print(reduced); // [6.0, 8.0, 10.0, 12.0]
 ````
 
-#### Matrix column wise reduce
+#### Matrix column-wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -711,7 +712,7 @@ print(matrix1 - matrix2);
   print(result); // [50, 66, 90]
 ````
 
-#### Matrix row wise map
+#### Matrix row-wise mapping
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -728,7 +729,7 @@ print(matrix1 - matrix2);
   // ]
 ````
 
-#### Matrix column wise map
+#### Matrix column-wise mapping
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -743,6 +744,25 @@ print(matrix1 - matrix2);
   //  [3.0, 4.0, 5.0, 6.0],
   //  [7.0, 8.0, 9.0, 10.0],
   // ]
+````
+
+#### Matrix element-wise mapping
+````dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix = Matrix.fromList([
+  [11.0, 12.0, 13.0, 14.0],
+  [15.0, 16.0, 0.0, 18.0],
+  [21.0, 22.0, -23.0, 24.0],
+], dtype: DType.float32);
+final result = matrix.mapElements((element) => element * 2);
+
+print(result);
+// [
+//  [22.0, 24.0,  26.0, 28.0],
+//  [30.0, 32.0,   0.0, 36.0],
+//  [42.0, 44.0, -46.0, 48.0],
+// ]
 ````
 
 #### Getting max value of the matrix
