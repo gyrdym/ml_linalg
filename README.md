@@ -687,7 +687,7 @@ print(matrix1 - matrix2);
   //]
 ````
  
-#### Matrix row wise reduce
+#### Matrix row-wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -699,7 +699,7 @@ print(matrix1 - matrix2);
   print(reduced); // [6.0, 8.0, 10.0, 12.0]
 ````
 
-#### Matrix column wise reduce
+#### Matrix column-wise reduce
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -712,7 +712,7 @@ print(matrix1 - matrix2);
   print(result); // [50, 66, 90]
 ````
 
-#### Matrix row wise mapping
+#### Matrix row-wise mapping
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -729,7 +729,7 @@ print(matrix1 - matrix2);
   // ]
 ````
 
-#### Matrix column wise mapping
+#### Matrix column-wise mapping
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -761,7 +761,7 @@ print(result);
 // [
 //  [22.0, 24.0,  26.0, 28.0],
 //  [30.0, 32.0,   0.0, 36.0],
-//  [42.0, 44.0, -26.0, 48.0],
+//  [42.0, 44.0, -46.0, 48.0],
 // ]
 ````
 
