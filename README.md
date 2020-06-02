@@ -28,7 +28,7 @@
         - [Sum of a vector and a scalar](#sum-of-a-vector-and-a-scalar)
         - [Subtraction of a scalar from a vector](#subtraction-of-a-scalar-from-a-vector)
         - [Multiplication of a vector by a scalar](#multiplication-of-a-vector-by-a-scalar)
-        - [Division of a vector by a scalar value](#division-of-a-vector-by-a-scalar-value)
+        - [Division of a vector by a scalar](#division-of-a-vector-by-a-scalar)
         - [Euclidean distance between two vectors](#euclidean-distance-between-two-vectors)
         - [Manhattan distance between two vectors](#manhattan-distance-between-two-vectors)
         - [Cosine distance between two vectors](#cosine-distance-between-two-vectors)
@@ -319,7 +319,7 @@ the difference is significant.
   print(result.toList()); // [5.0, 10.0, 15.0, 20.0, 25.0]
 ````
 
-#### Division of a vector by a scalar value
+#### Division of a vector by a scalar
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
