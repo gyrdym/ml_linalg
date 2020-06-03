@@ -18,7 +18,7 @@ class Float32x4VectorExpBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.exp();
+    vector.exp(skipCaching: true);
   }
 
   @override
