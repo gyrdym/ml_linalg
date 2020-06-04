@@ -311,7 +311,11 @@ abstract class Vector implements Iterable<double> {
 
   /// Creates a new [Vector] composed of Euler's numbers raised to powers which
   /// are the elements of this [Vector]
-  Vector exp();
+  Vector exp({bool skipCaching = false});
+
+  /// Creates a new [Vector] by taking natural log of each element of the source
+  /// vector
+  Vector log({bool skipCaching = false});
 
   /// Returns a new vector where the elements are absolute values of the
   /// original vector's elements

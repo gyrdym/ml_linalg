@@ -173,10 +173,12 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Matrix uniqueRows() {
     // TODO: consider using Set instead of List
     final checked = <Vector>[];
+
     for (final i in _dataManager.rowIndices) {
       final row = getRow(i);
       if (!checked.contains(row)) checked.add(row);
     }
+
     return Matrix.fromRows(checked, dtype: dtype);
   }
 
@@ -243,6 +245,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     } else if (rowsNum == 1) {
       return getRow(0);
     }
+
     throw Exception(
         'Cannot convert ${rowsNum} x ${columnsNum} matrix into a vector');
   }
@@ -254,6 +257,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     final eol = columnsNum > columnsLimit ? ', ...)' : ')';
     String result = 'Matrix $rowsNum x $columnsNum:\n';
     int i = 1;
+
     for (final row in this) {
       if (i > rowsLimit) {
         result += '...';
@@ -264,6 +268,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
               .replaceAll(RegExp(r'\)$'), '')}$eol\n';
       i++;
     }
+
     return result;
   }
 
@@ -289,10 +294,12 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     final newColumns = List<Vector>(columnsNum + columns.length)
       ..setRange(targetIdx, targetIdx + columns.length, columns);
     var i = 0;
+
     for (final column in this.columns) {
       if (i == targetIdx) i += columns.length;
       newColumns[i++] = column;
     }
+
     return Matrix.fromColumns(newColumns, dtype: dtype);
   }
 
@@ -301,11 +308,14 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     SortDirection sortDir = SortDirection.asc]) {
     final doSort =
         (Iterable<Vector> source) => _doSort(source, sortDir, selectSortValue);
+
     switch (axis) {
       case Axis.rows:
         return Matrix.fromRows(doSort(rows), dtype: dtype);
+
       case Axis.columns:
         return Matrix.fromColumns(doSort(columns), dtype: dtype);
+
       default:
         throw UnsupportedError('Unsupported axis type ${axis}');
     }
@@ -314,6 +324,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   List<Vector> _doSort(Iterable<Vector> source, SortDirection sortDir,
       double selector(Vector vector)) {
     final dir = sortDir == SortDirection.asc ? 1 : -1;
+
     return source.toList(growable: false)
       ..sort((row1, row2) => (selector(row1) - selector(row2)) ~/ dir);
   }
@@ -334,6 +345,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Matrix fastMap<T>(T mapper(T element)) {
     final source = List.generate(
         rowsNum, (int i) => getRow(i).fastMap(mapper));
+
     return Matrix.fromRows(source, dtype: dtype);
   }
 
@@ -346,12 +358,28 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
                   (column) => column.pow(exponent)).toList(), dtype: dtype));
 
   @override
-  Matrix exp() => _cacheManager.retrieveValue(matrixExpKey,
-          () => _dataManager.areAllRowsCached
-              ? Matrix.fromRows(rows.map(
-                  (row) => row.exp()).toList(), dtype: dtype)
-              : Matrix.fromColumns(columns.map(
-                  (column) => column.exp()).toList(), dtype: dtype));
+  Matrix exp({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(matrixLogKey,
+              () => _dataManager.areAllRowsCached
+                  ? Matrix.fromRows(rows.map(
+                      (row) => row.exp(
+                          skipCaching: skipCaching)).toList(), dtype: dtype)
+                  : Matrix.fromColumns(columns.map(
+                      (column) => column.exp(
+                          skipCaching: skipCaching)).toList(), dtype: dtype),
+          skipCaching: skipCaching);
+
+  @override
+  Matrix log({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(matrixLogKey,
+              () => _dataManager.areAllRowsCached
+                  ? Matrix.fromRows(rows.map(
+                      (row) => row.log(
+                          skipCaching: skipCaching)).toList(), dtype: dtype)
+                  : Matrix.fromColumns(columns.map(
+                      (column) => column.log(
+                          skipCaching: skipCaching)).toList(), dtype: dtype),
+          skipCaching: skipCaching);
 
   @override
   Matrix multiply(Matrix other) {
@@ -394,9 +422,11 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   double _findExtrema(double callback(Vector vector)) {
     int i = 0;
     final minValues = List<double>(rowsNum);
+
     for (final row in rows) {
       minValues[i++] = callback(row);
     }
+
     return callback(Vector.fromList(minValues, dtype: dtype));
   }
 
@@ -407,9 +437,11 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
       {Vector initValue}) {
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
+
     for (int i = startIndex; i < length; i++) {
       reduced = combiner(reduced, getVector(i));
     }
+
     return reduced;
   }
 
@@ -422,6 +454,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     final generateElement = (int i) => vector.dot(getRow(i));
     final source = List.generate(rowsNum, generateElement);
     final vectorColumn = Vector.fromList(source, dtype: dtype);
+
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }
 
@@ -434,6 +467,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
         source[i * matrix.columnsNum + j] = element;
       }
     }
+
     return Matrix.fromFlattenedList(source, rowsNum, matrix.columnsNum,
         dtype: dtype);
   }
@@ -442,24 +476,29 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     if (isSquare) {
       throw SquareMatrixDivisionByVectorException(rowsNum, columnsNum);
     }
+
     if (vector.length == rowsNum) {
       return mapColumns((column) => column / vector);
     }
+
     if (vector.length == columnsNum) {
       return mapRows((row) => row / vector);
     }
+
     throw MatrixDivisionByVectorException(rowsNum, columnsNum, vector.length);
   }
 
   Matrix _matrixByMatrixDiv(Matrix matrix) {
     checkShape(this, matrix, errorTitle: 'Cannot perform matrix by matrix '
         'division');
+
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first / second);
   }
 
   Matrix _matrixAdd(Matrix matrix) {
     checkShape(this, matrix, errorTitle: 'Cannot perform matrix addition');
+
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first + second);
   }
@@ -467,6 +506,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Matrix _matrixSub(Matrix matrix) {
     checkShape(this, matrix,
         errorTitle: 'Cannot perform matrix subtraction');
+
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first - second);
   }

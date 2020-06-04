@@ -118,7 +118,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  int get hashCode => _cacheManager.retrieveValue(hashKey, () {
+  int get hashCode => _cacheManager.retrieveValue(vectorHashKey, () {
     if (isEmpty) {
       return 0;
     }
@@ -234,7 +234,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector sqrt({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(sqrtKey, () {
+      _cacheManager.retrieveValue(vectorSqrtKey, () {
         final source = Float64x2List(_numOfBuckets);
         for (int i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].sqrt();
@@ -249,14 +249,27 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   Vector pow(num exponent) => _elementWisePow(exponent);
 
   @override
-  Vector exp() {
-    final source = Float64List(length);
-    for (int i = 0; i < length; i++) {
-      source[i] = math.exp(_innerTypedList[i]);
-    }
+  Vector exp({bool skipCaching = false}) => _cacheManager
+      .retrieveValue(vectorLogKey, () {
+        final source = Float64List(length);
 
-    return Vector.fromList(source, dtype: dtype);
-  }
+        for (int i = 0; i < length; i++) {
+          source[i] = math.exp(_innerTypedList[i]);
+        }
+
+        return Vector.fromList(source, dtype: dtype);
+      }, skipCaching: skipCaching);
+
+  @override
+  Vector log({bool skipCaching = false}) => _cacheManager
+      .retrieveValue(vectorLogKey, () {
+        final source = Float64List(length);
+        for (int i = 0; i < length; i++) {
+          source[i] = math.log(_innerTypedList[i]);
+        }
+
+        return Vector.fromList(source, dtype: dtype);
+      }, skipCaching: skipCaching);
 
   @override
   @deprecated
@@ -264,7 +277,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector abs({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(absKey, () {
+      _cacheManager.retrieveValue(vectorAbsKey, () {
         final source = Float64x2List(_numOfBuckets);
         for (int i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].abs();
@@ -281,14 +294,15 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       return double.nan;
     }
 
-    return _cacheManager.retrieveValue(sumKey,
+    return _cacheManager.retrieveValue(vectorSumKey,
             () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
         skipCaching: skipCaching);
   }
 
   @override
-  double prod({bool skipCaching = false}) => _cacheManager.retrieveValue(sumKey,
-      _findProduct, skipCaching: skipCaching);
+  double prod({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(vectorSumKey,
+          _findProduct, skipCaching: skipCaching);
 
   @override
   double distanceTo(Vector other, {
@@ -322,7 +336,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     if (isEmpty) {
       throw _emptyVectorException;
     }
-    return _cacheManager.retrieveValue(meanKey, () => sum() / length,
+    return _cacheManager.retrieveValue(vectorMeanKey, () => sum() / length,
         skipCaching: skipCaching);
   }
 
@@ -338,13 +352,13 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   double max({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(maxKey, () =>
+      _cacheManager.retrieveValue(vectorMaxKey, () =>
           _findExtrema(-double.infinity, _simdHelper.getMaxLane,
                   (a, b) => a.max(b), math.max), skipCaching: skipCaching);
 
   @override
   double min({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(minKey, () =>
+      _cacheManager.retrieveValue(vectorMinKey, () =>
           _findExtrema(double.infinity, _simdHelper.getMinLane,
                   (a, b) => a.min(b), math.min), skipCaching: skipCaching);
 
@@ -400,7 +414,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector unique({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(uniqueKey, () => Vector.fromList(
+      _cacheManager.retrieveValue(vectorUniqueKey, () => Vector.fromList(
                 Set<double>.from(this).toList(growable: false), dtype: dtype),
         skipCaching: skipCaching);
 
@@ -456,7 +470,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector rescale({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(rescaleKey, () {
+      _cacheManager.retrieveValue(vectorRescaleKey, () {
         final minValue = min();
         final maxValue = max();
         return (this - minValue) / (maxValue - minValue);

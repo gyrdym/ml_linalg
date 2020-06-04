@@ -1,44 +1,48 @@
 import 'package:ml_linalg/norm.dart';
 
-const hashKey = 'hash';
-const sqrtKey = 'sqrt';
-const absKey = 'abs';
-const sumKey = 'sum';
-const prodKey = 'prod';
-const meanKey = 'mean';
-const euclideanNormKey = 'euclidean_norm';
-const manhattanNormKey = 'manhattan_norm';
-const maxKey = 'max';
-const minKey = 'min';
-const uniqueKey = 'unique';
-const euclideanNormalizeKey = 'euclidean_normalize';
-const manhattanNormalizeKey = 'manhattan_normalize';
-const rescaleKey = 'rescale';
+const vectorHashKey = 'hash';
+const vectorSqrtKey = 'sqrt';
+const vectorAbsKey = 'abs';
+const vectorSumKey = 'sum';
+const vectorProdKey = 'prod';
+const vectorMeanKey = 'mean';
+const vectorExpKey = 'exp';
+const vectorLogKey = 'log';
+const vectorEuclideanNormKey = 'euclidean_norm';
+const vectorManhattanNormKey = 'manhattan_norm';
+const vectorMaxKey = 'max';
+const vectorMinKey = 'min';
+const vectorUniqueKey = 'unique';
+const vectorEuclideanNormalizeKey = 'euclidean_normalize';
+const vectorManhattanNormalizeKey = 'manhattan_normalize';
+const vectorRescaleKey = 'rescale';
 
 final vectorCacheKeys = Set<String>.from(<String>[
-  hashKey,
-  sqrtKey,
-  absKey,
-  sumKey,
-  prodKey,
-  meanKey,
-  euclideanNormKey,
-  manhattanNormKey,
-  maxKey,
-  minKey,
-  uniqueKey,
-  euclideanNormalizeKey,
-  manhattanNormalizeKey,
-  rescaleKey,
+  vectorHashKey,
+  vectorSqrtKey,
+  vectorAbsKey,
+  vectorSumKey,
+  vectorProdKey,
+  vectorMeanKey,
+  vectorExpKey,
+  vectorLogKey,
+  vectorEuclideanNormKey,
+  vectorManhattanNormKey,
+  vectorMaxKey,
+  vectorMinKey,
+  vectorUniqueKey,
+  vectorEuclideanNormalizeKey,
+  vectorManhattanNormalizeKey,
+  vectorRescaleKey,
 ]);
 
 String getCacheKeyForNormByNormType(Norm normType) {
   switch (normType) {
     case Norm.euclidean:
-      return euclideanNormKey;
+      return vectorEuclideanNormKey;
 
     case Norm.manhattan:
-      return manhattanNormKey;
+      return vectorManhattanNormKey;
 
     default:
       throw UnsupportedError('Unsupported norm type `$normType`');
@@ -48,10 +52,10 @@ String getCacheKeyForNormByNormType(Norm normType) {
 String getCacheKeyForNormalizeByNormType(Norm normType) {
   switch (normType) {
     case Norm.euclidean:
-      return euclideanNormalizeKey;
+      return vectorEuclideanNormalizeKey;
 
     case Norm.manhattan:
-      return manhattanNormalizeKey;
+      return vectorManhattanNormalizeKey;
 
     default:
       throw UnsupportedError('Unsupported norm type `$normType`');
