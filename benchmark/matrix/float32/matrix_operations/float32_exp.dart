@@ -9,7 +9,7 @@ const numOfRows = 10000;
 const numOfColumns = 1000;
 
 class Float32MatrixExpBenchmark extends BenchmarkBase {
-  Float32MatrixExpBenchmark() : super('Matrix log method');
+  Float32MatrixExpBenchmark() : super('Matrix exp method');
 
   final Matrix _source = Matrix.fromRows(
     List<Vector>.filled(numOfRows, Vector.randomFilled(
