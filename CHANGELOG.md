@@ -3,6 +3,8 @@
 ## 12.17.0
 - `Vector`:
     - `Vector.log` method added
+- `Matrix`:
+    - `Matrix.log` method added
 
 ## 12.16.0
 - `Matrix`:

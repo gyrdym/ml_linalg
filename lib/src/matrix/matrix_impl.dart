@@ -308,11 +308,14 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     SortDirection sortDir = SortDirection.asc]) {
     final doSort =
         (Iterable<Vector> source) => _doSort(source, sortDir, selectSortValue);
+
     switch (axis) {
       case Axis.rows:
         return Matrix.fromRows(doSort(rows), dtype: dtype);
+
       case Axis.columns:
         return Matrix.fromColumns(doSort(columns), dtype: dtype);
+
       default:
         throw UnsupportedError('Unsupported axis type ${axis}');
     }
@@ -355,12 +358,28 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
                   (column) => column.pow(exponent)).toList(), dtype: dtype));
 
   @override
-  Matrix exp() => _cacheManager.retrieveValue(matrixExpKey,
-          () => mapElements(math.exp));
+  Matrix exp({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(matrixLogKey,
+              () => _dataManager.areAllRowsCached
+                  ? Matrix.fromRows(rows.map(
+                      (row) => row.exp(
+                          skipCaching: skipCaching)).toList(), dtype: dtype)
+                  : Matrix.fromColumns(columns.map(
+                      (column) => column.exp(
+                          skipCaching: skipCaching)).toList(), dtype: dtype),
+          skipCaching: skipCaching);
 
   @override
-  Matrix log() => _cacheManager.retrieveValue(matrixLogKey,
-          () => mapElements(math.log));
+  Matrix log({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(matrixLogKey,
+              () => _dataManager.areAllRowsCached
+                  ? Matrix.fromRows(rows.map(
+                      (row) => row.log(
+                          skipCaching: skipCaching)).toList(), dtype: dtype)
+                  : Matrix.fromColumns(columns.map(
+                      (column) => column.log(
+                          skipCaching: skipCaching)).toList(), dtype: dtype),
+          skipCaching: skipCaching);
 
   @override
   Matrix multiply(Matrix other) {
