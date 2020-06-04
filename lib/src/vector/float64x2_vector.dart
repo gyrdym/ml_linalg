@@ -300,8 +300,9 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  double prod({bool skipCaching = false}) => _cacheManager.retrieveValue(vectorSumKey,
-      _findProduct, skipCaching: skipCaching);
+  double prod({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(vectorSumKey,
+          _findProduct, skipCaching: skipCaching);
 
   @override
   double distanceTo(Vector other, {

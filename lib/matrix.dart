@@ -460,6 +460,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// are the elements of this [Matrix]
   Matrix exp();
 
+  /// Creates a new [Matrix] composed of natural logarithms of the source
+  /// matrix elements
+  Matrix log();
+
   /// Performs Hadamard product - elemen-wise matrices multiplication
   Matrix multiply(Matrix other);
 

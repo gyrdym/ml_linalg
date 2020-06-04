@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.17.0
+- `Vector`:
+    - `Vector.log` method added
+
 ## 12.16.0
 - `Matrix`:
     - `Matrix.mapElements` method added
