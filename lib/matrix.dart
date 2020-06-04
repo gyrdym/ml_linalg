@@ -458,7 +458,11 @@ abstract class Matrix implements Iterable<Iterable<double>> {
 
   /// Creates a new [Matrix] composed of Euler's numbers raised to powers which
   /// are the elements of this [Matrix]
-  Matrix exp();
+  Matrix exp({bool skipCaching = false});
+
+  /// Creates a new [Matrix] composed of natural logarithms of the source
+  /// matrix elements
+  Matrix log({bool skipCaching = false});
 
   /// Performs Hadamard product - elemen-wise matrices multiplication
   Matrix multiply(Matrix other);
