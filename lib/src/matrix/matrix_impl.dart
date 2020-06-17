@@ -350,12 +350,11 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   @override
-  Matrix pow(num exponent) => _cacheManager.retrieveValue(matrixPowKey,
-          () => _dataManager.areAllRowsCached
-              ? Matrix.fromRows(rows.map(
-                  (row) => row.pow(exponent)).toList(), dtype: dtype)
-              : Matrix.fromColumns(columns.map(
-                  (column) => column.pow(exponent)).toList(), dtype: dtype));
+  Matrix pow(num exponent) => _dataManager.areAllRowsCached
+      ? Matrix.fromRows(rows.map(
+          (row) => row.pow(exponent)).toList(), dtype: dtype)
+      : Matrix.fromColumns(columns.map(
+          (column) => column.pow(exponent)).toList(), dtype: dtype);
 
   @override
   Matrix exp({bool skipCaching = false}) =>
@@ -460,16 +459,11 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
 
   Matrix _matrixMul(Matrix matrix) {
     checkColumnsAndRowsNumber(this, matrix);
-    final source = List<double>(rowsNum * matrix.columnsNum);
-    for (final i in _dataManager.rowIndices) {
-      for (final j in (matrix as MatrixImpl)._dataManager.columnIndices) {
-        final element = getRow(i).dot(matrix.getColumn(j));
-        source[i * matrix.columnsNum + j] = element;
-      }
-    }
+    final source = rows
+        .map((row) => row * matrix)
+        .toList();
 
-    return Matrix.fromFlattenedList(source, rowsNum, matrix.columnsNum,
-        dtype: dtype);
+    return Matrix.fromRows(source, dtype: dtype);
   }
 
   Matrix _matrixByVectorDiv(Vector vector) {
