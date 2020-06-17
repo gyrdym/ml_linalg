@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.17.1
+- `Matrix.pow`: caching removed
+- `Vector.sum`: summation of SIMD lanes fixed
+
 ## 12.17.0
 - `Vector`:
     - `Vector.log` method added

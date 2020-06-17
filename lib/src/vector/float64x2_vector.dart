@@ -193,11 +193,13 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         source[i] = _innerSimdList[i] * other._innerSimdList[i];
       }
       return Vector.fromSimdList(source, length, dtype: dtype);
+    }
 
-    } else if (value is Matrix) {
+    if (value is Matrix) {
       return _matrixMul(value);
+    }
 
-    } else if (value is num) {
+    if (value is num) {
       final source = Float64x2List(_numOfBuckets);
       for (int i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i].scale(value.toDouble());
@@ -286,7 +288,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       }, skipCaching: skipCaching);
 
   @override
-  double dot(Vector vector) => (this * vector).sum();
+  double dot(Vector vector) => (this * vector).sum(skipCaching: true);
 
   @override
   double sum({bool skipCaching = false}) {
