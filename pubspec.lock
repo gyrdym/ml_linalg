@@ -273,7 +273,7 @@ packages:
       name: injector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.8"
+    version: "1.0.9"
   intl:
     dependency: transitive
     description:
@@ -343,7 +343,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.7"
+    version: "1.2.2"
   mime:
     dependency: transitive
     description:
@@ -637,7 +637,7 @@ packages:
       name: xrange
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.8"
+    version: "0.0.9"
   yaml:
     dependency: transitive
     description:
@@ -646,4 +646,4 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=2.5.0 <3.0.0"
+  dart: ">=2.7.0 <3.0.0"

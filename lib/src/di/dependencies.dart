@@ -7,9 +7,10 @@ import 'package:ml_linalg/src/matrix/matrix_factory_impl.dart';
 
 Injector get dependencies => injector ??= Injector()
   ..registerSingleton<CacheManagerFactory>(
-          (_) => const CacheManagerFactoryImpl())
+          () => const CacheManagerFactoryImpl())
 
-  ..registerSingleton<MatrixFactory>((injector) {
-    final cacheManagerFactory = injector.getDependency<CacheManagerFactory>();
+  ..registerSingleton<MatrixFactory>(() {
+    final cacheManagerFactory = injector.get<CacheManagerFactory>();
+
     return MatrixFactoryImpl(cacheManagerFactory);
   });
