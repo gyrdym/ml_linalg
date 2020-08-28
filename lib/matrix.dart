@@ -39,7 +39,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   factory Matrix.fromList(List<List<double>> source, {
     DType dtype = DType.float32,
-  }) => dependencies.getDependency<MatrixFactory>().fromList(dtype, source);
+  }) => dependencies.get<MatrixFactory>().fromList(dtype, source);
 
   /// Creates a matrix with predefined row vectors
   ///
@@ -67,7 +67,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (6.0, 7.0, 8.0, 9.0, 0.0)
   /// ```
   factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) =>
-      dependencies.getDependency<MatrixFactory>().fromRows(dtype, source);
+      dependencies.get<MatrixFactory>().fromRows(dtype, source);
 
   /// Creates a matrix with predefined column vectors
   ///
@@ -99,7 +99,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   factory Matrix.fromColumns(List<Vector> source, {
     DType dtype = DType.float32,
-  }) => dependencies.getDependency<MatrixFactory>().fromColumns(dtype, source);
+  }) => dependencies.get<MatrixFactory>().fromColumns(dtype, source);
 
   /// Creates a matrix of shape 0 x 0 (no rows, no columns)
   ///
@@ -121,7 +121,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Matrix 0 x 0
   /// ```
   factory Matrix.empty({DType dtype = DType.float32}) =>
-      dependencies.getDependency<MatrixFactory>().empty(dtype);
+      dependencies.get<MatrixFactory>().empty(dtype);
 
   /// Creates a matrix from flattened list of length equal to
   /// [rowsNum] * [columnsNum]
@@ -150,7 +150,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.fromFlattenedList(List<double> source, int rowsNum,
       int columnsNum, {DType dtype = DType.float32}) =>
       dependencies
-          .getDependency<MatrixFactory>()
+          .get<MatrixFactory>()
           .fromFlattenedList(dtype, source, rowsNum, columnsNum);
 
   /// Creates a matrix, where elements from [source] are the elements for the
@@ -177,7 +177,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (0.0, 0.0, 0.0, 0.0, 5.0)
   /// ```
   factory Matrix.diagonal(List<double> source, {DType dtype = DType.float32}) =>
-      dependencies.getDependency<MatrixFactory>().diagonal(dtype, source);
+      dependencies.get<MatrixFactory>().diagonal(dtype, source);
 
   /// Creates a matrix of [size] * [size] dimension, where all the main
   /// diagonal elements are equal to [scalar], the rest of the elements are 0
@@ -204,7 +204,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   factory Matrix.scalar(double scalar, int size, {
     DType dtype = DType.float32,
-  }) => dependencies.getDependency<MatrixFactory>().scalar(dtype, scalar, size);
+  }) => dependencies.get<MatrixFactory>().scalar(dtype, scalar, size);
 
   /// Creates a matrix of [size] * [size] dimension, where all the main
   /// diagonal elements are equal to 1, the rest of the elements are 0
@@ -230,7 +230,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (0.0, 0.0, 0.0, 0.0, 1.0)
   /// ```
   factory Matrix.identity(int size, {DType dtype = DType.float32}) =>
-      dependencies.getDependency<MatrixFactory>().identity(dtype, size);
+      dependencies.get<MatrixFactory>().identity(dtype, size);
 
   /// Creates a matrix, consisting of just one row (aka `Row matrix`)
   ///
@@ -251,7 +251,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// ```
   factory Matrix.row(List<double> source, {DType dtype = DType.float32}) =>
-      dependencies.getDependency<MatrixFactory>().row(dtype, source);
+      dependencies.get<MatrixFactory>().row(dtype, source);
 
   /// Returns a restored matrix from a serializable map
   factory Matrix.fromJson(Map<String, dynamic> json) => fromMatrixJson(json);
@@ -279,7 +279,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (5.0)
   /// ```
   factory Matrix.column(List<double> source, {DType dtype = DType.float32}) =>
-      dependencies.getDependency<MatrixFactory>().column(dtype, source);
+      dependencies.get<MatrixFactory>().column(dtype, source);
 
   /// A data type of [Matrix] elements
   DType get dtype;

@@ -10,7 +10,7 @@ import 'package:ml_linalg/src/vector/float64x2_vector.dart';
 import 'package:ml_linalg/src/vector/serialization/from_vector_json.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 
-final _cacheManagerFactory = dependencies.getDependency<CacheManagerFactory>();
+final _cacheManagerFactory = dependencies.get<CacheManagerFactory>();
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
 /// architecture support and extended functionality, adapted for data science
