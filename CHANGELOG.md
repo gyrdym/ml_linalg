@@ -1,8 +1,11 @@
 # Changelog
 
+## 12.17.3
+- `injector` lib 1.0.9 supported
+
 ## 12.17.2
 - `pubspec`:
-    - `ibjector` dependency corrected
+    - `injector` dependency corrected
 
 ## 12.17.1
 - `Matrix.pow`: caching removed
