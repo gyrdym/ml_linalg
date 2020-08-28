@@ -4,7 +4,7 @@ version: 12.17.3
 homepage: https://github.com/gyrdym/ml_linalg
 
 environment:
-  sdk: '>=2.2.0 <3.0.0'
+  sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
   injector: ^1.0.9
