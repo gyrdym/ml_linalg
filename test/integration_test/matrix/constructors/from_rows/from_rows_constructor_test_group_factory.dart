@@ -47,5 +47,25 @@ void matrixFromRowsConstructorTestGroupFactory(DType dtype) =>
           expect(() => Matrix.fromRows(source, dtype: dtype),
               throwsException);
         });
+
+        test('should not use reference to a source list for the cache ', () {
+          final source = [
+            Vector.fromList([1, 2, 3], dtype: dtype),
+            Vector.fromList([1, 2, 3], dtype: dtype),
+            Vector.fromList([9, 8, 7], dtype: dtype),
+          ];
+          final matrix1 = Matrix.fromRows(source, dtype: dtype);
+
+          source[1] = Vector.fromList([100, 200, 300], dtype: dtype);
+
+          final matrix2 = Matrix.fromRows(source, dtype: dtype);
+          final result = matrix1 + matrix2;
+
+          expect(result, [
+            [2, 4, 6],
+            [101, 202, 303],
+            [18, 16, 14],
+          ]);
+        });
       });
     });

@@ -46,12 +46,14 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Matrix operator +(Object value) {
     if (value is Matrix) {
       return _matrixAdd(value);
-    } else if (value is num) {
-      return _matrixScalarAdd(value.toDouble());
-    } else {
-      throw UnsupportedError(
-          'Cannot add a ${value.runtimeType} to a ${runtimeType}');
     }
+
+    if (value is num) {
+      return _matrixScalarAdd(value.toDouble());
+    }
+
+    throw UnsupportedError(
+        'Cannot add a ${value.runtimeType} to a ${runtimeType}');
   }
 
   @override
@@ -521,6 +523,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
       Matrix matrix, Vector operation(Vector first, Vector second)) {
     final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
     final source = List<Vector>.generate(rowsNum, elementGenFn);
+
     return Matrix.fromRows(source, dtype: dtype);
   }
 

@@ -23,12 +23,16 @@ class Float32MatrixDataManager implements MatrixDataManager {
         areAllRowsCached = false,
         areAllColumnsCached = false
   {
-    final dataAsList = _data.buffer.asFloat32List();
+    final dataAsList = _data
+        .buffer
+        .asFloat32List();
+
     for (int i = 0; i < source.length; i++) {
       if (source[i].length != columnsNum) {
         throw Exception('Wrong nested list length: ${source[i].length}, '
             'expected length: ${columnsNum}');
       }
+
       for (int j = 0; j < source[i].length; j++) {
         dataAsList[i * columnsNum + j] = source[i][j];
       }
@@ -40,24 +44,30 @@ class Float32MatrixDataManager implements MatrixDataManager {
         columnsNum = getLengthOfFirstOrZero(source),
         rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
         columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
-        _rowsCache = source,
+        _rowsCache = [...source],
         _colsCache = List<Vector>(getLengthOfFirstOrZero(source)),
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement),
         areAllRowsCached = true,
         areAllColumnsCached = false
   {
-    final dataAsList = _data.buffer.asFloat32List();
+    final dataAsList = _data
+        .buffer
+        .asFloat32List();
+
     for (int i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
+
       if (row.dtype != dtype) {
         throw Exception('Vectors of different type are provided, '
             'expected vector type: `$dtype`, given: ${row.dtype}');
       }
+
       if (row.length != columnsNum) {
         throw Exception('Vectors of different length are provided, expected '
             'vector length: `$columnsNum`, given: ${row.length}');
       }
+
       for (final value in source[i]) {
         dataAsList[i * columnsNum + j++] = value;
       }
@@ -70,23 +80,29 @@ class Float32MatrixDataManager implements MatrixDataManager {
         rowIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         columnIndices = getZeroBasedIndices(get2dIterableLength(source)),
         _rowsCache = List<Vector>(getLengthOfFirstOrZero(source)),
-        _colsCache = source,
+        _colsCache = [...source],
         _data = ByteData(source.length *
             getLengthOfFirstOrZero(source) * _bytesPerElement),
         areAllRowsCached = false,
         areAllColumnsCached = true
   {
-    final dataAsList = _data.buffer.asFloat32List();
+    final dataAsList = _data
+        .buffer
+        .asFloat32List();
+
     for (int i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
+
       if (column.dtype != dtype) {
         throw Exception('Vectors of different type are provided, expected '
             'vector type: `$dtype`, given: ${column.dtype}');
       }
+
       if (column.length != rowsNum) {
         throw Exception('Vectors of different length are provided, expected '
             'vector length: `$rowsNum`, given: ${column.length}');
       }
+
       for (final value in column) {
         dataAsList[j++ * columnsNum + i] = value;
       }
@@ -183,13 +199,17 @@ class Float32MatrixDataManager implements MatrixDataManager {
     if (!hasData) {
       throw Exception('Matrix is empty');
     }
+
     final indexFrom = index * columnsNum;
+
     if (indexFrom  >= rowsNum * columnsNum) {
       throw RangeError.range(indexFrom, 0, rowsNum * columnsNum);
     }
+
     final values = _data.buffer.asFloat32List(
         indexFrom * _bytesPerElement, columnsNum);
     _rowsCache[index] ??= Vector.fromList(values, dtype: dtype);
+
     return _rowsCache[index];
   }
 
