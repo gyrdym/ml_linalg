@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.17.4 
+- `Matrix.fromRows`: copying source list instead of passing it by reference added  (issue [#100](https://github.com/gyrdym/ml_linalg/issues/100))
+- `Matrix.fromColumns`: copying source list instead of passing it by reference added  (issue [#100](https://github.com/gyrdym/ml_linalg/issues/100))
+
 ## 12.17.3
 - `injector` lib 1.0.9 supported
 
