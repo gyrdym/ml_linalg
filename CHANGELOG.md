@@ -1,5 +1,11 @@
 # Changelog
 
+## 12.17.6
+- `Distance`:
+    - serialization logic added
+- `CI`: 
+    - github actions set up
+
 ## 12.17.5
 - `FUNDING.yml` created
 

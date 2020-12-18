@@ -2,8 +2,9 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/common/dtype_serializer/dtype_encoded_values.dart';
 import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
-import 'package:ml_tech/unit_testing/matchers/iterable_2d_almost_equal_to.dart';
 import 'package:test/test.dart';
+
+import '../../../helpers.dart';
 
 void main() {
   group('fromMatrixJson', () {

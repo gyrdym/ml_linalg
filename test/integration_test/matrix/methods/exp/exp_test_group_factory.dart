@@ -1,10 +1,11 @@
 import 'dart:math' as math;
+
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/linalg.dart';
-import 'package:ml_tech/unit_testing/matchers/iterable_2d_almost_equal_to.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
+import '../../../../helpers.dart';
 
 void matrixExpTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {

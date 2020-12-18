@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 void main() {
   group('CacheManagerFactoryImpl', () {
     test('should create a CacheManagerImpl instance', () {
-      final keys = Set<String>.from(<String>['key_1', 'key_2', 'key_3']);
+      final keys = <String>{'key_1', 'key_2', 'key_3'};
 
       final cacheManagerFactory = const CacheManagerFactoryImpl();
       final manager = cacheManagerFactory.create(keys);

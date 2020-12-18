@@ -1,5 +1,5 @@
 abstract class CacheManager {
-  T retrieveValue<T>(String key, T calculateIfAbsent(), {
+  T retrieveValue<T>(String key, T Function() calculateIfAbsent, {
     bool skipCaching,
   });
 

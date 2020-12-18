@@ -156,18 +156,18 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
       _reduce(combiner, rowsNum, getRow, initValue: initValue);
 
   @override
-  Matrix mapElements(double mapper(double element)) =>
+  Matrix mapElements(double Function(double element) mapper) =>
       _dataManager.areAllRowsCached
           ? mapRows((row) => row.mapToVector(mapper))
           : mapColumns((column) => column.mapToVector(mapper));
 
   @override
-  Matrix mapColumns(Vector mapper(Vector columns)) =>
+  Matrix mapColumns(Vector Function(Vector columns) mapper) =>
       Matrix.fromColumns(List.generate(columnsNum,
               (int i) => mapper(getColumn(i))), dtype: dtype);
 
   @override
-  Matrix mapRows(Vector mapper(Vector row)) =>
+  Matrix mapRows(Vector Function(Vector row) mapper) =>
       Matrix.fromRows(List.generate(rowsNum,
               (int i) => mapper(getRow(i))), dtype: dtype);
 
@@ -257,8 +257,8 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     final columnsLimit = 5;
     final rowsLimit = 5;
     final eol = columnsNum > columnsLimit ? ', ...)' : ')';
-    String result = 'Matrix $rowsNum x $columnsNum:\n';
-    int i = 1;
+    var result = 'Matrix $rowsNum x $columnsNum:\n';
+    var i = 1;
 
     for (final row in this) {
       if (i > rowsLimit) {
@@ -284,6 +284,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   double norm([MatrixNorm norm = MatrixNorm.frobenius]) {
     switch (norm) {
       case MatrixNorm.frobenius:
+        // ignore: deprecated_member_use_from_same_package
         return math.sqrt(reduceRows((sum, row) => sum + row.toIntegerPower(2))
             .sum());
       default:
@@ -306,8 +307,8 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   @override
-  Matrix sort(double selectSortValue(Vector vector), [Axis axis = Axis.rows,
-    SortDirection sortDir = SortDirection.asc]) {
+  Matrix sort(double Function(Vector vector) selectSortValue, [
+    Axis axis = Axis.rows, SortDirection sortDir = SortDirection.asc]) {
     final doSort =
         (Iterable<Vector> source) => _doSort(source, sortDir, selectSortValue);
 
@@ -324,7 +325,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   List<Vector> _doSort(Iterable<Vector> source, SortDirection sortDir,
-      double selector(Vector vector)) {
+      double Function(Vector vector) selector) {
     final dir = sortDir == SortDirection.asc ? 1 : -1;
 
     return source.toList(growable: false)
@@ -344,7 +345,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Iterable<int> get columnIndices => _dataManager.columnIndices;
 
   @override
-  Matrix fastMap<T>(T mapper(T element)) {
+  Matrix fastMap<T>(T Function(T element) mapper) {
     final source = List.generate(
         rowsNum, (int i) => getRow(i).fastMap(mapper));
 
@@ -420,8 +421,8 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   @override
   Map<String, dynamic> toJson() => matrixToJson(this);
 
-  double _findExtrema(double callback(Vector vector)) {
-    int i = 0;
+  double _findExtrema(double Function(Vector vector) callback) {
+    var i = 0;
     final minValues = List<double>(rowsNum);
 
     for (final row in rows) {
@@ -432,14 +433,14 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   Vector _reduce(
-      Vector combiner(Vector combine, Vector vector),
+      Vector Function(Vector combine, Vector vector) combiner,
       int length,
-      Vector getVector(int index),
+      Vector Function(int index) getVector,
       {Vector initValue}) {
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
 
-    for (int i = startIndex; i < length; i++) {
+    for (var i = startIndex; i < length; i++) {
       reduced = combiner(reduced, getVector(i));
     }
 
@@ -520,7 +521,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     scalar, (double val, Vector vector) => vector / val);
 
   Matrix _matrix2matrixOperation(
-      Matrix matrix, Vector operation(Vector first, Vector second)) {
+      Matrix matrix, Vector Function(Vector first, Vector second) operation) {
     final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
     final source = List<Vector>.generate(rowsNum, elementGenFn);
 
@@ -528,7 +529,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   Matrix _matrix2scalarOperation(
-      double scalar, Vector operation(double scalar, Vector vector)) {
+      double scalar, Vector Function(double scalar, Vector vector) operation) {
     // TODO: use vectorized type (e.g. Float32x4) instead of `double`
     // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));

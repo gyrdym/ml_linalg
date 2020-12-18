@@ -14,7 +14,7 @@ void main() {
         final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
             dtype: DType.float32);
 
-        int iteration = 0;
+        var iteration = 0;
 
         final actual = vector.fastMap((Float32x4 element) {
           iteration++;
@@ -36,7 +36,7 @@ void main() {
         final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 9.0],
             dtype: DType.float64);
 
-        int iteration = 0;
+        var iteration = 0;
 
         final actual = vector.fastMap((Float64x2 element) {
           iteration++;

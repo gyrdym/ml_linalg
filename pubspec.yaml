@@ -1,6 +1,6 @@
 name: ml_linalg
 description: SIMD-based linear algebra and statistics for data science
-version: 12.17.5
+version: 12.17.6
 homepage: https://github.com/gyrdym/ml_linalg
 
 environment:
@@ -13,10 +13,9 @@ dependencies:
 
 dev_dependencies:
   benchmark_harness: '>=1.0.0 <2.0.0'
-  build_runner: ^1.1.2
-  build_test: ^0.10.2
-  dartdoc: any
-  grinder: ^0.8.3
-  ml_tech: ^0.0.5
+  build_runner: ^1.10.11
+  build_test: ^1.3.2
   mockito: ^3.0.0
-  test: ^1.2.0
+  pedantic: ^1.9.2
+  test: ^1.15.7
+  test_coverage: ^0.5.0
