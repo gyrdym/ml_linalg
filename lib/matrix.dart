@@ -358,24 +358,24 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   Vector getRow(int index);
 
   /// Reduces all the matrix columns to only column, using [combiner] function
-  Vector reduceColumns(Vector combiner(Vector combine, Vector vector),
+  Vector reduceColumns(Vector Function(Vector combine, Vector vector) combiner,
       {Vector initValue});
 
   /// Reduces all the matrix rows to only row, using [combiner] function
-  Vector reduceRows(Vector combiner(Vector combine, Vector vector),
+  Vector reduceRows(Vector Function(Vector combine, Vector vector) combiner,
       {Vector initValue});
 
   /// Performs element-wise mapping of this [Matrix] to a new one via passed
   /// [mapper] function
-  Matrix mapElements(double mapper(double element));
+  Matrix mapElements(double Function(double element) mapper);
 
   /// Performs column-wise mapping of this [Matrix] to a new one via passed
   /// [mapper] function
-  Matrix mapColumns(Vector mapper(Vector column));
+  Matrix mapColumns(Vector Function(Vector column) mapper);
 
   /// Performs row-wise mapping of this [Matrix] to a new one via passed
   /// [mapper] function
-  Matrix mapRows(Vector mapper(Vector row));
+  Matrix mapRows(Vector Function(Vector row) mapper);
 
   /// Creates a new matrix, efficiently iterating through all the matrix
   /// elements (several floating point elements in a time) and applying the
@@ -383,7 +383,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   ///
   /// Type [E] should be either [Float32x4] or [Float64x2], depends on [dtype]
   /// value
-  Matrix fastMap<E>(E mapper(E columnElement));
+  Matrix fastMap<E>(E Function(E columnElement) mapper);
 
   /// Tries to convert the [Matrix] to a vector:
   ///
@@ -448,7 +448,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   Vector deviation([Axis axis = Axis.columns]);
 
   /// Returns a new matrix with sorted elements from this [Matrix]
-  Matrix sort(double selectSortValue(Vector vector), [Axis axis = Axis.rows,
+  Matrix sort(double Function(Vector vector) selectSortValue, [Axis axis = Axis.rows,
     SortDirection sortDir = SortDirection.asc]);
 
   /// Raise all the elements of the matrix to the power [exponent] and returns

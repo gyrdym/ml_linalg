@@ -32,18 +32,16 @@ Future<Null> generateClassFromTemplate(
 
 Future<Null> _processFile(String targetFileName, String inputFileName,
     Map<Pattern, String Function(Match)> mapping, String comment) async {
-  final File inputFile = File(inputFileName);
-
-  final String input = await inputFile.readAsString();
-  final String output =
+  final inputFile = File(inputFileName);
+  final input = await inputFile.readAsString();
+  final output =
       '$comment${_convertTemplateToTargetClass(input, mapping)}';
-
-  final String outputFileName = targetFileName;
-  final Directory dir = Directory(p.dirname(outputFileName));
+  final outputFileName = targetFileName;
+  final dir = Directory(p.dirname(outputFileName));
 
   await dir.create(recursive: true);
 
-  final File outputFile = File(outputFileName);
+  final outputFile = File(outputFileName);
 
   await outputFile.writeAsString(output);
 }

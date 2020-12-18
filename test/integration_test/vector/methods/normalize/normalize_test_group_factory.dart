@@ -1,10 +1,10 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
+import '../../../../helpers.dart';
 
 void vectorNormalizeTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {

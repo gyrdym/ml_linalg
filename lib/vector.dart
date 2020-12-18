@@ -388,10 +388,10 @@ abstract class Vector implements Iterable<double> {
   /// ```
   /// (3.0, 6.0, 9.0, 12.0, 15.0, 18.0)
   /// ```
-  Vector fastMap<T>(T mapper(T element));
+  Vector fastMap<T>(T Function(T element) mapper);
 
   /// Creates a new vector applying [mapper] to each element of this [Vector]
-  Vector mapToVector(double mapper(double value));
+  Vector mapToVector(double Function(double value) mapper);
 
   /// Returns a new vector composed of values whose indices are within the range
   /// [start] (inclusive) - [end] (exclusive)
