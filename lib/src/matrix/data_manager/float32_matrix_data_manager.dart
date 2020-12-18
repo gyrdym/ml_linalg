@@ -27,13 +27,13 @@ class Float32MatrixDataManager implements MatrixDataManager {
         .buffer
         .asFloat32List();
 
-    for (int i = 0; i < source.length; i++) {
+    for (var i = 0; i < source.length; i++) {
       if (source[i].length != columnsNum) {
         throw Exception('Wrong nested list length: ${source[i].length}, '
             'expected length: ${columnsNum}');
       }
 
-      for (int j = 0; j < source[i].length; j++) {
+      for (var j = 0; j < source[i].length; j++) {
         dataAsList[i * columnsNum + j] = source[i][j];
       }
     }
@@ -55,6 +55,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
         .buffer
         .asFloat32List();
 
+    // ignore: omit_local_variable_types
     for (int i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
 
@@ -90,6 +91,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
         .buffer
         .asFloat32List();
 
+    // ignore: omit_local_variable_types
     for (int i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
 
@@ -139,7 +141,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
         areAllRowsCached = false,
         areAllColumnsCached = false
   {
-    for (int i = 0; i < rowsNum; i++) {
+    for (var i = 0; i < rowsNum; i++) {
       _data.setFloat32((i * columnsNum + i) * _bytesPerElement, source[i],
           Endian.host);
     }
@@ -156,7 +158,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
         areAllRowsCached = false,
         areAllColumnsCached = false
   {
-    for (int i = 0; i < size; i++) {
+    for (var i = 0; i < size; i++) {
       _data.setFloat32((i * columnsNum + i) * _bytesPerElement, scalar,
           Endian.host);
     }
@@ -220,7 +222,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     }
     if (_colsCache[index] == null) {
       final result = List<double>(rowsNum);
-      for (int i = 0; i < result.length; i++) {
+      for (var i = 0; i < result.length; i++) {
         result[i] = _data.getFloat32(
             (i * columnsNum + index) * _bytesPerElement, Endian.host);
       }

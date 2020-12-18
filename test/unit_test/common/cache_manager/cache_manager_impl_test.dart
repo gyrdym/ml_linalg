@@ -4,11 +4,11 @@ import 'package:test/test.dart';
 void main() {
   group('CacheManagerImpl', () {
     final cacheKey = 'key_1';
-    final cacheKeys = Set<String>.from(<String>[cacheKey]);
+    final cacheKeys = <String>{cacheKey};
 
     test('should calculate value if it is absent in the cache', () {
       final manager = CacheManagerImpl(cacheKeys);
-      int calledTimes = 0;
+      var calledTimes = 0;
 
       final value = manager.retrieveValue(cacheKey, () {
         calledTimes++;
@@ -22,7 +22,7 @@ void main() {
     test('should return value from cache if it was calculated once', () {
       final manager = CacheManagerImpl(cacheKeys);
       final value = {'key': 'value'};
-      int calledTimes = 0;
+      var calledTimes = 0;
 
       final calculateIfAbsentFn = () {
         calledTimes++;

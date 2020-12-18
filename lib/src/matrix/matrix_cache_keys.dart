@@ -7,7 +7,7 @@ const matrixLogKey = 'log';
 const matrixSumKey = 'sum';
 const matrixProdKey = 'prod';
 
-final matrixCacheKeys = Set<String>.from(<String>[
+final matrixCacheKeys = <String>{
   matrixMeansByRowsKey,
   matrixMeansByColumnsKey,
   matrixDeviationByRowsKey,
@@ -16,4 +16,4 @@ final matrixCacheKeys = Set<String>.from(<String>[
   matrixLogKey,
   matrixSumKey,
   matrixProdKey,
-]);
+};

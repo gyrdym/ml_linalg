@@ -20,7 +20,7 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    for (int i = 0; i < amountOfElements; i++) {
+    for (var i = 0; i < amountOfElements; i++) {
       result[i] = list1[i] + list2[i];
     }
   }

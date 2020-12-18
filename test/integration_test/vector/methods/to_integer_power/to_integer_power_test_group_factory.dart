@@ -10,6 +10,7 @@ void vectorToIntegerPowerTestGroupFactory(DType dtype) =>
         test('should raise vector elements to the integer power', () {
           final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
               dtype: dtype);
+          // ignore: deprecated_member_use_from_same_package
           final result = vector.toIntegerPower(3);
 
           expect(result, isNot(same(vector)));

@@ -2,10 +2,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/dtype_to_json.dart';
 import 'package:ml_linalg/src/vector/vector_json_keys.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
+import '../../../../helpers.dart';
 
 void vectorToJsonTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {

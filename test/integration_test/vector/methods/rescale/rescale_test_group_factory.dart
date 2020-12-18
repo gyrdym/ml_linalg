@@ -1,9 +1,9 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:ml_tech/unit_testing/matchers/iterable_almost_equal_to.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
+import '../../../../helpers.dart';
 
 void vectorRescaleTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {

@@ -17,7 +17,7 @@ const vectorEuclideanNormalizeKey = 'euclidean_normalize';
 const vectorManhattanNormalizeKey = 'manhattan_normalize';
 const vectorRescaleKey = 'rescale';
 
-final vectorCacheKeys = Set<String>.from(<String>[
+final vectorCacheKeys = <String>{
   vectorHashKey,
   vectorSqrtKey,
   vectorAbsKey,
@@ -34,7 +34,7 @@ final vectorCacheKeys = Set<String>.from(<String>[
   vectorEuclideanNormalizeKey,
   vectorManhattanNormalizeKey,
   vectorRescaleKey,
-]);
+};
 
 String getCacheKeyForNormByNormType(Norm normType) {
   switch (normType) {
