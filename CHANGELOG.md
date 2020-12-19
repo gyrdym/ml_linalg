@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.17.7
+- `Distance`:
+    - export files for serialization functions added
+
 ## 12.17.6
 - `Distance`:
     - serialization logic added
