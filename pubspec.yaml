@@ -1,6 +1,6 @@
 name: ml_linalg
 description: SIMD-based linear algebra and statistics for data science
-version: 12.17.7
+version: 12.17.8
 homepage: https://github.com/gyrdym/ml_linalg
 
 environment:

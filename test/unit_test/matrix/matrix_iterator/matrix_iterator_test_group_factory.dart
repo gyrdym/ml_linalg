@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:ml_linalg/dtype.dart';
 import 'package:test/test.dart';
 
-import '../../dtype_to_title.dart';
-import '../../helpers.dart';
+import '../../../dtype_to_title.dart';
+import '../../../helpers.dart';
 
 void matrixIteratorTestGroupFactory(DType dtype,
     Iterator<Iterable<double>> Function(ByteData data, int rowsNum,

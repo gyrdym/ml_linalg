@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.17.8
+- `matrixToJson`, `fromMatrixJson`, `vectorToJson`, `fromVectorJson`:
+    - `null` value handling 
+
 ## 12.17.7
 - `Distance`:
     - export files for serialization functions added
