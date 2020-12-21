@@ -3,5 +3,5 @@
 .pub/
 build/
 doc/api/
-
+pubspec.lock
 /.dart_tool/

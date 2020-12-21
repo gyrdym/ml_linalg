@@ -83,7 +83,7 @@ void main() {
     });
 
     test('should restore a float32 matrix from json with data consisting of '
-        'just empty row', () {
+        'just an empty row', () {
       final matrix = fromMatrixJson(validFloat32JsonWithEmptyRow);
       expect(matrix, emptyData);
     });
@@ -91,6 +91,11 @@ void main() {
     test('should throw an error if there are nulls in the data', () {
       final actual = () => fromMatrixJson(validFloat32JsonWithNullInData);
       expect(actual, throwsFormatException);
+    });
+
+    test('should handle null value', () {
+      final actual = fromMatrixJson(null);
+      expect(actual, isNull);
     });
   });
 }

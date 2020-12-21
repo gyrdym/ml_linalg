@@ -4,6 +4,10 @@ import 'package:ml_linalg/vector.dart';
 
 /// Returns a json-serializable map for the [vector]
 Map<String, dynamic> vectorToJson(Vector vector) {
+  if (vector == null) {
+    return null;
+  }
+
   final encodedDType = dTypeToJson(vector.dtype);
   final encodedData = vector.toList(growable: false);
 
