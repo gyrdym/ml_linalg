@@ -1,6 +1,6 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/common/dtype_serializer/dtype_encoded_values.dart';
-import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
+import 'package:ml_linalg/src/matrix/serialization/from_matrix_json_impl.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 import 'package:test/test.dart';
 

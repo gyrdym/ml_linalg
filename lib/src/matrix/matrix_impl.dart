@@ -12,7 +12,7 @@ import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
-import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
+import 'package:ml_linalg/src/matrix/serialization/matrix_to_json_impl.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 

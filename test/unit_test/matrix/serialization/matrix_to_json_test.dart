@@ -2,7 +2,7 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/src/common/dtype_serializer/dtype_encoded_values.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
-import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
+import 'package:ml_linalg/src/matrix/serialization/matrix_to_json_impl.dart';
 import 'package:test/test.dart';
 
 void main() {

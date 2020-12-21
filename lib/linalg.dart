@@ -9,6 +9,6 @@ export 'package:ml_linalg/src/common/distance_type_serializer/ditance_type_to_js
 export 'package:ml_linalg/src/common/distance_type_serializer/from_distance_type_json.dart';
 export 'package:ml_linalg/src/common/dtype_serializer/dtype_to_json.dart';
 export 'package:ml_linalg/src/common/dtype_serializer/from_dtype_json.dart';
-export 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
-export 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
+export 'package:ml_linalg/src/matrix/serialization/from_matrix_json_impl.dart';
+export 'package:ml_linalg/src/matrix/serialization/matrix_to_json_impl.dart';
 export 'package:ml_linalg/vector.dart';
