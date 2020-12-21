@@ -4,6 +4,10 @@ import 'package:ml_linalg/src/vector/vector_json_keys.dart';
 
 /// Restores a vector instance from the given [json]
 Vector fromVectorJson(Map<String, dynamic> json) {
+  if (json == null) {
+    return null;
+  }
+
   final source = (json[vectorDataJsonKey] as List)
       .map((dynamic value) => double.parse(value.toString()))
       .toList(growable: false);

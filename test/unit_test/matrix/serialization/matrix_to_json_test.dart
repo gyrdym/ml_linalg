@@ -41,5 +41,10 @@ void main() {
         matrixDataJsonKey: emptySource,
       });
     });
+
+    test('should handle null value', () {
+      final encoded = matrixToJson(null);
+      expect(encoded, isNull);
+    });
   });
 }

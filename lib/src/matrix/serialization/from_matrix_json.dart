@@ -4,6 +4,10 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 
 /// Restores a matrix instance from given [json]
 Matrix fromMatrixJson(Map<String, dynamic> json) {
+  if (json == null) {
+    return null;
+  }
+
   final matrixSource = json[matrixDataJsonKey] as List<dynamic>;
 
   if (matrixSource == null) {
