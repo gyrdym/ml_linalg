@@ -70,12 +70,8 @@
 
 ## Linear algebra
 
-&nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics that is working with vectors and 
+&nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics that works with vectors and 
 matrices. 
-
-&nbsp;&nbsp;&nbsp;&nbsp;Let's give a simple definition of Vector and Matrix. Vector is an ordered set of numbers 
-representing a point in the space where the vector is directed from the origin. Matrix is a collection of vectors that 
-is used to map vectors from one space to another.     
 
 &nbsp;&nbsp;&nbsp;&nbsp;Vectors and matrices are extremely powerful tools which can be used in real-life applications, 
 such as machine learning algorithms. There are many implementations of these great mathematical entities in a plenty of 
@@ -83,25 +79,33 @@ programming languages, and as Dart offers developers good instrumentarium, e.g. 
 out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite performant.
 
 &nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there are SIMD data types. Namely support of SIMD 
-computational architecture served as a source of inspiration for creating this library.
+computational architecture served as inspiration for creating this library.
 
 ## What is SIMD?
 
 &nbsp;&nbsp;&nbsp;&nbsp;SIMD stands for `Single instruction, multiple data` - it's a computer architecture that allows 
 to perform uniform mathematical operations in parallel on a list-like data structure. For instance, one has two arrays: 
 
-- ![a = [10, 20, 30, 40]](https://latex.codecogs.com/gif.latex?a%20%3D%20%5B10%2C%2020%2C%2030%2C%2040%5D)
-- ![b = [50, 60, 70, 80]](https://latex.codecogs.com/gif.latex?b%20%3D%20%5B50%2C%2060%2C%2070%2C%2080%5D)
+```Dart
+final a = [10, 20, 30, 40];
+final b = [50, 60, 70, 80];
+```
 
 and one needs to add these arrays element-wise. Using the regular architecture this operation could be done in the following 
 manner:
 
-<p align="center">
-    <img width="300" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/non_simd_array_sum.svg?sanitize=true">
-</p>
+```Dart
+final c = List(4);
 
-&nbsp;&nbsp;&nbsp;&nbsp;We need to do 4 operations one by one in a row. Using SIMD architecture we may perform one mathematical 
-operation on several operands in parallel, thus element-wise sum of two arrays will be done for just one step:
+c[0] = a[0] + b[0]; // operation 1
+c[1] = a[1] + b[1]; // operation 2
+c[2] = a[2] + b[2]; // operation 3
+c[3] = a[3] + b[3]; // operation 4
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;As you may have noticed, we need to do 4 operations one by one in a row using regular 
+computational approach. But with help of SIMD architecture we may do one arithmetic operation on several operands in 
+parallel, thus element-wise sum of two arrays can be done for just one step:
 
 <p align="center">
     <img height="350" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/simd_array_sum.svg?sanitize=true"> 
@@ -127,7 +131,7 @@ lead to creation of a new vector instance (of course, if the operation is suppos
 iterable collections.
 
 &nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for `HashMap` and similar data structures 
-and to look up a value by the vector-key, since the hash code is the same for equal vectors:
+and to look up a value by the vector-key, since the hash code for equal vectors is the same:
 
 ```dart
 import 'package:ml_linalg/vector.dart';
@@ -150,12 +154,12 @@ the timings:
 
 - Baseline benchmark (executed on Macbook Air mid 2017), 2 regular lists each with 10,000,000 elements:
 <p align="center">
-    <img height="290" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/vector_baseline_benchmark_timing.png"> 
+    <img height="250" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/vector_baseline_benchmark_timing.png"> 
 </p>
 
 - Actual benchmark (executed on Macbook Air mid 2017), 2 vectors each with 10,000,000 elements:
 <p align="center">
-    <img height="290" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/vector_actual_benchmark_timing.png"> 
+    <img height="250" src="https://raw.github.com/gyrdym/ml_linalg/master/readme_resources/img/vector_actual_benchmark_timing.png"> 
 </p>
 
 It took 15 seconds to create a new regular list by summing the elements of two lists, and 0.7 second to sum two vectors - 
@@ -422,10 +426,10 @@ the difference is significant.
 
 ## Matrices
 
-&nbsp;&nbsp;&nbsp;&nbsp;Along with SIMD vectors, the library presents SIMD-based Matrices. One can use the matrices via 
+&nbsp;&nbsp;&nbsp;&nbsp;Along with SIMD vectors, the library contains SIMD-based Matrices. One can use the matrices via 
 [Matrix factory](https://github.com/gyrdym/ml_linalg/blob/master/lib/matrix.dart). The matrices are immutable as well 
-as vectors and also they implement `Iterable` interface (to be precise, `Iterable<Iterable<double>>`), thus it's possible 
-to use them as a regular iterable collection.
+as vectors and also they implement `Iterable` interface (to be more precise, `Iterable<Iterable<double>>`), thus it's 
+possible to use them as a regular iterable collection.
 
 Matrices are serializable, and that means that one can easily convert a Matrix instance to a json-serializable map 
 via `toJson` method, see the examples below.
