@@ -1,6 +1,6 @@
-import 'package:xrange/integers.dart';
+import 'package:xrange/xrange.dart';
 
 Iterable<int> getZeroBasedIndices(int maxIndex) =>
     maxIndex == 0
         ? []
-        : integers(0, maxIndex, upperClosed: false);
+        : integers(0, maxIndex);
