@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.17.9
+- `README.md`: images for SIMD examples corrected
+
 ## 12.17.8
 - `matrixToJson`, `fromMatrixJson`, `vectorToJson`, `fromVectorJson`:
     - `null` value handling 
