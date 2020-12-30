@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.17.10
+- `xrange` v1.0.0 supported
+
 ## 12.17.9
 - `README.md`: images for SIMD examples corrected
 
