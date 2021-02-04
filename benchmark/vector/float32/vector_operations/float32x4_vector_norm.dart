@@ -11,7 +11,7 @@ class Float32x4VectorNormBenchmark extends BenchmarkBase {
   Float32x4VectorNormBenchmark()
       : super('Vector `norm` method; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorNormBenchmark().report();

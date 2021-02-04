@@ -10,7 +10,7 @@ class Float32x4VectorAbsBenchmark extends BenchmarkBase {
   Float32x4VectorAbsBenchmark()
       : super('Vector `abs` method; $amountOfElements elements');
 
-  Vector vector;
+  Vector? vector;
 
   static void main() {
     Float32x4VectorAbsBenchmark().report();
@@ -18,7 +18,7 @@ class Float32x4VectorAbsBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.abs(skipCaching: true);
+    vector!.abs(skipCaching: true);
   }
 
   @override

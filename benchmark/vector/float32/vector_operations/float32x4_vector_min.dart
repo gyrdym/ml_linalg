@@ -10,7 +10,7 @@ class Float32x4VectorMinValueBenchmark extends BenchmarkBase {
   Float32x4VectorMinValueBenchmark()
       : super('Vector `min` method; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorMinValueBenchmark().report();

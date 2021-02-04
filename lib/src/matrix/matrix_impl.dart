@@ -16,10 +16,17 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
-class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
-    implements Matrix {
+class MatrixImpl
+    with
+        IterableMixin<Iterable<double>>,
+        MatrixValidatorMixin
+    implements
+        Matrix {
 
-  MatrixImpl(this._dataManager, this._cacheManager);
+  MatrixImpl(
+    this._dataManager,
+    this._cacheManager,
+  );
 
   final MatrixDataManager _dataManager;
   final CacheManager _cacheManager;
@@ -60,12 +67,14 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Matrix operator -(Object value) {
     if (value is Matrix) {
       return _matrixSub(value);
-    } else if (value is num) {
-      return _matrixScalarSub(value.toDouble());
-    } else {
-      throw UnsupportedError(
-          'Cannot subtract a ${value.runtimeType} from a ${runtimeType}');
     }
+
+    if (value is num) {
+      return _matrixScalarSub(value.toDouble());
+    }
+
+    throw UnsupportedError(
+        'Cannot subtract a ${value.runtimeType} from a ${runtimeType}');
   }
 
   /// Mathematical matrix multiplication
@@ -78,14 +87,18 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Matrix operator *(Object value) {
     if (value is Vector) {
       return _matrixVectorMul(value);
-    } else if (value is Matrix) {
-      return _matrixMul(value);
-    } else if (value is num) {
-      return _matrixScalarMul(value.toDouble());
-    } else {
-      throw UnsupportedError(
-          'Cannot multiple a ${runtimeType} and a ${value.runtimeType}');
     }
+
+    if (value is Matrix) {
+      return _matrixMul(value);
+    }
+
+    if (value is num) {
+      return _matrixScalarMul(value.toDouble());
+    }
+
+    throw UnsupportedError(
+        'Cannot multiple a ${runtimeType} and a ${value.runtimeType}');
   }
 
   /// Performs division of the matrix by vector, matrix or scalar
@@ -93,14 +106,18 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Matrix operator /(Object value) {
     if (value is Vector) {
       return _matrixByVectorDiv(value);
-    } else if (value is Matrix) {
-      return _matrixByMatrixDiv(value);
-    } else if (value is num) {
-      return _matrixByScalarDiv(value.toDouble());
-    } else {
-      throw UnsupportedError(
-          'Cannot divide a ${runtimeType} by a ${value.runtimeType}');
     }
+
+    if (value is Matrix) {
+      return _matrixByMatrixDiv(value);
+    }
+
+    if (value is num) {
+      return _matrixByScalarDiv(value.toDouble());
+    }
+
+    throw UnsupportedError(
+        'Cannot divide a ${runtimeType} by a ${value.runtimeType}');
   }
 
   @override
@@ -109,6 +126,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   @override
   Matrix transpose() {
     final source = List.generate(rowsNum, getRow);
+
     return Matrix.fromColumns(source, dtype: dtype);
   }
 
@@ -123,37 +141,43 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     Iterable<int> rowIndices = const [],
     Iterable<int> columnIndices = const [],
   }) {
-    final rowsNumber = rowIndices.isEmpty
-        ? rowsNum
-        : rowIndices.length;
-    final targetMatrixSource = List<Vector>(rowsNumber);
-
-    for (final indexed in enumerate(rowIndices.isEmpty
+    final indices = rowIndices.isEmpty
         ? count(0).take(rowsNum).map((i) => i.toInt())
-        : rowIndices)
-    ) {
-      final targetRowIndex = indexed.index;
-      final sourceRowIndex = indexed.value;
-      final sourceRow = getRow(sourceRowIndex);
+        : rowIndices;
+    final targetMatrixSource = indices.map((index) {
+      final sourceRow = getRow(index);
 
-      targetMatrixSource[targetRowIndex] = columnIndices.isEmpty
-          ? sourceRow : sourceRow.sample(columnIndices);
-    }
+      return columnIndices.isEmpty
+          ? sourceRow
+          : sourceRow.sample(columnIndices);
+    }).toList(growable: false);
 
     return Matrix.fromRows(targetMatrixSource, dtype: dtype);
   }
 
   @override
   Vector reduceColumns(
-          Vector Function(Vector combine, Vector vector) combiner,
-          {Vector initValue}) =>
-      _reduce(combiner, columnsNum, getColumn, initValue: initValue);
+      Vector Function(Vector combine, Vector vector) combiner,
+      {
+        Vector? initValue,
+      }) => _reduce(
+    combiner,
+    columnsNum,
+    getColumn,
+    initValue: initValue,
+  );
 
   @override
   Vector reduceRows(
-          Vector Function(Vector combine, Vector vector) combiner,
-          {Vector initValue}) =>
-      _reduce(combiner, rowsNum, getRow, initValue: initValue);
+      Vector Function(Vector combine, Vector vector) combiner,
+      {
+        Vector? initValue
+      }) => _reduce(
+    combiner,
+    rowsNum,
+    getRow,
+    initValue: initValue,
+  );
 
   @override
   Matrix mapElements(double Function(double element) mapper) =>
@@ -173,12 +197,14 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
 
   @override
   Matrix uniqueRows() {
-    // TODO: consider using Set instead of List
     final checked = <Vector>[];
 
     for (final i in _dataManager.rowIndices) {
       final row = getRow(i);
-      if (!checked.contains(row)) checked.add(row);
+
+      if (!checked.contains(row)) {
+        checked.add(row);
+      }
     }
 
     return Matrix.fromRows(checked, dtype: dtype);
@@ -244,7 +270,9 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   Vector toVector() {
     if (columnsNum == 1) {
       return getColumn(0);
-    } else if (rowsNum == 1) {
+    }
+
+    if (rowsNum == 1) {
       return getRow(0);
     }
 
@@ -285,7 +313,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     switch (norm) {
       case MatrixNorm.frobenius:
         // ignore: deprecated_member_use_from_same_package
-        return math.sqrt(reduceRows((sum, row) => sum + row.toIntegerPower(2))
+        return math.sqrt(reduceRows((sum, row) => sum + row.pow(2))
             .sum());
       default:
         throw UnsupportedError('Unsupported matrix norm type - $norm');
@@ -293,15 +321,23 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   @override
-  Matrix insertColumns(int targetIdx, List<Vector> columns) {
-    final newColumns = List<Vector>(columnsNum + columns.length)
-      ..setRange(targetIdx, targetIdx + columns.length, columns);
-    var i = 0;
+  Matrix insertColumns(int targetIndex, List<Vector> columns) {
+    final columnsIterator = columns
+        .iterator;
+    final indices = count(0)
+        .take(columnsNum + columns.length)
+        .map((i) => i.toInt());
+    final newColumns = indices.map((index) {
+      if (index < targetIndex) {
+        return getColumn(index);
+      }
 
-    for (final column in this.columns) {
-      if (i == targetIdx) i += columns.length;
-      newColumns[i++] = column;
-    }
+      if (index < (targetIndex + columns.length)) {
+        return (columnsIterator..moveNext()).current;
+      }
+
+      return getColumn(index - columns.length);
+    }).toList(growable: false);
 
     return Matrix.fromColumns(newColumns, dtype: dtype);
   }
@@ -333,16 +369,22 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   @override
-  Iterable<Vector> get rows => _dataManager.rowIndices.map(getRow);
+  Iterable<Vector> get rows => _dataManager
+      .rowIndices
+      .map(getRow);
 
   @override
-  Iterable<Vector> get columns => _dataManager.columnIndices.map(getColumn);
+  Iterable<Vector> get columns => _dataManager
+      .columnIndices
+      .map(getColumn);
 
   @override
-  Iterable<int> get rowIndices => _dataManager.rowIndices;
+  Iterable<int> get rowIndices => _dataManager
+      .rowIndices;
 
   @override
-  Iterable<int> get columnIndices => _dataManager.columnIndices;
+  Iterable<int> get columnIndices => _dataManager
+      .columnIndices;
 
   @override
   Matrix fastMap<T>(T Function(T element) mapper) {
@@ -355,20 +397,24 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   @override
   Matrix pow(num exponent) => _dataManager.areAllRowsCached
       ? Matrix.fromRows(rows.map(
-          (row) => row.pow(exponent)).toList(), dtype: dtype)
+          (row) => row
+              .pow(exponent)).toList(), dtype: dtype)
       : Matrix.fromColumns(columns.map(
-          (column) => column.pow(exponent)).toList(), dtype: dtype);
+          (column) => column
+              .pow(exponent)).toList(), dtype: dtype);
 
   @override
   Matrix exp({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(matrixLogKey,
+      _cacheManager.retrieveValue(matrixExpKey,
               () => _dataManager.areAllRowsCached
                   ? Matrix.fromRows(rows.map(
                       (row) => row.exp(
-                          skipCaching: skipCaching)).toList(), dtype: dtype)
+                          skipCaching: skipCaching,
+                      )).toList(), dtype: dtype)
                   : Matrix.fromColumns(columns.map(
                       (column) => column.exp(
-                          skipCaching: skipCaching)).toList(), dtype: dtype),
+                          skipCaching: skipCaching,
+                      )).toList(), dtype: dtype),
           skipCaching: skipCaching);
 
   @override
@@ -377,10 +423,12 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
               () => _dataManager.areAllRowsCached
                   ? Matrix.fromRows(rows.map(
                       (row) => row.log(
-                          skipCaching: skipCaching)).toList(), dtype: dtype)
+                          skipCaching: skipCaching,
+                      )).toList(), dtype: dtype)
                   : Matrix.fromColumns(columns.map(
                       (column) => column.log(
-                          skipCaching: skipCaching)).toList(), dtype: dtype),
+                          skipCaching: skipCaching,
+                      )).toList(), dtype: dtype),
           skipCaching: skipCaching);
 
   @override
@@ -419,15 +467,13 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
   }
 
   @override
-  Map<String, dynamic> toJson() => matrixToJson(this);
+  Map<String, dynamic> toJson() => matrixToJson(this)!;
 
   double _findExtrema(double Function(Vector vector) callback) {
-    var i = 0;
-    final minValues = List<double>(rowsNum);
-
-    for (final row in rows) {
-      minValues[i++] = callback(row);
-    }
+    final rowIterator = rows.iterator;
+    final minValues = List<double>
+        .generate(rowsNum,
+            (i) => callback((rowIterator..moveNext()).current));
 
     return callback(Vector.fromList(minValues, dtype: dtype));
   }
@@ -436,7 +482,9 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
       Vector Function(Vector combine, Vector vector) combiner,
       int length,
       Vector Function(int index) getVector,
-      {Vector initValue}) {
+      {
+        Vector? initValue
+      }) {
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
 
@@ -534,6 +582,7 @@ class MatrixImpl with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));
     final source = List.generate(rowsNum, elementGenFn);
+
     return Matrix.fromRows(source, dtype: dtype);
   }
 }

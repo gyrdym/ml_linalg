@@ -4,8 +4,7 @@ import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/di/dependencies.dart';
-import 'package:ml_linalg/src/matrix/matrix_factory.dart';
+import 'package:ml_linalg/src/matrix/helper/create_matrix.dart';
 import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/vector.dart';
 
@@ -37,9 +36,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// (6.0, 7.0, 8.0, 9.0, 0.0)
   /// ```
-  factory Matrix.fromList(List<List<double>> source, {
-    DType dtype = DType.float32,
-  }) => dependencies.get<MatrixFactory>().fromList(dtype, source);
+  factory Matrix.fromList(
+      List<List<double>> source, {
+        DType dtype = DType.float32,
+      }) => createMatrixFactory().fromList(dtype, source);
 
   /// Creates a matrix with predefined row vectors
   ///
@@ -66,8 +66,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// (6.0, 7.0, 8.0, 9.0, 0.0)
   /// ```
-  factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) =>
-      dependencies.get<MatrixFactory>().fromRows(dtype, source);
+  factory Matrix.fromRows(
+      List<Vector> source, {
+        DType dtype = DType.float32
+      }) => createMatrixFactory().fromRows(dtype, source);
 
   /// Creates a matrix with predefined column vectors
   ///
@@ -97,9 +99,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (4.0, 9.0)
   /// (5.0, 0.0)
   /// ```
-  factory Matrix.fromColumns(List<Vector> source, {
-    DType dtype = DType.float32,
-  }) => dependencies.get<MatrixFactory>().fromColumns(dtype, source);
+  factory Matrix.fromColumns(
+      List<Vector> source, {
+        DType dtype = DType.float32,
+      }) => createMatrixFactory().fromColumns(dtype, source);
 
   /// Creates a matrix of shape 0 x 0 (no rows, no columns)
   ///
@@ -121,7 +124,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Matrix 0 x 0
   /// ```
   factory Matrix.empty({DType dtype = DType.float32}) =>
-      dependencies.get<MatrixFactory>().empty(dtype);
+      createMatrixFactory().empty(dtype);
 
   /// Creates a matrix from flattened list of length equal to
   /// [rowsNum] * [columnsNum]
@@ -147,11 +150,17 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// (6.0, 7.0, 8.0, 9.0, 0.0)
   /// ```
-  factory Matrix.fromFlattenedList(List<double> source, int rowsNum,
-      int columnsNum, {DType dtype = DType.float32}) =>
-      dependencies
-          .get<MatrixFactory>()
-          .fromFlattenedList(dtype, source, rowsNum, columnsNum);
+  factory Matrix.fromFlattenedList(
+      List<double> source,
+      int rowsNum,
+      int columnsNum, {
+        DType dtype = DType.float32,
+      }) => createMatrixFactory().fromFlattenedList(
+    dtype,
+    source,
+    rowsNum,
+    columnsNum,
+  );
 
   /// Creates a matrix, where elements from [source] are the elements for the
   /// matrix main diagonal, the rest of the elements are zero
@@ -176,8 +185,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (0.0, 0.0, 0.0, 4.0, 0.0)
   /// (0.0, 0.0, 0.0, 0.0, 5.0)
   /// ```
-  factory Matrix.diagonal(List<double> source, {DType dtype = DType.float32}) =>
-      dependencies.get<MatrixFactory>().diagonal(dtype, source);
+  factory Matrix.diagonal(
+      List<double> source, {
+        DType dtype = DType.float32,
+      }) => createMatrixFactory().diagonal(dtype, source);
 
   /// Creates a matrix of [size] * [size] dimension, where all the main
   /// diagonal elements are equal to [scalar], the rest of the elements are 0
@@ -202,9 +213,15 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (0.0, 0.0, 0.0, 3.0, 0.0)
   /// (0.0, 0.0, 0.0, 0.0, 3.0)
   /// ```
-  factory Matrix.scalar(double scalar, int size, {
-    DType dtype = DType.float32,
-  }) => dependencies.get<MatrixFactory>().scalar(dtype, scalar, size);
+  factory Matrix.scalar(
+      double scalar,
+      int size, {
+        DType dtype = DType.float32,
+      }) => createMatrixFactory().scalar(
+    dtype,
+    scalar,
+    size,
+  );
 
   /// Creates a matrix of [size] * [size] dimension, where all the main
   /// diagonal elements are equal to 1, the rest of the elements are 0
@@ -229,8 +246,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (0.0, 0.0, 0.0, 1.0, 0.0)
   /// (0.0, 0.0, 0.0, 0.0, 1.0)
   /// ```
-  factory Matrix.identity(int size, {DType dtype = DType.float32}) =>
-      dependencies.get<MatrixFactory>().identity(dtype, size);
+  factory Matrix.identity(
+      int size, {
+        DType dtype = DType.float32,
+      }) => createMatrixFactory().identity(dtype, size);
 
   /// Creates a matrix, consisting of just one row (aka `Row matrix`)
   ///
@@ -250,11 +269,13 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Matrix 1 x 5:
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// ```
-  factory Matrix.row(List<double> source, {DType dtype = DType.float32}) =>
-      dependencies.get<MatrixFactory>().row(dtype, source);
+  factory Matrix.row(
+      List<double> source, {
+        DType dtype = DType.float32,
+      }) => createMatrixFactory().row(dtype, source);
 
   /// Returns a restored matrix from a serializable map
-  factory Matrix.fromJson(Map<String, dynamic> json) => fromMatrixJson(json);
+  factory Matrix.fromJson(Map<String, dynamic> json) => fromMatrixJson(json)!;
 
   /// Creates a matrix, consisting of just one column (aka `Column matrix`)
   ///
@@ -278,8 +299,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (4.0)
   /// (5.0)
   /// ```
-  factory Matrix.column(List<double> source, {DType dtype = DType.float32}) =>
-      dependencies.get<MatrixFactory>().column(dtype, source);
+  factory Matrix.column(
+      List<double> source, {
+        DType dtype = DType.float32
+      }) => createMatrixFactory().column(dtype, source);
 
   /// A data type of [Matrix] elements
   DType get dtype;
@@ -359,11 +382,11 @@ abstract class Matrix implements Iterable<Iterable<double>> {
 
   /// Reduces all the matrix columns to only column, using [combiner] function
   Vector reduceColumns(Vector Function(Vector combine, Vector vector) combiner,
-      {Vector initValue});
+      {Vector? initValue});
 
   /// Reduces all the matrix rows to only row, using [combiner] function
   Vector reduceRows(Vector Function(Vector combine, Vector vector) combiner,
-      {Vector initValue});
+      {Vector? initValue});
 
   /// Performs element-wise mapping of this [Matrix] to a new one via passed
   /// [mapper] function
@@ -448,8 +471,8 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   Vector deviation([Axis axis = Axis.columns]);
 
   /// Returns a new matrix with sorted elements from this [Matrix]
-  Matrix sort(double Function(Vector vector) selectSortValue, [Axis axis = Axis.rows,
-    SortDirection sortDir = SortDirection.asc]);
+  Matrix sort(double Function(Vector vector) selectSortValue, [
+    Axis axis = Axis.rows, SortDirection sortDir = SortDirection.asc]);
 
   /// Raise all the elements of the matrix to the power [exponent] and returns
   /// a new [Matrix] with these elements. Avoid raising a matrix to a float

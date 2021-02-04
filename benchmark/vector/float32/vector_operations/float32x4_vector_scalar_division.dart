@@ -11,7 +11,7 @@ class Float32x4VectorAndScalarDivisionBenchmark extends BenchmarkBase {
       : super('Vector `/` operator, operands: vector, scalar; '
       '$amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorAndScalarDivisionBenchmark().report();

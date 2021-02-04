@@ -11,7 +11,7 @@ class Float32MatrixDiagonalBenchmark extends BenchmarkBase {
   Float32MatrixDiagonalBenchmark() :
         super('Matrix initialization (diagonal)');
 
-  List<double> _source;
+  late List<double> _source;
 
   static void main() {
     Float32MatrixDiagonalBenchmark().report();

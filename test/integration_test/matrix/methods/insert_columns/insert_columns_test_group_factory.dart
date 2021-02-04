@@ -22,10 +22,6 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-
-          expect(newMatrix.getColumn(1), equals(newCol));
-          expect(newMatrix.getRow(0), equals([4.0, 100.0, 8.0, 12.0, 16.0, 34.0]));
-          expect(newMatrix.getRow(4), equals([112.0, 500.0, 10.0, 34.0, 2.0, 10.0]));
           expect(newMatrix, equals([
             [4.0, 100.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 200.0, 24.0, 28.0, 32.0, 23.0],
@@ -50,8 +46,6 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-
-          expect(newMatrix.getColumn(0), equals(newCol));
           expect(newMatrix, equals([
             [100.0, 4.0, 8.0, 12.0, 16.0, 34.0],
             [200.0, 20.0, 24.0, 28.0, 32.0, 23.0],
@@ -75,8 +69,6 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-
-          expect(newMatrix.getColumn(4), equals(newCol));
           expect(newMatrix, equals([
             [4.0, 8.0, 12.0, 16.0, 100.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 200.0, 23.0],
@@ -101,8 +93,6 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-
-          expect(newMatrix.getColumn(5), equals(newCol));
           expect(newMatrix, equals([
             [4.0, 8.0, 12.0, 16.0, 34.0, 100.0],
             [20.0, 24.0, 28.0, 32.0, 23.0, 200.0],
@@ -137,10 +127,6 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
 
-          expect(newMatrix.getRow(0),
-              equals([4.0, 100.0, -100.0, 8.0, 12.0, 16.0, 34.0]));
-          expect(newMatrix.getRow(4),
-              equals([112.0, 500.0, -500.0, 10.0, 34.0, 2.0, 10.0]));
           expect(newMatrix, equals([
             [4.0, 100.0, -100.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 200.0, -200.0, 24.0, 28.0, 32.0, 23.0],
@@ -169,12 +155,6 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-
-          expect([
-            newMatrix.getColumn(0),
-            newMatrix.getColumn(1),
-          ], equals(newCols));
-
           expect(newMatrix, equals([
             [100.0, -100.0, 4.0, 8.0, 12.0, 16.0, 34.0],
             [200.0, -200.0, 20.0, 24.0, 28.0, 32.0, 23.0],
@@ -199,8 +179,6 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-
-          expect(newMatrix.getColumn(4), equals(newCol));
           expect(newMatrix, equals([
             [4.0, 8.0, 12.0, 16.0, 100.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 200.0, 23.0],
@@ -228,12 +206,6 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-
-          expect([
-            newMatrix.getColumn(5),
-            newMatrix.getColumn(6),
-          ], equals(newCols));
-
           expect(newMatrix, equals([
             [4.0, 8.0, 12.0, 16.0, 34.0, 100.0, -100.0],
             [20.0, 24.0, 28.0, 32.0, 23.0, 200.0, -200.0],

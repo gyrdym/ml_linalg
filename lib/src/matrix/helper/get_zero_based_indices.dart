@@ -1,6 +1,6 @@
-import 'package:xrange/xrange.dart';
+import 'package:quiver/iterables.dart';
 
 Iterable<int> getZeroBasedIndices(int maxIndex) =>
     maxIndex == 0
         ? []
-        : integers(0, maxIndex);
+        : count(0).take(maxIndex).map((value) => value.toInt());
