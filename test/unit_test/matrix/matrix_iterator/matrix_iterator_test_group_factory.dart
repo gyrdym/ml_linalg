@@ -19,11 +19,12 @@ void matrixIteratorTestGroupFactory(DType dtype,
       final source =
         createSource([1.0, 2.0, 3.0, 10.0, 22.0, 31.0, 8.3, 3.4, 34.5]);
 
-      test('should initilize with `current` property equals `null`', () {
+      test('should throw an error if one accesses `current` property before '
+          '`moveNext` call', () {
         final data = createByteData(source);
         final iterator = createIterator(data, 3, 3);
 
-        expect(iterator.current, isNull);
+        expect(() => iterator.current, throwsA(isA()));
       });
 
       test('should return the next value on every `moveNext` method call (9 '
@@ -40,9 +41,19 @@ void matrixIteratorTestGroupFactory(DType dtype,
 
         iterator.moveNext();
         expect(iterator.current, iterableAlmostEqualTo([8.3, 3.4, 34.5]));
+      });
 
-        iterator.moveNext();
-        expect(iterator.current, isNull);
+      test('should contain the last successful value in `current` field if '
+          '`moveNext` returns `false`', () {
+        final data = createByteData(source);
+
+        final iterator = createIterator(data, 3, 3)
+          ..moveNext()
+          ..moveNext()
+          ..moveNext()
+          ..moveNext();
+
+        expect(iterator.current, iterableAlmostEqualTo([8.3, 3.4, 34.5]));
       });
 
       test('should return the next value on every `moveNext` method call (9 '
@@ -78,10 +89,6 @@ void matrixIteratorTestGroupFactory(DType dtype,
             iterator.current,
             iterableAlmostEqualTo(
                 [1.0, 2.0, 3.0, 10.0, 22.0, 31.0, 8.3, 3.4, 34.5]));
-
-        iterator.moveNext();
-
-        expect(iterator.current, isNull);
       });
 
       test('should return a proper boolean indicator after each `moveNext` '

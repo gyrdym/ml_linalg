@@ -10,9 +10,9 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
   RegularListsAdditionBenchmark() : super('Regular lists addition; '
       '$amountOfElements elements');
 
-  List<double> list1;
-  List<double> list2;
-  final result = List<double>(amountOfElements);
+  late List<double> list1;
+  late List<double> list2;
+  final result = List<double>.filled(amountOfElements, 0.0);
 
   static void main() {
     RegularListsAdditionBenchmark().report();

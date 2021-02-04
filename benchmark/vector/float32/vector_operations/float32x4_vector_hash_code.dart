@@ -10,7 +10,7 @@ class Float32x4VectorHashCodeBenchmark extends BenchmarkBase {
   Float32x4VectorHashCodeBenchmark()
       : super('Vector `hashCode`; $amountOfElements elements');
 
-  Vector vector;
+  Vector? vector;
 
   static void main() {
     Float32x4VectorHashCodeBenchmark().report();

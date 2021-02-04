@@ -10,7 +10,7 @@ class Float32x4VectorMaxValueBenchmark extends BenchmarkBase {
   Float32x4VectorMaxValueBenchmark()
       : super('Vector `max` method; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorMaxValueBenchmark().report();
