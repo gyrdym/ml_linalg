@@ -3,7 +3,7 @@ import 'package:ml_linalg/src/vector/vector_json_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
 /// Returns a json-serializable map for the [vector]
-Map<String, dynamic> vectorToJson(Vector vector) {
+Map<String, dynamic>? vectorToJson(Vector? vector) {
   if (vector == null) {
     return null;
   }

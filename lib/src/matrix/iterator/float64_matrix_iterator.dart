@@ -11,7 +11,7 @@ class Float64MatrixIterator implements Iterator<Iterable<double>> {
   final int _rowsNum;
   final int _colsNum;
 
-  Float64List _current;
+  late Float64List _current;
   int _currentRow = 0;
 
   @override
@@ -19,14 +19,14 @@ class Float64MatrixIterator implements Iterator<Iterable<double>> {
 
   @override
   bool moveNext() {
-    final startIdx = _currentRow * _colsNum;
-    if (_currentRow >= _rowsNum) {
-      _current = null;
-    } else {
+    final hasNext = _currentRow < _rowsNum;
+
+    if (hasNext) {
       _current = _data.buffer
-          .asFloat64List(startIdx * _bytesPerElement, _colsNum);
+          .asFloat64List(_currentRow * _colsNum * _bytesPerElement, _colsNum);
+      _currentRow++;
     }
-    _currentRow++;
-    return _current != null;
+
+    return hasNext;
   }
 }

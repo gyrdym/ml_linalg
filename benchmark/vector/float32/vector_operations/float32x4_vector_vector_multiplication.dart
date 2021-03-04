@@ -11,8 +11,8 @@ class Float32x4VectorAndVectorMultiplicationBenchmark extends BenchmarkBase {
       : super('Vector `*` operator, operands: vector, vector; '
       '$amountOfElements elements');
 
-  Vector vector1;
-  Vector vector2;
+  late Vector vector1;
+  late Vector vector2;
 
   static void main() {
     Float32x4VectorAndVectorMultiplicationBenchmark().report();

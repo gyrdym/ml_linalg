@@ -3,14 +3,11 @@ import 'dart:typed_data';
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/norm.dart';
-import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
-import 'package:ml_linalg/src/di/dependencies.dart';
+import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory_impl.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_linalg/src/vector/float64x2_vector.dart';
 import 'package:ml_linalg/src/vector/serialization/from_vector_json.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
-
-final _cacheManagerFactory = dependencies.get<CacheManagerFactory>();
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
 /// architecture support and extended functionality, adapted for data science
@@ -44,13 +41,15 @@ abstract class Vector implements Iterable<double> {
       case DType.float32:
         return Float32x4Vector.fromList(
           source,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.fromList(
           source,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       default:
@@ -91,14 +90,16 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.fromSimdList(
           source as Float32x4List,
           actualLength,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.fromSimdList(
           source as Float64x2List,
           actualLength,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       default:
@@ -131,14 +132,16 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.filled(
           length,
           value,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.filled(
           length,
           value,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       default:
@@ -170,13 +173,15 @@ abstract class Vector implements Iterable<double> {
       case DType.float32:
         return Float32x4Vector.zero(
           length,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.zero(
           length,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       default:
@@ -217,7 +222,8 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.randomFilled(
           length,
           seed,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
           max: max,
           min: min,
         );
@@ -226,7 +232,8 @@ abstract class Vector implements Iterable<double> {
         return Float64x2Vector.randomFilled(
           length,
           seed,
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
           max: max,
           min: min,
         );
@@ -257,12 +264,14 @@ abstract class Vector implements Iterable<double> {
     switch (dtype) {
       case DType.float32:
         return Float32x4Vector.empty(
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.empty(
-          _cacheManagerFactory.create(vectorCacheKeys),
+          CacheManagerFactoryImpl()
+              .create(vectorCacheKeys),
         );
 
       default:
@@ -270,7 +279,7 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
-  factory Vector.fromJson(Map<String, dynamic> json) => fromVectorJson(json);
+  factory Vector.fromJson(Map<String, dynamic> json) => fromVectorJson(json)!;
 
   /// Denotes a data type, used for representation of the vector's elements
   DType get dtype;
@@ -297,12 +306,6 @@ abstract class Vector implements Iterable<double> {
   /// Returns a new [Vector] where elements are the elements from this [Vector]
   /// divided by [scalar]
   Vector scalarDiv(num scalar);
-
-  /// Creates a new [Vector] containing elements of this [Vector] raised to
-  /// the integer [power]
-  /// Deprecated, use [pow] instead
-  @deprecated
-  Vector toIntegerPower(int power);
 
   /// Creates a new [Vector] composed of elements of this [Vector] raised to
   /// the [exponent]. Avoid raising a vector to a float power, since it is
@@ -395,7 +398,7 @@ abstract class Vector implements Iterable<double> {
 
   /// Returns a new vector composed of values whose indices are within the range
   /// [start] (inclusive) - [end] (exclusive)
-  Vector subvector(int start, [int end]);
+  Vector subvector(int start, [int? end]);
 
   /// Returns a json-serializable map
   Map<String, dynamic> toJson();

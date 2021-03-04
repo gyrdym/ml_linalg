@@ -3,7 +3,7 @@ import 'package:ml_linalg/src/common/dtype_serializer/dtype_encoded_values.dart'
 import 'package:ml_linalg/src/vector/vector_json_keys.dart';
 
 /// Restores a vector instance from the given [json]
-Vector fromVectorJson(Map<String, dynamic> json) {
+Vector? fromVectorJson(Map<String, dynamic>? json) {
   if (json == null) {
     return null;
   }
@@ -12,7 +12,7 @@ Vector fromVectorJson(Map<String, dynamic> json) {
       .map((dynamic value) => double.parse(value.toString()))
       .toList(growable: false);
 
-  switch(json[vectorDTypeJsonKey] as String) {
+  switch(json[vectorDTypeJsonKey] as String?) {
     case dTypeFloat32EncodedValue:
       return Vector.fromList(source, dtype: DType.float32);
 

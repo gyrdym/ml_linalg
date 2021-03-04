@@ -10,7 +10,7 @@ class Float32x4VectorExpBenchmark extends BenchmarkBase {
   Float32x4VectorExpBenchmark()
       : super('Vector `exp` method; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorExpBenchmark().report();

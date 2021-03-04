@@ -10,7 +10,7 @@ class Float32x4VectorRandomAccessBenchmark extends BenchmarkBase {
   Float32x4VectorRandomAccessBenchmark()
       : super('Vector `[]` operator; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorRandomAccessBenchmark().report();

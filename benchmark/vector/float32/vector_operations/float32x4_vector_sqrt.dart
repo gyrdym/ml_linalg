@@ -10,7 +10,7 @@ class Float32x4VectorSqrtBenchmark extends BenchmarkBase {
   Float32x4VectorSqrtBenchmark()
       : super('Vector `sqrt` method; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorSqrtBenchmark().report();

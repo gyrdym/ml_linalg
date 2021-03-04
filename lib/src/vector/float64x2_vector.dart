@@ -19,23 +19,35 @@ const _bytesPerSimdElement = Float64x2List.bytesPerElement;
 const _bucketSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
 final _simdOnes = Float64x2.splat(1.0);
 
-class Float64x2Vector with IterableMixin<double> implements Vector {
+class Float64x2Vector
+    with
+        IterableMixin<double>
+    implements
+        Vector {
+
   Float64x2Vector.fromList(List<num> source, this._cacheManager) :
         length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(source.length, _bucketSize) *
             _bytesPerSimdElement).buffer {
+
     for (var i = 0; i < length; i++) {
       _buffer.asByteData().setFloat64(_bytesPerElement * i,
         source[i].toDouble(), Endian.host);
     }
   }
 
-  Float64x2Vector.randomFilled(this.length, int seed, this._cacheManager, {
-    num min = 0, num max = 1}) :
+  Float64x2Vector.randomFilled(
+      this.length,
+      int seed,
+      this._cacheManager, {
+        num min = 0,
+        num max = 1,
+      }) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
+
     if (min >= max) {
       throw ArgumentError.value(min, 'Argument `min` should be less than `max`');
     }
@@ -49,10 +61,14 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float64x2Vector.filled(this.length, num value, this._cacheManager) :
+  Float64x2Vector.filled(
+      this.length,
+      num value,
+      this._cacheManager) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer {
+
     for (var i = 0; i < length; i++) {
       _buffer.asByteData().setFloat64(_bytesPerElement * i, value.toDouble(),
           Endian.host);
@@ -64,10 +80,13 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
             _bytesPerSimdElement).buffer;
 
-  Float64x2Vector.fromSimdList(Float64x2List data, this.length,
+  Float64x2Vector.fromSimdList(
+      Float64x2List data,
+      this.length,
       this._cacheManager) :
         _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = data.buffer {
+
     _cachedInnerSimdList = data;
   }
 
@@ -92,11 +111,11 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   Float64x2List get _innerSimdList =>
       _cachedInnerSimdList ??= _buffer.asFloat64x2List();
-  Float64x2List _cachedInnerSimdList;
+  Float64x2List? _cachedInnerSimdList;
 
   List<double> get _innerTypedList =>
       _cachedInnerTypedList ??= _buffer.asFloat64List(0, length);
-  Float64List _cachedInnerTypedList;
+  Float64List? _cachedInnerTypedList;
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
@@ -134,22 +153,32 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   @override
   Vector operator +(Object value) {
     if (value is Vector || value is Matrix) {
-      final other = (value is Matrix ? value.toVector() : value) as Float64x2Vector;
+      final other = (value is Matrix
+          ? value.toVector()
+          : value) as Float64x2Vector;
+
       if (other.length != length) {
         throw _mismatchLengthError;
       }
+
       final source = Float64x2List(_numOfBuckets);
+
       for (var i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i] + other._innerSimdList[i];
       }
+
       return Vector.fromSimdList(source, length, dtype: dtype);
 
-    } else if (value is num) {
+    }
+
+    if (value is num) {
       final arg = Float64x2.splat(value.toDouble());
       final source = Float64x2List(_numOfBuckets);
+
       for (var i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i] + arg;
       }
+
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
@@ -159,22 +188,31 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   @override
   Vector operator -(Object value) {
     if (value is Vector || value is Matrix) {
-      final other = (value is Matrix ? value.toVector() : value) as Float64x2Vector;
+      final other = (value is Matrix
+          ? value.toVector()
+          : value) as Float64x2Vector;
+
       if (other.length != length) {
         throw _mismatchLengthError;
       }
+
       final source = Float64x2List(_numOfBuckets);
+
       for (var i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i] - other._innerSimdList[i];
       }
-      return Vector.fromSimdList(source, length, dtype: dtype);
 
-    } else if (value is num) {
+      return Vector.fromSimdList(source, length, dtype: dtype);
+    }
+
+    if (value is num) {
       final arg = Float64x2.splat(value.toDouble());
       final source = Float64x2List(_numOfBuckets);
+
       for (var i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i] - arg;
       }
+
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
@@ -185,13 +223,17 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   Vector operator *(Object value) {
     if (value is Vector) {
       final other = value as Float64x2Vector;
+
       if (other.length != length) {
         throw _mismatchLengthError;
       }
+
       final source = Float64x2List(_numOfBuckets);
+
       for (var i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i] * other._innerSimdList[i];
       }
+
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
@@ -201,9 +243,11 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
     if (value is num) {
       final source = Float64x2List(_numOfBuckets);
+
       for (var i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i].scale(value.toDouble());
       }
+
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
@@ -214,20 +258,28 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   Vector operator /(Object value) {
     if (value is Vector) {
       final other = value as Float64x2Vector;
+
       if (other.length != length) {
         throw _mismatchLengthError;
       }
+
       final source = Float64x2List(_numOfBuckets);
+
       for (var i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i] / other._innerSimdList[i];
       }
+
       return Vector.fromSimdList(source, length, dtype: dtype);
 
-    } else if (value is num) {
+    }
+
+    if (value is num) {
       final source = Float64x2List(_numOfBuckets);
+
       for (var i = 0; i < _numOfBuckets; i++) {
         source[i] = _innerSimdList[i].scale(1 / value);
       }
+
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
@@ -238,9 +290,11 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   Vector sqrt({bool skipCaching = false}) =>
       _cacheManager.retrieveValue(vectorSqrtKey, () {
         final source = Float64x2List(_numOfBuckets);
+
         for (var i = 0; i < _numOfBuckets; i++) {
           source[i] = _innerSimdList[i].sqrt();
         }
+
         return Vector.fromSimdList(source, length, dtype: dtype);
       }, skipCaching: skipCaching);
 
@@ -272,10 +326,6 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
         return Vector.fromList(source, dtype: dtype);
       }, skipCaching: skipCaching);
-
-  @override
-  @deprecated
-  Vector toIntegerPower(int power) => pow(power);
 
   @override
   Vector abs({bool skipCaching = false}) =>
@@ -313,10 +363,13 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     switch (distance) {
       case Distance.euclidean:
         return (this - other).norm(Norm.euclidean);
+
       case Distance.manhattan:
         return (this - other).norm(Norm.manhattan);
+
       case Distance.cosine:
         return 1 - getCosine(other);
+
       default:
         throw UnimplementedError('Unimplemented distance type - $distance');
     }
@@ -326,10 +379,12 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   double getCosine(Vector other) {
     final cosine = (dot(other) / norm(Norm.euclidean) /
         other.norm(Norm.euclidean));
+
     if (cosine.isInfinite || cosine.isNaN) {
       throw Exception('It is impossible to find cosine of an angle of two '
           'vectors if at least one of the vectors is zero-vector');
     }
+
     return cosine;
   }
 
@@ -338,6 +393,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     if (isEmpty) {
       throw _emptyVectorException;
     }
+
     return _cacheManager.retrieveValue(vectorMeanKey, () => sum() / length,
         skipCaching: skipCaching);
   }
@@ -346,9 +402,11 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   double norm([Norm normType = Norm.euclidean, bool skipCaching = false]) =>
       _cacheManager.retrieveValue(getCacheKeyForNormByNormType(normType), () {
         final power = _getPowerByNormType(normType);
+
         if (power == 1) {
           return abs().sum();
         }
+
         return math.pow(pow(power).sum(), 1 / power) as double;
       }, skipCaching: skipCaching);
 
@@ -393,31 +451,41 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     if (_isLastBucketNotFull) {
       var extrema = initialValue;
       final fullBucketsList = _innerSimdList.take(_numOfBuckets - 1);
+
       if (fullBucketsList.isNotEmpty) {
         extrema = getExtremalLane(fullBucketsList.reduce(getExtremalBucket));
       }
+
       return _simdHelper.simdValueToList(_innerSimdList.last)
           .take(length % _bucketSize)
           .fold(extrema, getExtremalValue);
-    } else {
-      return getExtremalLane(_innerSimdList.reduce(getExtremalBucket));
     }
+
+    return getExtremalLane(_innerSimdList.reduce(getExtremalBucket));
   }
 
   @override
   Vector sample(Iterable<int> indices) {
-    final list = Float64List(indices.length);
     var i = 0;
+    final list = Float64List(indices.length);
+
     for (final idx in indices) {
       list[i++] = this[idx];
     }
+
     return Vector.fromList(list, dtype: dtype);
   }
 
   @override
   Vector unique({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(vectorUniqueKey, () => Vector.fromList(
-                Set<double>.from(this).toList(growable: false), dtype: dtype),
+      _cacheManager.retrieveValue(
+          vectorUniqueKey,
+              () => Vector.fromList(
+                Set<double>
+                    .from(this)
+                    .toList(growable: false),
+                dtype: dtype,
+              ),
         skipCaching: skipCaching);
 
   @override
@@ -437,27 +505,32 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     if (isEmpty) {
       throw _emptyVectorException;
     }
+
     if (index >= length) {
       throw RangeError.index(index, this);
     }
+
     return _innerTypedList[index];
   }
 
   @override
-  Vector subvector(int start, [int end]) {
+  Vector subvector(int start, [int? end]) {
     if (start < 0) {
       throw RangeError.range(start, 0, length - 1, '`start` cannot'
           ' be negative');
     }
+
     if (end != null && start >= end) {
       throw RangeError.range(start, 0,
           length - 1, '`start` cannot be greater than or equal to `end`');
     }
+
     if (start >= length) {
       throw RangeError.range(start, 0,
           length - 1, '`start` cannot be greater than or equal to the vector'
               'length');
     }
+
     final limit = end == null || end > length ? length : end;
     final collection = _innerTypedList.sublist(start, limit);
 
@@ -475,11 +548,12 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       _cacheManager.retrieveValue(vectorRescaleKey, () {
         final minValue = min();
         final maxValue = max();
+
         return (this - minValue) / (maxValue - minValue);
       }, skipCaching: skipCaching);
 
   @override
-  Map<String, dynamic> toJson() => vectorToJson(this);
+  Map<String, dynamic> toJson() => vectorToJson(this)!;
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2,
   /// Manhattan - 1)
@@ -487,10 +561,12 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     switch (norm) {
       case Norm.euclidean:
         return 2;
+
       case Norm.manhattan:
         return 1;
+
       default:
-        throw UnsupportedError('Unsupported norm type!');
+        throw UnsupportedError('Unsupported norm type $norm');
     }
   }
 
@@ -500,17 +576,21 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   Vector _elementWiseIntegerPow(int exponent) {
     final source = Float64x2List(_numOfBuckets);
+
     for (var i = 0; i < _numOfBuckets; i++) {
       source[i] = _simdToIntPow(_innerSimdList[i], exponent);
     }
+
     return Vector.fromSimdList(source, length, dtype: dtype);
   }
 
   Vector _elementWiseFloatPow(double exponent) {
     final source = Float64x2List(_numOfBuckets);
+
     for (var i = 0; i < _numOfBuckets; i++) {
       source[i] = _simdToFloatPow(_innerSimdList[i], exponent);
     }
+
     return Vector.fromSimdList(source, length, dtype: dtype);
   }
 
@@ -540,8 +620,10 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
               'vector length is not allowed: vector length: $length, matrix '
               'row number: ${matrix.rowsNum}');
     }
+
     final source = List.generate(
         matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
+
     return Vector.fromList(source, dtype: dtype);
   }
 

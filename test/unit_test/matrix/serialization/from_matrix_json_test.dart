@@ -14,7 +14,7 @@ void main() {
       [33, -987, 90, 732],
     ];
 
-    final dataWithNull = <List<double>>[
+    final dataWithNull = <List<double?>>[
       [123.0009863, null, 11.777209, 90003.112],
       [-93.5678, 12, null, -10e2],
     ];
@@ -66,13 +66,13 @@ void main() {
     });
 
     test('should restore a float32 matrix instance from json', () {
-      final matrix = fromMatrixJson(validFloat32Json);
+      final matrix = fromMatrixJson(validFloat32Json)!;
       expect(matrix.dtype, DType.float32);
       expect(matrix, iterable2dAlmostEqualTo(data));
     });
 
     test('should restore a float64 matrix instance from json', () {
-      final matrix = fromMatrixJson(validFloat64Json);
+      final matrix = fromMatrixJson(validFloat64Json)!;
       expect(matrix.dtype, DType.float64);
       expect(matrix, iterable2dAlmostEqualTo(data));
     });

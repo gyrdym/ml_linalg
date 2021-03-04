@@ -9,7 +9,7 @@ class Float32MatrixIterator implements Iterator<Iterable<double>> {
   final int _rowsNum;
   final int _colsNum;
 
-  Float32List _current;
+  late Float32List _current;
   int _currentRow = 0;
 
   @override
@@ -17,14 +17,14 @@ class Float32MatrixIterator implements Iterator<Iterable<double>> {
 
   @override
   bool moveNext() {
-    final startIdx = _currentRow * _colsNum;
-    if (_currentRow >= _rowsNum) {
-      _current = null;
-    } else {
+    final hasNext = _currentRow < _rowsNum;
+
+    if (hasNext) {
       _current = _data.buffer
-          .asFloat32List(startIdx * _bytesPerElement, _colsNum);
+          .asFloat32List(_currentRow * _colsNum * _bytesPerElement, _colsNum);
+      _currentRow++;
     }
-    _currentRow++;
-    return _current != null;
+
+    return hasNext;
   }
 }

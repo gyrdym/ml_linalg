@@ -12,7 +12,7 @@ class Float32MatrixFromFlattenedBenchmark extends BenchmarkBase {
   Float32MatrixFromFlattenedBenchmark() :
         super('Matrix initialization (fromFlattenedList)');
 
-  List<double> _source;
+  late List<double> _source;
 
   static void main() {
     Float32MatrixFromFlattenedBenchmark().report();

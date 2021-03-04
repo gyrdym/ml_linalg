@@ -10,7 +10,7 @@ class Float32x4VectorSumBenchmark extends BenchmarkBase {
   Float32x4VectorSumBenchmark()
       : super('Vector `sum` method; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorSumBenchmark().report();

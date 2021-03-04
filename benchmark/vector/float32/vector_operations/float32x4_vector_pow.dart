@@ -10,7 +10,7 @@ class Float32x4VectorPowBenchmark extends BenchmarkBase {
   Float32x4VectorPowBenchmark()
       : super('Vector `pow` method; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorPowBenchmark().report();

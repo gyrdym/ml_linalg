@@ -12,7 +12,7 @@ class Float32MatrixFromColumnsBenchmark extends BenchmarkBase {
   Float32MatrixFromColumnsBenchmark() :
         super('Matrix initialization (fromColumns)');
 
-  List<Vector> _source;
+  late List<Vector> _source;
 
   static void main() {
     Float32MatrixFromColumnsBenchmark().report();
