@@ -5,7 +5,7 @@ mixin MatrixValidatorMixin {
       {String errorTitle = 'Cannot perform the operation'}) {
     if (first.rowsNum != second.rowsNum ||
         first.columnsNum != second.columnsNum) {
-      throw Exception('${errorTitle}: matrices have different shapes - '
+      throw Exception('$errorTitle: matrices have different shapes - '
           '(${first.rowsNum} x ${first.columnsNum}) and '
           '(${second.rowsNum} x ${second.columnsNum})');
     }

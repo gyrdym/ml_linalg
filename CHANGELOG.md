@@ -1,5 +1,11 @@
 # Changelog
 
+## 13.0.0
+- null-safety supported (stable)
+
+## 13.0.0-nullsafety.0
+- null-safety supported (beta)
+
 ## 12.17.10
 - `xrange` v1.0.0 supported
 

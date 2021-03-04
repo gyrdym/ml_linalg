@@ -12,7 +12,7 @@ Future<Null> generateClassFromTemplate(
     String targetFileName,
     String templateFileName,
     {
-      Map<Pattern, String Function(Match)> mapping,
+      Map<Pattern, String Function(Match)>? mapping,
       String comment = '/* This file is auto generated, do not change it manually */\n\n',
     }
 ) async {

@@ -13,18 +13,14 @@ class CacheManagerImpl implements CacheManager {
     if (!_keys.contains(key)) {
       throw Exception('Cache key `$key` is not registered');
     }
-    
-    var value = _cache[key] as T;
 
-    if (value == null) {
-      value = calculateIfAbsent();
-
-      if (!skipCaching) {
-        _cache[key] = value;
-      }
+    if (skipCaching) {
+      return calculateIfAbsent();
     }
+    
+    _cache[key] ??= calculateIfAbsent();
 
-    return value;
+    return _cache[key];
   }
 
   @override

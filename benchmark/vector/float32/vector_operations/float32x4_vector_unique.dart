@@ -10,7 +10,7 @@ class Float32x4VectorUniqueBenchmark extends BenchmarkBase {
   Float32x4VectorUniqueBenchmark()
       : super('Vector `unique` method; $amountOfElements elements');
 
-  Vector vector;
+  late Vector vector;
 
   static void main() {
     Float32x4VectorUniqueBenchmark().report();

@@ -11,8 +11,8 @@ class Float32x4VectorEqualityOperatorBenchmark extends BenchmarkBase {
       : super('Vector `==` operator, operands: vector, vector; '
       '$amountOfElements elements');
 
-  Vector vector1;
-  Vector vector2;
+  Vector? vector1;
+  Vector? vector2;
 
   static void main() {
     Float32x4VectorEqualityOperatorBenchmark().report();
@@ -32,7 +32,7 @@ class Float32x4VectorEqualityOperatorBenchmark extends BenchmarkBase {
       max: 1000,
       dtype: DType.float32,
     );
-    vector2 = Vector.fromList(vector1.toList());
+    vector2 = Vector.fromList(vector1!.toList());
   }
 
   void tearDown() {
