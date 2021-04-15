@@ -1,5 +1,10 @@
 # Changelog
 
+## 13.0.1
+- `pubspec.yaml`: 
+    - `mockito` dependency updated
+    - `test` dependency updated
+
 ## 13.0.0
 - null-safety supported (stable)
 
