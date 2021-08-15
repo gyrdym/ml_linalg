@@ -7,7 +7,9 @@ class CacheManagerImpl implements CacheManager {
   final Set<String> _keys;
 
   @override
-  T retrieveValue<T>(String key, T Function() calculateIfAbsent, {
+  T retrieveValue<T>(
+    String key,
+    T Function() calculateIfAbsent, {
     bool skipCaching = false,
   }) {
     if (!_keys.contains(key)) {
@@ -17,7 +19,7 @@ class CacheManagerImpl implements CacheManager {
     if (skipCaching) {
       return calculateIfAbsent();
     }
-    
+
     _cache[key] ??= calculateIfAbsent();
 
     return _cache[key];

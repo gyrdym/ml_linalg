@@ -17,12 +17,8 @@ import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
 class MatrixImpl
-    with
-        IterableMixin<Iterable<double>>,
-        MatrixValidatorMixin
-    implements
-        Matrix {
-
+    with IterableMixin<Iterable<double>>, MatrixValidatorMixin
+    implements Matrix {
   MatrixImpl(
     this._dataManager,
     this._cacheManager,
@@ -98,7 +94,7 @@ class MatrixImpl
     }
 
     throw UnsupportedError(
-        'Cannot multiple a $runtimeType and a ${value.runtimeType}');
+        'Cannot multiple a $runtimeType by a ${value.runtimeType}');
   }
 
   /// Performs division of the matrix by vector, matrix or scalar
@@ -157,27 +153,25 @@ class MatrixImpl
 
   @override
   Vector reduceColumns(
-      Vector Function(Vector combine, Vector vector) combiner,
-      {
-        Vector? initValue,
-      }) => _reduce(
-    combiner,
-    columnsNum,
-    getColumn,
-    initValue: initValue,
-  );
+    Vector Function(Vector combine, Vector vector) combiner, {
+    Vector? initValue,
+  }) =>
+      _reduce(
+        combiner,
+        columnsNum,
+        getColumn,
+        initValue: initValue,
+      );
 
   @override
-  Vector reduceRows(
-      Vector Function(Vector combine, Vector vector) combiner,
-      {
-        Vector? initValue
-      }) => _reduce(
-    combiner,
-    rowsNum,
-    getRow,
-    initValue: initValue,
-  );
+  Vector reduceRows(Vector Function(Vector combine, Vector vector) combiner,
+          {Vector? initValue}) =>
+      _reduce(
+        combiner,
+        rowsNum,
+        getRow,
+        initValue: initValue,
+      );
 
   @override
   Matrix mapElements(double Function(double element) mapper) =>
@@ -187,13 +181,14 @@ class MatrixImpl
 
   @override
   Matrix mapColumns(Vector Function(Vector columns) mapper) =>
-      Matrix.fromColumns(List.generate(columnsNum,
-              (int i) => mapper(getColumn(i))), dtype: dtype);
+      Matrix.fromColumns(
+          List.generate(columnsNum, (int i) => mapper(getColumn(i))),
+          dtype: dtype);
 
   @override
   Matrix mapRows(Vector Function(Vector row) mapper) =>
-      Matrix.fromRows(List.generate(rowsNum,
-              (int i) => mapper(getRow(i))), dtype: dtype);
+      Matrix.fromRows(List.generate(rowsNum, (int i) => mapper(getRow(i))),
+          dtype: dtype);
 
   @override
   Matrix uniqueRows() {
@@ -218,23 +213,23 @@ class MatrixImpl
 
     switch (axis) {
       case Axis.columns:
-        return _cacheManager
-            .retrieveValue(matrixMeansByColumnsKey, () => _mean(columns));
+        return _cacheManager.retrieveValue(
+            matrixMeansByColumnsKey, () => _mean(columns));
 
       case Axis.rows:
-        return _cacheManager
-            .retrieveValue(matrixMeansByRowsKey, () => _mean(rows));
+        return _cacheManager.retrieveValue(
+            matrixMeansByRowsKey, () => _mean(rows));
 
       default:
-        throw UnimplementedError('Mean values calculation for axis $axis is not '
-            'implemented yet');
+        throw UnimplementedError(
+            'Mean values calculation for axis $axis is not '
+            'supported yet');
     }
   }
 
   Vector _mean(Iterable<Vector> vectors) =>
-      Vector.fromList(
-        vectors.map((vector) => vector.mean()).toList(),
-        dtype: dtype);
+      Vector.fromList(vectors.map((vector) => vector.mean()).toList(),
+          dtype: dtype);
 
   @override
   Vector deviation([Axis axis = Axis.columns]) {
@@ -247,11 +242,11 @@ class MatrixImpl
     switch (axis) {
       case Axis.columns:
         return _cacheManager.retrieveValue(matrixDeviationByColumnsKey,
-                () => _deviation(rows, means, rowsNum));
+            () => _deviation(rows, means, rowsNum));
 
       case Axis.rows:
         return _cacheManager.retrieveValue(matrixDeviationByRowsKey,
-                () => _deviation(columns, means, columnsNum));
+            () => _deviation(columns, means, columnsNum));
 
       default:
         throw UnimplementedError('Deviation calculation for axis $axis is not '
@@ -294,8 +289,7 @@ class MatrixImpl
         break;
       }
       result =
-          '$result${row.take(columnsLimit).toString()
-              .replaceAll(RegExp(r'\)$'), '')}$eol\n';
+          '$result${row.take(columnsLimit).toString().replaceAll(RegExp(r'\)$'), '')}$eol\n';
       i++;
     }
 
@@ -313,20 +307,17 @@ class MatrixImpl
     switch (norm) {
       case MatrixNorm.frobenius:
         // ignore: deprecated_member_use_from_same_package
-        return math.sqrt(reduceRows((sum, row) => sum + row.pow(2))
-            .sum());
+        return math.sqrt(reduceRows((sum, row) => sum + row.pow(2)).sum());
       default:
-        throw UnsupportedError('Unsupported matrix norm type - $norm');
+        throw UnsupportedError('Unsupported matrix norm type: $norm');
     }
   }
 
   @override
   Matrix insertColumns(int targetIndex, List<Vector> columns) {
-    final columnsIterator = columns
-        .iterator;
-    final indices = count(0)
-        .take(columnsNum + columns.length)
-        .map((i) => i.toInt());
+    final columnsIterator = columns.iterator;
+    final indices =
+        count(0).take(columnsNum + columns.length).map((i) => i.toInt());
     final newColumns = indices.map((index) {
       if (index < targetIndex) {
         return getColumn(index);
@@ -343,8 +334,8 @@ class MatrixImpl
   }
 
   @override
-  Matrix sort(double Function(Vector vector) selectSortValue, [
-    Axis axis = Axis.rows, SortDirection sortDir = SortDirection.asc]) {
+  Matrix sort(double Function(Vector vector) selectSortValue,
+      [Axis axis = Axis.rows, SortDirection sortDir = SortDirection.asc]) {
     final doSort =
         (Iterable<Vector> source) => _doSort(source, sortDir, selectSortValue);
 
@@ -369,77 +360,87 @@ class MatrixImpl
   }
 
   @override
-  Iterable<Vector> get rows => _dataManager
-      .rowIndices
-      .map(getRow);
+  Iterable<Vector> get rows => _dataManager.rowIndices.map(getRow);
 
   @override
-  Iterable<Vector> get columns => _dataManager
-      .columnIndices
-      .map(getColumn);
+  Iterable<Vector> get columns => _dataManager.columnIndices.map(getColumn);
 
   @override
-  Iterable<int> get rowIndices => _dataManager
-      .rowIndices;
+  Iterable<int> get rowIndices => _dataManager.rowIndices;
 
   @override
-  Iterable<int> get columnIndices => _dataManager
-      .columnIndices;
+  Iterable<int> get columnIndices => _dataManager.columnIndices;
 
   @override
   Matrix fastMap<T>(T Function(T element) mapper) {
-    final source = List.generate(
-        rowsNum, (int i) => getRow(i).fastMap(mapper));
+    final source = List.generate(rowsNum, (int i) => getRow(i).fastMap(mapper));
 
     return Matrix.fromRows(source, dtype: dtype);
   }
 
   @override
   Matrix pow(num exponent) => _dataManager.areAllRowsCached
-      ? Matrix.fromRows(rows.map(
-          (row) => row
-              .pow(exponent)).toList(), dtype: dtype)
-      : Matrix.fromColumns(columns.map(
-          (column) => column
-              .pow(exponent)).toList(), dtype: dtype);
+      ? Matrix.fromRows(rows.map((row) => row.pow(exponent)).toList(),
+          dtype: dtype)
+      : Matrix.fromColumns(
+          columns.map((column) => column.pow(exponent)).toList(),
+          dtype: dtype);
 
   @override
-  Matrix exp({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(matrixExpKey,
-              () => _dataManager.areAllRowsCached
-                  ? Matrix.fromRows(rows.map(
-                      (row) => row.exp(
-                          skipCaching: skipCaching,
-                      )).toList(), dtype: dtype)
-                  : Matrix.fromColumns(columns.map(
-                      (column) => column.exp(
-                          skipCaching: skipCaching,
-                      )).toList(), dtype: dtype),
-          skipCaching: skipCaching);
+  Matrix exp({bool skipCaching = false}) => _cacheManager.retrieveValue(
+      matrixExpKey,
+      () => _dataManager.areAllRowsCached
+          ? Matrix.fromRows(
+              rows
+                  .map((row) => row.exp(
+                        skipCaching: skipCaching,
+                      ))
+                  .toList(),
+              dtype: dtype)
+          : Matrix.fromColumns(
+              columns
+                  .map((column) => column.exp(
+                        skipCaching: skipCaching,
+                      ))
+                  .toList(),
+              dtype: dtype),
+      skipCaching: skipCaching);
 
   @override
-  Matrix log({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(matrixLogKey,
-              () => _dataManager.areAllRowsCached
-                  ? Matrix.fromRows(rows.map(
-                      (row) => row.log(
-                          skipCaching: skipCaching,
-                      )).toList(), dtype: dtype)
-                  : Matrix.fromColumns(columns.map(
-                      (column) => column.log(
-                          skipCaching: skipCaching,
-                      )).toList(), dtype: dtype),
-          skipCaching: skipCaching);
+  Matrix log({bool skipCaching = false}) => _cacheManager.retrieveValue(
+      matrixLogKey,
+      () => _dataManager.areAllRowsCached
+          ? Matrix.fromRows(
+              rows
+                  .map((row) => row.log(
+                        skipCaching: skipCaching,
+                      ))
+                  .toList(),
+              dtype: dtype)
+          : Matrix.fromColumns(
+              columns
+                  .map((column) => column.log(
+                        skipCaching: skipCaching,
+                      ))
+                  .toList(),
+              dtype: dtype),
+      skipCaching: skipCaching);
 
   @override
   Matrix multiply(Matrix other) {
-    checkShape(this, other, errorTitle: 'Cannot find Hadamard product');
+    checkShape(this, other, errorMessage: 'Cannot find Hadamard product');
 
     return _dataManager.areAllRowsCached
-        ? Matrix.fromRows(zip([rows, other.rows]).map(
-            (pair) => pair.first * pair.last).toList(), dtype: dtype)
-        : Matrix.fromColumns(zip([columns, other.columns]).map(
-            (pair) => pair.first * pair.last).toList(), dtype: dtype);
+        ? Matrix.fromRows(
+            zip([rows, other.rows])
+                .map((pair) => pair.first * pair.last)
+                .toList(),
+            dtype: dtype)
+        : Matrix.fromColumns(
+            zip([columns, other.columns])
+                .map((pair) => pair.first * pair.last)
+                .toList(),
+            dtype: dtype);
   }
 
   @override
@@ -448,10 +449,11 @@ class MatrixImpl
       return double.nan;
     }
 
-    return _cacheManager.retrieveValue(matrixSumKey,
-            () => _dataManager.areAllRowsCached
-                ? rows.fold(0, (result, row) => result + row.sum())
-                : columns.fold(0, (result, column) => result + column.sum()));
+    return _cacheManager.retrieveValue(
+        matrixSumKey,
+        () => _dataManager.areAllRowsCached
+            ? rows.fold(0, (result, row) => result + row.sum())
+            : columns.fold(0, (result, column) => result + column.sum()));
   }
 
   @override
@@ -460,10 +462,11 @@ class MatrixImpl
       return double.nan;
     }
 
-    return _cacheManager.retrieveValue(matrixProdKey,
-            () => _dataManager.areAllRowsCached
-                ? rows.fold(0, (result, row) => result * row.prod())
-                : columns.fold(0, (result, column) => result * column.prod()));
+    return _cacheManager.retrieveValue(
+        matrixProdKey,
+        () => _dataManager.areAllRowsCached
+            ? rows.fold(0, (result, row) => result * row.prod())
+            : columns.fold(0, (result, column) => result * column.prod()));
   }
 
   @override
@@ -471,20 +474,15 @@ class MatrixImpl
 
   double _findExtrema(double Function(Vector vector) callback) {
     final rowIterator = rows.iterator;
-    final minValues = List<double>
-        .generate(rowsNum,
-            (i) => callback((rowIterator..moveNext()).current));
+    final minValues = List<double>.generate(
+        rowsNum, (i) => callback((rowIterator..moveNext()).current));
 
     return callback(Vector.fromList(minValues, dtype: dtype));
   }
 
-  Vector _reduce(
-      Vector Function(Vector combine, Vector vector) combiner,
-      int length,
-      Vector Function(int index) getVector,
-      {
-        Vector? initValue
-      }) {
+  Vector _reduce(Vector Function(Vector combine, Vector vector) combiner,
+      int length, Vector Function(int index) getVector,
+      {Vector? initValue}) {
     var reduced = initValue ?? getVector(0);
     final startIndex = initValue != null ? 0 : 1;
 
@@ -498,9 +496,9 @@ class MatrixImpl
   Matrix _matrixVectorMul(Vector vector) {
     if (vector.length != columnsNum) {
       throw Exception(
-          'The dimension of the vector and the columns number of '
-              'the matrix mismatch');
+          'Matrix column count and vector length mismatch, matrix column count: $columnsNum, vector length: ${vector.length}');
     }
+
     final generateElement = (int i) => vector.dot(getRow(i));
     final source = List.generate(rowsNum, generateElement);
     final vectorColumn = Vector.fromList(source, dtype: dtype);
@@ -510,9 +508,7 @@ class MatrixImpl
 
   Matrix _matrixMul(Matrix matrix) {
     checkColumnsAndRowsNumber(this, matrix);
-    final source = rows
-        .map((row) => row * matrix)
-        .toList();
+    final source = rows.map((row) => row * matrix).toList();
 
     return Matrix.fromRows(source, dtype: dtype);
   }
@@ -534,23 +530,23 @@ class MatrixImpl
   }
 
   Matrix _matrixByMatrixDiv(Matrix matrix) {
-    checkShape(this, matrix, errorTitle: 'Cannot perform matrix by matrix '
-        'division');
+    checkShape(this, matrix,
+        errorMessage: 'Cannot perform matrix by matrix '
+            'division');
 
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first / second);
   }
 
   Matrix _matrixAdd(Matrix matrix) {
-    checkShape(this, matrix, errorTitle: 'Cannot perform matrix addition');
+    checkShape(this, matrix, errorMessage: 'Cannot perform matrix addition');
 
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first + second);
   }
 
   Matrix _matrixSub(Matrix matrix) {
-    checkShape(this, matrix,
-        errorTitle: 'Cannot perform matrix subtraction');
+    checkShape(this, matrix, errorMessage: 'Cannot perform matrix subtraction');
 
     return _matrix2matrixOperation(
         matrix, (Vector first, Vector second) => first - second);
@@ -566,7 +562,7 @@ class MatrixImpl
       scalar, (double val, Vector vector) => vector * val);
 
   Matrix _matrixByScalarDiv(double scalar) => _matrix2scalarOperation(
-    scalar, (double val, Vector vector) => vector / val);
+      scalar, (double val, Vector vector) => vector / val);
 
   Matrix _matrix2matrixOperation(
       Matrix matrix, Vector Function(Vector first, Vector second) operation) {

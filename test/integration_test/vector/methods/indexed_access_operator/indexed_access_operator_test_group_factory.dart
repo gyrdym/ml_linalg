@@ -8,7 +8,8 @@ void vectorIndexedAccessOperatorTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {
       group('[] operator', () {
         test('should provide indexed access ([] operator, case 1)', () {
-          final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+          final vector =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
 
           expect(vector[0], 1.0);
           expect(vector[1], 2.0);

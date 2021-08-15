@@ -9,8 +9,8 @@ const numOfRows = 10000;
 const numOfColumns = 1000;
 
 class Float32MatrixFromColumnsBenchmark extends BenchmarkBase {
-  Float32MatrixFromColumnsBenchmark() :
-        super('Matrix initialization (fromColumns)');
+  Float32MatrixFromColumnsBenchmark()
+      : super('Matrix initialization (fromColumns)');
 
   late List<Vector> _source;
 

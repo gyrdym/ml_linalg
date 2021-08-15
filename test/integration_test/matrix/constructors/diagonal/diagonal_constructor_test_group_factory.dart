@@ -7,18 +7,21 @@ import '../../../../dtype_to_title.dart';
 void matrixDiagonalConstructorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('diagonal constructor', () {
-        test('should create a matrix with all zero elements but main diagonal '
+        test(
+            'should create a matrix with all zero elements but main diagonal '
             'ones', () {
           final source = [1.0, 2.0, 3.0, 4.0, 5.0];
           final matrix = Matrix.diagonal(source, dtype: dtype);
 
-          expect(matrix, equals([
-            [1, 0, 0, 0, 0],
-            [0, 2, 0, 0, 0],
-            [0, 0, 3, 0, 0],
-            [0, 0, 0, 4, 0],
-            [0, 0, 0, 0, 5],
-          ]));
+          expect(
+              matrix,
+              equals([
+                [1, 0, 0, 0, 0],
+                [0, 2, 0, 0, 0],
+                [0, 0, 3, 0, 0],
+                [0, 0, 0, 4, 0],
+                [0, 0, 0, 0, 5],
+              ]));
           expect(matrix.dtype, dtype);
         });
 

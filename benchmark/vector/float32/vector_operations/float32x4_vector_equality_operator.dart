@@ -9,7 +9,7 @@ const amountOfElements = 10000000;
 class Float32x4VectorEqualityOperatorBenchmark extends BenchmarkBase {
   Float32x4VectorEqualityOperatorBenchmark()
       : super('Vector `==` operator, operands: vector, vector; '
-      '$amountOfElements elements');
+            '$amountOfElements elements');
 
   Vector? vector1;
   Vector? vector2;
@@ -26,7 +26,8 @@ class Float32x4VectorEqualityOperatorBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector1 = Vector.randomFilled(amountOfElements,
+    vector1 = Vector.randomFilled(
+      amountOfElements,
       seed: 1,
       min: -1000,
       max: 1000,

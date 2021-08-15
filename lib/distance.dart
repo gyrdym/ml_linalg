@@ -32,4 +32,4 @@
 /// In other words, the distance is calculated based on a number of elements
 /// whose values are different: the more the number, the less similar the
 /// vectors are
-enum Distance {euclidean, manhattan, cosine, hamming}
+enum Distance { euclidean, manhattan, cosine, hamming }

@@ -82,7 +82,8 @@ void main() {
       expect(matrix, emptyData);
     });
 
-    test('should restore a float32 matrix from json with data consisting of '
+    test(
+        'should restore a float32 matrix from json with data consisting of '
         'just an empty row', () {
       final matrix = fromMatrixJson(validFloat32JsonWithEmptyRow);
       expect(matrix, emptyData);

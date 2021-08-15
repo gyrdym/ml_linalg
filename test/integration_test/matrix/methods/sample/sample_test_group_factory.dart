@@ -7,7 +7,8 @@ import '../../../../dtype_to_title.dart';
 void matrixSampleTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('sample method', () {
-        test('should create a new matrix from the diffrent segments of the '
+        test(
+            'should create a new matrix from the diffrent segments of the '
             'original matrix', () {
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -34,10 +35,10 @@ void matrixSampleTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
         });
 
-        test('should create a new matrix from the diffrent segments of the '
+        test(
+            'should create a new matrix from the diffrent segments of the '
             'original matrix even if there are repeating row indices in '
             '`rowIndices` parameter', () {
-
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -64,10 +65,10 @@ void matrixSampleTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
         });
 
-        test('should create a new matrix from the diffrent segments of the '
+        test(
+            'should create a new matrix from the diffrent segments of the '
             'original matrix even if there are repeating column indices in '
             '`columIndices` parameter', () {
-
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -93,9 +94,9 @@ void matrixSampleTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
         });
 
-        test('should throw a range error if one of the column indices is out of '
+        test(
+            'should throw a range error if one of the column indices is out of '
             'bound', () {
-
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -105,17 +106,17 @@ void matrixSampleTestGroupFactory(DType dtype) =>
           ], dtype: dtype);
 
           final actual = () => matrix.sample(
-            rowIndices: [1],
-            columnIndices: [1, 2, 3, 4, 5],
-          );
+                rowIndices: [1],
+                columnIndices: [1, 2, 3, 4, 5],
+              );
 
           expect(actual, throwsRangeError);
         });
 
-        test('should create a new matrix from the diffrent segments of the '
+        test(
+            'should create a new matrix from the diffrent segments of the '
             'original matrix if given row indices cover the whole rows range of '
             'the original matrix', () {
-
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.1],
@@ -142,10 +143,10 @@ void matrixSampleTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should create a new matrix from the diffrent segments of the '
+        test(
+            'should create a new matrix from the diffrent segments of the '
             'original matrix if given column indices cover the whole columns '
             'range of the original matrix', () {
-
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -169,9 +170,9 @@ void matrixSampleTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should create a new matrix from the diffrent segments of the '
+        test(
+            'should create a new matrix from the diffrent segments of the '
             'original matrix if columnIndices parameter is omitted', () {
-
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -194,9 +195,9 @@ void matrixSampleTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should create a new matrix from the diffrent segments of the '
+        test(
+            'should create a new matrix from the diffrent segments of the '
             'original matrix if rowIndices parameter is omitted', () {
-
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.0],
@@ -222,10 +223,10 @@ void matrixSampleTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should create a new matrix from the diffrent segments of the '
+        test(
+            'should create a new matrix from the diffrent segments of the '
             'original matrix if both rowIndices and columnIndices parameters are '
             'omitted', () {
-
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
             [20.0, 24.0, 28.0, 32.0, 23.0],

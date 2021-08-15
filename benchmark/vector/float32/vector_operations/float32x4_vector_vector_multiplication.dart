@@ -9,7 +9,7 @@ const amountOfElements = 10000000;
 class Float32x4VectorAndVectorMultiplicationBenchmark extends BenchmarkBase {
   Float32x4VectorAndVectorMultiplicationBenchmark()
       : super('Vector `*` operator, operands: vector, vector; '
-      '$amountOfElements elements');
+            '$amountOfElements elements');
 
   late Vector vector1;
   late Vector vector2;
@@ -26,13 +26,15 @@ class Float32x4VectorAndVectorMultiplicationBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector1 = Vector.randomFilled(amountOfElements,
+    vector1 = Vector.randomFilled(
+      amountOfElements,
       seed: 1,
       min: -1000,
       max: 1000,
       dtype: DType.float32,
     );
-    vector2 = Vector.randomFilled(amountOfElements,
+    vector2 = Vector.randomFilled(
+      amountOfElements,
       seed: 1,
       min: -1000,
       max: 1000,

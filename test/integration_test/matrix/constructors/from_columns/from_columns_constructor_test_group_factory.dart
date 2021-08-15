@@ -8,7 +8,8 @@ import '../../../../dtype_to_title.dart';
 void matrixFromColumnsConstructorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('fromColumns constructor', () {
-        test('should create an instance with predefined vectors as matrix '
+        test(
+            'should create an instance with predefined vectors as matrix '
             'columns', () {
           final actual = Matrix.fromColumns([
             Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype),
@@ -39,7 +40,8 @@ void matrixFromColumnsConstructorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should throw an exception if list of vectors of not the same '
+        test(
+            'should throw an exception if list of vectors of not the same '
             'length is provided', () {
           final source = [
             Vector.fromList([1, 2, 3], dtype: dtype),
@@ -47,8 +49,8 @@ void matrixFromColumnsConstructorTestGroupFactory(DType dtype) =>
             Vector.fromList([9, 8, 7], dtype: dtype),
           ];
 
-          expect(() => Matrix.fromColumns(source, dtype: dtype),
-              throwsException);
+          expect(
+              () => Matrix.fromColumns(source, dtype: dtype), throwsException);
         });
 
         test('should not use reference to a source list for the cache ', () {

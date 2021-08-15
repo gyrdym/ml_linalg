@@ -26,8 +26,8 @@ void matrixSortTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 34.0, 2.0, 10.0],
           ];
 
-          final actual = matrix.sort((vector) => vector[2], Axis.rows,
-              SortDirection.asc);
+          final actual =
+              matrix.sort((vector) => vector[2], Axis.rows, SortDirection.asc);
 
           expect(actual, equals(expected));
           expect(matrix, isNot(same(actual)));
@@ -52,8 +52,8 @@ void matrixSortTestGroupFactory(DType dtype) =>
             [2.0, 34.0, 10.0, 10.0, 112.0],
           ];
 
-          final actual = matrix.sort((vector) => vector[2], Axis.columns,
-              SortDirection.asc);
+          final actual = matrix.sort(
+              (vector) => vector[2], Axis.columns, SortDirection.asc);
 
           expect(actual, equals(expected));
           expect(matrix, isNot(same(actual)));
@@ -78,8 +78,8 @@ void matrixSortTestGroupFactory(DType dtype) =>
             [16.0, 1.0, -18.0, 3.0, 11.0],
           ];
 
-          final actual = matrix.sort((vector) => vector[2], Axis.rows,
-              SortDirection.desc);
+          final actual =
+              matrix.sort((vector) => vector[2], Axis.rows, SortDirection.desc);
 
           expect(actual, equals(expected));
           expect(matrix, isNot(same(actual)));
@@ -104,8 +104,8 @@ void matrixSortTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 10.0, 34.0, 2.0],
           ];
 
-          final actual = matrix.sort((vector) => vector[2], Axis.columns,
-              SortDirection.desc);
+          final actual = matrix.sort(
+              (vector) => vector[2], Axis.columns, SortDirection.desc);
 
           expect(actual, equals(expected));
           expect(matrix, isNot(same(actual)));

@@ -23,7 +23,8 @@ class Float32x4VectorUniqueBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector = Vector.randomFilled(amountOfElements,
+    vector = Vector.randomFilled(
+      amountOfElements,
       seed: 1,
       min: -1000,
       max: 1000,

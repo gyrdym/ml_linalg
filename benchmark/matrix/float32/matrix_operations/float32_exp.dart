@@ -12,8 +12,8 @@ class Float32MatrixExpBenchmark extends BenchmarkBase {
   Float32MatrixExpBenchmark() : super('Matrix exp method');
 
   final Matrix _source = Matrix.fromRows(
-    List<Vector>.filled(numOfRows, Vector.randomFilled(
-        numOfColumns, min: -1000, max: 1000)),
+    List<Vector>.filled(
+        numOfRows, Vector.randomFilled(numOfColumns, min: -1000, max: 1000)),
     dtype: DType.float32,
   );
 

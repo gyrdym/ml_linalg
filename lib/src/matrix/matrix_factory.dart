@@ -7,8 +7,8 @@ abstract class MatrixFactory {
   Matrix fromRows(DType dtype, List<Vector> source);
   Matrix fromColumns(DType dtype, List<Vector> source);
   Matrix empty(DType dtype);
-  Matrix fromFlattenedList(DType dtype, List<double> source, int rowsNum,
-      int columnsNum);
+  Matrix fromFlattenedList(
+      DType dtype, List<double> source, int rowsNum, int columnsNum);
   Matrix diagonal(DType dtype, List<double> source);
   Matrix scalar(DType dtype, double scalar, int size);
   Matrix identity(DType dtype, int size);

@@ -17,26 +17,30 @@ void matrixExpTestGroupFactory(DType dtype) =>
           ], dtype: dtype);
           final result = matrix.exp();
 
-          expect(result, iterable2dAlmostEqualTo([
-            [math.exp(1), math.exp(2), math.exp(3), math.exp(4)],
-            [math.exp(5), math.exp(6), math.exp(7), math.exp(8)],
-          ], 1e-3));
+          expect(
+              result,
+              iterable2dAlmostEqualTo([
+                [math.exp(1), math.exp(2), math.exp(3), math.exp(4)],
+                [math.exp(5), math.exp(6), math.exp(7), math.exp(8)],
+              ], 1e-3));
           expect(result.dtype, dtype);
         });
 
         test('should handle matrix created from columns', () {
           final matrix = Matrix.fromColumns([
             Vector.fromList([1, 2, 3, 4], dtype: dtype),
-              Vector.fromList([5, 6, 7, 8], dtype: dtype),
+            Vector.fromList([5, 6, 7, 8], dtype: dtype),
           ], dtype: dtype);
           final result = matrix.exp();
 
-          expect(result, iterable2dAlmostEqualTo([
-            [math.exp(1), math.exp(5)],
-            [math.exp(2), math.exp(6)],
-            [math.exp(3), math.exp(7)],
-            [math.exp(4), math.exp(8)],
-          ], 1e-3));
+          expect(
+              result,
+              iterable2dAlmostEqualTo([
+                [math.exp(1), math.exp(5)],
+                [math.exp(2), math.exp(6)],
+                [math.exp(3), math.exp(7)],
+                [math.exp(4), math.exp(8)],
+              ], 1e-3));
           expect(result.dtype, dtype);
         });
 

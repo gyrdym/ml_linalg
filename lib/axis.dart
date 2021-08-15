@@ -3,5 +3,6 @@
 /// For instance, it is used in `sort` method - axis parameter denotes there, how the
 /// matrix should be sorted: column-wise or row-wise
 enum Axis {
-  rows, columns,
+  rows,
+  columns,
 }

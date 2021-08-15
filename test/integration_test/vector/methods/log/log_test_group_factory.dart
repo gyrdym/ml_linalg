@@ -8,10 +8,11 @@ import '../../../../dtype_to_title.dart';
 void vectorLogVectorTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {
       group('log method', () {
-        test('should return vector composed of natural logs of the source '
+        test(
+            'should return vector composed of natural logs of the source '
             'vector elements', () {
-          final vector = Vector.fromList([10.0, 12.0, 4.0, 7.0, 9.0, 12.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([10.0, 12.0, 4.0, 7.0, 9.0, 12.0], dtype: dtype);
           final actual = vector.log();
 
           expect(actual, [
