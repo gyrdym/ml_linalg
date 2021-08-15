@@ -8,9 +8,9 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('fromFlattenedList constructor', () {
         test('should create an instance from flattened collection', () {
-          final actual =
-            Matrix.fromFlattenedList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3,
-                dtype: dtype);
+          final actual = Matrix.fromFlattenedList(
+              [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3,
+              dtype: dtype);
 
           final expected = [
             [1.0, 2.0, 3.0],
@@ -33,10 +33,12 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should throw an error if one tries to create a matrix from '
+        test(
+            'should throw an error if one tries to create a matrix from '
             'flattened collection with unproper dimension', () {
-          expect(() => Matrix
-              .fromFlattenedList([1.0, 2.0, 3.0, 4.0, 5.0], 2, 3, dtype: dtype),
+          expect(
+              () => Matrix.fromFlattenedList([1.0, 2.0, 3.0, 4.0, 5.0], 2, 3,
+                  dtype: dtype),
               throwsException);
         });
       });

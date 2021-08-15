@@ -7,10 +7,11 @@ import '../../../../dtype_to_title.dart';
 void matrixColumnIndicesTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('columnIndices getter', () {
-        test('should contain zero-based iterable of ordered column indices', () {
+        test('should contain zero-based iterable of ordered column indices',
+            () {
           final matrix = Matrix.fromList([
-            [  1,   2,   3,   4],
-            [ 10,  20,  30,  40],
+            [1, 2, 3, 4],
+            [10, 20, 30, 40],
             [100, 200, 300, 400],
           ], dtype: dtype);
 

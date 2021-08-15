@@ -8,7 +8,7 @@ const amountOfElements = 10000000;
 class Float32x4VectorRandomFilledBenchmark extends BenchmarkBase {
   const Float32x4VectorRandomFilledBenchmark()
       : super('Vector initialization (random filled), '
-      '$amountOfElements elements');
+            '$amountOfElements elements');
 
   static void main() {
     const Float32x4VectorRandomFilledBenchmark().report();
@@ -16,7 +16,8 @@ class Float32x4VectorRandomFilledBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    Vector.randomFilled(amountOfElements,
+    Vector.randomFilled(
+      amountOfElements,
       seed: 1,
       min: -1000,
       max: 1000,

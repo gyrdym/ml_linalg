@@ -34,26 +34,26 @@ abstract class Vector implements Iterable<double> {
   /// ```
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// ```
-  factory Vector.fromList(List<num> source, {
+  factory Vector.fromList(
+    List<num> source, {
     DType dtype = DType.float32,
   }) {
     switch (dtype) {
       case DType.float32:
         return Float32x4Vector.fromList(
           source,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.fromList(
           source,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       default:
-        throw UnimplementedError('Vector of $dtype type is not implemented yet');
+        throw UnimplementedError(
+            'Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -82,7 +82,9 @@ abstract class Vector implements Iterable<double> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// ```
-  factory Vector.fromSimdList(List source, int actualLength, {
+  factory Vector.fromSimdList(
+    List source,
+    int actualLength, {
     DType dtype = DType.float32,
   }) {
     switch (dtype) {
@@ -90,20 +92,19 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.fromSimdList(
           source as Float32x4List,
           actualLength,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.fromSimdList(
           source as Float64x2List,
           actualLength,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       default:
-        throw UnimplementedError('Vector of $dtype type is not implemented yet');
+        throw UnimplementedError(
+            'Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -124,7 +125,9 @@ abstract class Vector implements Iterable<double> {
   /// ```
   /// (2.0, 2.0, 2.0, 2.0, 2.0)
   /// ```
-  factory Vector.filled(int length, num value, {
+  factory Vector.filled(
+    int length,
+    num value, {
     DType dtype = DType.float32,
   }) {
     switch (dtype) {
@@ -132,20 +135,19 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.filled(
           length,
           value,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.filled(
           length,
           value,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       default:
-        throw UnimplementedError('Vector of $dtype type is not implemented yet');
+        throw UnimplementedError(
+            'Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -166,26 +168,26 @@ abstract class Vector implements Iterable<double> {
   /// ```
   /// (0.0, 0.0, 0.0, 0.0, 0.0)
   /// ```
-  factory Vector.zero(int length, {
+  factory Vector.zero(
+    int length, {
     DType dtype = DType.float32,
   }) {
     switch (dtype) {
       case DType.float32:
         return Float32x4Vector.zero(
           length,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.zero(
           length,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       default:
-        throw UnimplementedError('Vector of $dtype type is not implemented yet');
+        throw UnimplementedError(
+            'Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -211,7 +213,8 @@ abstract class Vector implements Iterable<double> {
   /// ```
   /// (-2.6859948542351675, -3.977462789496658, -1.3201339513128914, -1.2556185255852372, -3.254262886438903)
   /// ```
-  factory Vector.randomFilled(int length, {
+  factory Vector.randomFilled(
+    int length, {
     int seed = 1,
     num min = 0,
     num max = 1,
@@ -222,8 +225,7 @@ abstract class Vector implements Iterable<double> {
         return Float32x4Vector.randomFilled(
           length,
           seed,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
           max: max,
           min: min,
         );
@@ -232,14 +234,14 @@ abstract class Vector implements Iterable<double> {
         return Float64x2Vector.randomFilled(
           length,
           seed,
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
           max: max,
           min: min,
         );
 
       default:
-        throw UnimplementedError('Vector of $dtype type is not implemented yet');
+        throw UnimplementedError(
+            'Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -264,18 +266,17 @@ abstract class Vector implements Iterable<double> {
     switch (dtype) {
       case DType.float32:
         return Float32x4Vector.empty(
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       case DType.float64:
         return Float64x2Vector.empty(
-          CacheManagerFactoryImpl()
-              .create(vectorCacheKeys),
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
         );
 
       default:
-        throw UnimplementedError('Vector of $dtype type is not implemented yet');
+        throw UnimplementedError(
+            'Vector of $dtype type is not implemented yet');
     }
   }
 
@@ -328,7 +329,8 @@ abstract class Vector implements Iterable<double> {
   double dot(Vector vector);
 
   /// Returns a distance between [this] and [vector]
-  double distanceTo(Vector vector, {
+  double distanceTo(
+    Vector vector, {
     Distance distance = Distance.euclidean,
   });
 

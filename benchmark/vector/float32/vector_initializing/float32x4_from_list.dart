@@ -8,9 +8,10 @@ const amountOfElements = 10000000;
 class Float32x4VectorFromListBenchmark extends BenchmarkBase {
   Float32x4VectorFromListBenchmark()
       : super('Vector initialization (fromList), '
-      '$amountOfElements elements');
+            '$amountOfElements elements');
 
-  final _source = Vector.randomFilled(amountOfElements,
+  final _source = Vector.randomFilled(
+    amountOfElements,
     seed: 1,
     min: -1000,
     max: 1000,

@@ -16,15 +16,14 @@ class Float32MatrixSampleBenchmark extends BenchmarkBase {
     dtype: DType.float32,
   );
 
-  final _rowIndices = Vector
-      .randomFilled(numOfRows, min: 0, max: numOfRows)
+  final _rowIndices = Vector.randomFilled(numOfRows, min: 0, max: numOfRows)
       .map((el) => el.floor())
       .toList();
 
-  final _columnIndices = Vector
-      .randomFilled(numOfColumns, min: 0, max: numOfColumns)
-      .map((el) => el.floor())
-      .toList();
+  final _columnIndices =
+      Vector.randomFilled(numOfColumns, min: 0, max: numOfColumns)
+          .map((el) => el.floor())
+          .toList();
 
   static void main() {
     Float32MatrixSampleBenchmark().report();
@@ -33,8 +32,8 @@ class Float32MatrixSampleBenchmark extends BenchmarkBase {
   @override
   void run() {
     _source.sample(
-        rowIndices: _rowIndices,
-        columnIndices: _columnIndices,
+      rowIndices: _rowIndices,
+      columnIndices: _columnIndices,
     );
   }
 }

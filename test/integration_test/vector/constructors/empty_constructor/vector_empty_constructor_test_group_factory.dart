@@ -15,7 +15,8 @@ void vectorEmptyConstructorTestGroupFactory(DType dtype) =>
           expect(vector.dtype, dtype);
         });
 
-        test('should create a vector that throws an exception if one tries to'
+        test(
+            'should create a vector that throws an exception if one tries to'
             'access its elements by index', () {
           final vector = Vector.empty(dtype: dtype);
 

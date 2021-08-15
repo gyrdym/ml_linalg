@@ -7,8 +7,9 @@ import 'package:benchmark_harness/benchmark_harness.dart';
 const amountOfElements = 10000000;
 
 class RegularListsAdditionBenchmark extends BenchmarkBase {
-  RegularListsAdditionBenchmark() : super('Regular lists addition; '
-      '$amountOfElements elements');
+  RegularListsAdditionBenchmark()
+      : super('Regular lists addition; '
+            '$amountOfElements elements');
 
   late List<double> list1;
   late List<double> list2;
@@ -29,11 +30,11 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
   void setup() {
     final generator = Random(13);
 
-    list1 = List.generate(amountOfElements,
-            (_) => generator.nextDouble() * 2000 - 1000);
+    list1 = List.generate(
+        amountOfElements, (_) => generator.nextDouble() * 2000 - 1000);
 
-    list2 = List.generate(amountOfElements,
-            (_) => generator.nextDouble() * 2000 - 1000);
+    list2 = List.generate(
+        amountOfElements, (_) => generator.nextDouble() * 2000 - 1000);
   }
 }
 

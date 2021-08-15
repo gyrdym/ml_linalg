@@ -53,7 +53,8 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should throw an error if one tries to divide a matrix by a '
+        test(
+            'should throw an error if one tries to divide a matrix by a '
             'vector of unproper length', () {
           final matrix = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
@@ -61,14 +62,15 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
             [9.0, .0, -2.0, -3.0],
           ], dtype: dtype);
 
-          final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0], dtype: dtype);
 
           expect(() => matrix / vector,
               throwsA(isA<MatrixDivisionByVectorException>()));
         });
 
-        test('should throw an error if one tries to divide a square matrix '
+        test(
+            'should throw an error if one tries to divide a square matrix '
             'by a vector', () {
           final matrix = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
@@ -77,8 +79,7 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
             [9.0, .0, -2.0, -3.0],
           ], dtype: dtype);
 
-          final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0],
-              dtype: dtype);
+          final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0], dtype: dtype);
 
           expect(() => matrix / vector,
               throwsA(isA<SquareMatrixDivisionByVectorException>()));
@@ -111,8 +112,9 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should throw an error if one tries to divide a matrix by another '
-            'matrix of unproper shape', () {
+        test(
+            'should throw an error if one tries to divide a matrix by another '
+            'matrix of improper shape', () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
             [5.0, 6.0, 7.0, 8.0],

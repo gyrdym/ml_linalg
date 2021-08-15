@@ -7,7 +7,8 @@ import '../../../../dtype_to_title.dart';
 void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('empty constructor', () {
-        test('should create a matrix with both rowsNum and columnsNum '
+        test(
+            'should create a matrix with both rowsNum and columnsNum '
             'equal 0', () {
           final matrix = Matrix.empty(dtype: dtype);
 
@@ -15,7 +16,8 @@ void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
           expect(matrix.columnsNum, 0);
         });
 
-        test('should create a matrix with empty rows and colums '
+        test(
+            'should create a matrix with empty rows and colums '
             'collections', () {
           final matrix = Matrix.empty(dtype: dtype);
 
@@ -24,7 +26,8 @@ void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
         });
 
-        test('should create a matrix that throws an exception if one tries to '
+        test(
+            'should create a matrix that throws an exception if one tries to '
             'access its elements by index', () {
           final matrix = Matrix.empty(dtype: dtype);
 

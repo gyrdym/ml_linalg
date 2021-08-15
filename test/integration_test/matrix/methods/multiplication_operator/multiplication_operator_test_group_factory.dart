@@ -30,7 +30,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should throw an error if one tries to multiple a matrix by a '
+        test(
+            'should throw an error if one tries to multiple a matrix by a '
             'vector of unproper length', () {
           final matrix = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
@@ -38,13 +39,14 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
             [9.0, .0, -2.0, -3.0],
           ], dtype: dtype);
 
-          final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([2.0, 3.0, 4.0, 5.0, 7.0], dtype: dtype);
 
           expect(() => matrix * vector, throwsException);
         });
 
-        test('should perform multiplication of a matrix and another matrix', () {
+        test('should perform multiplication of a matrix and another matrix',
+            () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
             [5.0, 6.0, 7.0, 8.0],
@@ -72,7 +74,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
-        test('should throw an error if one tries to multiplicate a matrix with '
+        test(
+            'should throw an error if one tries to multiplicate a matrix with '
             'another matrix of unproper dimensions', () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],

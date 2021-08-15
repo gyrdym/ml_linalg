@@ -11,9 +11,11 @@ void matrixRowConstructorTestGroupFactory(DType dtype) =>
           final source = [1.0, 2.0, 3.0, 4.0, 5.0];
           final matrix = Matrix.row(source, dtype: dtype);
 
-          expect(matrix, equals([
-            [1, 2, 3, 4, 5]
-          ]));
+          expect(
+              matrix,
+              equals([
+                [1, 2, 3, 4, 5]
+              ]));
 
           expect(matrix.columnsNum, 5);
           expect(matrix.rowsNum, 1);

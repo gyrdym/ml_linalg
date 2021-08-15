@@ -1,5 +1,8 @@
 # Changelog
 
+## 13.0.2
+- Error handling improvements
+
 ## 13.0.1
 - `pubspec.yaml`: 
     - `mockito` dependency updated

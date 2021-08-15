@@ -10,8 +10,8 @@ void vectorNormalizeTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {
       group('normalize method', () {
         test('should normalize itself (Eucleadean norm)', () {
-          final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
           final actual = vector.normalize(Norm.euclidean);
           final expected = [0.134, 0.269, 0.404, 0.539, 0.674];
 
@@ -21,8 +21,8 @@ void vectorNormalizeTestGroupFactory(DType dtype) =>
         });
 
         test('should normalize itself (Manhattan norm)', () {
-          final vector = Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([1.0, -2.0, 3.0, -4.0, 5.0], dtype: dtype);
           final actual = vector.normalize(Norm.manhattan);
           final expected = [1 / 15, -2 / 15, 3 / 15, -4 / 15, 5 / 15];
 
