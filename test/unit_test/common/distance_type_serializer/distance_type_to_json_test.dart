@@ -6,8 +6,8 @@ import 'package:test/test.dart';
 void main() {
   group('distanceTypeToJson', () {
     test('should encode cosine distance', () {
-      expect(distanceTypeToJson(Distance.cosine),
-          cosineDistanceTypeEncodedValue);
+      expect(
+          distanceTypeToJson(Distance.cosine), cosineDistanceTypeEncodedValue);
     });
 
     test('should encode Euclidean distance', () {

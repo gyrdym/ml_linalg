@@ -8,8 +8,7 @@ import 'package:ml_linalg/vector.dart';
 const size = 10000;
 
 class Float32MatrixDiagonalBenchmark extends BenchmarkBase {
-  Float32MatrixDiagonalBenchmark() :
-        super('Matrix initialization (diagonal)');
+  Float32MatrixDiagonalBenchmark() : super('Matrix initialization (diagonal)');
 
   late List<double> _source;
 

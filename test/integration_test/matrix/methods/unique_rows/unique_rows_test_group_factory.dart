@@ -7,7 +7,8 @@ import '../../../../dtype_to_title.dart';
 void matrixUniqueRowsTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('uniqueRows method', () {
-        test('should return all the matrix rows if the matrix does not have '
+        test(
+            'should return all the matrix rows if the matrix does not have '
             'repeating rows at all', () {
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],

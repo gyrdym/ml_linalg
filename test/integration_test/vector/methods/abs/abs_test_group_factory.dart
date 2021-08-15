@@ -9,8 +9,8 @@ void vectorAbsOperatorTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {
       group('abs method', () {
         test('should find vector elements absolute value', () {
-          final vector = Vector.fromList([-3.0, 4.5, -12.0, -23.5, 44.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([-3.0, 4.5, -12.0, -23.5, 44.0], dtype: dtype);
           final result = vector.abs();
 
           expect(result, equals([3.0, 4.5, 12.0, 23.5, 44.0]));

@@ -9,7 +9,7 @@ const amountOfElements = 10000000;
 class Float32x4VectorAndScalarAdditionBenchmark extends BenchmarkBase {
   Float32x4VectorAndScalarAdditionBenchmark()
       : super('Vector `+` operator, operands: vector, scalar; '
-      '$amountOfElements elements');
+            '$amountOfElements elements');
 
   late Vector vector;
 
@@ -25,7 +25,8 @@ class Float32x4VectorAndScalarAdditionBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    vector = Vector.randomFilled(amountOfElements,
+    vector = Vector.randomFilled(
+      amountOfElements,
       seed: 1,
       min: -1000,
       max: 1000,

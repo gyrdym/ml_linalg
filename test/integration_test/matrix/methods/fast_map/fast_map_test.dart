@@ -17,8 +17,8 @@ void main() {
     group('fastMap method', () {
       test('should map the matrix elements row-wise 4 elements a time', () {
         final matrix = createOriginalData(DType.float32);
-        final actual = matrix
-            .fastMap((Float32x4 element) => element.scale(4.0));
+        final actual =
+            matrix.fastMap((Float32x4 element) => element.scale(4.0));
 
         expect(actual, equals(expected));
         expect(actual.rowsNum, 3);
@@ -32,8 +32,8 @@ void main() {
     group('fastMap method', () {
       test('should map the matrix elements row-wise 2 elements a time', () {
         final matrix = createOriginalData(DType.float64);
-        final actual = matrix
-            .fastMap((Float64x2 element) => element.scale(4.0));
+        final actual =
+            matrix.fastMap((Float64x2 element) => element.scale(4.0));
 
         expect(actual, equals(expected));
         expect(actual.rowsNum, 3);
@@ -44,8 +44,7 @@ void main() {
   });
 }
 
-Matrix createOriginalData(DType dtype) =>
-    Matrix.fromList([
+Matrix createOriginalData(DType dtype) => Matrix.fromList([
       [1.0, 2.0, 3.0, 4.0, 5.0],
       [5.0, 6.0, 7.0, 8.0, 9.0],
       [9.0, .0, -2.0, -3.0, -7.0],

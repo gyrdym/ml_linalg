@@ -12,8 +12,8 @@ class Float32MatrixLogBenchmark extends BenchmarkBase {
   Float32MatrixLogBenchmark() : super('Matrix log method');
 
   final Matrix _source = Matrix.fromRows(
-    List<Vector>.filled(numOfRows, Vector.randomFilled(
-        numOfColumns, min: -1000, max: 1000)),
+    List<Vector>.filled(
+        numOfRows, Vector.randomFilled(numOfColumns, min: -1000, max: 1000)),
     dtype: DType.float32,
   );
 

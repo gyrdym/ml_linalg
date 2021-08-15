@@ -8,8 +8,8 @@ void vectorMapToVectorTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {
       group('mapToVector method', () {
         test('should map to another vector', () {
-          final vector = Vector.fromList([10.0, 12.0, 4.0, 7.0, 9.0, 12.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([10.0, 12.0, 4.0, 7.0, 9.0, 12.0], dtype: dtype);
           final actual = vector.mapToVector((el) => el * 2);
 
           expect(actual, [20, 24, 8, 14, 18, 24]);

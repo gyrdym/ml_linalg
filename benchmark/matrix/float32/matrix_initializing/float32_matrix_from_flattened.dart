@@ -9,8 +9,8 @@ const numOfRows = 10000;
 const numOfColumns = 1000;
 
 class Float32MatrixFromFlattenedBenchmark extends BenchmarkBase {
-  Float32MatrixFromFlattenedBenchmark() :
-        super('Matrix initialization (fromFlattenedList)');
+  Float32MatrixFromFlattenedBenchmark()
+      : super('Matrix initialization (fromFlattenedList)');
 
   late List<double> _source;
 
@@ -26,8 +26,9 @@ class Float32MatrixFromFlattenedBenchmark extends BenchmarkBase {
 
   @override
   void setup() {
-    _source = Vector.randomFilled(numOfRows * numOfColumns, min: -1000, max: 1000)
-        .toList(growable: false);
+    _source =
+        Vector.randomFilled(numOfRows * numOfColumns, min: -1000, max: 1000)
+            .toList(growable: false);
   }
 }
 

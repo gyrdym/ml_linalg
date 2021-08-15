@@ -18,7 +18,8 @@ class Float32x4VectorHashCodeBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    Vector.randomFilled(amountOfElements,
+    Vector.randomFilled(
+      amountOfElements,
       seed: 1,
       min: -1000,
       max: 1000,

@@ -33,7 +33,8 @@ void matrixFromJsonTestGroupFactory(DType dtype) {
         expect(matrix, data);
       });
 
-      test('should create a matrix from serializable map containing empty data', () {
+      test('should create a matrix from serializable map containing empty data',
+          () {
         final matrix = Matrix.fromJson(serializableMapWithEmptyData);
 
         expect(matrix.dtype, dtype);

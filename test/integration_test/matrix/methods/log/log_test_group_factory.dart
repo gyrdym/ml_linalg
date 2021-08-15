@@ -10,7 +10,8 @@ import '../../../../helpers.dart';
 void matrixLogTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('log method', () {
-        test('should take a natural log of every matrix element and return '
+        test(
+            'should take a natural log of every matrix element and return '
             'new matrix', () {
           final matrix = Matrix.fromList([
             [1, 2, 3, 4],
@@ -18,10 +19,12 @@ void matrixLogTestGroupFactory(DType dtype) =>
           ], dtype: dtype);
           final result = matrix.log();
 
-          expect(result, iterable2dAlmostEqualTo([
-            [math.log(1), math.log(2), math.log(3), math.log(4)],
-            [math.log(5), math.log(6), math.log(7), math.log(8)],
-          ], 1e-3));
+          expect(
+              result,
+              iterable2dAlmostEqualTo([
+                [math.log(1), math.log(2), math.log(3), math.log(4)],
+                [math.log(5), math.log(6), math.log(7), math.log(8)],
+              ], 1e-3));
           expect(result.dtype, dtype);
         });
 
@@ -32,12 +35,14 @@ void matrixLogTestGroupFactory(DType dtype) =>
           ], dtype: dtype);
           final result = matrix.log();
 
-          expect(result, iterable2dAlmostEqualTo([
-            [math.log(1), math.log(5)],
-            [math.log(2), math.log(6)],
-            [math.log(3), math.log(7)],
-            [math.log(4), math.log(8)],
-          ], 1e-3));
+          expect(
+              result,
+              iterable2dAlmostEqualTo([
+                [math.log(1), math.log(5)],
+                [math.log(2), math.log(6)],
+                [math.log(3), math.log(7)],
+                [math.log(4), math.log(8)],
+              ], 1e-3));
           expect(result.dtype, dtype);
         });
 

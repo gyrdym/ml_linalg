@@ -29,7 +29,8 @@ void matrixToStringTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
         });
 
-        test('should provide readable string representation for Nx1 matrix, '
+        test(
+            'should provide readable string representation for Nx1 matrix, '
             'created from iterable', () {
           final matrix = Matrix.fromList([
             [4.0],
@@ -51,10 +52,11 @@ void matrixToStringTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
         });
 
-        test('should provide readable string representation for Nx1 matrix, '
+        test(
+            'should provide readable string representation for Nx1 matrix, '
             'created from columns constructor', () {
-          final vector = Vector.fromList(
-              [4.0, 20.0, 36.0, 16.0, 112.0], dtype: dtype);
+          final vector =
+              Vector.fromList([4.0, 20.0, 36.0, 16.0, 112.0], dtype: dtype);
           final matrix = Matrix.fromColumns([vector], dtype: dtype);
 
           final actual = matrix.toString();
@@ -70,7 +72,8 @@ void matrixToStringTestGroupFactory(DType dtype) =>
           expect(vector.dtype, dtype);
         });
 
-        test('should provide readable string representation for 1xN matrix, '
+        test(
+            'should provide readable string representation for 1xN matrix, '
             'created from iterable', () {
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -85,12 +88,12 @@ void matrixToStringTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
         });
 
-        test('should provide readable string representation for 1xN matrix, '
+        test(
+            'should provide readable string representation for 1xN matrix, '
             'created from rows constructor', () {
-          final vector = Vector.fromList(
-              [4.0, 8.0, 12.0, 16.0, 34.0], dtype: dtype);
-          final matrix = Matrix.fromRows(
-              [vector], dtype: dtype);
+          final vector =
+              Vector.fromList([4.0, 8.0, 12.0, 16.0, 34.0], dtype: dtype);
+          final matrix = Matrix.fromRows([vector], dtype: dtype);
 
           final actual = matrix.toString();
           final expected = 'Matrix 1 x 5:\n'

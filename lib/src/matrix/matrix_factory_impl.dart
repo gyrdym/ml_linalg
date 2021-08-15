@@ -29,7 +29,8 @@ class MatrixFactoryImpl implements MatrixFactory {
         );
 
       default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -49,7 +50,8 @@ class MatrixFactoryImpl implements MatrixFactory {
         );
 
       default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -69,7 +71,8 @@ class MatrixFactoryImpl implements MatrixFactory {
         );
 
       default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -89,13 +92,14 @@ class MatrixFactoryImpl implements MatrixFactory {
         );
 
       default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
     }
   }
 
   @override
-  Matrix fromFlattenedList(DType dtype, List<double> source, int rowsNum,
-      int columnsNum) {
+  Matrix fromFlattenedList(
+      DType dtype, List<double> source, int rowsNum, int columnsNum) {
     switch (dtype) {
       case DType.float32:
         return MatrixImpl(
@@ -110,7 +114,8 @@ class MatrixFactoryImpl implements MatrixFactory {
         );
 
       default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -130,7 +135,8 @@ class MatrixFactoryImpl implements MatrixFactory {
         );
 
       default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -150,7 +156,8 @@ class MatrixFactoryImpl implements MatrixFactory {
         );
 
       default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -170,7 +177,8 @@ class MatrixFactoryImpl implements MatrixFactory {
         );
 
       default:
-        throw UnimplementedError('Matrix of type $dtype is not implemented yet');
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
     }
   }
 
@@ -179,15 +187,15 @@ class MatrixFactoryImpl implements MatrixFactory {
     switch (dtype) {
       case DType.float32:
         return MatrixImpl(
-          Float32MatrixDataManager
-              .fromRows([Vector.fromList(source, dtype: dtype)]),
+          Float32MatrixDataManager.fromRows(
+              [Vector.fromList(source, dtype: dtype)]),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
         return MatrixImpl(
-          Float64MatrixDataManager
-              .fromRows([Vector.fromList(source, dtype: dtype)]),
+          Float64MatrixDataManager.fromRows(
+              [Vector.fromList(source, dtype: dtype)]),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
@@ -202,15 +210,15 @@ class MatrixFactoryImpl implements MatrixFactory {
     switch (dtype) {
       case DType.float32:
         return MatrixImpl(
-          Float32MatrixDataManager
-              .fromColumns(([Vector.fromList(source, dtype: dtype)])),
+          Float32MatrixDataManager.fromColumns(
+              ([Vector.fromList(source, dtype: dtype)])),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
         return MatrixImpl(
-          Float64MatrixDataManager
-              .fromColumns(([Vector.fromList(source, dtype: dtype)])),
+          Float64MatrixDataManager.fromColumns(
+              ([Vector.fromList(source, dtype: dtype)])),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 

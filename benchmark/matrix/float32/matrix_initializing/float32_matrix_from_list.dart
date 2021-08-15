@@ -9,13 +9,12 @@ const numOfRows = 10000;
 const numOfColumns = 1000;
 
 class Float32MatrixFromListBenchmark extends BenchmarkBase {
-  Float32MatrixFromListBenchmark() :
-        super('Matrix initialization (fromList)');
+  Float32MatrixFromListBenchmark() : super('Matrix initialization (fromList)');
 
-  final _source = List.filled(numOfRows,
-      Vector
-          .randomFilled(numOfColumns, min: -10000, max: 10000)
-          .toList(growable: false),
+  final _source = List.filled(
+    numOfRows,
+    Vector.randomFilled(numOfColumns, min: -10000, max: 10000)
+        .toList(growable: false),
   );
 
   static void main() {

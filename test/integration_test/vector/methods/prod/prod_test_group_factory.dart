@@ -8,32 +8,29 @@ void vectorProdTestGroupFactory(DType dtype) =>
     group(dtypeToVectorTestTitle[dtype], () {
       group('prod method', () {
         test('should multiply all the vector elements, case 1', () {
-          final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
           expect(vector.prod(), 120);
         });
 
         test('should multiply all the vector elements, case 2', () {
-          final vector = Vector.fromList([-1.0, 20.0, 4.5],
-              dtype: dtype);
+          final vector = Vector.fromList([-1.0, 20.0, 4.5], dtype: dtype);
           expect(vector.prod(), -90);
         });
 
         test('should handle a vector of just one element', () {
-          final vector = Vector.fromList([-1034.5],
-              dtype: dtype);
+          final vector = Vector.fromList([-1034.5], dtype: dtype);
           expect(vector.prod(), -1034.5);
         });
 
         test('should handle a vector with zeroes', () {
-          final vector = Vector.fromList([1.0, 2.0, 3.0, 0.0, 4.0, 5.0],
-              dtype: dtype);
+          final vector =
+              Vector.fromList([1.0, 2.0, 3.0, 0.0, 4.0, 5.0], dtype: dtype);
           expect(vector.prod(), 0.0);
         });
 
         test('should handle a vector with all zero values', () {
-          final vector = Vector.fromList([0.0, 0.0, 0.0],
-              dtype: dtype);
+          final vector = Vector.fromList([0.0, 0.0, 0.0], dtype: dtype);
           expect(vector.prod(), 0.0);
         });
 

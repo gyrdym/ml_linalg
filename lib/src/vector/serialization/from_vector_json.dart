@@ -12,7 +12,7 @@ Vector? fromVectorJson(Map<String, dynamic>? json) {
       .map((dynamic value) => double.parse(value.toString()))
       .toList(growable: false);
 
-  switch(json[vectorDTypeJsonKey] as String?) {
+  switch (json[vectorDTypeJsonKey] as String?) {
     case dTypeFloat32EncodedValue:
       return Vector.fromList(source, dtype: DType.float32);
 

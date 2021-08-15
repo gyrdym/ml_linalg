@@ -9,13 +9,12 @@ final _defaultMapping = {
 };
 
 Future<Null> generateClassFromTemplate(
-    String targetFileName,
-    String templateFileName,
-    {
-      Map<Pattern, String Function(Match)>? mapping,
-      String comment = '/* This file is auto generated, do not change it manually */\n\n',
-    }
-) async {
+  String targetFileName,
+  String templateFileName, {
+  Map<Pattern, String Function(Match)>? mapping,
+  String comment =
+      '/* This file is auto generated, do not change it manually */\n\n',
+}) async {
   final targetFile = File(targetFileName);
 
   if (targetFile.existsSync()) {
@@ -34,8 +33,7 @@ Future<Null> _processFile(String targetFileName, String inputFileName,
     Map<Pattern, String Function(Match)> mapping, String comment) async {
   final inputFile = File(inputFileName);
   final input = await inputFile.readAsString();
-  final output =
-      '$comment${_convertTemplateToTargetClass(input, mapping)}';
+  final output = '$comment${_convertTemplateToTargetClass(input, mapping)}';
   final outputFileName = targetFileName;
   final dir = Directory(p.dirname(outputFileName));
 
@@ -46,7 +44,9 @@ Future<Null> _processFile(String targetFileName, String inputFileName,
   await outputFile.writeAsString(output);
 }
 
-String _convertTemplateToTargetClass(String input,
-    Map<Pattern, String Function(Match)> mapping) =>
-    mapping.entries.fold(input, (processedInput, entry) =>
-        processedInput.replaceAllMapped(entry.key, entry.value));
+String _convertTemplateToTargetClass(
+        String input, Map<Pattern, String Function(Match)> mapping) =>
+    mapping.entries.fold(
+        input,
+        (processedInput, entry) =>
+            processedInput.replaceAllMapped(entry.key, entry.value));

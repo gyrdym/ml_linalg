@@ -16,19 +16,21 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 34.0, 2.0, 10.0],
           ], dtype: dtype);
 
-          final newCol = Vector.fromList(
-              [100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype);
+          final newCol = Vector.fromList([100.0, 200.0, 300.0, 400.0, 500.0],
+              dtype: dtype);
           final newMatrix = matrix.insertColumns(1, [newCol]);
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-          expect(newMatrix, equals([
-            [4.0, 100.0, 8.0, 12.0, 16.0, 34.0],
-            [20.0, 200.0, 24.0, 28.0, 32.0, 23.0],
-            [36.0, 300.0, .0, -8.0, -12.0, 12.0],
-            [16.0, 400.0, 1.0, -18.0, 3.0, 11.0],
-            [112.0, 500.0, 10.0, 34.0, 2.0, 10.0],
-          ]));
+          expect(
+              newMatrix,
+              equals([
+                [4.0, 100.0, 8.0, 12.0, 16.0, 34.0],
+                [20.0, 200.0, 24.0, 28.0, 32.0, 23.0],
+                [36.0, 300.0, .0, -8.0, -12.0, 12.0],
+                [16.0, 400.0, 1.0, -18.0, 3.0, 11.0],
+                [112.0, 500.0, 10.0, 34.0, 2.0, 10.0],
+              ]));
         });
 
         test('should insert a new column at the very first index', () {
@@ -40,19 +42,21 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 34.0, 2.0, 10.0],
           ], dtype: dtype);
 
-          final newCol = Vector.fromList(
-              [100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype);
+          final newCol = Vector.fromList([100.0, 200.0, 300.0, 400.0, 500.0],
+              dtype: dtype);
           final newMatrix = matrix.insertColumns(0, [newCol]);
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-          expect(newMatrix, equals([
-            [100.0, 4.0, 8.0, 12.0, 16.0, 34.0],
-            [200.0, 20.0, 24.0, 28.0, 32.0, 23.0],
-            [300.0, 36.0, .0, -8.0, -12.0, 12.0],
-            [400.0, 16.0, 1.0, -18.0, 3.0, 11.0],
-            [500.0, 112.0, 10.0, 34.0, 2.0, 10.0],
-          ]));
+          expect(
+              newMatrix,
+              equals([
+                [100.0, 4.0, 8.0, 12.0, 16.0, 34.0],
+                [200.0, 20.0, 24.0, 28.0, 32.0, 23.0],
+                [300.0, 36.0, .0, -8.0, -12.0, 12.0],
+                [400.0, 16.0, 1.0, -18.0, 3.0, 11.0],
+                [500.0, 112.0, 10.0, 34.0, 2.0, 10.0],
+              ]));
         });
 
         test('should set a new column at penultimate index', () {
@@ -69,13 +73,15 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-          expect(newMatrix, equals([
-            [4.0, 8.0, 12.0, 16.0, 100.0, 34.0],
-            [20.0, 24.0, 28.0, 32.0, 200.0, 23.0],
-            [36.0, .0, -8.0, -12.0, 300.0, 12.0],
-            [16.0, 1.0, -18.0, 3.0, 400.0, 11.0],
-            [112.0, 10.0, 34.0, 2.0, 500.0, 10.0],
-          ]));
+          expect(
+              newMatrix,
+              equals([
+                [4.0, 8.0, 12.0, 16.0, 100.0, 34.0],
+                [20.0, 24.0, 28.0, 32.0, 200.0, 23.0],
+                [36.0, .0, -8.0, -12.0, 300.0, 12.0],
+                [16.0, 1.0, -18.0, 3.0, 400.0, 11.0],
+                [112.0, 10.0, 34.0, 2.0, 500.0, 10.0],
+              ]));
         });
 
         test('should set a new column at very last index', () {
@@ -87,19 +93,21 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 34.0, 2.0, 10.0],
           ], dtype: dtype);
 
-          final newCol = Vector.fromList(
-              [100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype);
+          final newCol = Vector.fromList([100.0, 200.0, 300.0, 400.0, 500.0],
+              dtype: dtype);
           final newMatrix = matrix.insertColumns(5, [newCol]);
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-          expect(newMatrix, equals([
-            [4.0, 8.0, 12.0, 16.0, 34.0, 100.0],
-            [20.0, 24.0, 28.0, 32.0, 23.0, 200.0],
-            [36.0, .0, -8.0, -12.0, 12.0, 300.0],
-            [16.0, 1.0, -18.0, 3.0, 11.0, 400.0],
-            [112.0, 10.0, 34.0, 2.0, 10.0, 500.0],
-          ]));
+          expect(
+              newMatrix,
+              equals([
+                [4.0, 8.0, 12.0, 16.0, 34.0, 100.0],
+                [20.0, 24.0, 28.0, 32.0, 23.0, 200.0],
+                [36.0, .0, -8.0, -12.0, 12.0, 300.0],
+                [16.0, 1.0, -18.0, 3.0, 11.0, 400.0],
+                [112.0, 10.0, 34.0, 2.0, 10.0, 500.0],
+              ]));
         });
 
         test('should insert new columns by column index', () {
@@ -112,10 +120,9 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
           ], dtype: dtype);
 
           final newCols = [
-            Vector.fromList(
-                [100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype),
-            Vector.fromList(
-                [-100.0, -200.0, -300.0, -400.0, -500.0], dtype: dtype),
+            Vector.fromList([100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype),
+            Vector.fromList([-100.0, -200.0, -300.0, -400.0, -500.0],
+                dtype: dtype),
           ];
           final newMatrix = matrix.insertColumns(1, newCols);
 
@@ -127,13 +134,15 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
 
-          expect(newMatrix, equals([
-            [4.0, 100.0, -100.0, 8.0, 12.0, 16.0, 34.0],
-            [20.0, 200.0, -200.0, 24.0, 28.0, 32.0, 23.0],
-            [36.0, 300.0, -300.0, .0, -8.0, -12.0, 12.0],
-            [16.0, 400.0, -400.0, 1.0, -18.0, 3.0, 11.0],
-            [112.0, 500.0, -500.0, 10.0, 34.0, 2.0, 10.0],
-          ]));
+          expect(
+              newMatrix,
+              equals([
+                [4.0, 100.0, -100.0, 8.0, 12.0, 16.0, 34.0],
+                [20.0, 200.0, -200.0, 24.0, 28.0, 32.0, 23.0],
+                [36.0, 300.0, -300.0, .0, -8.0, -12.0, 12.0],
+                [16.0, 400.0, -400.0, 1.0, -18.0, 3.0, 11.0],
+                [112.0, 500.0, -500.0, 10.0, 34.0, 2.0, 10.0],
+              ]));
         });
 
         test('should insert new columns at the very first index', () {
@@ -145,23 +154,24 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 34.0, 2.0, 10.0],
           ], dtype: dtype);
           final newCols = [
-            Vector.fromList(
-                [100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype),
-            Vector.fromList(
-                [-100.0, -200.0, -300.0, -400.0, -500.0], dtype: dtype),
+            Vector.fromList([100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype),
+            Vector.fromList([-100.0, -200.0, -300.0, -400.0, -500.0],
+                dtype: dtype),
           ];
 
           final newMatrix = matrix.insertColumns(0, newCols);
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-          expect(newMatrix, equals([
-            [100.0, -100.0, 4.0, 8.0, 12.0, 16.0, 34.0],
-            [200.0, -200.0, 20.0, 24.0, 28.0, 32.0, 23.0],
-            [300.0, -300.0, 36.0, .0, -8.0, -12.0, 12.0],
-            [400.0, -400.0, 16.0, 1.0, -18.0, 3.0, 11.0],
-            [500.0, -500.0, 112.0, 10.0, 34.0, 2.0, 10.0],
-          ]));
+          expect(
+              newMatrix,
+              equals([
+                [100.0, -100.0, 4.0, 8.0, 12.0, 16.0, 34.0],
+                [200.0, -200.0, 20.0, 24.0, 28.0, 32.0, 23.0],
+                [300.0, -300.0, 36.0, .0, -8.0, -12.0, 12.0],
+                [400.0, -400.0, 16.0, 1.0, -18.0, 3.0, 11.0],
+                [500.0, -500.0, 112.0, 10.0, 34.0, 2.0, 10.0],
+              ]));
         });
 
         test('should set new columns at penultimate index', () {
@@ -173,19 +183,21 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 34.0, 2.0, 10.0],
           ], dtype: dtype);
 
-          final newCol = Vector.fromList(
-              [100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype);
+          final newCol = Vector.fromList([100.0, 200.0, 300.0, 400.0, 500.0],
+              dtype: dtype);
           final newMatrix = matrix.insertColumns(4, [newCol]);
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-          expect(newMatrix, equals([
-            [4.0, 8.0, 12.0, 16.0, 100.0, 34.0],
-            [20.0, 24.0, 28.0, 32.0, 200.0, 23.0],
-            [36.0, .0, -8.0, -12.0, 300.0, 12.0],
-            [16.0, 1.0, -18.0, 3.0, 400.0, 11.0],
-            [112.0, 10.0, 34.0, 2.0, 500.0, 10.0],
-          ]));
+          expect(
+              newMatrix,
+              equals([
+                [4.0, 8.0, 12.0, 16.0, 100.0, 34.0],
+                [20.0, 24.0, 28.0, 32.0, 200.0, 23.0],
+                [36.0, .0, -8.0, -12.0, 300.0, 12.0],
+                [16.0, 1.0, -18.0, 3.0, 400.0, 11.0],
+                [112.0, 10.0, 34.0, 2.0, 500.0, 10.0],
+              ]));
         });
 
         test('should set new columns at very last index', () {
@@ -197,22 +209,23 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 34.0, 2.0, 10.0],
           ], dtype: dtype);
           final newCols = [
-            Vector.fromList(
-                [100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype),
-            Vector.fromList(
-                [-100.0, -200.0, -300.0, -400.0, -500.0], dtype: dtype),
+            Vector.fromList([100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype),
+            Vector.fromList([-100.0, -200.0, -300.0, -400.0, -500.0],
+                dtype: dtype),
           ];
           final newMatrix = matrix.insertColumns(5, newCols);
 
           expect(matrix.dtype, dtype);
           expect(newMatrix.dtype, dtype);
-          expect(newMatrix, equals([
-            [4.0, 8.0, 12.0, 16.0, 34.0, 100.0, -100.0],
-            [20.0, 24.0, 28.0, 32.0, 23.0, 200.0, -200.0],
-            [36.0, .0, -8.0, -12.0, 12.0, 300.0, -300.0],
-            [16.0, 1.0, -18.0, 3.0, 11.0, 400.0, -400.0],
-            [112.0, 10.0, 34.0, 2.0, 10.0, 500.0, -500.0],
-          ]));
+          expect(
+              newMatrix,
+              equals([
+                [4.0, 8.0, 12.0, 16.0, 34.0, 100.0, -100.0],
+                [20.0, 24.0, 28.0, 32.0, 23.0, 200.0, -200.0],
+                [36.0, .0, -8.0, -12.0, 12.0, 300.0, -300.0],
+                [16.0, 1.0, -18.0, 3.0, 11.0, 400.0, -400.0],
+                [112.0, 10.0, 34.0, 2.0, 10.0, 500.0, -500.0],
+              ]));
         });
 
         test('should throw an error if new column has invalid length', () {
@@ -225,12 +238,14 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
           ], dtype: dtype);
 
           final newCol = Vector.fromList(
-              [100.0, 200.0, 300.0, 400.0, 500.0, 1000.0], dtype: dtype);
+              [100.0, 200.0, 300.0, 400.0, 500.0, 1000.0],
+              dtype: dtype);
 
           expect(() => matrix.insertColumns(4, [newCol]), throwsException);
         });
 
-        test('should throw an error if the passed column index is greater than or '
+        test(
+            'should throw an error if the passed column index is greater than or '
             'equal to the total number of new columns', () {
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0, 34.0],
@@ -240,8 +255,8 @@ void matrixInsertColumnsTestGroupFactory(DType dtype) =>
             [112.0, 10.0, 34.0, 2.0, 10.0],
           ], dtype: dtype);
 
-          final newCol = Vector.fromList(
-              [100.0, 200.0, 300.0, 400.0, 500.0], dtype: dtype);
+          final newCol = Vector.fromList([100.0, 200.0, 300.0, 400.0, 500.0],
+              dtype: dtype);
 
           expect(() => matrix.insertColumns(6, [newCol]), throwsRangeError);
         });

@@ -9,7 +9,8 @@ import '../../../../dtype_to_title.dart';
 void main() {
   group(dtypeToVectorTestTitle[DType.float32], () {
     group('fastMap method', () {
-      test('should map an existing vector to a new one processing 4 elements in '
+      test(
+          'should map an existing vector to a new one processing 4 elements in '
           'a time', () {
         final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
             dtype: DType.float32);
@@ -31,7 +32,8 @@ void main() {
 
   group(dtypeToVectorTestTitle[DType.float64], () {
     group('fastMap method', () {
-      test('should map an existing vector to a new one processing 2 elements in '
+      test(
+          'should map an existing vector to a new one processing 2 elements in '
           'a time', () {
         final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 9.0],
             dtype: DType.float64);

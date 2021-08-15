@@ -7,6 +7,13 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
+import 'package:ml_linalg/src/common/exception/unsupported_operand_type_exception.dart';
+import 'package:ml_linalg/src/vector/exception/cosine_of_zero_vector_exception.dart';
+import 'package:ml_linalg/src/vector/exception/empty_vector_exception.dart';
+import 'package:ml_linalg/src/vector/exception/matrix_rows_and_vector_length_mismatch_exception.dart';
+import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
+import 'package:ml_linalg/src/vector/exception/unsupported_distance_type_exception.dart';
+import 'package:ml_linalg/src/vector/exception/unsupported_norm_type_exception.dart';
 import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
 import 'package:ml_linalg/src/vector/simd_helper/float32x4_helper.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
@@ -14,40 +21,37 @@ import 'package:ml_linalg/vector.dart';
 
 const _bytesPerElement = Float32List.bytesPerElement;
 const _bytesPerSimdElement = Float32x4List.bytesPerElement;
-const _bucketSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
+const _bucketSize =
+    Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
 final _simdOnes = Float32x4.splat(1.0);
 
-class Float32x4Vector
-    with
-        IterableMixin<double>
-    implements
-        Vector {
-
-  Float32x4Vector.fromList(List<num> source, this._cacheManager) :
-        length = source.length,
+class Float32x4Vector with IterableMixin<double> implements Vector {
+  Float32x4Vector.fromList(List<num> source, this._cacheManager)
+      : length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(source.length, _bucketSize) *
-            _bytesPerSimdElement).buffer {
-
+                _bytesPerSimdElement)
+            .buffer {
     for (var i = 0; i < length; i++) {
-      _buffer.asByteData().setFloat32(_bytesPerElement * i,
-        source[i].toDouble(), Endian.host);
+      _buffer
+          .asByteData()
+          .setFloat32(_bytesPerElement * i, source[i].toDouble(), Endian.host);
     }
   }
 
   Float32x4Vector.randomFilled(
-      this.length,
-      int seed,
-      this._cacheManager, {
-        num min = 0,
-        num max = 1,
-      }) :
-        _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
-            _bytesPerSimdElement).buffer {
-
+    this.length,
+    int seed,
+    this._cacheManager, {
+    num min = 0,
+    num max = 1,
+  })  : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
+        _buffer = ByteData(
+                _getNumOfBuckets(length, _bucketSize) * _bytesPerSimdElement)
+            .buffer {
     if (min >= max) {
-      throw ArgumentError.value(min, 'Argument `min` should be less than `max`');
+      throw ArgumentError.value(min,
+          'Argument `min` should be less than `max`, min: $min, max: $max');
     }
 
     final generator = math.Random(seed);
@@ -55,41 +59,37 @@ class Float32x4Vector
 
     for (var i = 0; i < length; i++) {
       _buffer.asByteData().setFloat32(_bytesPerElement * i,
-        generator.nextDouble() * diff + min, Endian.host);
+          generator.nextDouble() * diff + min, Endian.host);
     }
   }
 
-  Float32x4Vector.filled(
-      this.length,
-      num value,
-      this._cacheManager) :
-        _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
-            _bytesPerSimdElement).buffer {
-
+  Float32x4Vector.filled(this.length, num value, this._cacheManager)
+      : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
+        _buffer = ByteData(
+                _getNumOfBuckets(length, _bucketSize) * _bytesPerSimdElement)
+            .buffer {
     for (var i = 0; i < length; i++) {
-      _buffer.asByteData().setFloat32(_bytesPerElement * i, value.toDouble(),
-          Endian.host);
+      _buffer
+          .asByteData()
+          .setFloat32(_bytesPerElement * i, value.toDouble(), Endian.host);
     }
   }
 
-  Float32x4Vector.zero(this.length, this._cacheManager) :
-        _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _buffer = ByteData(_getNumOfBuckets(length, _bucketSize) *
-            _bytesPerSimdElement).buffer;
+  Float32x4Vector.zero(this.length, this._cacheManager)
+      : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
+        _buffer = ByteData(
+                _getNumOfBuckets(length, _bucketSize) * _bytesPerSimdElement)
+            .buffer;
 
   Float32x4Vector.fromSimdList(
-      Float32x4List data,
-      this.length,
-      this._cacheManager) :
-        _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
+      Float32x4List data, this.length, this._cacheManager)
+      : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = data.buffer {
-
     _cachedInnerSimdList = data;
   }
 
-  Float32x4Vector.empty(this._cacheManager) :
-        length = 0,
+  Float32x4Vector.empty(this._cacheManager)
+      : length = 0,
         _numOfBuckets = 0,
         _buffer = ByteData(0).buffer;
 
@@ -123,40 +123,42 @@ class Float32x4Vector
       if (length != other.length) {
         return false;
       }
+
       for (var i = 0; i < _numOfBuckets; i++) {
-        if (!_simdHelper.areLanesEqual(_innerSimdList[i],
-            other._innerSimdList[i])) {
+        if (!_simdHelper.areLanesEqual(
+            _innerSimdList[i], other._innerSimdList[i])) {
           return false;
         }
       }
+
       return true;
     }
+
     return false;
   }
 
   @override
   int get hashCode => _cacheManager.retrieveValue(vectorHashKey, () {
-    if (isEmpty) {
-      return 0;
-    }
+        if (isEmpty) {
+          return 0;
+        }
 
-    var i = 0;
+        var i = 0;
 
-    final summed = _innerSimdList.reduce(
-            (sum, element) => sum + element.scale((31 * (i++)) * 1.0));
+        final summed = _innerSimdList
+            .reduce((sum, element) => sum + element.scale((31 * (i++)) * 1.0));
 
-    return length + _simdHelper.sumLanesForHash(summed).hashCode;
-  }, skipCaching: false);
+        return length + _simdHelper.sumLanesForHash(summed).hashCode;
+      }, skipCaching: false);
 
   @override
   Vector operator +(Object value) {
     if (value is Vector || value is Matrix) {
-      final other = (value is Matrix
-          ? value.toVector()
-          : value) as Float32x4Vector;
+      final other =
+          (value is Matrix ? value.toVector() : value) as Float32x4Vector;
 
       if (other.length != length) {
-        throw _mismatchLengthError;
+        throw VectorsLengthMismatchException(length, other.length);
       }
 
       final source = Float32x4List(_numOfBuckets);
@@ -166,7 +168,6 @@ class Float32x4Vector
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
-
     }
 
     if (value is num) {
@@ -180,18 +181,17 @@ class Float32x4Vector
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+    throw UnsupportedOperandTypeException(value.runtimeType);
   }
 
   @override
   Vector operator -(Object value) {
     if (value is Vector || value is Matrix) {
-      final other = (value is Matrix
-          ? value.toVector()
-          : value) as Float32x4Vector;
+      final other =
+          (value is Matrix ? value.toVector() : value) as Float32x4Vector;
 
       if (other.length != length) {
-        throw _mismatchLengthError;
+        throw VectorsLengthMismatchException(length, other.length);
       }
 
       final source = Float32x4List(_numOfBuckets);
@@ -214,7 +214,7 @@ class Float32x4Vector
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+    throw UnsupportedOperandTypeException(value.runtimeType);
   }
 
   @override
@@ -223,7 +223,7 @@ class Float32x4Vector
       final other = value as Float32x4Vector;
 
       if (other.length != length) {
-        throw _mismatchLengthError;
+        throw VectorsLengthMismatchException(length, other.length);
       }
 
       final source = Float32x4List(_numOfBuckets);
@@ -249,7 +249,7 @@ class Float32x4Vector
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+    throw UnsupportedOperandTypeException(value.runtimeType);
   }
 
   @override
@@ -258,7 +258,7 @@ class Float32x4Vector
       final other = value as Float32x4Vector;
 
       if (other.length != length) {
-        throw _mismatchLengthError;
+        throw VectorsLengthMismatchException(length, other.length);
       }
 
       final source = Float32x4List(_numOfBuckets);
@@ -268,7 +268,6 @@ class Float32x4Vector
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
-
     }
 
     if (value is num) {
@@ -281,7 +280,7 @@ class Float32x4Vector
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    throw UnsupportedError('Unsupported operand type: ${value.runtimeType}');
+    throw UnsupportedOperandTypeException(value.runtimeType);
   }
 
   @override
@@ -303,8 +302,8 @@ class Float32x4Vector
   Vector pow(num exponent) => _elementWisePow(exponent);
 
   @override
-  Vector exp({bool skipCaching = false}) => _cacheManager
-      .retrieveValue(vectorLogKey, () {
+  Vector exp({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(vectorLogKey, () {
         final source = Float32List(length);
 
         for (var i = 0; i < length; i++) {
@@ -315,8 +314,8 @@ class Float32x4Vector
       }, skipCaching: skipCaching);
 
   @override
-  Vector log({bool skipCaching = false}) => _cacheManager
-      .retrieveValue(vectorLogKey, () {
+  Vector log({bool skipCaching = false}) =>
+      _cacheManager.retrieveValue(vectorLogKey, () {
         final source = Float32List(length);
         for (var i = 0; i < length; i++) {
           source[i] = math.log(_innerTypedList[i]);
@@ -345,17 +344,17 @@ class Float32x4Vector
     }
 
     return _cacheManager.retrieveValue(vectorSumKey,
-            () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
+        () => _simdHelper.sumLanes(_innerSimdList.reduce((a, b) => a + b)),
         skipCaching: skipCaching);
   }
 
   @override
-  double prod({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(vectorSumKey,
-          _findProduct, skipCaching: skipCaching);
+  double prod({bool skipCaching = false}) => _cacheManager
+      .retrieveValue(vectorSumKey, _findProduct, skipCaching: skipCaching);
 
   @override
-  double distanceTo(Vector other, {
+  double distanceTo(
+    Vector other, {
     Distance distance = Distance.euclidean,
   }) {
     switch (distance) {
@@ -369,18 +368,17 @@ class Float32x4Vector
         return 1 - getCosine(other);
 
       default:
-        throw UnimplementedError('Unimplemented distance type - $distance');
+        throw UnsupportedDistanceTypeException(distance);
     }
   }
 
   @override
   double getCosine(Vector other) {
-    final cosine = (dot(other) / norm(Norm.euclidean) /
-        other.norm(Norm.euclidean));
+    final cosine =
+        (dot(other) / norm(Norm.euclidean) / other.norm(Norm.euclidean));
 
     if (cosine.isInfinite || cosine.isNaN) {
-      throw Exception('It is impossible to find cosine of an angle of two '
-          'vectors if at least one of the vectors is zero-vector');
+      throw CosineOfZeroVectorException();
     }
 
     return cosine;
@@ -389,7 +387,7 @@ class Float32x4Vector
   @override
   double mean({bool skipCaching = false}) {
     if (isEmpty) {
-      throw _emptyVectorException;
+      throw EmptyVectorException();
     }
 
     return _cacheManager.retrieveValue(vectorMeanKey, () => sum() / length,
@@ -409,16 +407,18 @@ class Float32x4Vector
       }, skipCaching: skipCaching);
 
   @override
-  double max({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(vectorMaxKey, () =>
-          _findExtrema(-double.infinity, _simdHelper.getMaxLane,
-                  (a, b) => a.max(b), math.max), skipCaching: skipCaching);
+  double max({bool skipCaching = false}) => _cacheManager.retrieveValue(
+      vectorMaxKey,
+      () => _findExtrema(-double.infinity, _simdHelper.getMaxLane,
+          (a, b) => a.max(b), math.max),
+      skipCaching: skipCaching);
 
   @override
-  double min({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(vectorMinKey, () =>
-          _findExtrema(double.infinity, _simdHelper.getMinLane,
-                  (a, b) => a.min(b), math.min), skipCaching: skipCaching);
+  double min({bool skipCaching = false}) => _cacheManager.retrieveValue(
+      vectorMinKey,
+      () => _findExtrema(double.infinity, _simdHelper.getMinLane,
+          (a, b) => a.min(b), math.min),
+      skipCaching: skipCaching);
 
   double _findProduct() {
     if (length == 0) {
@@ -431,20 +431,22 @@ class Float32x4Vector
           ? fullBucketsList.reduce((result, value) => result * value)
           : _simdOnes;
 
-      return _simdHelper.simdValueToList(_innerSimdList.last)
+      return _simdHelper
+          .simdValueToList(_innerSimdList.last)
           .take(length % _bucketSize)
           .fold(_simdHelper.multLanes(product),
               (result, value) => result * value);
     }
 
-    return _simdHelper.multLanes(
-        _innerSimdList.reduce((result, value) => result * value));
+    return _simdHelper
+        .multLanes(_innerSimdList.reduce((result, value) => result * value));
   }
 
-  double _findExtrema(double initialValue,
-      double Function(Float32x4 bucket) getExtremalLane,
-      Float32x4 Function(Float32x4 first, Float32x4 second) getExtremalBucket,
-      double Function(double first, double second) getExtremalValue,
+  double _findExtrema(
+    double initialValue,
+    double Function(Float32x4 bucket) getExtremalLane,
+    Float32x4 Function(Float32x4 first, Float32x4 second) getExtremalBucket,
+    double Function(double first, double second) getExtremalValue,
   ) {
     if (_isLastBucketNotFull) {
       var extrema = initialValue;
@@ -454,7 +456,8 @@ class Float32x4Vector
         extrema = getExtremalLane(fullBucketsList.reduce(getExtremalBucket));
       }
 
-      return _simdHelper.simdValueToList(_innerSimdList.last)
+      return _simdHelper
+          .simdValueToList(_innerSimdList.last)
           .take(length % _bucketSize)
           .fold(extrema, getExtremalValue);
     }
@@ -475,21 +478,19 @@ class Float32x4Vector
   }
 
   @override
-  Vector unique({bool skipCaching = false}) =>
-      _cacheManager.retrieveValue(
-          vectorUniqueKey,
-              () => Vector.fromList(
-                Set<double>
-                    .from(this)
-                    .toList(growable: false),
-                dtype: dtype,
-              ),
-        skipCaching: skipCaching);
+  Vector unique({bool skipCaching = false}) => _cacheManager.retrieveValue(
+      vectorUniqueKey,
+      () => Vector.fromList(
+            Set<double>.from(this).toList(growable: false),
+            dtype: dtype,
+          ),
+      skipCaching: skipCaching);
 
   @override
   Vector fastMap<T>(T Function(T element) mapper) {
-    final source = _innerSimdList.map<Float32x4>(
-            (value) => mapper(value as T) as Float32x4).toList(growable: false);
+    final source = _innerSimdList
+        .map<Float32x4>((value) => mapper(value as T) as Float32x4)
+        .toList(growable: false);
     return Vector.fromSimdList(Float32x4List.fromList(source), length,
         dtype: dtype);
   }
@@ -501,7 +502,7 @@ class Float32x4Vector
   @override
   double operator [](int index) {
     if (isEmpty) {
-      throw _emptyVectorException;
+      throw EmptyVectorException();
     }
 
     if (index >= length) {
@@ -514,19 +515,26 @@ class Float32x4Vector
   @override
   Vector subvector(int start, [int? end]) {
     if (start < 0) {
-      throw RangeError.range(start, 0, length - 1, '`start` cannot'
-          ' be negative');
+      throw RangeError.range(
+          start,
+          0,
+          length - 1,
+          '`start` cannot'
+          ' be negative, `start`: $start');
     }
 
     if (end != null && start >= end) {
-      throw RangeError.range(start, 0,
-          length - 1, '`start` cannot be greater than or equal to `end`');
+      throw RangeError.range(start, 0, length - 1,
+          '`start` cannot be greater than or equal to `end`, `start`: $start, `end`: $end');
     }
 
     if (start >= length) {
-      throw RangeError.range(start, 0,
-          length - 1, '`start` cannot be greater than or equal to the vector'
-              'length');
+      throw RangeError.range(
+          start,
+          0,
+          length - 1,
+          '`start` cannot be greater than or equal to the vector'
+          'length, `start`: $start');
     }
 
     final limit = end == null || end > length ? length : end;
@@ -536,10 +544,11 @@ class Float32x4Vector
   }
 
   @override
-  Vector normalize([Norm normType = Norm.euclidean,
-    bool skipCaching = false]) =>
+  Vector normalize(
+          [Norm normType = Norm.euclidean, bool skipCaching = false]) =>
       _cacheManager.retrieveValue(getCacheKeyForNormalizeByNormType(normType),
-              () => this / norm(normType), skipCaching: skipCaching);
+          () => this / norm(normType),
+          skipCaching: skipCaching);
 
   @override
   Vector rescale({bool skipCaching = false}) =>
@@ -564,7 +573,7 @@ class Float32x4Vector
         return 1;
 
       default:
-        throw UnsupportedError('Unsupported norm type $norm');
+        throw UnsupportedNormType(norm);
     }
   }
 
@@ -613,23 +622,14 @@ class Float32x4Vector
 
   Vector _matrixMul(Matrix matrix) {
     if (length != matrix.rowsNum) {
-      throw Exception(
-          'Multiplication by a matrix with diffrent number of rows than the '
-              'vector length is not allowed: vector length: $length, matrix '
-              'row number: ${matrix.rowsNum}');
+      throw MatrixRowsAndVectorLengthMismatchException(matrix.rowsNum, length);
     }
 
-    final source = List.generate(
-        matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
+    final source =
+        List.generate(matrix.columnsNum, (int i) => dot(matrix.getColumn(i)));
 
     return Vector.fromList(source, dtype: dtype);
   }
-
-  Exception get _emptyVectorException =>
-      Exception('The vector is empty');
-
-  RangeError get _mismatchLengthError =>
-      RangeError('Vectors length must be equal');
 
   @override
   DType get dtype => DType.float32;

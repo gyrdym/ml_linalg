@@ -9,8 +9,8 @@ void matrixRowIndicesTestGroupFactory(DType dtype) =>
       group('rowIndices getter', () {
         test('should contain zero-based ordered iterable of row indices', () {
           final matrix = Matrix.fromList([
-            [  1,   2,   3,   4],
-            [ 10,  20,  30,  40],
+            [1, 2, 3, 4],
+            [10, 20, 30, 40],
             [100, 200, 300, 400],
           ], dtype: dtype);
 

@@ -9,5 +9,6 @@
 /// represented in memory as 64 digit floating point numbers and in most cases
 /// they will be processed in two threads
 enum DType {
-  float32, float64,
+  float32,
+  float64,
 }

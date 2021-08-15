@@ -38,7 +38,8 @@ void matrixToVectorTestGroupFactory(DType dtype) =>
           expect(row1.dtype, dtype);
         });
 
-        test('should throw an error if one tries to convert matrix into '
+        test(
+            'should throw an error if one tries to convert matrix into '
             'vector if the matrix dimension is inappropriate', () {
           final matrix = Matrix.fromList([
             [4.0, 8.0, 12.0, 16.0],

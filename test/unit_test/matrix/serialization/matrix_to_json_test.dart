@@ -15,8 +15,8 @@ void main() {
 
     final float32Matrix = Matrix.fromList(source, dtype: DType.float32);
     final float64Matrix = Matrix.fromList(source, dtype: DType.float64);
-    final float32EmptyMatrix = Matrix.fromList(emptySource,
-        dtype: DType.float32);
+    final float32EmptyMatrix =
+        Matrix.fromList(emptySource, dtype: DType.float32);
 
     test('should serialize float32 matrix', () {
       final encoded = matrixToJson(float32Matrix);

@@ -7,7 +7,8 @@ import '../../../../dtype_to_title.dart';
 void matrixMapColumnsTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('mapColumns method', () {
-        test('should perform column-wise mapping of the matrix to a new one', () {
+        test('should perform column-wise mapping of the matrix to a new one',
+            () {
           final matrix = Matrix.fromList([
             [11.0, 12.0, 13.0, 14.0],
             [15.0, 16.0, 17.0, 18.0],

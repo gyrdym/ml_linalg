@@ -17,9 +17,9 @@ void matrixPowTestGroupFactory(DType dtype) =>
           final raised = matrix.pow(3);
 
           expect(raised, [
-            [  1.0,   8.0,  27.0,  64.0],
+            [1.0, 8.0, 27.0, 64.0],
             [125.0, 216.0, 343.0, 512.0],
-            [729.0,   0.0,  -8.0, -27.0],
+            [729.0, 0.0, -8.0, -27.0],
           ]);
           expect(matrix.dtype, dtype);
         });
@@ -48,11 +48,13 @@ void matrixPowTestGroupFactory(DType dtype) =>
           ], dtype: dtype);
           final raised = matrix.pow(3.75);
 
-          expect(raised, iterable2dAlmostEqualTo([
-            [      1.0,  13.4543,    61.5456,   181.0193],
-            [ 417.9626, 828.0702,  1476.1063,  2435.4961],
-            [3787.9951,      0.0, double.nan, double.nan],
-          ], 1e-2));
+          expect(
+              raised,
+              iterable2dAlmostEqualTo([
+                [1.0, 13.4543, 61.5456, 181.0193],
+                [417.9626, 828.0702, 1476.1063, 2435.4961],
+                [3787.9951, 0.0, double.nan, double.nan],
+              ], 1e-2));
           expect(matrix.dtype, dtype);
         });
 

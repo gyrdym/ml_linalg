@@ -15,10 +15,9 @@ Matrix? fromMatrixJson(Map<String, dynamic>? json) {
   }
 
   final double2dList = matrixSource
-      .map(
-          (dynamic row) => (row as List<dynamic>)
-              .map((dynamic element) => double.parse(element.toString()))
-              .toList(growable: false))
+      .map((dynamic row) => (row as List<dynamic>)
+          .map((dynamic element) => double.parse(element.toString()))
+          .toList(growable: false))
       .toList(growable: false);
 
   final encodedDType = json[matrixDTypeJsonKey] as String?;
