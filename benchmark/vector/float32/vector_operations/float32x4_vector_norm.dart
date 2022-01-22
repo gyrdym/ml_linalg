@@ -2,7 +2,7 @@
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/vector.dart';
 
 const amountOfElements = 10000000;

@@ -1,5 +1,5 @@
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';

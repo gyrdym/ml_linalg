@@ -1,5 +1,4 @@
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/linalg.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 

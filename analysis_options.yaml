@@ -1,1 +1,7 @@
 include: package:pedantic/analysis_options.yaml
+
+analyzer:
+  errors:
+    unnecessary_import: error
+    unnecessary_type_check: error
+    unused_import: error
