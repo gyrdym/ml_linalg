@@ -1,7 +1,8 @@
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
+import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';

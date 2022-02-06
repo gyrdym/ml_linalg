@@ -24,7 +24,9 @@ Future<Null> generateClassFromTemplate(
   await _processFile(
     targetFileName,
     templateFileName,
-    {}..addAll(mapping ?? {})..addAll(_defaultMapping),
+    {}
+      ..addAll(mapping ?? {})
+      ..addAll(_defaultMapping),
     comment,
   );
 }

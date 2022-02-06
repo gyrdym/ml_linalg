@@ -1,5 +1,6 @@
 import 'package:ml_linalg/distance.dart';
-import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/norm.dart';
+import 'package:ml_linalg/vector.dart';
 
 void main() {
   addition();

@@ -2,11 +2,15 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:ml_linalg/axis.dart';
+import 'package:ml_linalg/decomposition.dart';
 import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/inverse.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
+import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix.dart';
+import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_matrix.dart';
 import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
@@ -467,6 +471,97 @@ class MatrixImpl
         () => _dataManager.areAllRowsCached
             ? rows.fold(0, (result, row) => result * row.prod())
             : columns.fold(0, (result, column) => result * column.prod()));
+  }
+
+  @override
+  Iterable<Matrix> decompose(
+      [Decomposition decompositionType = Decomposition.cholesky]) {
+    switch (decompositionType) {
+      case Decomposition.cholesky:
+        return _choleskyDecomposition();
+
+      default:
+        throw UnimplementedError(
+            'Unimplemented decomposition type $decompositionType');
+    }
+  }
+
+  @override
+  Matrix inverse([Inverse inverseType = Inverse.cholesky]) {
+    switch (inverseType) {
+      case Inverse.cholesky:
+        return _choleskyInverse();
+
+      case Inverse.forwardSubstitution:
+        return _forwardSubstitutionInverse();
+
+      default:
+        throw UnimplementedError('Unimplemented inverse type $inverseType');
+    }
+  }
+
+  Matrix _choleskyInverse() {
+    final matrices = decompose(Decomposition.cholesky);
+    final lower = matrices.first;
+    final lowerInverted = lower.inverse(Inverse.forwardSubstitution);
+
+    return lowerInverted.transpose() * lowerInverted;
+  }
+
+  Matrix _forwardSubstitutionInverse() {
+    if (!isSquare) {
+      throw ForwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
+    }
+
+    final X = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+
+    for (var i = 0; i < rowsNum; i++) {
+      for (var row = 0; row < rowsNum; row++) {
+        var sum = 0.0;
+        var b = row == i ? 1.0 : 0.0;
+
+        for (var col = 0; col < row; col++) {
+          sum += this[row][col] * X[col][i];
+        }
+
+        X[row][i] = (b - sum) / this[row][row];
+      }
+    }
+
+    return Matrix.fromList(X, dtype: dtype);
+  }
+
+  Iterable<Matrix> _choleskyDecomposition() {
+    if (!isSquare) {
+      throw CholeskyNonSquareMatrixException(rowsNum, columnsNum);
+    }
+
+    final lower = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+
+    for (var i = 0; i < rowsNum; i++) {
+      for (var j = 0; j <= i; j++) {
+        var sum = 0.0;
+
+        if (j == i) {
+          for (var k = 0; k < j; k++) {
+            sum += math.pow(lower[j][k], 2);
+          }
+
+          lower[j][j] = math.sqrt(this[j][j] - sum);
+        } else {
+          for (var k = 0; k < j; k++) {
+            sum += (lower[i][k] * lower[j][k]);
+          }
+
+          lower[i][j] = (this[i][j] - sum) / lower[j][j];
+        }
+      }
+    }
+
+    final lowerMatrix = Matrix.fromList(lower, dtype: dtype);
+    final upperMatrix = lowerMatrix.transpose();
+
+    return [lowerMatrix, upperMatrix];
   }
 
   @override

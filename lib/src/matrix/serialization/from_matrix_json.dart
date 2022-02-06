@@ -1,4 +1,4 @@
-import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/common/dtype_serializer/from_dtype_json.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 

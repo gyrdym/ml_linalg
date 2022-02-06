@@ -1,5 +1,5 @@
 import 'package:ml_linalg/dtype.dart';
-import 'package:ml_linalg/linalg.dart';
+import 'package:ml_linalg/matrix.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
@@ -16,10 +16,7 @@ void matrixGetRowTestGroupFactory(DType dtype) =>
           final row1 = matrix.getRow(0);
           final row2 = matrix.getRow(1);
 
-          expect(row1 is Vector, isTrue);
           expect(row1, [11.0, 12.0, 13.0, 14.0]);
-
-          expect(row2 is Vector, isTrue);
           expect(row2, [15.0, 16.0, 17.0, 18.0]);
 
           expect(matrix.dtype, dtype);
