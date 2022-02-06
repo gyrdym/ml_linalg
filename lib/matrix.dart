@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:ml_linalg/axis.dart';
+import 'package:ml_linalg/decomposition.dart';
 import 'package:ml_linalg/dtype.dart';
+import 'package:ml_linalg/inverse.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/matrix/helper/create_matrix.dart';
@@ -498,6 +500,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
 
   /// Returns the product of all the matrix elements
   double prod();
+
+  Iterable<Matrix> decompose([Decomposition decompositionType]);
+
+  Matrix inverse([Inverse inverseType]);
 
   /// Returns a serializable map
   Map<String, dynamic> toJson();

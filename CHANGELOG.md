@@ -1,5 +1,12 @@
 # Changelog
 
+## 13.1.0
+- Matrix: 
+  - Added Cholesky decomposition
+  - Added `inverse` method:
+    - Cholesky inverse
+    - Forward substitution inverse for triangular matrices
+
 ## 13.0.2
 - Error handling improvements
 
