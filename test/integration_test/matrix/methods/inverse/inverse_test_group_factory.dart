@@ -1,8 +1,8 @@
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/inverse.dart';
 import 'package:ml_linalg/matrix.dart';
-import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix.dart';
-import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_matrix.dart';
+import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix_exception.dart';
+import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_matrix_exception.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
