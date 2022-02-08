@@ -9,8 +9,9 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
-import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix.dart';
-import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_matrix.dart';
+import 'package:ml_linalg/src/common/exception/cholesky_inappropriate_matrix_exception.dart';
+import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix_exception.dart';
+import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
@@ -542,17 +543,17 @@ class MatrixImpl
       for (var j = 0; j <= i; j++) {
         var sum = 0.0;
 
+        for (var k = 0; k < j; k++) {
+          sum += (lower[i][k] * lower[j][k]);
+        }
+
         if (j == i) {
-          for (var k = 0; k < j; k++) {
-            sum += math.pow(lower[j][k], 2);
-          }
-
           lower[j][j] = math.sqrt(this[j][j] - sum);
-        } else {
-          for (var k = 0; k < j; k++) {
-            sum += (lower[i][k] * lower[j][k]);
-          }
 
+          if (lower[j][j].isNaN) {
+            throw CholeskyInappropriateMatrixException();
+          }
+        } else {
           lower[i][j] = (this[i][j] - sum) / lower[j][j];
         }
       }
