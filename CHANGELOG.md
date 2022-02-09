@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.2.0
+- Matrix:
+  - Added LU decomposition
+
 ## 13.1.1
 - Matrix:
   - Added extra test-cases for Cholesky decomposition

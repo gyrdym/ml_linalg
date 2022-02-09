@@ -1,3 +1,4 @@
 enum Decomposition {
   cholesky,
+  LU,
 }
