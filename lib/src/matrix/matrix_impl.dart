@@ -12,6 +12,7 @@ import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_inappropriate_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_matrix_exception.dart';
+import 'package:ml_linalg/src/common/exception/lu_decomposition_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
@@ -476,10 +477,13 @@ class MatrixImpl
 
   @override
   Iterable<Matrix> decompose(
-      [Decomposition decompositionType = Decomposition.cholesky]) {
+      [Decomposition decompositionType = Decomposition.LU]) {
     switch (decompositionType) {
       case Decomposition.cholesky:
         return _choleskyDecomposition();
+
+      case Decomposition.LU:
+        return _luDecomposition();
 
       default:
         throw UnimplementedError(
@@ -563,6 +567,35 @@ class MatrixImpl
     final upperMatrix = lowerMatrix.transpose();
 
     return [lowerMatrix, upperMatrix];
+  }
+
+  Iterable<Matrix> _luDecomposition() {
+    if (!isSquare) {
+      throw LUDecompositionNonSquareMatrixException(rowsNum, columnsNum);
+    }
+
+    final L = List.generate(
+        rowsNum, (i) => List.generate(rowsNum, (j) => i == j ? 1.0 : 0.0));
+    final U = List.generate(
+        rowsNum, (index) => List.generate(rowsNum, (index) => 0.0));
+
+    for (var i = 0; i < rowsNum; i++) {
+      for (var j = 0; j < rowsNum; j++) {
+        var sum = 0.0;
+
+        for (var k = 0; k < i; k++) {
+          sum += L[i][k] * U[k][j];
+        }
+
+        if (i <= j) {
+          U[i][j] = this[i][j] - sum;
+        } else {
+          L[i][j] = (this[i][j] - sum) / U[j][j];
+        }
+      }
+    }
+
+    return [Matrix.fromList(L, dtype: dtype), Matrix.fromList(U, dtype: dtype)];
   }
 
   @override
