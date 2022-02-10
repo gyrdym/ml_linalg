@@ -9,6 +9,7 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
+import 'package:ml_linalg/src/common/exception/backward_substitution_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_inappropriate_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_matrix_exception.dart';
@@ -497,8 +498,14 @@ class MatrixImpl
       case Inverse.cholesky:
         return _choleskyInverse();
 
+      case Inverse.LU:
+        return _luInverse();
+
       case Inverse.forwardSubstitution:
         return _forwardSubstitutionInverse();
+
+      case Inverse.backwardSubstitution:
+        return _backwardSubstitutionInverse();
 
       default:
         throw UnimplementedError('Unimplemented inverse type $inverseType');
@@ -511,6 +518,15 @@ class MatrixImpl
     final lowerInverted = lower.inverse(Inverse.forwardSubstitution);
 
     return lowerInverted.transpose() * lowerInverted;
+  }
+
+  Matrix _luInverse() {
+    final matrices = decompose(Decomposition.LU);
+    final lower = matrices.first;
+    final upper = matrices.last;
+
+    return upper.inverse(Inverse.backwardSubstitution) *
+        lower.inverse(Inverse.forwardSubstitution);
   }
 
   Matrix _forwardSubstitutionInverse() {
@@ -526,6 +542,29 @@ class MatrixImpl
         var b = row == i ? 1.0 : 0.0;
 
         for (var col = 0; col < row; col++) {
+          sum += this[row][col] * X[col][i];
+        }
+
+        X[row][i] = (b - sum) / this[row][row];
+      }
+    }
+
+    return Matrix.fromList(X, dtype: dtype);
+  }
+
+  Matrix _backwardSubstitutionInverse() {
+    if (!isSquare) {
+      throw BackwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
+    }
+
+    final X = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+
+    for (var i = rowsNum - 1; i >= 0; i--) {
+      for (var row = rowsNum - 1; row >= 0; row--) {
+        var sum = 0.0;
+        var b = row == i ? 1.0 : 0.0;
+
+        for (var col = rowsNum - 1; col > row; col--) {
           sum += this[row][col] * X[col][i];
         }
 

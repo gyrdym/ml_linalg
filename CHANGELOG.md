@@ -1,5 +1,10 @@
 # Changelog
 
+## 13.3.0
+- Matrix:
+  - Added LU inverse
+  - Added backward substitution inverse
+
 ## 13.2.0
 - Matrix:
   - Added LU decomposition
