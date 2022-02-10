@@ -4,6 +4,7 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/common/exception/backward_substitution_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_matrix_exception.dart';
+import 'package:ml_linalg/src/common/exception/lu_decomposition_non_square_matrix_exception.dart';
 import 'package:test/test.dart';
 
 import '../../../../dtype_to_title.dart';
@@ -230,6 +231,95 @@ void matrixInverseTestGroupFactory(DType dtype) =>
 
           expect(() => matrix.inverse(Inverse.backwardSubstitution),
               throwsA(isA<BackwardSubstitutionNonSquareMatrixException>()));
+        });
+
+        test('should perform LU inverse, 1x1 matrix', () {
+          final matrix = Matrix.fromList([
+            [-4],
+          ], dtype: dtype);
+          final inverted = matrix.inverse(Inverse.LU);
+
+          expect(
+              matrix * inverted,
+              iterable2dAlmostEqualTo([
+                [1],
+              ], 1e-4));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform LU inverse, 2x2 matrix', () {
+          final matrix = Matrix.fromList([
+            [4, 12],
+            [33, 37],
+          ], dtype: dtype);
+          final inverted = matrix.inverse(Inverse.LU);
+
+          expect(
+              matrix * inverted,
+              iterable2dAlmostEqualTo([
+                [1, 0],
+                [0, 1],
+              ], 1e-4));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform LU inverse, 3x3 matrix', () {
+          final matrix = Matrix.fromList([
+            [-16, -43, 98],
+            [33, 12.4, 37],
+            [12, -88.3, 4],
+          ], dtype: dtype);
+          final inverted = matrix.inverse(Inverse.LU);
+
+          expect(
+              matrix * inverted,
+              iterable2dAlmostEqualTo([
+                [1, 0, 0],
+                [0, 1, 0],
+                [0, 0, 1],
+              ], 1e-4));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform LU inverse, 4x4 matrix', () {
+          final matrix = Matrix.fromList([
+            [-18, 99, 233, 11],
+            [333, -16, -43, 98],
+            [-19, 754, 0.4, 37],
+            [1, 2, 3, 4],
+          ], dtype: dtype);
+          final inverted = matrix.inverse(Inverse.LU);
+
+          expect(
+              matrix * inverted,
+              iterable2dAlmostEqualTo([
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+              ], 1e-4));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform LU inverse, empty matrix', () {
+          final matrix = Matrix.empty(dtype: dtype);
+          final inverted = matrix.inverse(Inverse.LU);
+
+          expect(matrix * inverted, iterable2dAlmostEqualTo([], 1e-4));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should throw exception for LU inverse if matrix is not square',
+            () {
+          final matrix = Matrix.fromList([
+            [4, 12, -16],
+            [12, 37, -43],
+            [-16, -43, 98],
+            [-1, -4, 9],
+          ], dtype: dtype);
+
+          expect(() => matrix.inverse(Inverse.LU),
+              throwsA(isA<LUDecompositionNonSquareMatrixException>()));
         });
       });
     });
