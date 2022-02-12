@@ -52,6 +52,12 @@
         - [Hadamard product (element-wise matrices multiplication)](#hadamard-product-element-wise-matrices-multiplication)
         - [Element-wise matrices subtraction](#element-wise-matrices-subtraction)
         - [Matrix transposition](#matrix-transposition)
+        - [Matrix LU decomposition](#matrix-lu-decomposition)
+        - [Matrix Cholesky decomposition](#matrix-cholesky-decomposition)
+        - [Matrix LU inversion](#matrix-lu-inversion)
+        - [Matrix Cholesky inversion](#matrix-cholesky-inversion)
+        - [Lower triangular matrix inversion](#lower-triangular-matrix-inversion)
+        - [Upper triangular matrix inversion](#upper-triangular-matrix-inversion)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)
         - [Matrix row-wise mapping](#matrix-row-wise-mapping)
@@ -690,6 +696,104 @@ print(matrix1 - matrix2);
   // [4.0, 8.0, -3.0],
   //]
 ````
+
+#### Matrix LU decomposition
+```dart
+  final matrix = Matrix.fromList([
+    [4, 12, -16],
+    [12, 37, -43],
+    [-16, -43, 98],
+  ], dtype: dtype);
+  final decomposed = matrix.decompose(Decomposition.LU);
+  
+  // yields approximately the same matrix as the original one:
+  print(decomposed.first * decomposed.last);
+```
+
+#### Matrix Cholesky decomposition
+```dart
+  final matrix = Matrix.fromList([
+    [4, 12, -16],
+    [12, 37, -43],
+    [-16, -43, 98],
+  ], dtype: dtype);
+  final decomposed = matrix.decompose(Decomposition.cholesky);
+  
+  // yields approximately the same matrix as the original one:
+  print(decomposed.first * decomposed.last);
+```
+
+*Keep in mind that Cholesky decomposition is applicable only for positive definite and symmetric matrices*
+
+#### Matrix LU inversion
+
+```dart
+  final matrix = Matrix.fromList([
+    [-16, -43, 98],
+    [33, 12.4, 37],
+    [12, -88.3, 4],
+  ], dtype: dtype);
+  final inverted = matrix.inverse(Inverse.LU);
+
+  print(inverted * matrix);
+  // The output (there can be some round-off errors):
+  // [1, 0, 0],
+  // [0, 1, 0],
+  // [0, 0, 1],
+```
+
+#### Matrix Cholesky inversion
+
+```dart
+  final matrix = Matrix.fromList([
+    [4, 12, -16],
+    [12, 37, -43],
+    [-16, -43, 98],
+  ], dtype: dtype);
+  final inverted = matrix.inverse(Inverse.cholesky);
+
+  print(inverted * matrix);
+  // The output (there can be some round-off errors):
+  // [1, 0, 0],
+  // [0, 1, 0],
+  // [0, 0, 1],
+```
+
+*Keep in mind that since this kind of inversion is based on Cholesky decomposition, the inversion is applicable only for positive definite and symmetric matrices*
+
+#### Lower triangular matrix inversion
+
+```dart
+  final matrix = Matrix.fromList([
+    [  4,   0,  0],
+    [ 12,  37,  0],
+    [-16, -43, 98],
+  ], dtype: dtype);
+  final inverted = matrix.inverse(Inverse.forwardSubstitution);
+
+  print(inverted * matrix);
+  // The output (there can be some round-off errors):
+  // [1, 0, 0],
+  // [0, 1, 0],
+  // [0, 0, 1],
+```
+
+#### Upper triangular matrix inversion
+
+```dart
+  final matrix = Matrix.fromList([
+    [4, 12, -16],
+    [0, 37, -43],
+    [0,  0, -98],
+  ], dtype: dtype);
+  final inverted = matrix.inverse(Inverse.backwardSubstitution);
+
+  print(inverted * matrix);
+  // The output (there can be some round-off errors):
+  // [1, 0, 0],
+  // [0, 1, 0],
+  // [0, 0, 1],
+```
  
 #### Matrix row-wise reduce
 ````Dart
@@ -962,5 +1066,6 @@ final matrix = Matrix.fromJson(serialized);
 
 ### Contacts
 If you have questions, feel free to write me on 
+ - [Twitter](https://twitter.com/ilgyrd)
  - [Facebook](https://www.facebook.com/ilya.gyrdymov)
  - [Linkedin](https://www.linkedin.com/in/gyrdym/)
