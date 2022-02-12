@@ -56,6 +56,8 @@
         - [Matrix Cholesky decomposition](#matrix-cholesky-decomposition)
         - [Matrix LU inversion](#matrix-lu-inversion)
         - [Matrix Cholesky inversion](#matrix-cholesky-inversion)
+        - [Triangular Matrix inversion, forward substitution](#triangular-matrix-inversion-forward-substitution)
+        - [Triangular Matrix inversion, backward substitution](#triangular-matrix-inversion-backward-substitution)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)
         - [Matrix row-wise mapping](#matrix-row-wise-mapping)
@@ -716,7 +718,7 @@ print(matrix1 - matrix2);
   ], dtype: dtype);
   final decomposed = matrix.decompose(Decomposition.cholesky);
   
-  print(decomposed.first * decomposed.last, equals(matrix)); // yields approximately the same matrix as the original one
+  print(decomposed.first * decomposed.last); // yields approximately the same matrix as the original one
 ```
 
 *Keep in mind that Cholesky decomposition is applicable only for positive definite and symmetric matrices*
@@ -731,7 +733,7 @@ print(matrix1 - matrix2);
   ], dtype: dtype);
   final inverted = matrix.inverse(Inverse.LU);
 
-  print(inverted);
+  print(inverted * matrix);
   // The output (there can be some round-off errors):
   // [1, 0, 0],
   // [0, 1, 0],
@@ -748,7 +750,7 @@ print(matrix1 - matrix2);
   ], dtype: dtype);
   final inverted = matrix.inverse(Inverse.cholesky);
 
-  print(inverted);
+  print(inverted * matrix);
   // The output (there can be some round-off errors):
   // [1, 0, 0],
   // [0, 1, 0],
@@ -756,6 +758,40 @@ print(matrix1 - matrix2);
 ```
 
 *Keep in mind that since this kind of inversion is based on Cholesky decomposition, the inversion is applicable only for positive definite and symmetric matrices*
+
+#### Triangular matrix inversion (forward substitution)
+
+```dart
+  final matrix = Matrix.fromList([
+    [  4,   0,  0],
+    [ 12,  37,  0],
+    [-16, -43, 98],
+  ], dtype: dtype);
+  final inverted = matrix.inverse(Inverse.forwardSubstitution);
+
+  print(inverted * matrix);
+  // The output (there can be some round-off errors):
+  // [1, 0, 0],
+  // [0, 1, 0],
+  // [0, 0, 1],
+```
+
+#### Triangular matrix inversion (backward substitution)
+
+```dart
+  final matrix = Matrix.fromList([
+    [4, 12, -16],
+    [0, 37, -43],
+    [0,  0, -98],
+  ], dtype: dtype);
+  final inverted = matrix.inverse(Inverse.backwardSubstitution);
+
+  print(inverted * matrix);
+  // The output (there can be some round-off errors):
+  // [1, 0, 0],
+  // [0, 1, 0],
+  // [0, 0, 1],
+```
  
 #### Matrix row-wise reduce
 ````Dart
