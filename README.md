@@ -54,7 +54,8 @@
         - [Matrix transposition](#matrix-transposition)
         - [Matrix LU decomposition](#matrix-lu-decomposition)
         - [Matrix Cholesky decomposition](#matrix-cholesky-decomposition)
-        - [Matrix inversion](#matrix-inversion)
+        - [Matrix LU inversion](#matrix-lu-inversion)
+        - [Matrix Cholesky inversion](#matrix-cholesky-inversion)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)
         - [Matrix row-wise mapping](#matrix-row-wise-mapping)
@@ -713,12 +714,48 @@ print(matrix1 - matrix2);
     [12, 37, -43],
     [-16, -43, 98],
   ], dtype: dtype);
-  final decomposed = matrix.decompose(Decomposition.cholesky); // yields approximately the same matrix as the original one
+  final decomposed = matrix.decompose(Decomposition.cholesky);
   
-  expect(decomposed.first * decomposed.last, equals(matrix));
+  print(decomposed.first * decomposed.last, equals(matrix)); // yields approximately the same matrix as the original one
 ```
 
 *Keep in mind that Cholesky decomposition is applicable only for positive definite and symmetric matrices*
+
+#### Matrix LU inversion
+
+```dart
+  final matrix = Matrix.fromList([
+    [-16, -43, 98],
+    [33, 12.4, 37],
+    [12, -88.3, 4],
+  ], dtype: dtype);
+  final inverted = matrix.inverse(Inverse.LU);
+
+  print(inverted);
+  // The output (there can be some round-off errors):
+  // [1, 0, 0],
+  // [0, 1, 0],
+  // [0, 0, 1],
+```
+
+#### Matrix Cholesky inversion
+
+```dart
+  final matrix = Matrix.fromList([
+    [4, 12, -16],
+    [12, 37, -43],
+    [-16, -43, 98],
+  ], dtype: dtype);
+  final inverted = matrix.inverse(Inverse.cholesky);
+
+  print(inverted);
+  // The output (there can be some round-off errors):
+  // [1, 0, 0],
+  // [0, 1, 0],
+  // [0, 0, 1],
+```
+
+*Keep in mind that since this kind of inversion is based on Cholesky decomposition, the inversion is applicable only for positive definite and symmetric matrices*
  
 #### Matrix row-wise reduce
 ````Dart
