@@ -1,5 +1,8 @@
 # Changelog
 
+## 13.3.1
+- Added documentation for matrix decomposition and inversion
+
 ## 13.3.0
 - Matrix:
   - Added LU inverse

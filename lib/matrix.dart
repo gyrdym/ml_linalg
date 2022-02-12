@@ -492,7 +492,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// matrix elements
   Matrix log({bool skipCaching = false});
 
-  /// Performs Hadamard product - elemen-wise matrices multiplication
+  /// Performs Hadamard product - element-wise matrices multiplication
   Matrix multiply(Matrix other);
 
   /// Returns the sum of all the matrix elements
@@ -501,8 +501,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Returns the product of all the matrix elements
   double prod();
 
+  /// Decomposes the original matrix into several matrices whose product results in the original matrix
   Iterable<Matrix> decompose([Decomposition decompositionType]);
 
+  /// Finds the inverse of the original matrix. Product of the inverse and the original matrix results in singular matrix
   Matrix inverse([Inverse inverseType]);
 
   /// Returns a serializable map
