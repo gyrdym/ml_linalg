@@ -52,6 +52,9 @@
         - [Hadamard product (element-wise matrices multiplication)](#hadamard-product-element-wise-matrices-multiplication)
         - [Element-wise matrices subtraction](#element-wise-matrices-subtraction)
         - [Matrix transposition](#matrix-transposition)
+        - [Matrix LU decomposition](#matrix-lu-decomposition)
+        - [Matrix Cholesky decomposition](#matrix-cholesky-decomposition)
+        - [Matrix inversion](#matrix-inversion)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)
         - [Matrix row-wise mapping](#matrix-row-wise-mapping)
@@ -690,6 +693,32 @@ print(matrix1 - matrix2);
   // [4.0, 8.0, -3.0],
   //]
 ````
+
+#### Matrix LU decomposition
+```dart
+  final matrix = Matrix.fromList([
+    [4, 12, -16],
+    [12, 37, -43],
+    [-16, -43, 98],
+  ], dtype: dtype);
+  final decomposed = matrix.decompose(Decomposition.LU);
+  
+  print(decomposed.first * decomposed.last); // yields approximately the same matrix as the original one
+```
+
+#### Matrix Cholesky decomposition
+```dart
+  final matrix = Matrix.fromList([
+    [4, 12, -16],
+    [12, 37, -43],
+    [-16, -43, 98],
+  ], dtype: dtype);
+  final decomposed = matrix.decompose(Decomposition.cholesky); // yields approximately the same matrix as the original one
+  
+  expect(decomposed.first * decomposed.last, equals(matrix));
+```
+
+*Keep in mind that Cholesky decomposition is applicable only for positive definite and symmetric matrices*
  
 #### Matrix row-wise reduce
 ````Dart
