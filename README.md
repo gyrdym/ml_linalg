@@ -56,8 +56,8 @@
         - [Matrix Cholesky decomposition](#matrix-cholesky-decomposition)
         - [Matrix LU inversion](#matrix-lu-inversion)
         - [Matrix Cholesky inversion](#matrix-cholesky-inversion)
-        - [Triangular Matrix inversion, forward substitution](#triangular-matrix-inversion-forward-substitution)
-        - [Triangular Matrix inversion, backward substitution](#triangular-matrix-inversion-backward-substitution)
+        - [Lower triangular matrix inversion](#lower-triangular-matrix-inversion)
+        - [Upper triangular matrix inversion](#upper-triangular-matrix-inversion)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)
         - [Matrix row-wise mapping](#matrix-row-wise-mapping)
@@ -706,7 +706,8 @@ print(matrix1 - matrix2);
   ], dtype: dtype);
   final decomposed = matrix.decompose(Decomposition.LU);
   
-  print(decomposed.first * decomposed.last); // yields approximately the same matrix as the original one
+  // yields approximately the same matrix as the original one:
+  print(decomposed.first * decomposed.last);
 ```
 
 #### Matrix Cholesky decomposition
@@ -718,7 +719,8 @@ print(matrix1 - matrix2);
   ], dtype: dtype);
   final decomposed = matrix.decompose(Decomposition.cholesky);
   
-  print(decomposed.first * decomposed.last); // yields approximately the same matrix as the original one
+  // yields approximately the same matrix as the original one:
+  print(decomposed.first * decomposed.last);
 ```
 
 *Keep in mind that Cholesky decomposition is applicable only for positive definite and symmetric matrices*
@@ -759,7 +761,7 @@ print(matrix1 - matrix2);
 
 *Keep in mind that since this kind of inversion is based on Cholesky decomposition, the inversion is applicable only for positive definite and symmetric matrices*
 
-#### Triangular matrix inversion (forward substitution)
+#### Lower triangular matrix inversion
 
 ```dart
   final matrix = Matrix.fromList([
@@ -776,7 +778,7 @@ print(matrix1 - matrix2);
   // [0, 0, 1],
 ```
 
-#### Triangular matrix inversion (backward substitution)
+#### Upper triangular matrix inversion
 
 ```dart
   final matrix = Matrix.fromList([
