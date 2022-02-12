@@ -1,5 +1,8 @@
+/* This file is auto generated, do not change it manually */
+
 import 'dart:collection';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/decomposition.dart';
@@ -23,10 +26,10 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
-class MatrixImpl
+class Float64Matrix
     with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     implements Matrix {
-  MatrixImpl(
+  Float64Matrix(
     this._dataManager,
     this._cacheManager,
   );
@@ -614,9 +617,9 @@ class MatrixImpl
     }
 
     final L = List.generate(
-        rowsNum, (i) => List.generate(rowsNum, (j) => i == j ? 1.0 : 0.0));
+        rowsNum, (i) => Float64List.fromList(List.generate(rowsNum, (j) => i == j ? 1.0 : 0.0)));
     final U = List.generate(
-        rowsNum, (index) => List.generate(rowsNum, (index) => 0.0));
+        rowsNum, (i) => Float64List.fromList(List.generate(rowsNum, (i) => 0.0)));
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j < rowsNum; j++) {
@@ -742,7 +745,7 @@ class MatrixImpl
 
   Matrix _matrix2scalarOperation(
       double scalar, Vector Function(double scalar, Vector vector) operation) {
-    // TODO: use vectorized type (e.g. Float32x4) instead of `double`
+    // TODO: use vectorized type (e.g. Float64x2) instead of `double`
     // TODO: use then `fastMap` to accelerate computations
     final elementGenFn = (int i) => operation(scalar, getRow(i));
     final source = List.generate(rowsNum, elementGenFn);
