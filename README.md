@@ -1064,5 +1064,6 @@ final matrix = Matrix.fromJson(serialized);
 
 ### Contacts
 If you have questions, feel free to write me on 
+ - [Twitter](https://twitter.com/ilgyrd)
  - [Facebook](https://www.facebook.com/ilya.gyrdymov)
  - [Linkedin](https://www.linkedin.com/in/gyrdym/)
