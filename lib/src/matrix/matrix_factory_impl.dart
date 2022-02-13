@@ -228,4 +228,28 @@ class MatrixFactoryImpl implements MatrixFactory {
             'Matrix of type $dtype is not implemented yet');
     }
   }
+
+  @override
+  Matrix random(DType dtype, int rowsNum, int columnsCount,
+      {num min = -1000, num max = 1000, int? seed}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix(
+          Float32MatrixDataManager.random(dtype, rowsNum, columnsCount,
+              min: min, max: max, seed: seed),
+          _cacheManagerFactory.create(matrixCacheKeys),
+        );
+
+      case DType.float64:
+        return Float64Matrix(
+          Float64MatrixDataManager.random(dtype, rowsNum, columnsCount,
+              min: min, max: max, seed: seed),
+          _cacheManagerFactory.create(matrixCacheKeys),
+        );
+
+      default:
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
+    }
+  }
 }

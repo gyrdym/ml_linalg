@@ -281,6 +281,14 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   }) =>
       createMatrixFactory().row(dtype, source);
 
+  factory Matrix.random(int rowsNum, int columnsCount,
+          {DType dtype = DType.float32,
+          num min = -1000,
+          num max = 1000,
+          int? seed}) =>
+      createMatrixFactory()
+          .random(dtype, rowsNum, columnsCount, max: max, min: min);
+
   /// Returns a restored matrix from a serializable map
   factory Matrix.fromJson(Map<String, dynamic> json) => fromMatrixJson(json)!;
 

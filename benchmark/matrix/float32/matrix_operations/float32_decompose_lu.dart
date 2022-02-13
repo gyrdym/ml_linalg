@@ -7,8 +7,8 @@ import 'package:ml_linalg/vector.dart';
 const numOfRows = 300;
 const numOfColumns = 300;
 
-class Float32MatrixDecomposeBenchmark extends BenchmarkBase {
-  Float32MatrixDecomposeBenchmark() : super('Matrix decompose method');
+class Float32MatrixDecomposeLUBenchmark extends BenchmarkBase {
+  Float32MatrixDecomposeLUBenchmark() : super('Matrix decompose method (LU)');
 
   final Matrix _source = Matrix.fromRows(
     List<Vector>.filled(
@@ -17,7 +17,7 @@ class Float32MatrixDecomposeBenchmark extends BenchmarkBase {
   );
 
   static void main() {
-    Float32MatrixDecomposeBenchmark().report();
+    Float32MatrixDecomposeLUBenchmark().report();
   }
 
   @override
@@ -27,5 +27,5 @@ class Float32MatrixDecomposeBenchmark extends BenchmarkBase {
 }
 
 void main() {
-  Float32MatrixDecomposeBenchmark.main();
+  Float32MatrixDecomposeLUBenchmark.main();
 }
