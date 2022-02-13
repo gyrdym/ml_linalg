@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/matrix/iterator/float32_matrix_iterator.dart';
-import 'package:ml_linalg/src/matrix/iterator/float64_matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/iterator/float64_matrix_iterator.g.dart';
 
 import 'matrix_iterator_test_group_factory.dart';
 

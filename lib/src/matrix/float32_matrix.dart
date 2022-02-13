@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/decomposition.dart';
@@ -23,10 +24,10 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
-class MatrixImpl
+class Float32Matrix
     with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     implements Matrix {
-  MatrixImpl(
+  Float32Matrix(
     this._dataManager,
     this._cacheManager,
   );
@@ -614,9 +615,12 @@ class MatrixImpl
     }
 
     final L = List.generate(
-        rowsNum, (i) => List.generate(rowsNum, (j) => i == j ? 1.0 : 0.0));
-    final U = List.generate(
-        rowsNum, (index) => List.generate(rowsNum, (index) => 0.0));
+        rowsNum,
+        (i) => Float32List.fromList(
+            List.generate(rowsNum, (j) => i == j ? 1.0 : 0.0)));
+    final zeroes = List.filled(rowsNum, 0.0);
+    final uGenerator = (i) => Float32List.fromList(zeroes);
+    final U = List.generate(rowsNum, uGenerator);
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j < rowsNum; j++) {
