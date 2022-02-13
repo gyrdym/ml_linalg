@@ -2,10 +2,11 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
 import 'package:ml_linalg/src/matrix/data_manager/float32_matrix_data_manager.dart';
-import 'package:ml_linalg/src/matrix/data_manager/float64_matrix_data_manager.dart';
+import 'package:ml_linalg/src/matrix/data_manager/float64_matrix_data_manager.g.dart';
+import 'package:ml_linalg/src/matrix/float32_matrix.dart';
+import 'package:ml_linalg/src/matrix/float64_matrix.g.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/matrix_factory.dart';
-import 'package:ml_linalg/src/matrix/matrix_impl.dart';
 import 'package:ml_linalg/vector.dart';
 
 class MatrixFactoryImpl implements MatrixFactory {
@@ -17,13 +18,13 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix fromList(DType dtype, List<List<double>> source) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.fromList(source),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.fromList(source),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
@@ -38,13 +39,13 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix fromRows(DType dtype, List<Vector> source) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.fromRows(source),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.fromRows(source),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
@@ -59,13 +60,13 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix fromColumns(DType dtype, List<Vector> source) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.fromColumns(source),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.fromColumns(source),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
@@ -80,13 +81,13 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix empty(DType dtype) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.fromList([]),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.fromList([]),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
@@ -102,13 +103,13 @@ class MatrixFactoryImpl implements MatrixFactory {
       DType dtype, List<double> source, int rowsNum, int columnsNum) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.fromFlattened(source, rowsNum, columnsNum),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.fromFlattened(source, rowsNum, columnsNum),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
@@ -123,13 +124,13 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix diagonal(DType dtype, List<double> source) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.diagonal(source),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.diagonal(source),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
@@ -144,13 +145,13 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix scalar(DType dtype, double scalar, int size) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.scalar(scalar, size),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.scalar(scalar, size),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
@@ -165,13 +166,13 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix identity(DType dtype, int size) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.scalar(1.0, size),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.scalar(1.0, size),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
@@ -186,14 +187,14 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix row(DType dtype, List<double> source) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.fromRows(
               [Vector.fromList(source, dtype: dtype)]),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.fromRows(
               [Vector.fromList(source, dtype: dtype)]),
           _cacheManagerFactory.create(matrixCacheKeys),
@@ -209,14 +210,14 @@ class MatrixFactoryImpl implements MatrixFactory {
   Matrix column(DType dtype, List<double> source) {
     switch (dtype) {
       case DType.float32:
-        return MatrixImpl(
+        return Float32Matrix(
           Float32MatrixDataManager.fromColumns(
               ([Vector.fromList(source, dtype: dtype)])),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 
       case DType.float64:
-        return MatrixImpl(
+        return Float64Matrix(
           Float64MatrixDataManager.fromColumns(
               ([Vector.fromList(source, dtype: dtype)])),
           _cacheManagerFactory.create(matrixCacheKeys),

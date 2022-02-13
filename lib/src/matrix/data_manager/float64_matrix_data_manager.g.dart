@@ -7,7 +7,7 @@ import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/helper/get_2d_iterable_length.dart';
 import 'package:ml_linalg/src/matrix/helper/get_length_of_first_or_zero.dart';
 import 'package:ml_linalg/src/matrix/helper/get_zero_based_indices.dart';
-import 'package:ml_linalg/src/matrix/iterator/float64_matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/iterator/float64_matrix_iterator.g.dart';
 import 'package:ml_linalg/vector.dart';
 
 const _bytesPerElement = Float64List.bytesPerElement;
