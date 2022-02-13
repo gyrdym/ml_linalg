@@ -5,6 +5,11 @@ import 'package:path/path.dart' as p;
 
 final _defaultMapping = {
   RegExp('(F|f)loat32x4'): (Match match) => '${match.group(1)}loat64x2',
+
+  // import paths replacer regexp:
+  RegExp('\/float32([^/]*)\.dart'): (Match match) =>
+      '/float64${match.group(1)}.g.dart',
+
   RegExp('(F|f)loat32'): (Match match) => '${match.group(1)}loat64',
 };
 
