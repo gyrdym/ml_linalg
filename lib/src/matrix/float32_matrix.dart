@@ -614,12 +614,13 @@ class Float32Matrix
       throw LUDecompositionNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final zeroes = List.filled(rowsNum, 0.0);
     final L = List.generate(
         rowsNum,
         (i) => Float32List.fromList(
             List.generate(rowsNum, (j) => i == j ? 1.0 : 0.0)));
-    final U = List.generate(rowsNum, (i) => Float32List.fromList(zeroes));
+    final zeroes = List.filled(rowsNum, 0.0);
+    final uGenerator = (i) => Float32List.fromList(zeroes);
+    final U = List.generate(rowsNum, uGenerator);
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j < rowsNum; j++) {
