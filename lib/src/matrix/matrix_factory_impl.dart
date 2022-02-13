@@ -3,10 +3,10 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
 import 'package:ml_linalg/src/matrix/data_manager/float32_matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/data_manager/float64_matrix_data_manager.dart';
-import 'package:ml_linalg/src/matrix/float64_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32_matrix.dart';
+import 'package:ml_linalg/src/matrix/float64_matrix.g.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/matrix_factory.dart';
-import 'package:ml_linalg/src/matrix/float32_matrix.dart';
 import 'package:ml_linalg/vector.dart';
 
 class MatrixFactoryImpl implements MatrixFactory {

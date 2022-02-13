@@ -8,7 +8,7 @@ const numOfRows = 300;
 const numOfColumns = 300;
 
 class Float32MatrixDecomposeBenchmark extends BenchmarkBase {
-  Float32MatrixDecomposeBenchmark() : super('Matrix exp method');
+  Float32MatrixDecomposeBenchmark() : super('Matrix decompose method');
 
   final Matrix _source = Matrix.fromRows(
     List<Vector>.filled(
