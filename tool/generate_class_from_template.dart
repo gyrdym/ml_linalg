@@ -4,12 +4,15 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 
 final _defaultMapping = {
+  // Order is important!
+  // First, replace imports and names for float32x4 data type, then replace imports and names for float32 data type
+
+  RegExp('\/float32x4([^/]*)\.dart'): (Match match) =>
+      '/float64x2${match.group(1)}.g.dart',
   RegExp('(F|f)loat32x4'): (Match match) => '${match.group(1)}loat64x2',
 
-  // import paths replacer regexp:
   RegExp('\/float32([^/]*)\.dart'): (Match match) =>
       '/float64${match.group(1)}.g.dart',
-
   RegExp('(F|f)loat32'): (Match match) => '${match.group(1)}loat64',
 };
 

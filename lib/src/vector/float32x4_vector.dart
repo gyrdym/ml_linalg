@@ -11,11 +11,11 @@ import 'package:ml_linalg/src/common/exception/unsupported_operand_type_exceptio
 import 'package:ml_linalg/src/vector/exception/cosine_of_zero_vector_exception.dart';
 import 'package:ml_linalg/src/vector/exception/empty_vector_exception.dart';
 import 'package:ml_linalg/src/vector/exception/matrix_rows_and_vector_length_mismatch_exception.dart';
-import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/exception/unsupported_distance_type_exception.dart';
 import 'package:ml_linalg/src/vector/exception/unsupported_norm_type_exception.dart';
+import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
-import 'package:ml_linalg/src/vector/simd_helper/float32x4_helper.dart';
+import 'package:ml_linalg/src/vector/simd_helper/simd_helper.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
@@ -26,7 +26,8 @@ const _bucketSize =
 final _simdOnes = Float32x4.splat(1.0);
 
 class Float32x4Vector with IterableMixin<double> implements Vector {
-  Float32x4Vector.fromList(List<num> source, this._cacheManager)
+  Float32x4Vector.fromList(
+      List<num> source, this._cacheManager, this._simdHelper)
       : length = source.length,
         _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
         _buffer = ByteData(_getNumOfBuckets(source.length, _bucketSize) *
@@ -42,7 +43,8 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.randomFilled(
     this.length,
     int seed,
-    this._cacheManager, {
+    this._cacheManager,
+    this._simdHelper, {
     num min = 0,
     num max = 1,
   })  : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
@@ -63,7 +65,8 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float32x4Vector.filled(this.length, num value, this._cacheManager)
+  Float32x4Vector.filled(
+      this.length, num value, this._cacheManager, this._simdHelper)
       : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(
                 _getNumOfBuckets(length, _bucketSize) * _bytesPerSimdElement)
@@ -75,20 +78,20 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
   }
 
-  Float32x4Vector.zero(this.length, this._cacheManager)
+  Float32x4Vector.zero(this.length, this._cacheManager, this._simdHelper)
       : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = ByteData(
                 _getNumOfBuckets(length, _bucketSize) * _bytesPerSimdElement)
             .buffer;
 
   Float32x4Vector.fromSimdList(
-      Float32x4List data, this.length, this._cacheManager)
+      Float32x4List data, this.length, this._cacheManager, this._simdHelper)
       : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
         _buffer = data.buffer {
     _cachedInnerSimdList = data;
   }
 
-  Float32x4Vector.empty(this._cacheManager)
+  Float32x4Vector.empty(this._cacheManager, this._simdHelper)
       : length = 0,
         _numOfBuckets = 0,
         _buffer = ByteData(0).buffer;
@@ -100,7 +103,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   final int length;
 
   final CacheManager _cacheManager;
-  final Float32x4Helper _simdHelper = const Float32x4Helper();
+  final SimdHelper _simdHelper;
   final ByteBuffer _buffer;
   final int _numOfBuckets;
 
