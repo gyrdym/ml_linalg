@@ -293,7 +293,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Returns randomly filled symmetric and positive definite matrix of
   /// [size]x[size] dimension
   ///
-  /// Keep in mind that [min] and [max] are constraints for an random
+  /// Keep in mind that [min] and [max] are constraints for a random
   /// intermediate matrix which is used to build the result matrix
   factory Matrix.randomSPD(int size,
           {DType dtype = DType.float32,
@@ -524,7 +524,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   double prod();
 
   /// Decomposes the original matrix into several matrices whose product results in the original matrix
-  /// /// Default value id [Decomposition.LU]
+  /// Default value id [Decomposition.LU]
   Iterable<Matrix> decompose([Decomposition decompositionType]);
 
   /// Finds the inverse of the original matrix. Product of the inverse and the original matrix results in singular matrix
