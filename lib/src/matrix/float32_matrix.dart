@@ -535,7 +535,9 @@ class Float32Matrix
       throw ForwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final X = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+    final zeroes = List.filled(rowsNum, 0.0);
+    final generator = (_) => Float32List.fromList(zeroes);
+    final X = List.generate(rowsNum, generator);
 
     for (var i = 0; i < rowsNum; i++) {
       for (var row = 0; row < rowsNum; row++) {
