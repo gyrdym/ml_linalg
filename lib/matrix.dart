@@ -292,6 +292,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
 
   /// Returns randomly filled symmetric and positive definite matrix of
   /// [size]x[size] dimension
+  ///
+  /// Keep in mind that [min] and [max] are constraints for an random
+  /// intermediate matrix which is used to build the result matrix
   factory Matrix.randomSPD(int size,
           {DType dtype = DType.float32,
           num min = -1000,

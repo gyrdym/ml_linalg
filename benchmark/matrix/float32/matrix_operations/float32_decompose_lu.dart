@@ -7,7 +7,8 @@ const numOfRows = 300;
 const numOfColumns = 300;
 
 class Float32MatrixDecomposeLUBenchmark extends BenchmarkBase {
-  Float32MatrixDecomposeLUBenchmark() : super('Matrix decompose method (LU)');
+  Float32MatrixDecomposeLUBenchmark()
+      : super('Matrix float32 decompose method (LU)');
 
   final Matrix _source =
       Matrix.random(numOfRows, numOfColumns, dtype: DType.float32);

@@ -5,7 +5,7 @@ import 'package:ml_linalg/matrix.dart';
 
 class Float32MatrixDecomposeCholeskyBenchmark extends BenchmarkBase {
   Float32MatrixDecomposeCholeskyBenchmark()
-      : super('Matrix decompose method (Cholesky)');
+      : super('Matrix float32 decompose method (Cholesky)');
 
   final Matrix _source = Matrix.randomSPD(300, dtype: DType.float32);
 

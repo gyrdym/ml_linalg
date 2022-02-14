@@ -562,7 +562,9 @@ class Float64Matrix
       throw BackwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final X = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+    final zeroes = List.filled(rowsNum, 0.0);
+    final generator = (_) => Float64List.fromList(zeroes);
+    final X = List.generate(rowsNum, generator);
 
     for (var i = rowsNum - 1; i >= 0; i--) {
       for (var row = rowsNum - 1; row >= 0; row--) {
