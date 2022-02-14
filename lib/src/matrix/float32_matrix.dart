@@ -494,7 +494,7 @@ class Float32Matrix
   }
 
   @override
-  Matrix inverse([Inverse inverseType = Inverse.cholesky]) {
+  Matrix inverse([Inverse inverseType = Inverse.LU]) {
     switch (inverseType) {
       case Inverse.cholesky:
         return _choleskyInverse();
@@ -581,7 +581,9 @@ class Float32Matrix
       throw CholeskyNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final lower = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+    final zeroes = List.filled(rowsNum, 0.0);
+    final generator = (_) => Float32List.fromList(zeroes);
+    final lower = List.generate(rowsNum, generator);
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j <= i; j++) {

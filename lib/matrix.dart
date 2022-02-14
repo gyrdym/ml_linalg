@@ -281,6 +281,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   }) =>
       createMatrixFactory().row(dtype, source);
 
+  /// Returns randomly filled matrix of [rowsNum]x[columnsCount] dimension
   factory Matrix.random(int rowsNum, int columnsCount,
           {DType dtype = DType.float32,
           num min = -1000,
@@ -288,6 +289,16 @@ abstract class Matrix implements Iterable<Iterable<double>> {
           int? seed}) =>
       createMatrixFactory()
           .random(dtype, rowsNum, columnsCount, max: max, min: min, seed: seed);
+
+  /// Returns randomly filled symmetric and positive definite matrix of
+  /// [size]x[size] dimension
+  factory Matrix.randomSPD(int size,
+          {DType dtype = DType.float32,
+          num min = -1000,
+          num max = 1000,
+          int? seed}) =>
+      createMatrixFactory()
+          .randomSPD(dtype, size, max: max, min: min, seed: seed);
 
   /// Returns a restored matrix from a serializable map
   factory Matrix.fromJson(Map<String, dynamic> json) => fromMatrixJson(json)!;
@@ -510,9 +521,11 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   double prod();
 
   /// Decomposes the original matrix into several matrices whose product results in the original matrix
+  /// /// Default value id [Decomposition.LU]
   Iterable<Matrix> decompose([Decomposition decompositionType]);
 
   /// Finds the inverse of the original matrix. Product of the inverse and the original matrix results in singular matrix
+  /// Default value id [Inverse.LU]
   Matrix inverse([Inverse inverseType]);
 
   /// Returns a serializable map

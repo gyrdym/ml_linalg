@@ -252,4 +252,13 @@ class MatrixFactoryImpl implements MatrixFactory {
             'Matrix of type $dtype is not implemented yet');
     }
   }
+
+  @override
+  Matrix randomSPD(DType dtype, int size,
+      {num min = -1000, num max = 1000, int? seed}) {
+    final A =
+        Matrix.random(size, size, dtype: dtype, max: max, min: min, seed: seed);
+
+    return A * A.transpose() + Matrix.scalar(size * 1.0, size, dtype: dtype);
+  }
 }

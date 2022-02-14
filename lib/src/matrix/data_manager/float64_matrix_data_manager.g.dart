@@ -155,15 +155,15 @@ class Float64MatrixDataManager implements MatrixDataManager {
     }
   }
 
-  Float64MatrixDataManager.random(DType dtype, int rowCount, int colCount,
+  Float64MatrixDataManager.random(DType dtype, int rowsNum, int columnsNum,
       {num min = -1000, num max = 1000, int? seed})
-      : rowsNum = rowCount,
-        columnsNum = colCount,
-        rowIndices = getZeroBasedIndices(rowCount),
-        columnIndices = getZeroBasedIndices(colCount),
-        _rowsCache = List<Vector?>.filled(rowCount, null),
-        _colsCache = List<Vector?>.filled(colCount, null),
-        _data = ByteData(rowCount * colCount * _bytesPerElement),
+      : rowsNum = rowsNum,
+        columnsNum = columnsNum,
+        rowIndices = getZeroBasedIndices(rowsNum),
+        columnIndices = getZeroBasedIndices(columnsNum),
+        _rowsCache = List<Vector?>.filled(rowsNum, null),
+        _colsCache = List<Vector?>.filled(columnsNum, null),
+        _data = ByteData(rowsNum * columnsNum * _bytesPerElement),
         areAllRowsCached = false,
         areAllColumnsCached = false {
     if (min >= max) {
@@ -174,7 +174,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
     final generator = math.Random(seed);
     final diff = max - min;
 
-    for (var i = 0; i < colCount * rowCount; i++) {
+    for (var i = 0; i < columnsNum * rowsNum; i++) {
       final value = generator.nextDouble() * diff + min;
 
       _data.setFloat64(i * _bytesPerElement, value, Endian.host);

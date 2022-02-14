@@ -16,4 +16,5 @@ abstract class MatrixFactory {
   Matrix column(DType dtype, List<double> source);
   Matrix random(DType dtype, int rowsNum, int columnsNum,
       {num min, num max, int? seed});
+  Matrix randomSPD(DType dtype, int size, {num min, num max, int? seed});
 }
