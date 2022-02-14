@@ -496,7 +496,7 @@ class Float64Matrix
   }
 
   @override
-  Matrix inverse([Inverse inverseType = Inverse.cholesky]) {
+  Matrix inverse([Inverse inverseType = Inverse.LU]) {
     switch (inverseType) {
       case Inverse.cholesky:
         return _choleskyInverse();
@@ -537,7 +537,9 @@ class Float64Matrix
       throw ForwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final X = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+    final zeroes = List.filled(rowsNum, 0.0);
+    final generator = (_) => Float64List.fromList(zeroes);
+    final X = List.generate(rowsNum, generator);
 
     for (var i = 0; i < rowsNum; i++) {
       for (var row = 0; row < rowsNum; row++) {
@@ -560,7 +562,9 @@ class Float64Matrix
       throw BackwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final X = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+    final zeroes = List.filled(rowsNum, 0.0);
+    final generator = (_) => Float64List.fromList(zeroes);
+    final X = List.generate(rowsNum, generator);
 
     for (var i = rowsNum - 1; i >= 0; i--) {
       for (var row = rowsNum - 1; row >= 0; row--) {
@@ -583,7 +587,9 @@ class Float64Matrix
       throw CholeskyNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final lower = List.generate(rowsNum, (index) => List.filled(rowsNum, 0.0));
+    final zeroes = List.filled(rowsNum, 0.0);
+    final generator = (_) => Float64List.fromList(zeroes);
+    final lower = List.generate(rowsNum, generator);
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j <= i; j++) {

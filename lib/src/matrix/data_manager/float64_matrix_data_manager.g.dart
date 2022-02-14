@@ -1,6 +1,7 @@
 /* This file is auto generated, do not change it manually */
 
 import 'dart:typed_data';
+import 'dart:math' as math;
 
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
@@ -151,6 +152,32 @@ class Float64MatrixDataManager implements MatrixDataManager {
     for (var i = 0; i < size; i++) {
       _data.setFloat64(
           (i * columnsNum + i) * _bytesPerElement, scalar, Endian.host);
+    }
+  }
+
+  Float64MatrixDataManager.random(DType dtype, int rowsNum, int columnsNum,
+      {num min = -1000, num max = 1000, int? seed})
+      : rowsNum = rowsNum,
+        columnsNum = columnsNum,
+        rowIndices = getZeroBasedIndices(rowsNum),
+        columnIndices = getZeroBasedIndices(columnsNum),
+        _rowsCache = List<Vector?>.filled(rowsNum, null),
+        _colsCache = List<Vector?>.filled(columnsNum, null),
+        _data = ByteData(rowsNum * columnsNum * _bytesPerElement),
+        areAllRowsCached = false,
+        areAllColumnsCached = false {
+    if (min >= max) {
+      throw ArgumentError.value(min,
+          'Argument `min` should be less than `max`, min: $min, max: $max');
+    }
+
+    final generator = math.Random(seed);
+    final diff = max - min;
+
+    for (var i = 0; i < columnsNum * rowsNum; i++) {
+      final value = generator.nextDouble() * diff + min;
+
+      _data.setFloat64(i * _bytesPerElement, value, Endian.host);
     }
   }
 
