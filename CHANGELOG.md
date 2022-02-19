@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.4.0
+- Matrix:
+  - Added `filterColumns` method
+
 ## 13.3.3
 - Matrix:
     - Added `random` constructor

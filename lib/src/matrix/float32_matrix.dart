@@ -194,6 +194,14 @@ class Float32Matrix
           dtype: dtype);
 
   @override
+  Matrix filterColumns(bool Function(Vector column, int idx) predicate) {
+    var i = 0;
+    return Matrix.fromColumns(
+        columns.where((column) => predicate(column, i++)).toList(),
+        dtype: dtype);
+  }
+
+  @override
   Matrix mapRows(Vector Function(Vector row) mapper) =>
       Matrix.fromRows(List.generate(rowsNum, (int i) => mapper(getRow(i))),
           dtype: dtype);
