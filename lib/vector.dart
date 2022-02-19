@@ -412,6 +412,9 @@ abstract class Vector implements Iterable<double> {
   /// Creates a new vector applying [mapper] to each element of this [Vector]
   Vector mapToVector(double Function(double value) mapper);
 
+  /// Returns a new vector consisting of filtered elements of the original vector
+  Vector filterElements(bool Function(double element, int idx) predicate);
+
   /// Returns a new vector composed of values whose indices are within the range
   /// [start] (inclusive) - [end] (exclusive)
   Vector subvector(int start, [int? end]);

@@ -114,7 +114,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       _cachedInnerSimdList ??= _buffer.asFloat32x4List();
   Float32x4List? _cachedInnerSimdList;
 
-  List<double> get _innerTypedList =>
+  Float32List get _innerTypedList =>
       _cachedInnerTypedList ??= _buffer.asFloat32List(0, length);
   Float32List? _cachedInnerTypedList;
 
@@ -501,6 +501,14 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   @override
   Vector mapToVector(double Function(double value) mapper) =>
       Vector.fromList(_innerTypedList.map(mapper).toList(), dtype: dtype);
+
+  @override
+  Vector filterElements(bool Function(double element, int idx) predicate) {
+    var i = 0;
+    return Vector.fromList(
+        _innerTypedList.where((element) => predicate(element, i++)).toList(),
+        dtype: dtype);
+  }
 
   @override
   double operator [](int index) {
