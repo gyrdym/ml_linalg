@@ -3,8 +3,8 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/vector.dart';
 
-const numOfRows = 100000;
-const numOfColumns = 10000;
+const numOfRows = 10000;
+const numOfColumns = 1000;
 
 class Float32MatrixMultMatrixVectorBenchmark extends BenchmarkBase {
   Float32MatrixMultMatrixVectorBenchmark()
