@@ -63,6 +63,8 @@
         - [Matrix row-wise mapping](#matrix-row-wise-mapping)
         - [Matrix column-wise mapping](#matrix-column-wise-mapping)
         - [Matrix element-wise mapping](#matrix-element-wise-mapping)
+        - [Matrix' columns filtering (by column index)](#matrix-columns-filtering-by-column-index)
+        - [Matrix' columns filtering (by column)](#matrix-columns-filtering-by-column)
         - [Getting max value of the matrix](#getting-max-value-of-the-matrix)
         - [Getting min value of the matrix](#getting-min-value-of-the-matrix)
         - [Matrix element-wise power](#matrix-element-wise-power)
@@ -871,6 +873,47 @@ print(result);
 //  [30.0, 32.0,   0.0, 36.0],
 //  [42.0, 44.0, -46.0, 48.0],
 // ]
+````
+
+#### Matrix' columns filtering (by column index) 
+````dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix = Matrix.fromList([
+  [11.0, 12.0, 13.0, 14.0],
+  [15.0, 16.0, 17.0, 18.0],
+  [21.0, 22.0, 23.0, 24.0],
+], dtype: dtype);
+
+final indicesToExclude = [0, 3];
+final result = matrix.filterColumns((column, idx) => !indicesToExclude.contains(idx));
+
+print(result);
+// [
+//   [12.0, 13.0],
+//   [16.0, 17.0],
+//   [22.0, 23.0],
+// ]
+````
+
+#### Matrix' columns filtering (by column)
+````dart
+import 'package:ml_linalg/linalg.dart';
+
+final matrix = Matrix.fromList([
+  [11.0, 33.0, 13.0, 14.0],
+  [15.0, 92.0, 17.0, 18.0],
+  [21.0, 22.0, 23.0, 24.0],
+], dtype: dtype);
+
+final result = matrix.filterColumns((column, _) => column.sum() > 100);
+
+print(result);
+// [
+//   [33.0],
+//   [92.0],
+//   [22.0],
+// ];
 ````
 
 #### Getting max value of the matrix
