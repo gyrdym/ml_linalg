@@ -423,7 +423,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// [mapper] function
   Matrix mapColumns(Vector Function(Vector column) mapper);
 
-  /// Returns a new matrix consisted of filtered columns of the original matrix
+  /// Returns a new matrix consisting of filtered columns of the original matrix
   Matrix filterColumns(bool Function(Vector column, int idx) predicate);
 
   /// Performs row-wise mapping of this [Matrix] to a new one via passed

@@ -8,7 +8,7 @@ void matrixFilterColumnsTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('filterColumns method', () {
         test(
-            'should return a new matrix consisted of filtered columns, filter by column index',
+            'should return a new matrix consisting of filtered columns, filter by column index',
             () {
           final matrix = Matrix.fromList([
             [11.0, 12.0, 13.0, 14.0],
@@ -30,7 +30,7 @@ void matrixFilterColumnsTestGroupFactory(DType dtype) =>
         });
 
         test(
-            'should return a new matrix consisted of filtered columns, filter by column',
+            'should return a new matrix consisting of filtered columns, filter by column',
             () {
           final matrix = Matrix.fromList([
             [11.0, 33.0, 13.0, 14.0],
