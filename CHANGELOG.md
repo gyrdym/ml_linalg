@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.5.0
+- Vector:
+  - Added `filterElements` method
+
 ## 13.4.0
 - Matrix:
   - Added `filterColumns` method
