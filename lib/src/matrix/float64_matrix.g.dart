@@ -251,6 +251,11 @@ class Float64Matrix
 
   @override
   Vector deviation([Axis axis = Axis.columns]) {
+    return variance(axis).sqrt();
+  }
+
+  @override
+  Vector variance([Axis axis = Axis.columns]) {
     if (!hasData) {
       return Vector.empty(dtype: dtype);
     }
@@ -259,12 +264,12 @@ class Float64Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _cacheManager.retrieveValue(matrixDeviationByColumnsKey,
-            () => _deviation(rows, means, rowsNum));
+        return _cacheManager.retrieveValue(
+            matrixDeviationByColumnsKey, () => _variance(rows, means, rowsNum));
 
       case Axis.rows:
         return _cacheManager.retrieveValue(matrixDeviationByRowsKey,
-            () => _deviation(columns, means, columnsNum));
+            () => _variance(columns, means, columnsNum));
 
       default:
         throw UnimplementedError('Deviation calculation for axis $axis is not '
@@ -272,12 +277,11 @@ class Float64Matrix
     }
   }
 
-  Vector _deviation(Iterable<Vector> vectors, Vector means, int vectorsNum) =>
+  Vector _variance(Iterable<Vector> vectors, Vector means, int vectorsNum) =>
       vectors
           .map((vector) => (vector - means) * (vector - means))
           .reduce((summed, vector) => summed + vector)
-          .scalarDiv(vectorsNum)
-          .sqrt();
+          .scalarDiv(vectorsNum);
 
   @override
   Vector toVector() {

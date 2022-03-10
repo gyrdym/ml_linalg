@@ -500,6 +500,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Returns standard deviation values of matrix column/rows
   Vector deviation([Axis axis = Axis.columns]);
 
+  /// Returns variance of matrix column/rows
+  Vector variance([Axis axis = Axis.columns]);
+
   /// Returns a new matrix with sorted elements from this [Matrix]
   Matrix sort(double Function(Vector vector) selectSortValue,
       [Axis axis = Axis.rows, SortDirection sortDir = SortDirection.asc]);
