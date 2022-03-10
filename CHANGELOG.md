@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.6.0
+- Matrix:
+  - Added `variance` method
+
 ## 13.5.0
 - Vector:
   - Added `filterElements` method
