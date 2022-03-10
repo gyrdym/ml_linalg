@@ -263,10 +263,10 @@ class Float32Matrix
     switch (axis) {
       case Axis.columns:
         return _cacheManager.retrieveValue(
-            matrixDeviationByColumnsKey, () => _variance(rows, means, rowsNum));
+            matrixVarianceByColumnsKey, () => _variance(rows, means, rowsNum));
 
       case Axis.rows:
-        return _cacheManager.retrieveValue(matrixDeviationByRowsKey,
+        return _cacheManager.retrieveValue(matrixVarianceByRowsKey,
             () => _variance(columns, means, columnsNum));
 
       default:
