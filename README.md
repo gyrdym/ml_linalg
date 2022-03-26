@@ -20,6 +20,7 @@
         - [Euclidean norm](#euclidean-norm)
         - [Manhattan norm](#manhattan-norm)
         - [Mean value](#mean-value)
+        - [Median value](#median-value)
         - [Sum of all vector elements](#sum-of-all-vector-elements)
         - [Product of all vector elements](#product-of-all-vector-elements)
         - [Element-wise power](#element-wise-power)
@@ -224,7 +225,7 @@ the difference is significant.
   import 'package:ml_linalg/linalg.dart';
 
   final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.norm();
+  final result = vector.norm();
 
   print(result); // sqrt(2^2 + 3^2 + 4^2 + 5^2 + 6^2) = sqrt(90) ~~ 9.48
 ````
@@ -234,7 +235,7 @@ the difference is significant.
   import 'package:ml_linalg/linalg.dart';
 
   final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.norm(Norm.manhattan);
+  final result = vector.norm(Norm.manhattan);
 
   print(result); // 2 + 3 + 4 + 5 + 6 = 20.0
 ````
@@ -244,10 +245,32 @@ the difference is significant.
   import 'package:ml_linalg/linalg.dart';
 
   final vector = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0]);
-  final result = vector1.mean();
+  final result = vector.mean();
 
   print(result); // (2 + 3 + 4 + 5 + 6) / 5 = 4.0
 ````
+
+#### Median value
+
+##### Even length
+```dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([10, 12, 4, 7, 9, 12]);
+  final result = vector.median();
+
+  print(result); // 9.5
+```
+
+##### Odd length
+```dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([10, 12, 4, 7, 9, 12, 34]);
+  final result = vector.median();
+
+  print(result); // 10
+```
 
 #### Sum of all vector elements
 ````Dart
@@ -306,7 +329,7 @@ the difference is significant.
 
   final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
   final scalar = 5.0;
-  final result = vector1 + scalar;
+  final result = vector + scalar;
 
   print(result.toList()); // [6.0, 7.0, 8.0, 9.0, 10.0]
 ````
