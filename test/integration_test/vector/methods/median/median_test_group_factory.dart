@@ -12,7 +12,7 @@ void vectorMedianTestGroupFactory(DType dtype) =>
           final vector = Vector.fromList([10, 12, 4, 7, 9, 12], dtype: dtype);
           // 4, 7, 9, 10, 12, 12
 
-          expect(vector.median(), 9);
+          expect(vector.median(), 9.5);
         });
 
         test('should find the median value, case 2', () {

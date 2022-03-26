@@ -406,10 +406,17 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
 
     return _cacheManager.retrieveValue(vectorMedianKey, () {
-      final sorted = Float64List.fromList(_innerTypedList)..sort();
-      final midIndex = ((_innerTypedList.length - 1) / 2).floor();
+      if (length == 1) {
+        return this[0];
+      }
 
-      return sorted[midIndex];
+      final sorted = Float64List.fromList(_innerTypedList)..sort();
+      final isOdd = length % 2 != 0;
+      final midIndex = ((length - 1) / 2).floor();
+
+      return isOdd
+          ? sorted[midIndex]
+          : (sorted[midIndex] + sorted[midIndex + 1]) / 2;
     }, skipCaching: skipCaching);
   }
 
