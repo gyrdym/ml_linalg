@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.7.0
+- Vector:
+  - Added `median` method
+
 ## 13.6.0
 - Matrix:
   - Added `variance` method
