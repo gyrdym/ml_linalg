@@ -398,6 +398,27 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   @override
+  double median({bool skipCaching = false}) {
+    if (isEmpty) {
+      throw EmptyVectorException();
+    }
+
+    return _cacheManager.retrieveValue(vectorMedianKey, () {
+      if (length == 1) {
+        return this[0];
+      }
+
+      final sorted = Float32List.fromList(_innerTypedList)..sort();
+      final isOdd = length % 2 != 0;
+      final midIndex = ((length - 1) / 2).floor();
+
+      return isOdd
+          ? sorted[midIndex]
+          : (sorted[midIndex] + sorted[midIndex + 1]) / 2;
+    }, skipCaching: skipCaching);
+  }
+
+  @override
   double norm([Norm normType = Norm.euclidean, bool skipCaching = false]) =>
       _cacheManager.retrieveValue(getCacheKeyForNormByNormType(normType), () {
         final power = _getPowerByNormType(normType);

@@ -6,6 +6,7 @@ const vectorAbsKey = 'abs';
 const vectorSumKey = 'sum';
 const vectorProdKey = 'prod';
 const vectorMeanKey = 'mean';
+const vectorMedianKey = 'median';
 const vectorExpKey = 'exp';
 const vectorLogKey = 'log';
 const vectorEuclideanNormKey = 'euclidean_norm';
@@ -24,6 +25,7 @@ final vectorCacheKeys = <String>{
   vectorSumKey,
   vectorProdKey,
   vectorMeanKey,
+  vectorMedianKey,
   vectorExpKey,
   vectorLogKey,
   vectorEuclideanNormKey,
