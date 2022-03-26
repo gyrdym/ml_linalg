@@ -351,10 +351,10 @@ abstract class Vector implements Iterable<double> {
   /// Returns cosine of the angle between [this] and [other] vector
   double getCosine(Vector other);
 
-  /// Returns a mean value of [this] vector
+  /// Returns the mean value of [this] vector
   double mean({bool skipCaching = false});
 
-  /// Returns a median value of [this] vector
+  /// Returns the median value of [this] vector
   double median({bool skipCaching = false});
 
   /// Calculates vector norm (magnitude)
