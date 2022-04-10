@@ -385,6 +385,9 @@ abstract class Vector implements Iterable<double> {
   /// Returns rescaled (min-max normed) version of this vector
   Vector rescale({bool skipCaching = false});
 
+  /// Copies the vector, sets the [value] by the [index] and returns the vector
+  Vector set(int index, num value);
+
   /// Returns a new vector from mapped elements of the original vector.
   /// Mapping function [mapper] should accept argument only of [Float32x4] or
   /// [Float64x2] data type (depends on [dtype] value, e.g. if [dtype] equals

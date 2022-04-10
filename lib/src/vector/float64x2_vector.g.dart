@@ -594,6 +594,15 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       }, skipCaching: skipCaching);
 
   @override
+  Vector set(int index, num value) {
+    final copy = Float64List.fromList(_innerTypedList);
+
+    copy[index] = value.toDouble();
+
+    return Vector.fromList(copy, dtype: dtype);
+  }
+
+  @override
   Map<String, dynamic> toJson() => vectorToJson(this)!;
 
   /// Returns exponent depending on vector norm type (for Euclidean norm - 2,
