@@ -15,6 +15,7 @@ void vectorSetTestGroupFactory(DType dtype) =>
           final actual = vector.set(0, 1001);
 
           expect(actual, equals([1001, 3.0, 4.0, 7.0, 9.0, 12.0]));
+          expect(actual.dtype, dtype);
         });
 
         test(
