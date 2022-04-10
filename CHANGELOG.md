@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.8.0
+- Vector:
+  - Added `set` method
+
 ## 13.7.0
 - Vector:
   - Added `median` method
