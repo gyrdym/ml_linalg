@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.9.0
+- Vector:
+  - `hamming` distance implemented
+
 ## 13.8.0
 - Vector:
   - Added `set` method

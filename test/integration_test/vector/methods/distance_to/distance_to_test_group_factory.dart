@@ -72,5 +72,63 @@ void vectorDistanceToTestGroupFactory(DType dtype) =>
           expect(() => vector1.distanceTo(vector2, distance: Distance.cosine),
               throwsException);
         });
+
+        test('should find Hamming distance, only one element is the same', () {
+          final vector1 =
+              Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0], dtype: dtype);
+          final vector2 =
+              Vector.fromList([1.0, 3.0, 2.0, 11.5, 10.0, 15.5], dtype: dtype);
+
+          expect(vector1.distanceTo(vector2, distance: Distance.hamming),
+              equals(5));
+        });
+
+        test('should find Hamming distance, two element are the same', () {
+          final vector1 =
+              Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0], dtype: dtype);
+          final vector2 =
+              Vector.fromList([1.0, 3.0, 2.0, 11.5, 10.0, 12.0], dtype: dtype);
+
+          expect(vector1.distanceTo(vector2, distance: Distance.hamming),
+              equals(4));
+        });
+
+        test('should find Hamming distance, all element are the same', () {
+          final vector1 =
+              Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0], dtype: dtype);
+          final vector2 =
+              Vector.fromList([10.0, 3.0, 4.0, 7.0, 9.0, 12.0], dtype: dtype);
+
+          expect(vector1.distanceTo(vector2, distance: Distance.hamming),
+              equals(0));
+        });
+
+        test(
+            'should find Hamming distance, single element vector, both vectors have the same element',
+            () {
+          final vector1 = Vector.fromList([-10.123], dtype: dtype);
+          final vector2 = Vector.fromList([-10.123], dtype: dtype);
+
+          expect(vector1.distanceTo(vector2, distance: Distance.hamming),
+              equals(0));
+        });
+
+        test(
+            'should find Hamming distance, single element vector, both vectors have different elements',
+            () {
+          final vector1 = Vector.fromList([-10.123], dtype: dtype);
+          final vector2 = Vector.fromList([-10.124], dtype: dtype);
+
+          expect(vector1.distanceTo(vector2, distance: Distance.hamming),
+              equals(1));
+        });
+
+        test('should find Hamming distance, empty vector', () {
+          final vector1 = Vector.empty(dtype: dtype);
+          final vector2 = Vector.empty(dtype: dtype);
+
+          expect(vector1.distanceTo(vector2, distance: Distance.hamming),
+              equals(0));
+        });
       });
     });
