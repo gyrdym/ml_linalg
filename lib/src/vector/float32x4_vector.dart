@@ -370,6 +370,9 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       case Distance.cosine:
         return 1 - getCosine(other);
 
+      case Distance.hamming:
+        return _getHammingDistance(other);
+
       default:
         throw UnsupportedDistanceTypeException(distance);
     }
@@ -660,6 +663,18 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   Float32x4 _simdToFloatPow(Float32x4 lane, num exponent) =>
       _simdHelper.pow(lane, exponent);
+
+  double _getHammingDistance(Vector other) {
+    var dist = 0.0;
+
+    for (var i = 0; i < _innerTypedList.length; i++) {
+      if (other[i] != _innerTypedList[i]) {
+        dist++;
+      }
+    }
+
+    return dist;
+  }
 
   Vector _matrixMul(Matrix matrix) {
     if (length != matrix.rowsNum) {
