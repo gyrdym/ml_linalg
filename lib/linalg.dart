@@ -2,6 +2,7 @@ export 'package:ml_linalg/axis.dart';
 export 'package:ml_linalg/decomposition.dart';
 export 'package:ml_linalg/distance.dart';
 export 'package:ml_linalg/dtype.dart';
+export 'package:ml_linalg/src/matrix/eigen_method.dart';
 export 'package:ml_linalg/inverse.dart';
 export 'package:ml_linalg/matrix.dart';
 export 'package:ml_linalg/matrix_norm.dart';

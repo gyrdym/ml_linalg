@@ -10,6 +10,8 @@ import 'package:ml_linalg/src/matrix/helper/create_matrix.dart';
 import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/vector.dart';
 
+import 'src/matrix/eigen.dart';
+
 /// An algebraic matrix with extended functionality, adapted for data science
 /// applications
 abstract class Matrix implements Iterable<Iterable<double>> {
@@ -532,6 +534,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Decomposes the original matrix into several matrices whose product results in the original matrix
   /// Default value id [Decomposition.LU]
   Iterable<Matrix> decompose([Decomposition decompositionType]);
+
+  /// Returns a set of eigen vector and eigen values for the matrix
+  Iterable<Eigen> eigen({Vector? initial, int iterationCount = 10, int? seed});
 
   /// Finds the inverse of the original matrix. Product of the inverse and the original matrix results in singular matrix
   /// Default value id [Inverse.LU]

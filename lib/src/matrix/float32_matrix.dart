@@ -18,6 +18,7 @@ import 'package:ml_linalg/src/common/exception/lu_decomposition_non_square_matri
 import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
+import 'package:ml_linalg/src/matrix/eigen.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
@@ -490,6 +491,15 @@ class Float32Matrix
   }
 
   @override
+  Iterable<Eigen> eigen({Vector? initial, int iterationCount = 10, int? seed}) {
+    var eigenVector =
+        (initial ?? Vector.randomFilled(columnsNum, dtype: dtype, seed: seed))
+            .normalize();
+
+    return _powerIteration(eigenVector, iterationCount);
+  }
+
+  @override
   Iterable<Matrix> decompose(
       [Decomposition decompositionType = Decomposition.LU]) {
     switch (decompositionType) {
@@ -661,6 +671,25 @@ class Float32Matrix
 
   @override
   Map<String, dynamic> toJson() => matrixToJson(this)!;
+
+  Iterable<Eigen> _powerIteration(Vector initial, int iterationCount) {
+    var eigenVector = initial;
+
+    for (var i = 1; i < iterationCount; i++) {
+      final candidate = this * eigenVector;
+
+      eigenVector = (candidate / candidate.norm()).toVector();
+    }
+
+    return [Eigen(_rayleighQuotient(eigenVector), eigenVector)];
+  }
+
+  num _rayleighQuotient(Vector eigenVector) {
+    return (Matrix.fromRows([eigenVector], dtype: dtype) * this)
+            .toVector()
+            .dot(eigenVector) /
+        eigenVector.dot(eigenVector);
+  }
 
   double _findExtrema(double Function(Vector vector) callback) {
     final rowIterator = rows.iterator;

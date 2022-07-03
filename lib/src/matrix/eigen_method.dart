@@ -1,0 +1,3 @@
+enum EigenMethod {
+  powerIteration,
+}
