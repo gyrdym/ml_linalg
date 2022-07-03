@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.10.0
+- Matrix:
+  - `eigen` method added
+
 ## 13.9.0
 - Vector:
   - `hamming` distance implemented
