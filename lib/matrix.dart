@@ -537,6 +537,8 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   Iterable<Matrix> decompose([Decomposition decompositionType]);
 
   /// Returns a collection of pairs of an eigenvector and its corresponding eigenvalue
+  ///
+  /// Default method id [EigenMethod.powerIteration]
   Iterable<Eigen> eigen(
       {EigenMethod method, Vector? initial, int iterationCount, int? seed});
 

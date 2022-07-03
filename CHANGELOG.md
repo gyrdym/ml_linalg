@@ -2,7 +2,7 @@
 
 ## 13.10.0
 - Matrix:
-  - `eigen` method added
+  - `eigen` method added, Power Iteration method added
 
 ## 13.9.0
 - Vector:
