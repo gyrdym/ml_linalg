@@ -225,7 +225,7 @@ abstract class Vector implements Iterable<double> {
   /// ```
   factory Vector.randomFilled(
     int length, {
-    int seed = 1,
+    int? seed,
     num min = 0,
     num max = 1,
     DType dtype = DType.float32,
