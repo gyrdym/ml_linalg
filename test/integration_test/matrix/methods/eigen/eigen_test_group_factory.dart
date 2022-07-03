@@ -16,7 +16,8 @@ void eigenTestGroupFactory(DType dtype) =>
             [1, 0],
             [0, 2],
           ], dtype: dtype);
-          final actual = matrix.eigen();
+          final initial = Vector.randomFilled(2, seed: 10, dtype: dtype);
+          final actual = matrix.eigen(initial: initial);
 
           expect(actual, hasLength(1));
           expect(actual.elementAt(0).value, closeTo(2, 1e-3));
