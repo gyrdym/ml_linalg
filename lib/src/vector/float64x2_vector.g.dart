@@ -44,7 +44,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   Float64x2Vector.randomFilled(
     this.length,
-    int seed,
+    int? seed,
     this._cacheManager,
     this._simdHelper, {
     num min = 0,
