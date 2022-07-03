@@ -59,7 +59,7 @@
         - [Matrix Cholesky inversion](#matrix-cholesky-inversion)
         - [Lower triangular matrix inversion](#lower-triangular-matrix-inversion)
         - [Upper triangular matrix inversion](#upper-triangular-matrix-inversion)
-        - [Obtaining Matrix eigen vectors and eigen values, Power Iteration method](#obtaining-matrix-eigen-vectors-and-eigen-values-power-iteration-method)
+        - [Obtaining Matrix eigenvectors and eigenvalues, Power Iteration method](#obtaining-matrix-eigenvectors-and-eigenvalues-power-iteration-method)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)
         - [Matrix row-wise mapping](#matrix-row-wise-mapping)
@@ -821,9 +821,9 @@ print(matrix1 - matrix2);
   // [0, 0, 1],
 ```
 
-#### Obtaining Matrix eigen vectors and eigen values, Power Iteration method
+#### Obtaining Matrix eigenvectors and eigenvalues, Power Iteration method
 
-The method returns a collection of pairs of an eigen vector and its corresponding eigen value. 
+The method returns a collection of pairs of an eigenvector and its corresponding eigenvalue. 
 By default `Power iteration` method is used.
 
 ```dart
