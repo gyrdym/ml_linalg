@@ -19,6 +19,7 @@ import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_excepti
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/eigen.dart';
+import 'package:ml_linalg/src/matrix/eigen_method.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
@@ -491,12 +492,22 @@ class Float32Matrix
   }
 
   @override
-  Iterable<Eigen> eigen({Vector? initial, int iterationCount = 10, int? seed}) {
+  Iterable<Eigen> eigen(
+      {EigenMethod method = EigenMethod.powerIteration,
+      Vector? initial,
+      int iterationCount = 10,
+      int? seed}) {
     var eigenVector =
         (initial ?? Vector.randomFilled(columnsNum, dtype: dtype, seed: seed))
             .normalize();
 
-    return _powerIteration(eigenVector, iterationCount);
+    switch (method) {
+      case EigenMethod.powerIteration:
+        return _powerIteration(eigenVector, iterationCount);
+
+      default:
+        throw UnimplementedError('Eigen method $method isn\'t implemented yet');
+    }
   }
 
   @override
