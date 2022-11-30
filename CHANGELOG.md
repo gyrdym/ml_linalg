@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.10.1
+-Vector:
+  - '+', '-', '/', '*' operators: acceptable types narrowed
+
 ## 13.10.0
 - Matrix:
   - `eigen` method added, Power Iteration method added

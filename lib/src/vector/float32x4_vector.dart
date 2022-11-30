@@ -8,6 +8,7 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/common/exception/unsupported_operand_type_exception.dart';
+import 'package:ml_linalg/src/matrix/float32_matrix.dart';
 import 'package:ml_linalg/src/vector/exception/cosine_of_zero_vector_exception.dart';
 import 'package:ml_linalg/src/vector/exception/empty_vector_exception.dart';
 import 'package:ml_linalg/src/vector/exception/matrix_rows_and_vector_length_mismatch_exception.dart';
@@ -156,9 +157,9 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector operator +(Object value) {
-    if (value is Vector || value is Matrix) {
-      final other =
-          (value is Matrix ? value.toVector() : value) as Float32x4Vector;
+    if (value is Float32x4Vector || value is Float32Matrix) {
+      final other = (value is Float32Matrix ? value.toVector() : value)
+          as Float32x4Vector;
 
       if (other.length != length) {
         throw VectorsLengthMismatchException(length, other.length);
@@ -184,12 +185,13 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    throw UnsupportedOperandTypeException(value.runtimeType);
+    throw UnsupportedOperandTypeException(value.runtimeType,
+        operationName: 'Vector "+" operator');
   }
 
   @override
   Vector operator -(Object value) {
-    if (value is Vector || value is Matrix) {
+    if (value is Float32x4Vector || value is Float32Matrix) {
       final other =
           (value is Matrix ? value.toVector() : value) as Float32x4Vector;
 
@@ -217,13 +219,14 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    throw UnsupportedOperandTypeException(value.runtimeType);
+    throw UnsupportedOperandTypeException(value.runtimeType,
+        operationName: 'Vector "-" operator');
   }
 
   @override
   Vector operator *(Object value) {
-    if (value is Vector) {
-      final other = value as Float32x4Vector;
+    if (value is Float32x4Vector) {
+      final other = value;
 
       if (other.length != length) {
         throw VectorsLengthMismatchException(length, other.length);
@@ -238,7 +241,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    if (value is Matrix) {
+    if (value is Float32Matrix) {
       return _matrixMul(value);
     }
 
@@ -252,13 +255,14 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    throw UnsupportedOperandTypeException(value.runtimeType);
+    throw UnsupportedOperandTypeException(value.runtimeType,
+        operationName: 'Vector "*" operator');
   }
 
   @override
   Vector operator /(Object value) {
-    if (value is Vector) {
-      final other = value as Float32x4Vector;
+    if (value is Float32x4Vector) {
+      final other = value;
 
       if (other.length != length) {
         throw VectorsLengthMismatchException(length, other.length);
@@ -283,7 +287,8 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    throw UnsupportedOperandTypeException(value.runtimeType);
+    throw UnsupportedOperandTypeException(value.runtimeType,
+        operationName: 'Vector "/" operator');
   }
 
   @override
