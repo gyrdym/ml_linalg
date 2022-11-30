@@ -1,7 +1,7 @@
 class UnsupportedOperandTypeException implements Exception {
   UnsupportedOperandTypeException(Type operandType, {String operationName = ''})
       : _message =
-            '${operationName.isNotEmpty ? '${operationName}, ' : ''}Unsupported operand type: $operandType';
+            '${operationName.isNotEmpty ? '$operationName, ' : ''}Unsupported operand type: $operandType';
 
   final String _message;
 
