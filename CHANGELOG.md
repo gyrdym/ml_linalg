@@ -1,7 +1,11 @@
 # Changelog
 
+## 13.10.2
+- Vector:
+  - `fromList`, `randomFilled`, `filled` constructors speed up
+
 ## 13.10.1
--Vector:
+- Vector:
   - '+', '-', '/', '*' operators: acceptable types narrowed
 
 ## 13.10.0
