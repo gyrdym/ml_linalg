@@ -31,15 +31,14 @@ final _simdOnes = Float64x2.splat(1.0);
 class Float64x2Vector with IterableMixin<double> implements Vector {
   Float64x2Vector.fromList(
       List<num> source, this._cacheManager, this._simdHelper)
-      : length = source.length,
-        _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize),
-        _buffer = ByteData(_getNumOfBuckets(source.length, _bucketSize) *
-                _bytesPerSimdElement)
-            .buffer {
+      : length = source.length {
+    _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
+    final byteData = ByteData(_numOfBuckets * _bytesPerSimdElement);
+    _buffer = byteData.buffer;
+
     for (var i = 0; i < length; i++) {
-      _buffer
-          .asByteData()
-          .setFloat64(_bytesPerElement * i, source[i].toDouble(), Endian.host);
+      byteData.setFloat64(
+          _bytesPerElement * i, source[i].toDouble(), Endian.host);
     }
   }
 
@@ -50,34 +49,33 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     this._simdHelper, {
     num min = 0,
     num max = 1,
-  })  : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _buffer = ByteData(
-                _getNumOfBuckets(length, _bucketSize) * _bytesPerSimdElement)
-            .buffer {
+  }) {
     if (min >= max) {
       throw ArgumentError.value(min,
           'Argument `min` should be less than `max`, min: $min, max: $max');
     }
 
+    _numOfBuckets = _getNumOfBuckets(length, _bucketSize);
+    final byteData = ByteData(_numOfBuckets * _bytesPerSimdElement);
+    _buffer = byteData.buffer;
+
     final generator = math.Random(seed);
     final diff = max - min;
 
     for (var i = 0; i < length; i++) {
-      _buffer.asByteData().setFloat64(_bytesPerElement * i,
+      byteData.setFloat64(_bytesPerElement * i,
           generator.nextDouble() * diff + min, Endian.host);
     }
   }
 
   Float64x2Vector.filled(
-      this.length, num value, this._cacheManager, this._simdHelper)
-      : _numOfBuckets = _getNumOfBuckets(length, _bucketSize),
-        _buffer = ByteData(
-                _getNumOfBuckets(length, _bucketSize) * _bytesPerSimdElement)
-            .buffer {
+      this.length, num value, this._cacheManager, this._simdHelper) {
+    _numOfBuckets = _getNumOfBuckets(length, _bucketSize);
+    final byteData = ByteData(_numOfBuckets * _bytesPerSimdElement);
+    _buffer = byteData.buffer;
+
     for (var i = 0; i < length; i++) {
-      _buffer
-          .asByteData()
-          .setFloat64(_bytesPerElement * i, value.toDouble(), Endian.host);
+      byteData.setFloat64(_bytesPerElement * i, value.toDouble(), Endian.host);
     }
   }
 
@@ -107,8 +105,8 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   final CacheManager _cacheManager;
   final SimdHelper _simdHelper;
-  final ByteBuffer _buffer;
-  final int _numOfBuckets;
+  late ByteBuffer _buffer;
+  late int _numOfBuckets;
 
   @override
   Iterator<double> get iterator => _innerTypedList.iterator;
