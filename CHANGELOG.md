@@ -1,5 +1,10 @@
 # Changelog
 
+## 13.10.3
+- Vector:
+    - Add compatibility for arithmetic operations between float32 and float64 vectors
+    - Add compatibility for arithmetic operations with List class
+
 ## 13.10.2
 - Vector:
   - `fromList`, `randomFilled`, `filled` constructors speed up

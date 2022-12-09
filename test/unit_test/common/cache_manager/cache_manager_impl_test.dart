@@ -10,7 +10,7 @@ void main() {
       final manager = CacheManagerImpl(cacheKeys);
       var calledTimes = 0;
 
-      final value = manager.retrieveValue(cacheKey, () {
+      final value = manager.get(cacheKey, () {
         calledTimes++;
         return 'value';
       });
@@ -29,9 +29,9 @@ void main() {
         return value;
       };
 
-      final cachedValue1 = manager.retrieveValue(cacheKey, calculateIfAbsentFn);
-      final cachedValue2 = manager.retrieveValue(cacheKey, calculateIfAbsentFn);
-      final cachedValue3 = manager.retrieveValue(cacheKey, calculateIfAbsentFn);
+      final cachedValue1 = manager.get(cacheKey, calculateIfAbsentFn);
+      final cachedValue2 = manager.get(cacheKey, calculateIfAbsentFn);
+      final cachedValue3 = manager.get(cacheKey, calculateIfAbsentFn);
 
       expect(calledTimes, 1);
       expect(cachedValue1, value);
@@ -42,8 +42,8 @@ void main() {
     test('should throw error if non existent key was accessed', () {
       final manager = CacheManagerImpl(cacheKeys);
 
-      expect(() => manager.retrieveValue('non_existent_key', () => 'val'),
-          throwsException);
+      expect(
+          () => manager.get('non_existent_key', () => 'val'), throwsException);
     });
   });
 }

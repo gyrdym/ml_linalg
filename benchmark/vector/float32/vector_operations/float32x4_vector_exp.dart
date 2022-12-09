@@ -1,4 +1,4 @@
-// Approx. 20 seconds (MacBook Air mid 2017)
+// Approx. 3 seconds (MacBook Air mid 2017) Dart 2.16.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';

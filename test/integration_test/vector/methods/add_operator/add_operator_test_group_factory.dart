@@ -23,6 +23,32 @@ void vectorAddOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
+        test('should perform addition of a vector of different dtype', () {
+          final vector1 =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+          final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
+              dtype: dtypeToInverseDType[dtype]!);
+
+          final actual = vector1 + vector2;
+          final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
+
+          expect(actual, equals(expected));
+          expect(actual.length, equals(5));
+          expect(actual.dtype, dtype);
+        });
+
+        test('should perform addition of a list', () {
+          final vector1 =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+
+          final actual = vector1 + [1.0, 2.0, 3.0, 4.0, 5.0];
+          final expected = [2.0, 4.0, 6.0, 8.0, 10.0];
+
+          expect(actual, equals(expected));
+          expect(actual.length, equals(5));
+          expect(actual.dtype, dtype);
+        });
+
         test(
             'should throw an exception if one tries to add vectors of different '
             'lengths', () {

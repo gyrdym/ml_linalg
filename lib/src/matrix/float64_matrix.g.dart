@@ -33,11 +33,11 @@ class Float64Matrix
     implements Matrix {
   Float64Matrix(
     this._dataManager,
-    this._cacheManager,
+    this._cache,
   );
 
   final MatrixDataManager _dataManager;
-  final CacheManager _cacheManager;
+  final CacheManager _cache;
 
   @override
   DType get dtype => _dataManager.dtype;
@@ -233,12 +233,10 @@ class Float64Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _cacheManager.retrieveValue(
-            matrixMeansByColumnsKey, () => _mean(columns));
+        return _cache.get(matrixMeansByColumnsKey, () => _mean(columns));
 
       case Axis.rows:
-        return _cacheManager.retrieveValue(
-            matrixMeansByRowsKey, () => _mean(rows));
+        return _cache.get(matrixMeansByRowsKey, () => _mean(rows));
 
       default:
         throw UnimplementedError(
@@ -266,11 +264,11 @@ class Float64Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _cacheManager.retrieveValue(
+        return _cache.get(
             matrixVarianceByColumnsKey, () => _variance(rows, means, rowsNum));
 
       case Axis.rows:
-        return _cacheManager.retrieveValue(matrixVarianceByRowsKey,
+        return _cache.get(matrixVarianceByRowsKey,
             () => _variance(columns, means, columnsNum));
 
       default:
@@ -411,7 +409,7 @@ class Float64Matrix
           dtype: dtype);
 
   @override
-  Matrix exp({bool skipCaching = false}) => _cacheManager.retrieveValue(
+  Matrix exp({bool skipCaching = false}) => _cache.get(
       matrixExpKey,
       () => _dataManager.areAllRowsCached
           ? Matrix.fromRows(
@@ -431,7 +429,7 @@ class Float64Matrix
       skipCaching: skipCaching);
 
   @override
-  Matrix log({bool skipCaching = false}) => _cacheManager.retrieveValue(
+  Matrix log({bool skipCaching = false}) => _cache.get(
       matrixLogKey,
       () => _dataManager.areAllRowsCached
           ? Matrix.fromRows(
@@ -473,7 +471,7 @@ class Float64Matrix
       return double.nan;
     }
 
-    return _cacheManager.retrieveValue(
+    return _cache.get(
         matrixSumKey,
         () => _dataManager.areAllRowsCached
             ? rows.fold(0, (result, row) => result + row.sum())
@@ -486,7 +484,7 @@ class Float64Matrix
       return double.nan;
     }
 
-    return _cacheManager.retrieveValue(
+    return _cache.get(
         matrixProdKey,
         () => _dataManager.areAllRowsCached
             ? rows.fold(0, (result, row) => result * row.prod())

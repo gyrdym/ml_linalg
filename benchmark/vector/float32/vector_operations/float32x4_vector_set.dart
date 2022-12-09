@@ -1,4 +1,4 @@
-// Approx. 3 sec (MacBook Air mid 2017)
+// Approx. 0.9 sec (MacBook Air mid 2017)
 import 'dart:math' as math;
 
 import 'package:benchmark_harness/benchmark_harness.dart';

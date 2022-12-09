@@ -7,7 +7,7 @@ class CacheManagerImpl implements CacheManager {
   final Set<String> _keys;
 
   @override
-  T retrieveValue<T>(
+  T get<T>(
     String key,
     T Function() calculateIfAbsent, {
     bool skipCaching = false,
@@ -26,5 +26,5 @@ class CacheManagerImpl implements CacheManager {
   }
 
   @override
-  void clearCache() => _cache.clear();
+  void clear() => _cache.clear();
 }

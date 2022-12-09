@@ -129,13 +129,6 @@ parallel, thus element-wise sum of two arrays can be done for just one step:
 and [Float64x2](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float64x2-class.html) data types - 
 [Float32x4Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float32x4_vector.dart) and [Float64x2Vector](https://github.com/gyrdym/linalg/blob/master/lib/src/vector/float64x2_vector.gen.dart) (the second one is generated from the source code of the first vector's implementation)
 
-***
-#### NB
-
-*These vector classes can't be used interchangeably in the context of "+", "-", "/" and "\*" operators!*
-
-***
-
 &nbsp;&nbsp;&nbsp;&nbsp;Most of element-wise operations in the first one are performed in four "threads" and in the second one - in two "threads".
 
 &nbsp;&nbsp;&nbsp;&nbsp;Implementation of both classes is hidden from the library's users. You can create a 
