@@ -14,3 +14,8 @@ const dtypeToVectorTestTitle = {
   DType.float32: 'Float32x4Vector',
   DType.float64: 'Float64x4Vector',
 };
+
+const dtypeToInverseDType = {
+  DType.float32: DType.float64,
+  DType.float64: DType.float32,
+};
