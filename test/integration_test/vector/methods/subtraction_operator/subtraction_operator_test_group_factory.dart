@@ -21,6 +21,28 @@ void vectorSubtractionOperatorTestGroupFactory(DType dtype) =>
           expect(result.dtype, dtype);
         });
 
+        test('should perform subtraction with a vector of different dtype', () {
+          final vector1 =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+          final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
+              dtype: dtypeToInverseDType[dtype]!);
+          final result = vector1 - vector2;
+
+          expect(result, equals([0.0, 0.0, 0.0, 0.0, 0.0]));
+          expect(result.length, equals(5));
+          expect(result.dtype, dtype);
+        });
+
+        test('should perform subtraction with a list', () {
+          final vector1 =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+          final result = vector1 - [1.0, 2.0, 3.0, 4.0, 5.0];
+
+          expect(result, equals([0.0, 0.0, 0.0, 0.0, 0.0]));
+          expect(result.length, equals(5));
+          expect(result.dtype, dtype);
+        });
+
         test(
             'should throw an exception if one tries to subtract a vector of '
             'inappropriate length', () {

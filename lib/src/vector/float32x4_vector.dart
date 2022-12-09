@@ -191,7 +191,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         }
       }
 
-      return Vector.fromSimdList(result, length, dtype: dtype);
+      return Vector.fromList(result, dtype: dtype);
     }
 
     if (value is num) {
@@ -249,7 +249,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         }
       }
 
-      return Vector.fromSimdList(result, length, dtype: dtype);
+      return Vector.fromList(result, dtype: dtype);
     }
 
     if (value is num) {
@@ -310,7 +310,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         }
       }
 
-      return Vector.fromSimdList(result, length, dtype: dtype);
+      return Vector.fromList(result, dtype: dtype);
     }
 
     if (value is num) {
@@ -366,7 +366,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         }
       }
 
-      return Vector.fromSimdList(result, length, dtype: dtype);
+      return Vector.fromList(result, dtype: dtype);
     }
 
     if (value is num) {

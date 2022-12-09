@@ -22,6 +22,30 @@ void vectorMultiplicationOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
+        test('should perform multiplication by a vector of different dtype',
+            () {
+          final vector1 =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+          final vector2 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0],
+              dtype: dtypeToInverseDType[dtype]!);
+
+          final actual = vector1 * vector2;
+
+          expect(actual, equals([1.0, 4.0, 9.0, 16.0, 25.0]));
+          expect(actual.length, equals(5));
+          expect(actual.dtype, dtype);
+        });
+
+        test('should perform multiplication by a list', () {
+          final vector1 =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+          final actual = vector1 * [1.0, 2.0, 3.0, 4.0, 5.0];
+
+          expect(actual, equals([1.0, 4.0, 9.0, 16.0, 25.0]));
+          expect(actual.length, equals(5));
+          expect(actual.dtype, dtype);
+        });
+
         test(
             'should throw an error if one tries to multiple by a vector of '
             'inappropriate length', () {
