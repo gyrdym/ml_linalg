@@ -231,12 +231,10 @@ class Float32Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _cacheManager.retrieveValue(
-            matrixMeansByColumnsKey, () => _mean(columns));
+        return _cacheManager.get(matrixMeansByColumnsKey, () => _mean(columns));
 
       case Axis.rows:
-        return _cacheManager.retrieveValue(
-            matrixMeansByRowsKey, () => _mean(rows));
+        return _cacheManager.get(matrixMeansByRowsKey, () => _mean(rows));
 
       default:
         throw UnimplementedError(
@@ -264,11 +262,11 @@ class Float32Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _cacheManager.retrieveValue(
+        return _cacheManager.get(
             matrixVarianceByColumnsKey, () => _variance(rows, means, rowsNum));
 
       case Axis.rows:
-        return _cacheManager.retrieveValue(matrixVarianceByRowsKey,
+        return _cacheManager.get(matrixVarianceByRowsKey,
             () => _variance(columns, means, columnsNum));
 
       default:
@@ -409,7 +407,7 @@ class Float32Matrix
           dtype: dtype);
 
   @override
-  Matrix exp({bool skipCaching = false}) => _cacheManager.retrieveValue(
+  Matrix exp({bool skipCaching = false}) => _cacheManager.get(
       matrixExpKey,
       () => _dataManager.areAllRowsCached
           ? Matrix.fromRows(
@@ -429,7 +427,7 @@ class Float32Matrix
       skipCaching: skipCaching);
 
   @override
-  Matrix log({bool skipCaching = false}) => _cacheManager.retrieveValue(
+  Matrix log({bool skipCaching = false}) => _cacheManager.get(
       matrixLogKey,
       () => _dataManager.areAllRowsCached
           ? Matrix.fromRows(
@@ -471,7 +469,7 @@ class Float32Matrix
       return double.nan;
     }
 
-    return _cacheManager.retrieveValue(
+    return _cacheManager.get(
         matrixSumKey,
         () => _dataManager.areAllRowsCached
             ? rows.fold(0, (result, row) => result + row.sum())
@@ -484,7 +482,7 @@ class Float32Matrix
       return double.nan;
     }
 
-    return _cacheManager.retrieveValue(
+    return _cacheManager.get(
         matrixProdKey,
         () => _dataManager.areAllRowsCached
             ? rows.fold(0, (result, row) => result * row.prod())
