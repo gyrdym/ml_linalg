@@ -13,10 +13,18 @@
 	- [A couple of words about the underlying architecture](#a-couple-of-words-about-the-underlying-architecture)
 	- [Vector benchmarks](#vector-benchmarks)
 	- [Vector operations](#vector-operations-examples)
-        - [Vectors sum](#vectors-sum)
-        - [Vectors subtraction](#vectors-subtraction)
-        - [Element-wise vector by vector multiplication](#element-wise-vector-by-vector-multiplication)
-        - [Element-wise vector by vector division](#element-wise-vector-by-vector-division)
+        - [Vector summation](#vector-summation)
+        - [Vector and List summation](#vector-and-list-summation)
+        - [Summation of Vectors of different dtype](#summation-of-vectors-of-different-dtype)
+        - [Vector subtraction](#vector-subtraction)
+        - [Vector and List subtraction](#vector-and-list-subtraction)
+        - [Subtraction of Vectors of different dtype](#subtraction-of-vectors-of-different-dtype)
+        - [Element-wise Vector by Vector multiplication](#element-wise-vector-by-vector-multiplication)
+        - [Element-wise Vector and List multiplication](#element-wise-vector-and-list-multiplication)
+        - [Element-wise multiplication of Vectors of different dtype](#element-wise-multiplication-of-vectors-of-different-dtype)
+        - [Element-wise Vector by Vector division](#element-wise-vector-by-vector-division)
+        - [Element-wise Vector and List division](#element-wise-vector-and-list-division)
+        - [Element-wise division of Vectors of different dtype](#element-wise-division-of-vectors-of-different-dtype)
         - [Euclidean norm](#euclidean-norm)
         - [Manhattan norm](#manhattan-norm)
         - [Mean value](#mean-value)
@@ -177,7 +185,7 @@ the difference is significant.
 
 ### Vector operations examples
 
-#### Vectors sum
+#### Vector summation
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -188,7 +196,34 @@ the difference is significant.
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
-#### Vectors subtraction
+#### Vector and List summation
+
+*This operation doesn't benefit from SIMD*
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final result = vector + [2.0, 3.0, 4.0, 5.0, 6.0];
+
+  print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
+````
+
+#### Summation of Vectors of different dtype
+
+*This operation doesn't benefit from SIMD*
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: DType.float32);
+  final vector2 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0], dtype: DType.float64);
+  final result = vector1 + vector2;
+
+  print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
+````
+
+#### Vector subtraction
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -199,7 +234,34 @@ the difference is significant.
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
 
-#### Element wise vector by vector multiplication
+#### Vector and List subtraction
+
+*This operation doesn't benefit from SIMD*
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([4.0, 5.0, 6.0, 7.0, 8.0]);
+  final result = vector - [2.0, 3.0, 2.0, 3.0, 2.0];
+
+  print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
+````
+
+#### Subtraction of vectors of different dtype
+
+*This operation doesn't benefit from SIMD*
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector1 = Vector.fromList([4.0, 5.0, 6.0, 7.0, 8.0], dtype: DType.float32);
+  final vector2 = Vector.fromList([2.0, 3.0, 2.0, 3.0, 2.0], dtype: DType.float64);
+  final result = vector1 - vector2;
+
+  print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
+````
+
+#### Element wise Vector by Vector multiplication
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -210,12 +272,66 @@ the difference is significant.
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
-#### Element wise vector by vector division
+#### Element wise Vector and List multiplication
+
+*This operation doesn't benefit from SIMD*
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+  final result = vector * [2.0, 3.0, 4.0, 5.0, 6.0];
+
+  print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
+````
+
+#### Element wise multiplication of Vectors of different dtype
+
+*This operation doesn't benefit from SIMD*
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector1 = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: DType.float32);
+  final vector2 = Vector.fromList([2.0, 3.0, 4.0, 5.0, 6.0], dtype: DType.float64);
+  final result = vector1 * vector2;
+
+  print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
+````
+
+#### Element wise Vector by Vector division
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
   final vector1 = Vector.fromList([6.0, 12.0, 24.0, 48.0, 96.0]);
   final vector2 = Vector.fromList([3.0, 4.0, 6.0, 8.0, 12.0]);
+  final result = vector1 / vector2;
+
+  print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
+````
+
+#### Element-wise Vector and List division
+
+*This operation doesn't benefit from SIMD*
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([6.0, 12.0, 24.0, 48.0, 96.0]);
+  final result = vector / [3.0, 4.0, 6.0, 8.0, 12.0];
+
+  print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
+````
+
+#### Element wise division of vectors of different dtype
+
+*This operation doesn't benefit from SIMD*
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector1 = Vector.fromList([6.0, 12.0, 24.0, 48.0, 96.0], dtype: DType.float32);
+  final vector2 = Vector.fromList([3.0, 4.0, 6.0, 8.0, 12.0], dtype: DType.float64);
   final result = vector1 / vector2;
 
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
