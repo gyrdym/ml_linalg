@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.10.4
+- README:
+    - Add examples on vector arithmetic operations to README
+
 ## 13.10.3
 - Vector:
     - Add compatibility for arithmetic operations between float32 and float64 vectors
