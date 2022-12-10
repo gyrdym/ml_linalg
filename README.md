@@ -13,18 +13,18 @@
 	- [A couple of words about the underlying architecture](#a-couple-of-words-about-the-underlying-architecture)
 	- [Vector benchmarks](#vector-benchmarks)
 	- [Vector operations](#vector-operations-examples)
-        - [Vectors sum](#vectors-sum)
+        - [Vector summation](#vector-summation)
         - [Vector and List summation](#vector-and-list-summation)
-        - [Summation of vectors of different dtype](#summation-of-vectors-of-different-dtype)
-        - [Vectors subtraction](#vectors-subtraction)
+        - [Summation of Vectors of different dtype](#summation-of-vectors-of-different-dtype)
+        - [Vector subtraction](#vector-subtraction)
         - [Vector and List subtraction](#vector-and-list-subtraction)
-        - [Subtraction of vectors of different dtype](#subtraction-of-vectors-of-different-dtype)
-        - [Element-wise vector by vector multiplication](#element-wise-vector-by-vector-multiplication)
+        - [Subtraction of Vectors of different dtype](#subtraction-of-vectors-of-different-dtype)
+        - [Element-wise Vector by Vector multiplication](#element-wise-vector-by-vector-multiplication)
         - [Element-wise Vector and List multiplication](#element-wise-vector-and-list-multiplication)
-        - [Element-wise multiplication of vectors of different dtype](#element-wise-multiplication-of-vectors-of-different-dtype)
-        - [Element-wise vector by vector division](#element-wise-vector-by-vector-division)
+        - [Element-wise multiplication of Vectors of different dtype](#element-wise-multiplication-of-vectors-of-different-dtype)
+        - [Element-wise Vector by Vector division](#element-wise-vector-by-vector-division)
         - [Element-wise Vector and List division](#element-wise-vector-and-list-division)
-        - [Element-wise division of vectors of different dtype](#element-wise-division-of-vectors-of-different-dtype)
+        - [Element-wise division of Vectors of different dtype](#element-wise-division-of-vectors-of-different-dtype)
         - [Euclidean norm](#euclidean-norm)
         - [Manhattan norm](#manhattan-norm)
         - [Mean value](#mean-value)
@@ -185,7 +185,7 @@ the difference is significant.
 
 ### Vector operations examples
 
-#### Vectors sum
+#### Vector summation
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -196,7 +196,7 @@ the difference is significant.
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
-#### Vector and list summation
+#### Vector and List summation
 
 *This operation doesn't benefit from SIMD*
 
@@ -209,7 +209,7 @@ the difference is significant.
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
-#### Summation of vectors of different dtype
+#### Summation of Vectors of different dtype
 
 *This operation doesn't benefit from SIMD*
 
@@ -223,7 +223,7 @@ the difference is significant.
   print(result.toList()); // [3.0, 5.0, 7.0, 9.0, 11.0]
 ````
 
-#### Vectors subtraction
+#### Vector subtraction
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -234,7 +234,7 @@ the difference is significant.
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
 
-#### Vector and list subtraction
+#### Vector and List subtraction
 
 *This operation doesn't benefit from SIMD*
 
@@ -261,7 +261,7 @@ the difference is significant.
   print(result.toList()); // [2.0, 2.0, 4.0, 4.0, 6.0]
 ````
 
-#### Element wise vector by vector multiplication
+#### Element wise Vector by Vector multiplication
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -272,7 +272,7 @@ the difference is significant.
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
-#### Element wise vector and list multiplication
+#### Element wise Vector and List multiplication
 
 *This operation doesn't benefit from SIMD*
 
@@ -285,7 +285,7 @@ the difference is significant.
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
-#### Element wise multiplication of vectors of different dtype
+#### Element wise multiplication of Vectors of different dtype
 
 *This operation doesn't benefit from SIMD*
 
@@ -299,7 +299,7 @@ the difference is significant.
   print(result.toList()); // [2.0, 6.0, 12.0, 20.0, 30.0]
 ````
 
-#### Element wise vector by vector division
+#### Element wise Vector by Vector division
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
@@ -310,7 +310,7 @@ the difference is significant.
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
 ````
 
-#### Element wise vector and list division
+#### Element-wise Vector and List division
 
 *This operation doesn't benefit from SIMD*
 
