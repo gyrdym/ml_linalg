@@ -8,7 +8,7 @@ const amountOfElements = 10000000;
 
 class Float32x4VectorAndListAdditionBenchmark extends BenchmarkBase {
   Float32x4VectorAndListAdditionBenchmark()
-      : super('Vector `+` operator, operands: vector, vector; '
+      : super('Vector `+` operator, operands: vector, list; '
             '$amountOfElements elements');
 
   late Vector vector;
