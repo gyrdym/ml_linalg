@@ -6,7 +6,7 @@
 **SIMD-based linear algebra and statistics for data science with Dart**
 
 <details>
-<summary>Table of contents</summary>
+<summary>TABLE OF CONTENTS</summary>
 
 - [What is linear algebra](#linear-algebra)
 - [What is SIMD](#what-is-simd)
