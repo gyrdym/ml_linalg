@@ -5,7 +5,8 @@
 
 **SIMD-based linear algebra and statistics for data science with Dart**
 
-**Table of contents**
+<details>
+<summary>TABLE OF CONTENTS</summary>
 
 - [What is linear algebra](#linear-algebra)
 - [What is SIMD](#what-is-simd)
@@ -85,19 +86,19 @@
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
         - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
 - [Contacts](#contacts)
+</details>
 
 ## Linear algebra
 
-&nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics that works with vectors and 
-matrices. 
+&nbsp;&nbsp;&nbsp;&nbsp;In a few words, linear algebra is a branch of mathematics that works with vectors and matrices.
+Vectors and matrices are practical tools in real-life applications, such as machine learning algorithms. These significant 
+mathematical entities are implemented in plenty of programming languages.
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;As Dart offers developers good instrumentation, e.g. highly optimized virtual machine, specific data types and rich out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite performant.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Vectors and matrices are extremely powerful tools which can be used in real-life applications, 
-such as machine learning algorithms. There are many implementations of these great mathematical entities in a plenty of 
-programming languages, and as Dart offers developers good instrumentarium, e.g. highly optimized virtual machine and rich 
-out-of-the-box library, Dart-based implementation of vectors and matrices has to be quite performant.
+&nbsp;&nbsp;&nbsp;&nbsp;Among numerous standard Dart tools, there are SIMD data types, and support of SIMD computational 
+architecture served as inspiration for creating this library.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Among myriad of standard Dart tools there are SIMD data types. Namely support of SIMD 
-computational architecture served as inspiration for creating this library.
 
 ## What is SIMD?
 
@@ -141,6 +142,44 @@ and [Float64x2](https://api.dartlang.org/stable/2.5.0/dart-typed_data/Float64x2-
 
 &nbsp;&nbsp;&nbsp;&nbsp;Implementation of both classes is hidden from the library's users. You can create a 
 `Float32x4Vector` or a `Float64x2Vector` instance via [Vector](https://github.com/gyrdym/ml_linalg/blob/master/lib/vector.dart) factory (see examples below).
+
+One can create `Float32x4`-based vectors the following way:
+
+```dart
+import 'package:ml_linalg/linalg.dart';
+
+void main() {
+  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: DType.float32);
+}
+```
+
+or simply
+
+```dart
+import 'package:ml_linalg/linalg.dart';
+
+void main() {
+  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0]);
+}
+```
+
+since `dtype` is set to `DType.float32` by default.
+
+One can create `Float64x2`-based vectors the following way: 
+
+```dart
+import 'package:ml_linalg/linalg.dart';
+
+void main() {
+  final vector = Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: DType.float64);
+}
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;Float32x4-based vectors are much faster than Float64x2-based ones, but Float64x2-based vectors are more precise since 
+they use 64 bits to represent numbers in the memory versus 32 bits for Float32x4-based vectors.
+
+&nbsp;&nbsp;&nbsp;&nbsp;Nevertheless, Float32x4 representation uses by default since usually 32 bits is enough for number precision, and along 
+with that, this representation is more performant.
 
 &nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable: once created, the vector cannot be changed. All the vector operations 
 lead to creation of a new vector instance (of course, if the operation is supposed to return a `Vector`).

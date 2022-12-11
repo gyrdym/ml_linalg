@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.10.5
+- README:
+    - Add information on Vector creation to README
+
 ## 13.10.4
 - README:
     - Add examples on vector arithmetic operations to README
