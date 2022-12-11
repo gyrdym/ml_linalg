@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.10.6
+- Vector:
+    - Arithmetic operations: replace 'List' with 'Iterable'
+
 ## 13.10.5
 - README:
     - Add information on Vector creation to README

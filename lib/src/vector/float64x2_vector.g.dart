@@ -172,16 +172,16 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(result, length, dtype: dtype);
     }
 
-    if (value is List<num> || value is Vector) {
+    if (value is Iterable<num> || value is Vector) {
       final result = Float64List(length);
 
-      if (value is List<num>) {
+      if (value is Iterable<num>) {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] + value[i];
+          result[i] = _typedList[i] + value.elementAt(i);
         }
       } else if (value is Vector) {
         if (value.length != length) {
@@ -230,16 +230,16 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    if (value is List<num> || value is Vector) {
+    if (value is Iterable<num> || value is Vector) {
       final result = Float64List(length);
 
-      if (value is List<num>) {
+      if (value is Iterable<num>) {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] - value[i];
+          result[i] = _typedList[i] - value.elementAt(i);
         }
       } else if (value is Vector) {
         if (value.length != length) {
@@ -291,16 +291,16 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       return _matrixMul(value);
     }
 
-    if (value is List<num> || value is Vector) {
+    if (value is Iterable<num> || value is Vector) {
       final result = Float64List(length);
 
-      if (value is List<num>) {
+      if (value is Iterable<num>) {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] * value[i];
+          result[i] = _typedList[i] * value.elementAt(i);
         }
       } else if (value is Vector) {
         if (value.length != length) {
@@ -347,16 +347,16 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    if (value is List<num> || value is Vector) {
+    if (value is Iterable<num> || value is Vector) {
       final result = Float64List(length);
 
-      if (value is List<num>) {
+      if (value is Iterable<num>) {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] / value[i];
+          result[i] = _typedList[i] / value.elementAt(i);
         }
       } else if (value is Vector) {
         if (value.length != length) {
