@@ -170,24 +170,24 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(result, length, dtype: dtype);
     }
 
-    if (value is Iterable<num> || value is Vector) {
+    if (value is Iterable<num>) {
       final result = Float32List(length);
 
-      if (value is Iterable<num>) {
-        if (value.length != length) {
-          throw VectorListLengthMismatchException(length, value.length);
-        }
-
-        for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] + value.elementAt(i);
-        }
-      } else if (value is Vector) {
+      if (value is Vector) {
         if (value.length != length) {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
         for (var i = 0; i < length; i++) {
           result[i] = _typedList[i] + value[i];
+        }
+      } else {
+        if (value.length != length) {
+          throw VectorListLengthMismatchException(length, value.length);
+        }
+
+        for (var i = 0; i < length; i++) {
+          result[i] = _typedList[i] + value.elementAt(i);
         }
       }
 
@@ -228,24 +228,24 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    if (value is Iterable<num> || value is Vector) {
+    if (value is Iterable<num>) {
       final result = Float32List(length);
 
-      if (value is Iterable<num>) {
-        if (value.length != length) {
-          throw VectorListLengthMismatchException(length, value.length);
-        }
-
-        for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] - value.elementAt(i);
-        }
-      } else if (value is Vector) {
+      if (value is Vector) {
         if (value.length != length) {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
         for (var i = 0; i < length; i++) {
           result[i] = _typedList[i] - value[i];
+        }
+      } else {
+        if (value.length != length) {
+          throw VectorListLengthMismatchException(length, value.length);
+        }
+
+        for (var i = 0; i < length; i++) {
+          result[i] = _typedList[i] - value.elementAt(i);
         }
       }
 
@@ -289,24 +289,24 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return _matrixMul(value);
     }
 
-    if (value is Iterable<num> || value is Vector) {
+    if (value is Iterable<num>) {
       final result = Float32List(length);
 
-      if (value is Iterable<num>) {
-        if (value.length != length) {
-          throw VectorListLengthMismatchException(length, value.length);
-        }
-
-        for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] * value.elementAt(i);
-        }
-      } else if (value is Vector) {
+      if (value is Vector) {
         if (value.length != length) {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
         for (var i = 0; i < length; i++) {
           result[i] = _typedList[i] * value[i];
+        }
+      } else {
+        if (value.length != length) {
+          throw VectorListLengthMismatchException(length, value.length);
+        }
+
+        for (var i = 0; i < length; i++) {
+          result[i] = _typedList[i] * value.elementAt(i);
         }
       }
 
@@ -345,24 +345,24 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return Vector.fromSimdList(source, length, dtype: dtype);
     }
 
-    if (value is Iterable<num> || value is Vector) {
+    if (value is Iterable<num>) {
       final result = Float32List(length);
 
-      if (value is Iterable<num>) {
-        if (value.length != length) {
-          throw VectorListLengthMismatchException(length, value.length);
-        }
-
-        for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] / value.elementAt(i);
-        }
-      } else if (value is Vector) {
+      if (value is Vector) {
         if (value.length != length) {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
         for (var i = 0; i < length; i++) {
           result[i] = _typedList[i] / value[i];
+        }
+      } else {
+        if (value.length != length) {
+          throw VectorListLengthMismatchException(length, value.length);
+        }
+
+        for (var i = 0; i < length; i++) {
+          result[i] = _typedList[i] / value.elementAt(i);
         }
       }
 
