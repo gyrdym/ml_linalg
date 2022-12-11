@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.10.7
+- Vector:
+    - Arithmetic operations: vector32-vector64 operations speed up
+
 ## 13.10.6
 - Vector:
     - Arithmetic operations: replace 'List' with 'Iterable'
