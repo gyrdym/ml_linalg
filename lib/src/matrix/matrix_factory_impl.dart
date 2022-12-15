@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory.dart';
@@ -111,6 +113,27 @@ class MatrixFactoryImpl implements MatrixFactory {
       case DType.float64:
         return Float64Matrix(
           Float64MatrixDataManager.fromFlattened(source, rowsNum, columnsNum),
+          _cacheManagerFactory.create(matrixCacheKeys),
+        );
+
+      default:
+        throw UnimplementedError(
+            'Matrix of type $dtype is not implemented yet');
+    }
+  }
+
+  @override
+  Matrix fromByteData(DType dtype, ByteData data, int rowsNum, int columnsNum) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix(
+          Float32MatrixDataManager.fromByteData(data, rowsNum, columnsNum),
+          _cacheManagerFactory.create(matrixCacheKeys),
+        );
+
+      case DType.float64:
+        return Float64Matrix(
+          Float64MatrixDataManager.fromByteData(data, rowsNum, columnsNum),
           _cacheManagerFactory.create(matrixCacheKeys),
         );
 

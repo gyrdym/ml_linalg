@@ -168,6 +168,19 @@ abstract class Matrix implements Iterable<Iterable<double>> {
         columnsNum,
       );
 
+  factory Matrix.fromByteData(
+    ByteData data,
+    int rowsNum,
+    int columnsNum, {
+    DType dtype = DType.float32,
+  }) =>
+      createMatrixFactory().fromByteData(
+        dtype,
+        data,
+        rowsNum,
+        columnsNum,
+      );
+
   /// Creates a matrix, where elements from [source] are the elements for the
   /// matrix main diagonal, the rest of the elements are zero
   ///

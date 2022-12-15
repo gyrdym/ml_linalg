@@ -4,5 +4,5 @@ import 'transpose_test_group_factory.dart';
 
 void main() {
   matrixTransposeTestGroupFactory(DType.float32);
-  matrixTransposeTestGroupFactory(DType.float64);
+//  matrixTransposeTestGroupFactory(DType.float64);
 }
