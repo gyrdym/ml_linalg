@@ -133,9 +133,18 @@ class Float64Matrix
 
   @override
   Matrix transpose() {
-    final source = List.generate(rowsNum, getRow);
+    final list = _dataManager.buffer.asFloat64List();
+    final source = Float64List(columnsNum * rowsNum);
 
-    return Matrix.fromColumns(source, dtype: dtype);
+    for (var i = 0; i < list.length; i++) {
+      final rowIdx = i ~/ columnsNum;
+      final colIdx = i - columnsNum * rowIdx;
+
+      source[colIdx * rowsNum + rowIdx] = list[i];
+    }
+
+    return Matrix.fromByteData(source.buffer.asByteData(), columnsNum, rowsNum,
+        dtype: dtype);
   }
 
   @override

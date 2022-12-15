@@ -52,22 +52,17 @@ class Float64MatrixDataManager implements MatrixDataManager {
         areAllColumnsCached = false {
     final dataAsList = _data.buffer.asFloat64List();
 
-    // ignore: omit_local_variable_types
-    for (int i = 0, j = 0; i < source.length; i++, j = 0) {
+    for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
-
-      if (row.dtype != dtype) {
-        throw Exception('Vectors of different type are provided, '
-            'expected vector type: `$dtype`, given: ${row.dtype}');
-      }
 
       if (row.length != columnsNum) {
         throw Exception('Vectors of different length are provided, expected '
             'vector length: `$columnsNum`, given: ${row.length}');
       }
 
-      for (final value in source[i]) {
-        dataAsList[i * columnsNum + j++] = value;
+      for (final value in row) {
+        dataAsList[i * columnsNum + j] = value;
+        j++;
       }
     }
   }
@@ -85,14 +80,8 @@ class Float64MatrixDataManager implements MatrixDataManager {
         areAllColumnsCached = true {
     final dataAsList = _data.buffer.asFloat64List();
 
-    // ignore: omit_local_variable_types
-    for (int i = 0, j = 0; i < source.length; i++, j = 0) {
+    for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
-
-      if (column.dtype != dtype) {
-        throw Exception('Vectors of different type are provided, expected '
-            'vector type: `$dtype`, given: ${column.dtype}');
-      }
 
       if (column.length != rowsNum) {
         throw Exception('Vectors of different length are provided, expected '
@@ -100,7 +89,8 @@ class Float64MatrixDataManager implements MatrixDataManager {
       }
 
       for (final value in column) {
-        dataAsList[j++ * columnsNum + i] = value;
+        dataAsList[j * columnsNum + i] = value;
+        j++;
       }
     }
   }
@@ -120,6 +110,24 @@ class Float64MatrixDataManager implements MatrixDataManager {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowsNum x $colsNum, but given a collection of length '
           '${source.length}');
+    }
+  }
+
+  Float64MatrixDataManager.fromByteData(
+      ByteData source, int rowsNum, int colsNum)
+      : rowsNum = rowsNum,
+        columnsNum = colsNum,
+        rowIndices = getZeroBasedIndices(rowsNum),
+        columnIndices = getZeroBasedIndices(colsNum),
+        _rowsCache = List<Vector?>.filled(rowsNum, null),
+        _colsCache = List<Vector?>.filled(colsNum, null),
+        _data = source,
+        areAllRowsCached = false,
+        areAllColumnsCached = false {
+    if (source.lengthInBytes != rowsNum * colsNum * _bytesPerElement) {
+      throw Exception('Invalid matrix dimension has been provided - '
+          '$rowsNum x $colsNum (${rowsNum * columnsNum} elements), but byte data of '
+          '${source.lengthInBytes / _bytesPerElement} elements has been given');
     }
   }
 
@@ -212,6 +220,9 @@ class Float64MatrixDataManager implements MatrixDataManager {
 
   @override
   bool get hasData => rowsNum > 0 && columnsNum > 0;
+
+  @override
+  ByteBuffer get buffer => _data.buffer;
 
   @override
   Vector getRow(int index) {
