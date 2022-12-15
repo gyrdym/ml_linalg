@@ -28,8 +28,6 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
-const _bytesPerElement = Float64List.bytesPerElement;
-
 class Float64Matrix
     with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     implements Matrix {

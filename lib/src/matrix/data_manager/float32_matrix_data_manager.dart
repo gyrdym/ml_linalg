@@ -122,11 +122,11 @@ class Float32MatrixDataManager implements MatrixDataManager {
         _data = source,
         areAllRowsCached = false,
         areAllColumnsCached = false {
-//    if (source.length != rowsNum * colsNum) {
-//      throw Exception('Invalid matrix dimension has been provided - '
-//          '$rowsNum x $colsNum, but given a collection of length '
-//          '${source.length}');
-//    }
+    if (source.lengthInBytes != rowsNum * colsNum * _bytesPerElement) {
+      throw Exception('Invalid matrix dimension has been provided - '
+          '$rowsNum x $colsNum (${rowsNum * columnsNum} elements), but byte data of '
+          '${source.lengthInBytes / _bytesPerElement} elements has been given');
+    }
   }
 
   Float32MatrixDataManager.diagonal(List<double> source)

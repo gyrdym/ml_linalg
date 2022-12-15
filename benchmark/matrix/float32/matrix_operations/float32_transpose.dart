@@ -1,4 +1,4 @@
-// Approx. 6 second (MacBook Air mid 2017), Dart version: 2.16.0
+// Approx. 3 second (MacBook Air mid 2017), Dart version: 2.16.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
@@ -10,7 +10,7 @@ const numOfColumns = 5000;
 class Float32MatrixTransposeBenchmark extends BenchmarkBase {
   Float32MatrixTransposeBenchmark() : super('Matrix float32 transpose method');
 
-  final Matrix _source =
+  final Matrix source =
       Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 12);
 
   static void main() {
@@ -19,7 +19,7 @@ class Float32MatrixTransposeBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    _source.transpose();
+    source.transpose();
   }
 }
 

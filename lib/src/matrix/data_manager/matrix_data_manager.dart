@@ -15,6 +15,5 @@ abstract class MatrixDataManager {
   Vector getRow(int index);
   bool get areAllRowsCached;
   bool get areAllColumnsCached;
-
   ByteBuffer get buffer;
 }
