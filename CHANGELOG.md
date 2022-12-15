@@ -1,5 +1,10 @@
 # Changelog
 
+## 13.11.0
+- Matrix:
+    - `transpose` method speed up
+    - `fromByteData` constructor added
+
 ## 13.10.7
 - Vector:
     - Arithmetic operations: vector32-vector64 operations speed up
