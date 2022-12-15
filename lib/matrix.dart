@@ -168,6 +168,47 @@ abstract class Matrix implements Iterable<Iterable<double>> {
         columnsNum,
       );
 
+  /// Creates a matrix from byte data of [rowsNum] * [columnsNum] elements
+  ///
+  /// A simple usage example:
+  ///
+  /// ````dart
+  /// import 'dart:typed_data';
+  ///
+  /// import 'package:ml_linalg/matrix.dart';
+  ///
+  /// void main() {
+  ///   final data = Float32List.fromList([
+  ///     1, 2, 3, 4, 5,
+  ///     6, 7, 8, 9, 0
+  ///   ]).buffer.asByteData();
+  ///
+  ///   final matrix = Matrix.fromByteData(data, 2, 5);
+  ///
+  ///   print(matrix);
+  /// }
+  /// ````
+  ///
+  /// The output:
+  ///
+  /// ```
+  /// Matrix 2 x 5:
+  /// (1.0, 2.0, 3.0, 4.0, 5.0)
+  /// (6.0, 7.0, 8.0, 9.0, 0.0)
+  /// ```
+  factory Matrix.fromByteData(
+    ByteData data,
+    int rowsNum,
+    int columnsNum, {
+    DType dtype = DType.float32,
+  }) =>
+      createMatrixFactory().fromByteData(
+        dtype,
+        data,
+        rowsNum,
+        columnsNum,
+      );
+
   /// Creates a matrix, where elements from [source] are the elements for the
   /// matrix main diagonal, the rest of the elements are zero
   ///
