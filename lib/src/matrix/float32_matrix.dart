@@ -638,19 +638,20 @@ class Float32Matrix
         }
 
         if (j == i) {
-          final value = math.sqrt(thisAsList[j * columnsNum + j] - sum);
+          final idx = j * columnsNum + j;
+          final value = math.sqrt(thisAsList[idx] - sum);
 
-          lower[j * columnsNum + j] = value;
-          upper[j * columnsNum + j] = value;
+          lower[idx] = value;
+          upper[idx] = value;
 
-          if (lower[j * columnsNum + j].isNaN) {
+          if (lower[idx].isNaN) {
             throw CholeskyInappropriateMatrixException();
           }
         } else {
-          final value = (thisAsList[i * columnsNum + j] - sum) /
-              lower[j * columnsNum + j];
+          final idx = i * columnsNum + j;
+          final value = (thisAsList[idx] - sum) / lower[j * columnsNum + j];
 
-          lower[i * columnsNum + j] = value;
+          lower[idx] = value;
           upper[j * columnsNum + i] = value;
         }
       }
