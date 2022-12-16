@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.1
+- Matrix:
+  - `decompose` method speed up (Cholesky decomposition case)
+
 ## 13.11.0
 - Matrix:
     - `transpose` method speed up

@@ -1,3 +1,5 @@
+// Approx. 7 second (MacBook Pro 2019), Dart version: 2.16.0
+
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/inverse.dart';
@@ -7,7 +9,7 @@ class Float32MatrixInverseCholeskyBenchmark extends BenchmarkBase {
   Float32MatrixInverseCholeskyBenchmark()
       : super('Matrix float32 inverse method (Cholesky)');
 
-  final Matrix _source = Matrix.randomSPD(300, dtype: DType.float32);
+  final Matrix source = Matrix.randomSPD(300, dtype: DType.float32, seed: 12);
 
   static void main() {
     Float32MatrixInverseCholeskyBenchmark().report();
@@ -15,7 +17,7 @@ class Float32MatrixInverseCholeskyBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    _source.inverse(Inverse.cholesky);
+    source.inverse(Inverse.cholesky);
   }
 }
 
