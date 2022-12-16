@@ -644,7 +644,7 @@ class Float32Matrix
           lower[idx] = value;
           upper[idx] = value;
 
-          if (lower[idx].isNaN) {
+          if (value.isNaN) {
             throw CholeskyInappropriateMatrixException();
           }
         } else {

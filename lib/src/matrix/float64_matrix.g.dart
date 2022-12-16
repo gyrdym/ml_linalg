@@ -627,9 +627,9 @@ class Float64Matrix
       throw CholeskyNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    // final zeroes = List.filled(rowsNum, 0.0);
-    // final generator = (_) => Float64List.fromList(zeroes);
     final lower = Float64List(rowsNum * columnsNum);
+    final upper = Float64List(rowsNum * columnsNum);
+    final thisAsList = _dataManager.buffer.asFloat64List();
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j <= i; j++) {
@@ -640,14 +640,21 @@ class Float64Matrix
         }
 
         if (j == i) {
-          lower[j * columnsNum + j] = math.sqrt(this[j][j] - sum);
+          final idx = j * columnsNum + j;
+          final value = math.sqrt(thisAsList[idx] - sum);
 
-          if (lower[j * columnsNum + j].isNaN) {
+          lower[idx] = value;
+          upper[idx] = value;
+
+          if (value.isNaN) {
             throw CholeskyInappropriateMatrixException();
           }
         } else {
-          lower[i * columnsNum + j] =
-              (this[i][j] - sum) / lower[j * columnsNum + j];
+          final idx = i * columnsNum + j;
+          final value = (thisAsList[idx] - sum) / lower[j * columnsNum + j];
+
+          lower[idx] = value;
+          upper[j * columnsNum + i] = value;
         }
       }
     }
@@ -655,7 +662,9 @@ class Float64Matrix
     final lowerMatrix = Matrix.fromByteData(
         lower.buffer.asByteData(), rowsNum, columnsNum,
         dtype: dtype);
-    final upperMatrix = lowerMatrix.transpose();
+    final upperMatrix = Matrix.fromByteData(
+        upper.buffer.asByteData(), rowsNum, columnsNum,
+        dtype: dtype);
 
     return [lowerMatrix, upperMatrix];
   }
