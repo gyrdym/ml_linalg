@@ -626,6 +626,7 @@ class Float32Matrix
     }
 
     final lower = Float32List(rowsNum * columnsNum);
+    final upper = Float32List(rowsNum * columnsNum);
     final thisAsList = _dataManager.buffer.asFloat32List();
 
     for (var i = 0; i < rowsNum; i++) {
@@ -637,15 +638,20 @@ class Float32Matrix
         }
 
         if (j == i) {
-          lower[j * columnsNum + j] =
-              math.sqrt(thisAsList[j * columnsNum + j] - sum);
+          final value = math.sqrt(thisAsList[j * columnsNum + j] - sum);
+
+          lower[j * columnsNum + j] = value;
+          upper[j * columnsNum + j] = value;
 
           if (lower[j * columnsNum + j].isNaN) {
             throw CholeskyInappropriateMatrixException();
           }
         } else {
-          lower[i * columnsNum + j] = (thisAsList[i * columnsNum + j] - sum) /
+          final value = (thisAsList[i * columnsNum + j] - sum) /
               lower[j * columnsNum + j];
+
+          lower[i * columnsNum + j] = value;
+          upper[j * columnsNum + i] = value;
         }
       }
     }
@@ -653,7 +659,9 @@ class Float32Matrix
     final lowerMatrix = Matrix.fromByteData(
         lower.buffer.asByteData(), rowsNum, columnsNum,
         dtype: dtype);
-    final upperMatrix = lowerMatrix.transpose();
+    final upperMatrix = Matrix.fromByteData(
+        upper.buffer.asByteData(), rowsNum, columnsNum,
+        dtype: dtype);
 
     return [lowerMatrix, upperMatrix];
   }
