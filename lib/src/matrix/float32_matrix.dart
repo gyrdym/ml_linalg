@@ -625,31 +625,34 @@ class Float32Matrix
       throw CholeskyNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final zeroes = List.filled(rowsNum, 0.0);
-    final generator = (_) => Float32List.fromList(zeroes);
-    final lower = List.generate(rowsNum, generator);
+    final lower = Float32List(rowsNum * columnsNum);
+    final thisAsList = _dataManager.buffer.asFloat32List();
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j <= i; j++) {
         var sum = 0.0;
 
         for (var k = 0; k < j; k++) {
-          sum += (lower[i][k] * lower[j][k]);
+          sum += (lower[i * columnsNum + k] * lower[j * columnsNum + k]);
         }
 
         if (j == i) {
-          lower[j][j] = math.sqrt(this[j][j] - sum);
+          lower[j * columnsNum + j] =
+              math.sqrt(thisAsList[j * columnsNum + j] - sum);
 
-          if (lower[j][j].isNaN) {
+          if (lower[j * columnsNum + j].isNaN) {
             throw CholeskyInappropriateMatrixException();
           }
         } else {
-          lower[i][j] = (this[i][j] - sum) / lower[j][j];
+          lower[i * columnsNum + j] = (thisAsList[i * columnsNum + j] - sum) /
+              lower[j * columnsNum + j];
         }
       }
     }
 
-    final lowerMatrix = Matrix.fromList(lower, dtype: dtype);
+    final lowerMatrix = Matrix.fromByteData(
+        lower.buffer.asByteData(), rowsNum, columnsNum,
+        dtype: dtype);
     final upperMatrix = lowerMatrix.transpose();
 
     return [lowerMatrix, upperMatrix];
