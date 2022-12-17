@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.4
+- Matrix:
+  - `inverse` method speed up (Forward substitution case)
+
 ## 13.11.3
 - Matrix:
   - `inverse` method speed up (Backward substitution case)

@@ -5,22 +5,22 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/inverse.dart';
 import 'package:ml_linalg/matrix.dart';
 
-class Float32MatrixInverseBackwardSubstitutionBenchmark extends BenchmarkBase {
-  Float32MatrixInverseBackwardSubstitutionBenchmark()
-      : super('Matrix float32 inverse method (Backward substitution)');
+class Float32MatrixInverseForwardSubstitutionBenchmark extends BenchmarkBase {
+  Float32MatrixInverseForwardSubstitutionBenchmark()
+      : super('Matrix float32 inverse method (Forward substitution)');
 
   final Matrix source = Matrix.randomSPD(500, dtype: DType.float32, seed: 12);
 
   static void main() {
-    Float32MatrixInverseBackwardSubstitutionBenchmark().report();
+    Float32MatrixInverseForwardSubstitutionBenchmark().report();
   }
 
   @override
   void run() {
-    source.inverse(Inverse.backwardSubstitution);
+    source.inverse(Inverse.forwardSubstitution);
   }
 }
 
 void main() {
-  Float32MatrixInverseBackwardSubstitutionBenchmark.main();
+  Float32MatrixInverseForwardSubstitutionBenchmark.main();
 }
