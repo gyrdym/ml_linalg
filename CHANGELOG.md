@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.3
+- Matrix:
+  - `inverse` method speed up (Backward substitution case)
+
 ## 13.11.2
 - Matrix:
   - `decompose` method speed up (LU decomposition case)
