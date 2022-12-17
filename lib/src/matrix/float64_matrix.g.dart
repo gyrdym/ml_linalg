@@ -602,9 +602,8 @@ class Float64Matrix
       throw BackwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final zeroes = List.filled(rowsNum, 0.0);
-    final generator = (_) => Float64List.fromList(zeroes);
-    final X = List.generate(rowsNum, generator);
+    final X = Float64List(rowsNum * rowsNum);
+    final thisAsList = _dataManager.buffer.asFloat64List();
 
     for (var i = rowsNum - 1; i >= 0; i--) {
       for (var row = rowsNum - 1; row >= 0; row--) {
@@ -612,14 +611,15 @@ class Float64Matrix
         var b = row == i ? 1.0 : 0.0;
 
         for (var col = rowsNum - 1; col > row; col--) {
-          sum += this[row][col] * X[col][i];
+          sum += thisAsList[row * rowsNum + col] * X[col * rowsNum + i];
         }
 
-        X[row][i] = (b - sum) / this[row][row];
+        X[row * rowsNum + i] = (b - sum) / thisAsList[row * rowsNum + row];
       }
     }
 
-    return Matrix.fromList(X, dtype: dtype);
+    return Matrix.fromByteData(X.buffer.asByteData(), rowsNum, rowsNum,
+        dtype: dtype);
   }
 
   Iterable<Matrix> _choleskyDecomposition() {
