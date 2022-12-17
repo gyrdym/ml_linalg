@@ -1,17 +1,19 @@
+// Approx. 12.5 seconds (MacBook Pro 2019), Dart version: 2.16.0
+
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/decomposition.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 
-const numOfRows = 300;
-const numOfColumns = 300;
+const numOfRows = 1000;
+const numOfColumns = 1000;
 
 class Float32MatrixDecomposeLUBenchmark extends BenchmarkBase {
   Float32MatrixDecomposeLUBenchmark()
       : super('Matrix float32 decompose method (LU)');
 
-  final Matrix _source =
-      Matrix.random(numOfRows, numOfColumns, dtype: DType.float32);
+  final Matrix source =
+      Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 5);
 
   static void main() {
     Float32MatrixDecomposeLUBenchmark().report();
@@ -19,7 +21,7 @@ class Float32MatrixDecomposeLUBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    _source.decompose(Decomposition.LU);
+    source.decompose(Decomposition.LU);
   }
 }
 

@@ -674,31 +674,37 @@ class Float64Matrix
       throw LUDecompositionNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final L = List.generate(
-        rowsNum,
-        (i) => Float64List.fromList(
-            List.generate(rowsNum, (j) => i == j ? 1.0 : 0.0)));
-    final zeroes = List.filled(rowsNum, 0.0);
-    final uGenerator = (i) => Float64List.fromList(zeroes);
-    final U = List.generate(rowsNum, uGenerator);
+    final L = Float64List(rowsNum * rowsNum);
+    final U = Float64List(rowsNum * rowsNum);
+    final thisAsList = _dataManager.buffer.asFloat64List();
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j < rowsNum; j++) {
+        final idx = i * rowsNum + j;
+
+        if (i == j) {
+          L[idx] = 1;
+        }
+
         var sum = 0.0;
 
         for (var k = 0; k < i; k++) {
-          sum += L[i][k] * U[k][j];
+          sum += L[i * rowsNum + k] * U[k * rowsNum + j];
         }
 
         if (i <= j) {
-          U[i][j] = this[i][j] - sum;
+          U[idx] = thisAsList[idx] - sum;
         } else {
-          L[i][j] = (this[i][j] - sum) / U[j][j];
+          L[idx] = (thisAsList[idx] - sum) / U[j * rowsNum + j];
         }
       }
     }
 
-    return [Matrix.fromList(L, dtype: dtype), Matrix.fromList(U, dtype: dtype)];
+    return [
+      Matrix.fromByteData(L.buffer.asByteData(), rowsNum, rowsNum,
+          dtype: dtype),
+      Matrix.fromByteData(U.buffer.asByteData(), rowsNum, rowsNum, dtype: dtype)
+    ];
   }
 
   @override
