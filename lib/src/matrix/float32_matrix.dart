@@ -575,9 +575,8 @@ class Float32Matrix
       throw ForwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final zeroes = List.filled(rowsNum, 0.0);
-    final generator = (_) => Float32List.fromList(zeroes);
-    final X = List.generate(rowsNum, generator);
+    final X = Float32List(rowsNum * rowsNum);
+    final thisAsList = _dataManager.buffer.asFloat32List();
 
     for (var i = 0; i < rowsNum; i++) {
       for (var row = 0; row < rowsNum; row++) {
@@ -585,14 +584,15 @@ class Float32Matrix
         var b = row == i ? 1.0 : 0.0;
 
         for (var col = 0; col < row; col++) {
-          sum += this[row][col] * X[col][i];
+          sum += thisAsList[row * rowsNum + col] * X[col * rowsNum + i];
         }
 
-        X[row][i] = (b - sum) / this[row][row];
+        X[row * rowsNum + i] = (b - sum) / thisAsList[row * rowsNum + row];
       }
     }
 
-    return Matrix.fromList(X, dtype: dtype);
+    return Matrix.fromByteData(X.buffer.asByteData(), rowsNum, rowsNum,
+        dtype: dtype);
   }
 
   Matrix _backwardSubstitutionInverse() {
