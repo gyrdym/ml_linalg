@@ -2,8 +2,6 @@
 
 import 'dart:typed_data';
 
-const _bytesPerElement = Float64List.bytesPerElement;
-
 class Float64MatrixIterator implements Iterator<Iterable<double>> {
   Float64MatrixIterator(this._data, this._rowsNum, this._colsNum);
 
