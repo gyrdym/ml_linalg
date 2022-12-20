@@ -98,7 +98,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(colsNum),
         _rowsCache = List<Vector?>.filled(rowsNum, null),
         _colsCache = List<Vector?>.filled(colsNum, null),
-        _data = Float32List.fromList(source),
+        _data = source is Float32List ? source : Float32List.fromList(source),
         areAllRowsCached = false,
         areAllColumnsCached = false {
     if (source.length != rowsNum * colsNum) {
