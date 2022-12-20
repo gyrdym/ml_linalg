@@ -31,24 +31,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.fromList(List<num> source, this._cache, this._simdHelper)
       : length = source.length {
     _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
-    final byteData = ByteData(_numOfBuckets * _bytesPerSimdElement);
-    _buffer = byteData.buffer;
+    _buffer = ByteData(_numOfBuckets * _bytesPerSimdElement).buffer;
+    final asTypedList = _buffer.asFloat32List();
 
     for (var i = 0; i < length; i++) {
-      byteData.setFloat32(
-          _bytesPerElement * i, source[i].toDouble(), Endian.host);
-    }
-  }
-
-  Float32x4Vector.fromFloatList(
-      List<double> source, this._cache, this._simdHelper)
-      : length = source.length {
-    _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
-    final byteData = ByteData(_numOfBuckets * _bytesPerSimdElement);
-    _buffer = byteData.buffer;
-
-    for (var i = 0; i < length; i++) {
-      byteData.setFloat32(_bytesPerElement * i, source[i], Endian.host);
+      asTypedList[i] = source[i].toDouble();
     }
   }
 
@@ -203,7 +190,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         }
       }
 
-      return Vector.fromFloatList(result, dtype: dtype);
+      return Vector.fromList(result, dtype: dtype);
     }
 
     if (value is num) {
@@ -261,7 +248,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         }
       }
 
-      return Vector.fromFloatList(result, dtype: dtype);
+      return Vector.fromList(result, dtype: dtype);
     }
 
     if (value is num) {
@@ -322,7 +309,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         }
       }
 
-      return Vector.fromFloatList(result, dtype: dtype);
+      return Vector.fromList(result, dtype: dtype);
     }
 
     if (value is num) {
@@ -378,7 +365,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         }
       }
 
-      return Vector.fromFloatList(result, dtype: dtype);
+      return Vector.fromList(result, dtype: dtype);
     }
 
     if (value is num) {
@@ -420,7 +407,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
           source[i] = math.exp(_typedList[i]);
         }
 
-        return Vector.fromFloatList(source, dtype: dtype);
+        return Vector.fromList(source, dtype: dtype);
       }, skipCaching: skipCaching);
 
   @override
@@ -431,7 +418,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
           source[i] = math.log(_typedList[i]);
         }
 
-        return Vector.fromFloatList(source, dtype: dtype);
+        return Vector.fromList(source, dtype: dtype);
       }, skipCaching: skipCaching);
 
   @override
@@ -609,7 +596,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       list[i++] = this[idx];
     }
 
-    return Vector.fromFloatList(list, dtype: dtype);
+    return Vector.fromList(list, dtype: dtype);
   }
 
   @override
@@ -683,7 +670,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     final limit = end == null || end > length ? length : end;
     final collection = _typedList.sublist(start, limit);
 
-    return Vector.fromFloatList(collection, dtype: dtype);
+    return Vector.fromList(collection, dtype: dtype);
   }
 
   @override
@@ -708,7 +695,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
     copy[index] = value.toDouble();
 
-    return Vector.fromFloatList(copy, dtype: dtype);
+    return Vector.fromList(copy, dtype: dtype);
   }
 
   @override
@@ -795,7 +782,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       source[i] = dot(matrix.getColumn(i));
     }
 
-    return Vector.fromFloatList(source, dtype: dtype);
+    return Vector.fromList(source, dtype: dtype);
   }
 
   @override

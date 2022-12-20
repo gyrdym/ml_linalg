@@ -759,7 +759,7 @@ class Float32Matrix
       source[i] = vector.dot(_dataManager.getRow(i));
     }
 
-    final vectorColumn = Vector.fromFloatList(source, dtype: dtype);
+    final vectorColumn = Vector.fromList(source, dtype: dtype);
 
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }

@@ -230,7 +230,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
     if (_rowsCache[index] == null) {
       final values = _data.sublist(indexFrom, indexFrom + columnsNum);
 
-      _rowsCache[index] = Vector.fromFloatList(values, dtype: dtype);
+      _rowsCache[index] = Vector.fromList(values, dtype: dtype);
     }
 
     return _rowsCache[index]!;
@@ -249,7 +249,7 @@ class Float32MatrixDataManager implements MatrixDataManager {
         column[i] = _data[i * columnsNum + index];
       }
 
-      _colsCache[index] = Vector.fromFloatList(column, dtype: dtype);
+      _colsCache[index] = Vector.fromList(column, dtype: dtype);
     }
 
     return _colsCache[index]!;

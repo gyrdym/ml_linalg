@@ -1,4 +1,4 @@
-// Approx. 3.7 sec (MacBook Air mid 2017), Dart VM version: 2.16.0
+// Approx. 0.5 sec (MacBook Air mid 2017), Dart VM version: 2.16.0
 
 import 'dart:typed_data';
 
@@ -9,7 +9,7 @@ const amountOfElements = 10000000;
 
 class Float32x4VectorFromFloatListBenchmark extends BenchmarkBase {
   Float32x4VectorFromFloatListBenchmark()
-      : super('Vector initialization (fromFloatList), '
+      : super('Vector initialization (fromFloatList, List Type - Float32List), '
             '$amountOfElements elements');
 
   final _source = Float32List.fromList(Vector.randomFilled(
@@ -25,7 +25,7 @@ class Float32x4VectorFromFloatListBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    Vector.fromFloatList(_source);
+    Vector.fromList(_source);
   }
 }
 
