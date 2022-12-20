@@ -229,9 +229,11 @@ class Float64MatrixDataManager implements MatrixDataManager {
       throw RangeError.range(indexFrom, 0, rowsNum * columnsNum);
     }
 
-    final values =
-        _data.buffer.asFloat64List(indexFrom * _bytesPerElement, columnsNum);
-    _rowsCache[index] ??= Vector.fromList(values, dtype: dtype);
+    if (_rowsCache[index] == null) {
+      final values = _data.sublist(indexFrom, indexFrom + columnsNum);
+
+      _rowsCache[index] = Vector.fromList(values, dtype: dtype);
+    }
 
     return _rowsCache[index]!;
   }
