@@ -1,4 +1,5 @@
 // Approx. 1 second (MacBook Air mid 2017), Dart VM version: 2.5.0
+// Approx. 0.6 second (MacBook Pro mid 2019), Dart VM version: 2.16.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
@@ -13,7 +14,7 @@ class Float32MatrixFromListBenchmark extends BenchmarkBase {
 
   final _source = List.filled(
     numOfRows,
-    Vector.randomFilled(numOfColumns, min: -10000, max: 10000)
+    Vector.randomFilled(numOfColumns, min: -10000, max: 10000, seed: 12)
         .toList(growable: false),
   );
 

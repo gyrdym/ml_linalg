@@ -2,12 +2,10 @@
 
 import 'dart:typed_data';
 
-const _bytesPerElement = Float64List.bytesPerElement;
-
 class Float64MatrixIterator implements Iterator<Iterable<double>> {
   Float64MatrixIterator(this._data, this._rowsNum, this._colsNum);
 
-  final ByteData _data;
+  final Float64List _data;
   final int _rowsNum;
   final int _colsNum;
 
@@ -22,8 +20,8 @@ class Float64MatrixIterator implements Iterator<Iterable<double>> {
     final hasNext = _currentRow < _rowsNum;
 
     if (hasNext) {
-      _current = _data.buffer
-          .asFloat64List(_currentRow * _colsNum * _bytesPerElement, _colsNum);
+      _current = _data.sublist(
+          _currentRow * _colsNum, _currentRow * _colsNum + _colsNum);
       _currentRow++;
     }
 

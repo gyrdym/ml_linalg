@@ -141,8 +141,7 @@ class Float32Matrix
       source[colIdx * rowsNum + rowIdx] = list[i];
     }
 
-    return Matrix.fromByteData(source.buffer.asByteData(), columnsNum, rowsNum,
-        dtype: dtype);
+    return Matrix.fromFlattenedList(source, columnsNum, rowsNum, dtype: dtype);
   }
 
   @override
