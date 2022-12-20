@@ -243,10 +243,13 @@ class Float32MatrixDataManager implements MatrixDataManager {
     }
 
     if (_colsCache[index] == null) {
-      final result =
-          List<num>.generate(rowsNum, (i) => _data[i * columnsNum + index]);
+      final column = Float32List(rowsNum);
 
-      _colsCache[index] = Vector.fromList(result, dtype: dtype);
+      for (var i = 0; i < rowsNum; i++) {
+        column[i] = _data[i * columnsNum + index];
+      }
+
+      _colsCache[index] = Vector.fromList(column, dtype: dtype);
     }
 
     return _colsCache[index]!;
