@@ -9,21 +9,17 @@ import '../../../helpers.dart';
 void matrixIteratorTestGroupFactory(
         DType dtype,
         Iterator<Iterable<double>> Function(
-                ByteData data, int rowsNum, int colsNum)
+                Float32List data, int rowsNum, int colsNum)
             createIterator,
         List<double> Function(List<double> data) createSource) =>
     group(dtypeToMatrixIteratorTestTitle[dtype], () {
-      ByteData createByteData(List<double> source) =>
-          ByteData.view((source as TypedData).buffer, 0, source.length);
-
       // 3x3 matrix
-      final source =
-          createSource([1.0, 2.0, 3.0, 10.0, 22.0, 31.0, 8.3, 3.4, 34.5]);
+      final data = Float32List.fromList(
+          [1.0, 2.0, 3.0, 10.0, 22.0, 31.0, 8.3, 3.4, 34.5]);
 
       test(
           'should throw an error if one accesses `current` property before '
           '`moveNext` call', () {
-        final data = createByteData(source);
         final iterator = createIterator(data, 3, 3);
 
         expect(() => iterator.current, throwsA(isA()));
@@ -32,8 +28,6 @@ void matrixIteratorTestGroupFactory(
       test(
           'should return the next value on every `moveNext` method call (9 '
           'elements, 3 columns)', () {
-        final data = createByteData(source);
-
         final iterator = createIterator(data, 3, 3)..moveNext();
 
         expect(iterator.current, iterableAlmostEqualTo([1.0, 2.0, 3.0]));
@@ -48,8 +42,6 @@ void matrixIteratorTestGroupFactory(
       test(
           'should contain the last successful value in `current` field if '
           '`moveNext` returns `false`', () {
-        final data = createByteData(source);
-
         final iterator = createIterator(data, 3, 3)
           ..moveNext()
           ..moveNext()
@@ -62,7 +54,6 @@ void matrixIteratorTestGroupFactory(
       test(
           'should return the next value on every `moveNext` method call (9 '
           'elements, 2 columns)', () {
-        final data = createByteData(source);
         final iterator = createIterator(data, 5, 2)..moveNext();
 
         expect(iterator.current, iterableAlmostEqualTo([1.0, 2.0]));
@@ -86,7 +77,6 @@ void matrixIteratorTestGroupFactory(
       test(
           'should return the next value on every `moveNext` method call (9 '
           'elements, 9 columns)', () {
-        final data = createByteData(source);
         final iterator = createIterator(data, 1, 9)..moveNext();
         expect(
             iterator.current,
@@ -97,7 +87,6 @@ void matrixIteratorTestGroupFactory(
       test(
           'should return a proper boolean indicator after each `moveNext` '
           'call', () {
-        final data = createByteData(source);
         final iterator = createIterator(data, 3, 3);
 
         expect(iterator.moveNext(), isTrue);

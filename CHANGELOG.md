@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.5
+- Matrix:
+  - `ByteData` replaced with typed lists
+
 ## 13.11.4
 - Matrix:
   - `inverse` method speed up (Forward substitution case)
