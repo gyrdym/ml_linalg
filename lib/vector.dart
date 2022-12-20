@@ -61,6 +61,31 @@ abstract class Vector implements Iterable<double> {
     }
   }
 
+  factory Vector.fromFloatList(
+    List<double> source, {
+    DType dtype = DType.float32,
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32x4Vector.fromFloatList(
+          source,
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
+          const Float32x4Helper(),
+        );
+
+      case DType.float64:
+        return Float64x2Vector.fromFloatList(
+          source,
+          CacheManagerFactoryImpl().create(vectorCacheKeys),
+          const Float64x2Helper(),
+        );
+
+      default:
+        throw UnimplementedError(
+            'Vector of $dtype type is not implemented yet');
+    }
+  }
+
   /// Creates a vector from a simd-typed collection. It accepts only
   /// [Float32x4List] or [Float64x2List] lists as a source.
   ///
