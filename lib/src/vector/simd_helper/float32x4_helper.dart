@@ -44,7 +44,4 @@ class Float32x4Helper implements SimdHelper<Float32x4> {
         math.pow(a.z, exponent).toDouble(),
         math.pow(a.w, exponent).toDouble(),
       );
-
-  @override
-  Float32x4 createZero() => Float32x4(0, 0, 0, 0);
 }

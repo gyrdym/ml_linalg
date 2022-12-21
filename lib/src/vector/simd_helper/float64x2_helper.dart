@@ -35,7 +35,4 @@ class Float64x2Helper implements SimdHelper<Float64x2> {
         math.pow(a.x, exponent).toDouble(),
         math.pow(a.y, exponent).toDouble(),
       );
-
-  @override
-  Float64x2 createZero() => Float64x2(0, 0);
 }
