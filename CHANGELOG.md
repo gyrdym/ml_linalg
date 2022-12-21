@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.6
+- Matrix, Vector:
+  - Multiplication speed up
+
 ## 13.11.5
 - Matrix:
   - `ByteData` replaced with typed lists

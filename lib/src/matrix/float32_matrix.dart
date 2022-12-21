@@ -753,8 +753,12 @@ class Float32Matrix
           'Matrix column count and vector length mismatch, matrix column count: $columnsNum, vector length: ${vector.length}');
     }
 
-    final generateElement = (int i) => vector.dot(getRow(i));
-    final source = List.generate(rowsNum, generateElement);
+    final source = Float32List(rowsNum);
+
+    for (var i = 0; i < source.length; i++) {
+      source[i] = vector.dot(_dataManager.getRow(i));
+    }
+
     final vectorColumn = Vector.fromList(source, dtype: dtype);
 
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
@@ -762,7 +766,8 @@ class Float32Matrix
 
   Matrix _matrixMul(Matrix matrix) {
     checkColumnsAndRowsNumber(this, matrix);
-    final source = rows.map((row) => row * matrix).toList();
+
+    final source = List.generate(rowsNum, (i) => getRow(i) * matrix);
 
     return Matrix.fromRows(source, dtype: dtype);
   }
