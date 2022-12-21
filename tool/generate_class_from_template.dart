@@ -9,6 +9,7 @@ final _defaultMapping = {
 
   RegExp('\/float32x4([^/]*)\.dart'): (Match match) =>
       '/float64x2${match.group(1)}.g.dart',
+  RegExp(r'Float32x4\(0\.?0*,\s*0\.?0*,\s*0\.?0*,\s*0\.?0*\)'): (Match match) => 'Float64x2(0, 0)',
   RegExp('(F|f)loat32x4'): (Match match) => '${match.group(1)}loat64x2',
 
   RegExp('\/float32([^/]*)\.dart'): (Match match) =>

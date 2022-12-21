@@ -439,7 +439,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
 
     if (vector is Float32x4Vector) {
-      var sum = _simdHelper.createZero();
+      var sum = Float32x4(0, 0, 0, 0);
 
       for (var i = 0; i < _numOfBuckets; i++) {
         sum += _simdList[i] * vector._simdList[i];
