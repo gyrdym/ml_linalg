@@ -22,4 +22,7 @@ abstract class SimdHelper<E> {
 
   /// Raises all the lanes of [a] to the [exponent]
   E pow(E a, num exponent);
+
+  /// Returns a SIMD value filled with zeroes
+  E createZero();
 }

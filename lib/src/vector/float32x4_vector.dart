@@ -101,7 +101,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   final int length;
 
   final CacheManager _cache;
-  final SimdHelper _simdHelper;
+  final SimdHelper<Float32x4> _simdHelper;
   late ByteBuffer _buffer;
   late int _numOfBuckets;
 
@@ -433,7 +433,23 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       }, skipCaching: skipCaching);
 
   @override
-  double dot(Vector vector) => (this * vector).sum(skipCaching: true);
+  double dot(Vector vector) {
+    if (vector.length != length) {
+      throw VectorsLengthMismatchException(length, vector.length);
+    }
+
+    if (vector is Float32x4Vector) {
+      var sum = _simdHelper.createZero();
+
+      for (var i = 0; i < _numOfBuckets; i++) {
+        sum += _simdList[i] * vector._simdList[i];
+      }
+
+      return _simdHelper.sumLanes(sum);
+    }
+
+    return (this * vector).sum(skipCaching: true);
+  }
 
   @override
   double sum({bool skipCaching = false}) {

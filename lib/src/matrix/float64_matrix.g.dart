@@ -769,7 +769,7 @@ class Float64Matrix
   Matrix _matrixMul(Matrix matrix) {
     checkColumnsAndRowsNumber(this, matrix);
 
-    final source = rows.map((row) => row * matrix).toList();
+    final source = List.generate(rowsNum, (i) => getRow(i) * matrix);
 
     return Matrix.fromRows(source, dtype: dtype);
   }
