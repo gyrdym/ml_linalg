@@ -393,6 +393,8 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Returns a representation of the matrix as a flattened list:
   ///
   /// ```dart
+  /// import 'package:ml_linalg/matrix.dart';
+  ///
   /// void main() {
   ///   final matrix = Matrix.fromList([
   ///     [1.0, 2.0, 3.0],
