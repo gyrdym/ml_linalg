@@ -782,27 +782,66 @@ class Float64Matrix
     throw MatrixDivisionByVectorException(rowsNum, columnsNum, vector.length);
   }
 
-  Matrix _matrixByMatrixDiv(Matrix matrix) {
-    checkShape(this, matrix,
+  Matrix _matrixByMatrixDiv(Matrix other) {
+    checkShape(this, other,
         errorMessage: 'Cannot perform matrix by matrix '
             'division');
 
+    if (other is Float64Matrix) {
+      final thisAsList = _dataManager.buffer.asFloat64List();
+      final matrixAsList = other._dataManager.buffer.asFloat64List();
+      final source = Float64List(rowsNum * columnsNum);
+
+      for (var i = 0; i < source.length; i++) {
+        source[i] = thisAsList[i] / matrixAsList[i];
+      }
+
+      return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
+          dtype: DType.float64);
+    }
+
     return _matrix2matrixOperation(
-        matrix, (Vector first, Vector second) => first / second);
+        other, (Vector first, Vector second) => first / second);
   }
 
-  Matrix _matrixAdd(Matrix matrix) {
-    checkShape(this, matrix, errorMessage: 'Cannot perform matrix addition');
+  Matrix _matrixAdd(Matrix other) {
+    checkShape(this, other, errorMessage: 'Cannot perform matrix addition');
+
+    if (other is Float64Matrix) {
+      final thisAsList = _dataManager.buffer.asFloat64List();
+      final matrixAsList = other._dataManager.buffer.asFloat64List();
+      final source = Float64List(rowsNum * columnsNum);
+
+      for (var i = 0; i < source.length; i++) {
+        source[i] = thisAsList[i] + matrixAsList[i];
+      }
+
+      return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
+          dtype: DType.float64);
+    }
 
     return _matrix2matrixOperation(
-        matrix, (Vector first, Vector second) => first + second);
+        other, (Vector first, Vector second) => first + second);
   }
 
-  Matrix _matrixSub(Matrix matrix) {
-    checkShape(this, matrix, errorMessage: 'Cannot perform matrix subtraction');
+  Matrix _matrixSub(Matrix other) {
+    checkShape(this, other, errorMessage: 'Cannot perform matrix subtraction');
+
+    if (other is Float64Matrix) {
+      final thisAsList = _dataManager.buffer.asFloat64List();
+      final matrixAsList = other._dataManager.buffer.asFloat64List();
+      final source = Float64List(rowsNum * columnsNum);
+
+      for (var i = 0; i < source.length; i++) {
+        source[i] = thisAsList[i] - matrixAsList[i];
+      }
+
+      return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
+          dtype: DType.float64);
+    }
 
     return _matrix2matrixOperation(
-        matrix, (Vector first, Vector second) => first - second);
+        other, (Vector first, Vector second) => first - second);
   }
 
   Matrix _matrixScalarAdd(double scalar) {
