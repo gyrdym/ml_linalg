@@ -131,7 +131,7 @@ class Float32Matrix
 
   @override
   Matrix transpose() {
-    final list = _dataManager.buffer.asFloat32List();
+    final list = _dataManager.flattenedList;
     final source = Float32List(columnsNum * rowsNum);
 
     for (var i = 0; i < list.length; i++) {
@@ -400,6 +400,9 @@ class Float32Matrix
   Iterable<int> get columnIndices => _dataManager.columnIndices;
 
   @override
+  List<double> get asFlattenedList => _dataManager.flattenedList;
+
+  @override
   Matrix fastMap<T>(T Function(T element) mapper) {
     final source = List.generate(rowsNum, (int i) => getRow(i).fastMap(mapper));
 
@@ -575,7 +578,7 @@ class Float32Matrix
     }
 
     final X = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.buffer.asFloat32List();
+    final thisAsList = _dataManager.flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var row = 0; row < rowsNum; row++) {
@@ -599,7 +602,7 @@ class Float32Matrix
     }
 
     final X = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.buffer.asFloat32List();
+    final thisAsList = _dataManager.flattenedList;
 
     for (var i = rowsNum - 1; i >= 0; i--) {
       for (var row = rowsNum - 1; row >= 0; row--) {
@@ -624,7 +627,7 @@ class Float32Matrix
 
     final L = Float32List(rowsNum * rowsNum);
     final U = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.buffer.asFloat32List();
+    final thisAsList = _dataManager.flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j <= i; j++) {
@@ -666,7 +669,7 @@ class Float32Matrix
 
     final L = Float32List(rowsNum * rowsNum);
     final U = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.buffer.asFloat32List();
+    final thisAsList = _dataManager.flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j < rowsNum; j++) {
@@ -785,66 +788,48 @@ class Float32Matrix
         errorMessage: 'Cannot perform matrix by matrix '
             'division');
 
-    if (other is Float32Matrix) {
-      final thisAsList = _dataManager.buffer.asFloat32List();
-      final otherAsList = other._dataManager.buffer.asFloat32List();
-      final source = Float32List(rowsNum * columnsNum);
+    final thisAsList = _dataManager.flattenedList;
+    final otherAsList = other.asFlattenedList;
+    final source = Float32List(rowsNum * columnsNum);
 
-      for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] / otherAsList[i];
-      }
-
-      return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
-          dtype: DType.float32);
+    for (var i = 0; i < source.length; i++) {
+      source[i] = thisAsList[i] / otherAsList[i];
     }
 
-    return _matrix2matrixOperation(
-        other, (Vector first, Vector second) => first / second);
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
   }
 
   Matrix _matrixAdd(Matrix other) {
     checkShape(this, other, errorMessage: 'Cannot perform matrix addition');
 
-    if (other is Float32Matrix) {
-      final thisAsList = _dataManager.buffer.asFloat32List();
-      final otherAsList = other._dataManager.buffer.asFloat32List();
-      final source = Float32List(rowsNum * columnsNum);
+    final thisAsList = asFlattenedList;
+    final otherAsList = other.asFlattenedList;
+    final source = Float32List(rowsNum * columnsNum);
 
-      for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] + otherAsList[i];
-      }
-
-      return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
-          dtype: DType.float32);
+    for (var i = 0; i < source.length; i++) {
+      source[i] = thisAsList[i] + otherAsList[i];
     }
 
-    return _matrix2matrixOperation(
-        other, (Vector first, Vector second) => first + second);
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
   }
 
   Matrix _matrixSub(Matrix other) {
     checkShape(this, other, errorMessage: 'Cannot perform matrix subtraction');
 
-    if (other is Float32Matrix) {
-      final thisAsList = _dataManager.buffer.asFloat32List();
-      final otherAsList = other._dataManager.buffer.asFloat32List();
-      final source = Float32List(rowsNum * columnsNum);
+    final thisAsList = asFlattenedList;
+    final otherAsList = other.asFlattenedList;
+    final source = Float32List(rowsNum * columnsNum);
 
-      for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] - otherAsList[i];
-      }
-
-      return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
-          dtype: DType.float32);
+    for (var i = 0; i < source.length; i++) {
+      source[i] = thisAsList[i] - otherAsList[i];
     }
 
-    return _matrix2matrixOperation(
-        other, (Vector first, Vector second) => first - second);
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
   }
 
   Matrix _matrixScalarAdd(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
-    final list = _dataManager.buffer.asFloat32List();
+    final list = _dataManager.flattenedList;
 
     for (var i = 0; i < list.length; i++) {
       source[i] = list[i] + scalar;
@@ -855,7 +840,7 @@ class Float32Matrix
 
   Matrix _matrixScalarSub(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
-    final list = _dataManager.buffer.asFloat32List();
+    final list = _dataManager.flattenedList;
 
     for (var i = 0; i < list.length; i++) {
       source[i] = list[i] - scalar;
@@ -866,7 +851,7 @@ class Float32Matrix
 
   Matrix _matrixScalarMul(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
-    final list = _dataManager.buffer.asFloat32List();
+    final list = _dataManager.flattenedList;
 
     for (var i = 0; i < list.length; i++) {
       source[i] = list[i] * scalar;
@@ -877,7 +862,7 @@ class Float32Matrix
 
   Matrix _matrixByScalarDiv(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
-    final list = _dataManager.buffer.asFloat32List();
+    final list = _dataManager.flattenedList;
 
     for (var i = 0; i < list.length; i++) {
       source[i] = list[i] / scalar;

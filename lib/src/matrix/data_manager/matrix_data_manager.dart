@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
@@ -15,5 +13,5 @@ abstract class MatrixDataManager {
   Vector getRow(int index);
   bool get areAllRowsCached;
   bool get areAllColumnsCached;
-  ByteBuffer get buffer;
+  List<double> get flattenedList;
 }

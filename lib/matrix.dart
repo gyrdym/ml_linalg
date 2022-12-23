@@ -390,6 +390,8 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Return a lazy iterable of column indices
   Iterable<int> get columnIndices;
 
+  List<double> get asFlattenedList;
+
   /// Returns a number of matrix row
   int get rowsNum;
 
