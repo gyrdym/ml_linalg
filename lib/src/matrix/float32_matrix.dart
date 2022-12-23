@@ -788,12 +788,10 @@ class Float32Matrix
         errorMessage: 'Cannot perform matrix by matrix '
             'division');
 
-    final thisAsList = _dataManager.flattenedList;
-    final otherAsList = other.asFlattenedList;
     final source = Float32List(rowsNum * columnsNum);
 
     for (var i = 0; i < source.length; i++) {
-      source[i] = thisAsList[i] / otherAsList[i];
+      source[i] = asFlattenedList[i] / other.asFlattenedList[i];
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
@@ -802,12 +800,10 @@ class Float32Matrix
   Matrix _matrixAdd(Matrix other) {
     checkShape(this, other, errorMessage: 'Cannot perform matrix addition');
 
-    final thisAsList = asFlattenedList;
-    final otherAsList = other.asFlattenedList;
     final source = Float32List(rowsNum * columnsNum);
 
     for (var i = 0; i < source.length; i++) {
-      source[i] = thisAsList[i] + otherAsList[i];
+      source[i] = asFlattenedList[i] + other.asFlattenedList[i];
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
@@ -816,12 +812,10 @@ class Float32Matrix
   Matrix _matrixSub(Matrix other) {
     checkShape(this, other, errorMessage: 'Cannot perform matrix subtraction');
 
-    final thisAsList = asFlattenedList;
-    final otherAsList = other.asFlattenedList;
     final source = Float32List(rowsNum * columnsNum);
 
     for (var i = 0; i < source.length; i++) {
-      source[i] = thisAsList[i] - otherAsList[i];
+      source[i] = asFlattenedList[i] - other.asFlattenedList[i];
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
@@ -840,10 +834,9 @@ class Float32Matrix
 
   Matrix _matrixScalarSub(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
-    final list = _dataManager.flattenedList;
 
-    for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] - scalar;
+    for (var i = 0; i < asFlattenedList.length; i++) {
+      source[i] = asFlattenedList[i] - scalar;
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
@@ -851,10 +844,9 @@ class Float32Matrix
 
   Matrix _matrixScalarMul(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
-    final list = _dataManager.flattenedList;
 
-    for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] * scalar;
+    for (var i = 0; i < asFlattenedList.length; i++) {
+      source[i] = asFlattenedList[i] * scalar;
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
@@ -862,20 +854,11 @@ class Float32Matrix
 
   Matrix _matrixByScalarDiv(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
-    final list = _dataManager.flattenedList;
 
-    for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] / scalar;
+    for (var i = 0; i < asFlattenedList.length; i++) {
+      source[i] = asFlattenedList[i] / scalar;
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
-  }
-
-  Matrix _matrix2matrixOperation(
-      Matrix matrix, Vector Function(Vector first, Vector second) operation) {
-    final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
-    final source = List<Vector>.generate(rowsNum, elementGenFn);
-
-    return Matrix.fromRows(source, dtype: dtype);
   }
 }
