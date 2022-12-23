@@ -631,7 +631,6 @@ class Float32Matrix
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j <= i; j++) {
-        final idx = j * rowsNum + j;
         var sum = 0.0;
 
         for (var k = 0; k < j; k++) {
@@ -639,6 +638,7 @@ class Float32Matrix
         }
 
         if (j == i) {
+          final idx = j * rowsNum + j;
           final value = math.sqrt(thisAsList[idx] - sum);
 
           L[idx] = value;
@@ -648,6 +648,7 @@ class Float32Matrix
             throw CholeskyInappropriateMatrixException();
           }
         } else {
+          final idx = i * columnsNum + j;
           final value = (thisAsList[idx] - sum) / L[j * rowsNum + j];
 
           L[idx] = value;
