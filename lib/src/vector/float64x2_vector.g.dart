@@ -34,6 +34,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       : length = source.length {
     _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
     _buffer = ByteData(_numOfBuckets * _bytesPerSimdElement).buffer;
+
     final asTypedList = _buffer.asFloat64List();
 
     for (var i = 0; i < length; i++) {
