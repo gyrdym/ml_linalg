@@ -1,7 +1,7 @@
 # Changelog
 
 ## 13.11.8
-- tests added for matrix add operator
+- More tests added for matrix "add" operator
 
 ## 13.11.7
 - Matrix:
