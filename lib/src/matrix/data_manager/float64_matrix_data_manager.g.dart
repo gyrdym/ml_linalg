@@ -21,11 +21,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         _rowsCache = List<Vector?>.filled(source.length, null),
         _colsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
-        _data = Float64List(source.length * getLengthOfFirstOrZero(source)),
+        flattenedList =
+            Float64List(source.length * getLengthOfFirstOrZero(source)),
         areAllRowsCached = false,
         areAllColumnsCached = false {
-    final dataAsList = _data.buffer.asFloat64List();
-
     for (var i = 0; i < source.length; i++) {
       if (source[i].length != columnsNum) {
         throw Exception('Wrong nested list length: ${source[i].length}, '
@@ -33,7 +32,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
       }
 
       for (var j = 0; j < source[i].length; j++) {
-        dataAsList[i * columnsNum + j] = source[i][j];
+        flattenedList[i * columnsNum + j] = source[i][j];
       }
     }
   }
@@ -45,11 +44,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         _rowsCache = [...source],
         _colsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
-        _data = Float64List(source.length * getLengthOfFirstOrZero(source)),
+        flattenedList =
+            Float64List(source.length * getLengthOfFirstOrZero(source)),
         areAllRowsCached = true,
         areAllColumnsCached = false {
-    final dataAsList = _data.buffer.asFloat64List();
-
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
 
@@ -59,7 +57,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
       }
 
       for (final value in row) {
-        dataAsList[i * columnsNum + j] = value;
+        flattenedList[i * columnsNum + j] = value;
         j++;
       }
     }
@@ -72,11 +70,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(get2dIterableLength(source)),
         _rowsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _colsCache = [...source],
-        _data = Float64List(source.length * getLengthOfFirstOrZero(source)),
+        flattenedList =
+            Float64List(source.length * getLengthOfFirstOrZero(source)),
         areAllRowsCached = false,
         areAllColumnsCached = true {
-    final dataAsList = _data.buffer.asFloat64List();
-
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
 
@@ -86,7 +83,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
       }
 
       for (final value in column) {
-        dataAsList[j * columnsNum + i] = value;
+        flattenedList[j * columnsNum + i] = value;
         j++;
       }
     }
@@ -100,7 +97,8 @@ class Float64MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(colsNum),
         _rowsCache = List<Vector?>.filled(rowsNum, null),
         _colsCache = List<Vector?>.filled(colsNum, null),
-        _data = source is Float64List ? source : Float64List.fromList(source),
+        flattenedList =
+            source is Float64List ? source : Float64List.fromList(source),
         areAllRowsCached = false,
         areAllColumnsCached = false {
     if (source.length != rowsNum * colsNum) {
@@ -118,7 +116,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(colsNum),
         _rowsCache = List<Vector?>.filled(rowsNum, null),
         _colsCache = List<Vector?>.filled(colsNum, null),
-        _data = source.buffer.asFloat64List(),
+        flattenedList = source.buffer.asFloat64List(),
         areAllRowsCached = false,
         areAllColumnsCached = false {
     if (source.lengthInBytes != rowsNum * colsNum * _bytesPerElement) {
@@ -135,11 +133,11 @@ class Float64MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(source.length),
         _rowsCache = List<Vector?>.filled(source.length, null),
         _colsCache = List<Vector?>.filled(source.length, null),
-        _data = Float64List(source.length * source.length),
+        flattenedList = Float64List(source.length * source.length),
         areAllRowsCached = false,
         areAllColumnsCached = false {
     for (var i = 0; i < rowsNum; i++) {
-      _data[i * columnsNum + i] = source[i];
+      flattenedList[i * columnsNum + i] = source[i];
     }
   }
 
@@ -150,11 +148,11 @@ class Float64MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(size),
         _rowsCache = List<Vector?>.filled(size, null),
         _colsCache = List<Vector?>.filled(size, null),
-        _data = Float64List(size * size),
+        flattenedList = Float64List(size * size),
         areAllRowsCached = false,
         areAllColumnsCached = false {
     for (var i = 0; i < size; i++) {
-      _data[i * columnsNum + i] = scalar;
+      flattenedList[i * columnsNum + i] = scalar;
     }
   }
 
@@ -166,7 +164,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
         columnIndices = getZeroBasedIndices(columnsNum),
         _rowsCache = List<Vector?>.filled(rowsNum, null),
         _colsCache = List<Vector?>.filled(columnsNum, null),
-        _data = Float64List(rowsNum * columnsNum),
+        flattenedList = Float64List(rowsNum * columnsNum),
         areAllRowsCached = false,
         areAllColumnsCached = false {
     if (min >= max) {
@@ -178,9 +176,12 @@ class Float64MatrixDataManager implements MatrixDataManager {
     final diff = max - min;
 
     for (var i = 0; i < columnsNum * rowsNum; i++) {
-      _data[i] = generator.nextDouble() * diff + min;
+      flattenedList[i] = generator.nextDouble() * diff + min;
     }
   }
+
+  @override
+  final Float64List flattenedList;
 
   @override
   final DType dtype = DType.float64;
@@ -205,17 +206,13 @@ class Float64MatrixDataManager implements MatrixDataManager {
 
   final List<Vector?> _rowsCache;
   final List<Vector?> _colsCache;
-  final Float64List _data;
 
   @override
   Iterator<Iterable<double>> get iterator =>
-      Float64MatrixIterator(_data, rowsNum, columnsNum);
+      Float64MatrixIterator(flattenedList, rowsNum, columnsNum);
 
   @override
   bool get hasData => rowsNum > 0 && columnsNum > 0;
-
-  @override
-  ByteBuffer get buffer => _data.buffer;
 
   @override
   Vector getRow(int index) {
@@ -230,7 +227,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
     }
 
     if (_rowsCache[index] == null) {
-      final values = _data.sublist(indexFrom, indexFrom + columnsNum);
+      final values = flattenedList.sublist(indexFrom, indexFrom + columnsNum);
 
       _rowsCache[index] = Vector.fromList(values, dtype: dtype);
     }
@@ -248,7 +245,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
       final column = Float64List(rowsNum);
 
       for (var i = 0; i < rowsNum; i++) {
-        column[i] = _data[i * columnsNum + index];
+        column[i] = flattenedList[i * columnsNum + index];
       }
 
       _colsCache[index] = Vector.fromList(column, dtype: dtype);

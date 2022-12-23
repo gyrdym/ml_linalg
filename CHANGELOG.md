@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.7
+- Matrix:
+  - Arithmetic operations speed up
+
 ## 13.11.6
 - Matrix, Vector:
   - Multiplication speed up

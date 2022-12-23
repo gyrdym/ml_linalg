@@ -387,8 +387,26 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Returns a lazy iterable of row indices
   Iterable<int> get rowIndices;
 
-  /// Return a lazy iterable of column indices
+  /// Returns a lazy iterable of column indices
   Iterable<int> get columnIndices;
+
+  /// Returns a representation of the matrix as a flattened list:
+  ///
+  /// ```dart
+  /// import 'package:ml_linalg/matrix.dart';
+  ///
+  /// void main() {
+  ///   final matrix = Matrix.fromList([
+  ///     [1.0, 2.0, 3.0],
+  ///     [4.0, 5.0, 6.0],
+  ///   ]);
+  ///
+  ///   print(matrix.asFlattenedList); // [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+  /// }
+  /// ```
+  ///
+  /// Runtime type can be Float32List or Float64List, it depends on the [dtype]
+  List<double> get asFlattenedList;
 
   /// Returns a number of matrix row
   int get rowsNum;

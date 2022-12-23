@@ -131,7 +131,7 @@ class Float32Matrix
 
   @override
   Matrix transpose() {
-    final list = _dataManager.buffer.asFloat32List();
+    final list = _dataManager.flattenedList;
     final source = Float32List(columnsNum * rowsNum);
 
     for (var i = 0; i < list.length; i++) {
@@ -400,6 +400,9 @@ class Float32Matrix
   Iterable<int> get columnIndices => _dataManager.columnIndices;
 
   @override
+  List<double> get asFlattenedList => _dataManager.flattenedList;
+
+  @override
   Matrix fastMap<T>(T Function(T element) mapper) {
     final source = List.generate(rowsNum, (int i) => getRow(i).fastMap(mapper));
 
@@ -575,7 +578,7 @@ class Float32Matrix
     }
 
     final X = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.buffer.asFloat32List();
+    final thisAsList = _dataManager.flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var row = 0; row < rowsNum; row++) {
@@ -590,8 +593,7 @@ class Float32Matrix
       }
     }
 
-    return Matrix.fromByteData(X.buffer.asByteData(), rowsNum, rowsNum,
-        dtype: dtype);
+    return Matrix.fromFlattenedList(X, rowsNum, rowsNum, dtype: dtype);
   }
 
   Matrix _backwardSubstitutionInverse() {
@@ -600,7 +602,7 @@ class Float32Matrix
     }
 
     final X = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.buffer.asFloat32List();
+    final thisAsList = _dataManager.flattenedList;
 
     for (var i = rowsNum - 1; i >= 0; i--) {
       for (var row = rowsNum - 1; row >= 0; row--) {
@@ -615,8 +617,7 @@ class Float32Matrix
       }
     }
 
-    return Matrix.fromByteData(X.buffer.asByteData(), rowsNum, rowsNum,
-        dtype: dtype);
+    return Matrix.fromFlattenedList(X, rowsNum, rowsNum, dtype: dtype);
   }
 
   Iterable<Matrix> _choleskyDecomposition() {
@@ -624,46 +625,42 @@ class Float32Matrix
       throw CholeskyNonSquareMatrixException(rowsNum, columnsNum);
     }
 
-    final lower = Float32List(rowsNum * columnsNum);
-    final upper = Float32List(rowsNum * columnsNum);
-    final thisAsList = _dataManager.buffer.asFloat32List();
+    final L = Float32List(rowsNum * rowsNum);
+    final U = Float32List(rowsNum * rowsNum);
+    final thisAsList = _dataManager.flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j <= i; j++) {
         var sum = 0.0;
 
         for (var k = 0; k < j; k++) {
-          sum += (lower[i * columnsNum + k] * lower[j * columnsNum + k]);
+          sum += (L[i * rowsNum + k] * L[j * rowsNum + k]);
         }
 
         if (j == i) {
-          final idx = j * columnsNum + j;
+          final idx = j * rowsNum + j;
           final value = math.sqrt(thisAsList[idx] - sum);
 
-          lower[idx] = value;
-          upper[idx] = value;
+          L[idx] = value;
+          U[idx] = value;
 
           if (value.isNaN) {
             throw CholeskyInappropriateMatrixException();
           }
         } else {
           final idx = i * columnsNum + j;
-          final value = (thisAsList[idx] - sum) / lower[j * columnsNum + j];
+          final value = (thisAsList[idx] - sum) / L[j * rowsNum + j];
 
-          lower[idx] = value;
-          upper[j * columnsNum + i] = value;
+          L[idx] = value;
+          U[j * rowsNum + i] = value;
         }
       }
     }
 
-    final lowerMatrix = Matrix.fromByteData(
-        lower.buffer.asByteData(), rowsNum, columnsNum,
-        dtype: dtype);
-    final upperMatrix = Matrix.fromByteData(
-        upper.buffer.asByteData(), rowsNum, columnsNum,
-        dtype: dtype);
-
-    return [lowerMatrix, upperMatrix];
+    return [
+      Matrix.fromFlattenedList(L, rowsNum, rowsNum, dtype: dtype),
+      Matrix.fromFlattenedList(U, rowsNum, rowsNum, dtype: dtype)
+    ];
   }
 
   Iterable<Matrix> _luDecomposition() {
@@ -673,7 +670,7 @@ class Float32Matrix
 
     final L = Float32List(rowsNum * rowsNum);
     final U = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.buffer.asFloat32List();
+    final thisAsList = _dataManager.flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j < rowsNum; j++) {
@@ -698,9 +695,8 @@ class Float32Matrix
     }
 
     return [
-      Matrix.fromByteData(L.buffer.asByteData(), rowsNum, rowsNum,
-          dtype: dtype),
-      Matrix.fromByteData(U.buffer.asByteData(), rowsNum, rowsNum, dtype: dtype)
+      Matrix.fromFlattenedList(L, rowsNum, rowsNum, dtype: dtype),
+      Matrix.fromFlattenedList(U, rowsNum, rowsNum, dtype: dtype)
     ];
   }
 
@@ -788,56 +784,82 @@ class Float32Matrix
     throw MatrixDivisionByVectorException(rowsNum, columnsNum, vector.length);
   }
 
-  Matrix _matrixByMatrixDiv(Matrix matrix) {
-    checkShape(this, matrix,
+  Matrix _matrixByMatrixDiv(Matrix other) {
+    checkShape(this, other,
         errorMessage: 'Cannot perform matrix by matrix '
             'division');
 
-    return _matrix2matrixOperation(
-        matrix, (Vector first, Vector second) => first / second);
+    final source = Float32List(rowsNum * columnsNum);
+
+    for (var i = 0; i < source.length; i++) {
+      source[i] = asFlattenedList[i] / other.asFlattenedList[i];
+    }
+
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
   }
 
-  Matrix _matrixAdd(Matrix matrix) {
-    checkShape(this, matrix, errorMessage: 'Cannot perform matrix addition');
+  Matrix _matrixAdd(Matrix other) {
+    checkShape(this, other, errorMessage: 'Cannot perform matrix addition');
 
-    return _matrix2matrixOperation(
-        matrix, (Vector first, Vector second) => first + second);
+    final source = Float32List(rowsNum * columnsNum);
+
+    for (var i = 0; i < source.length; i++) {
+      source[i] = asFlattenedList[i] + other.asFlattenedList[i];
+    }
+
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
   }
 
-  Matrix _matrixSub(Matrix matrix) {
-    checkShape(this, matrix, errorMessage: 'Cannot perform matrix subtraction');
+  Matrix _matrixSub(Matrix other) {
+    checkShape(this, other, errorMessage: 'Cannot perform matrix subtraction');
 
-    return _matrix2matrixOperation(
-        matrix, (Vector first, Vector second) => first - second);
+    final source = Float32List(rowsNum * columnsNum);
+
+    for (var i = 0; i < source.length; i++) {
+      source[i] = asFlattenedList[i] - other.asFlattenedList[i];
+    }
+
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
   }
 
-  Matrix _matrixScalarAdd(double scalar) => _matrix2scalarOperation(
-      scalar, (double val, Vector vector) => vector + val);
+  Matrix _matrixScalarAdd(double scalar) {
+    final source = Float32List(rowsNum * columnsNum);
+    final list = _dataManager.flattenedList;
 
-  Matrix _matrixScalarSub(double scalar) => _matrix2scalarOperation(
-      scalar, (double val, Vector vector) => vector - val);
+    for (var i = 0; i < list.length; i++) {
+      source[i] = list[i] + scalar;
+    }
 
-  Matrix _matrixScalarMul(double scalar) => _matrix2scalarOperation(
-      scalar, (double val, Vector vector) => vector * val);
-
-  Matrix _matrixByScalarDiv(double scalar) => _matrix2scalarOperation(
-      scalar, (double val, Vector vector) => vector / val);
-
-  Matrix _matrix2matrixOperation(
-      Matrix matrix, Vector Function(Vector first, Vector second) operation) {
-    final elementGenFn = (int i) => operation(getRow(i), matrix.getRow(i));
-    final source = List<Vector>.generate(rowsNum, elementGenFn);
-
-    return Matrix.fromRows(source, dtype: dtype);
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
   }
 
-  Matrix _matrix2scalarOperation(
-      double scalar, Vector Function(double scalar, Vector vector) operation) {
-    // TODO: use vectorized type (e.g. Float32x4) instead of `double`
-    // TODO: use then `fastMap` to accelerate computations
-    final elementGenFn = (int i) => operation(scalar, getRow(i));
-    final source = List.generate(rowsNum, elementGenFn);
+  Matrix _matrixScalarSub(double scalar) {
+    final source = Float32List(rowsNum * columnsNum);
 
-    return Matrix.fromRows(source, dtype: dtype);
+    for (var i = 0; i < asFlattenedList.length; i++) {
+      source[i] = asFlattenedList[i] - scalar;
+    }
+
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
+  }
+
+  Matrix _matrixScalarMul(double scalar) {
+    final source = Float32List(rowsNum * columnsNum);
+
+    for (var i = 0; i < asFlattenedList.length; i++) {
+      source[i] = asFlattenedList[i] * scalar;
+    }
+
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
+  }
+
+  Matrix _matrixByScalarDiv(double scalar) {
+    final source = Float32List(rowsNum * columnsNum);
+
+    for (var i = 0; i < asFlattenedList.length; i++) {
+      source[i] = asFlattenedList[i] / scalar;
+    }
+
+    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
   }
 }
