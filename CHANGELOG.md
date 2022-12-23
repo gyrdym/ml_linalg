@@ -1,5 +1,8 @@
 # Changelog
 
+## 13.11.8
+- More tests added for matrix "add" operator
+
 ## 13.11.7
 - Matrix:
   - Arithmetic operations speed up
