@@ -789,11 +789,11 @@ class Float64Matrix
 
     if (other is Float64Matrix) {
       final thisAsList = _dataManager.buffer.asFloat64List();
-      final matrixAsList = other._dataManager.buffer.asFloat64List();
+      final otherAsList = other._dataManager.buffer.asFloat64List();
       final source = Float64List(rowsNum * columnsNum);
 
       for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] / matrixAsList[i];
+        source[i] = thisAsList[i] / otherAsList[i];
       }
 
       return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
@@ -809,11 +809,11 @@ class Float64Matrix
 
     if (other is Float64Matrix) {
       final thisAsList = _dataManager.buffer.asFloat64List();
-      final matrixAsList = other._dataManager.buffer.asFloat64List();
+      final otherAsList = other._dataManager.buffer.asFloat64List();
       final source = Float64List(rowsNum * columnsNum);
 
       for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] + matrixAsList[i];
+        source[i] = thisAsList[i] + otherAsList[i];
       }
 
       return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
@@ -829,11 +829,11 @@ class Float64Matrix
 
     if (other is Float64Matrix) {
       final thisAsList = _dataManager.buffer.asFloat64List();
-      final matrixAsList = other._dataManager.buffer.asFloat64List();
+      final otherAsList = other._dataManager.buffer.asFloat64List();
       final source = Float64List(rowsNum * columnsNum);
 
       for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] - matrixAsList[i];
+        source[i] = thisAsList[i] - otherAsList[i];
       }
 
       return Matrix.fromFlattenedList(source, rowsNum, columnsNum,

@@ -787,11 +787,11 @@ class Float32Matrix
 
     if (other is Float32Matrix) {
       final thisAsList = _dataManager.buffer.asFloat32List();
-      final matrixAsList = other._dataManager.buffer.asFloat32List();
+      final otherAsList = other._dataManager.buffer.asFloat32List();
       final source = Float32List(rowsNum * columnsNum);
 
       for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] / matrixAsList[i];
+        source[i] = thisAsList[i] / otherAsList[i];
       }
 
       return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
@@ -807,11 +807,11 @@ class Float32Matrix
 
     if (other is Float32Matrix) {
       final thisAsList = _dataManager.buffer.asFloat32List();
-      final matrixAsList = other._dataManager.buffer.asFloat32List();
+      final otherAsList = other._dataManager.buffer.asFloat32List();
       final source = Float32List(rowsNum * columnsNum);
 
       for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] + matrixAsList[i];
+        source[i] = thisAsList[i] + otherAsList[i];
       }
 
       return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
@@ -827,11 +827,11 @@ class Float32Matrix
 
     if (other is Float32Matrix) {
       final thisAsList = _dataManager.buffer.asFloat32List();
-      final matrixAsList = other._dataManager.buffer.asFloat32List();
+      final otherAsList = other._dataManager.buffer.asFloat32List();
       final source = Float32List(rowsNum * columnsNum);
 
       for (var i = 0; i < source.length; i++) {
-        source[i] = thisAsList[i] - matrixAsList[i];
+        source[i] = thisAsList[i] - otherAsList[i];
       }
 
       return Matrix.fromFlattenedList(source, rowsNum, columnsNum,
