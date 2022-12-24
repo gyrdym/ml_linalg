@@ -53,6 +53,36 @@ void matrixDecomposeTestGroupFactory(DType dtype) =>
           expect(matrix.dtype, dtype);
         });
 
+        test('should perform cholesky decomposition, 4x4 matrix', () {
+          final matrix =
+              Matrix.randomSPD(4, seed: 5, min: -100, max: 100, dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.cholesky);
+
+          expect(decomposed.first * decomposed.last,
+              iterable2dAlmostEqualTo(matrix, 0.1));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform cholesky decomposition, 5x5 matrix', () {
+          final matrix =
+              Matrix.randomSPD(5, seed: 5, min: -100, max: 100, dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.cholesky);
+
+          expect(decomposed.first * decomposed.last,
+              iterable2dAlmostEqualTo(matrix, 0.1));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform cholesky decomposition, 100x100 matrix', () {
+          final matrix =
+              Matrix.randomSPD(100, seed: 5, min: -100, max: 100, dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.cholesky);
+
+          expect(decomposed.first * decomposed.last,
+              iterable2dAlmostEqualTo(matrix, 0.1));
+          expect(matrix.dtype, dtype);
+        });
+
         test(
             'should throw exception while decomposing (Cholesky) if a matrix is inappropriate',
             () {

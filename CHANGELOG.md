@@ -1,5 +1,11 @@
 # Changelog
 
+## 13.11.9
+- Add more tests for:
+  - `Matrix.columnIndices`
+  - `Matrix.columns`
+  - `Matrix.decompose`
+
 ## 13.11.8
 - More tests added for matrix "add" operator
 
