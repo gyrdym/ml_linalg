@@ -109,12 +109,12 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   late int _numOfBuckets;
 
   @override
-  Iterator<double> get iterator => _typedList.iterator;
+  Iterator<double> get iterator => _getTypedList().iterator;
 
   Float64x2List _getSimdList() => _cachedSimdList ??= _buffer.asFloat64x2List();
   Float64x2List? _cachedSimdList;
 
-  Float64List get _typedList =>
+  Float64List _getTypedList() =>
       _cachedTypedList ??= _buffer.asFloat64List(0, length);
   Float64List? _cachedTypedList;
 
@@ -185,16 +185,21 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] + value[i];
+          result[i] = list[i] + value[i];
         }
       } else {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+        ;
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] + value.elementAt(i);
+          result[i] = list[i] + value.elementAt(i);
         }
       }
 
@@ -246,16 +251,20 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] - value[i];
+          result[i] = list[i] - value[i];
         }
       } else {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] - value.elementAt(i);
+          result[i] = list[i] - value.elementAt(i);
         }
       }
 
@@ -310,16 +319,20 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] * value[i];
+          result[i] = list[i] * value[i];
         }
       } else {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] * value.elementAt(i);
+          result[i] = list[i] * value.elementAt(i);
         }
       }
 
@@ -369,16 +382,20 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] / value[i];
+          result[i] = list[i] / value[i];
         }
       } else {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] / value.elementAt(i);
+          result[i] = list[i] / value.elementAt(i);
         }
       }
 
@@ -421,9 +438,10 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   @override
   Vector exp({bool skipCaching = false}) => _cache.get(vectorLogKey, () {
         final source = Float64List(length);
+        final list = _getTypedList();
 
         for (var i = 0; i < length; i++) {
-          source[i] = math.exp(_typedList[i]);
+          source[i] = math.exp(list[i]);
         }
 
         return Vector.fromList(source, dtype: dtype);
@@ -432,9 +450,10 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   @override
   Vector log({bool skipCaching = false}) => _cache.get(vectorLogKey, () {
         final source = Float64List(length);
+        final list = _getTypedList();
 
         for (var i = 0; i < length; i++) {
-          source[i] = math.log(_typedList[i]);
+          source[i] = math.log(list[i]);
         }
 
         return Vector.fromList(source, dtype: dtype);
@@ -544,7 +563,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         return this[0];
       }
 
-      final sorted = Float64List.fromList(_typedList)..sort();
+      final sorted = Float64List.fromList(_getTypedList())..sort();
       final isOdd = length % 2 != 0;
       final midIndex = ((length - 1) / 2).floor();
 
@@ -661,13 +680,13 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector mapToVector(double Function(double value) mapper) =>
-      Vector.fromList(_typedList.map(mapper).toList(), dtype: dtype);
+      Vector.fromList(_getTypedList().map(mapper).toList(), dtype: dtype);
 
   @override
   Vector filterElements(bool Function(double element, int idx) predicate) {
     var i = 0;
     return Vector.fromList(
-        _typedList.where((element) => predicate(element, i++)).toList(),
+        _getTypedList().where((element) => predicate(element, i++)).toList(),
         dtype: dtype);
   }
 
@@ -681,7 +700,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       throw RangeError.index(index, this);
     }
 
-    return _typedList[index];
+    return _getTypedList()[index];
   }
 
   @override
@@ -710,7 +729,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     }
 
     final limit = end == null || end > length ? length : end;
-    final collection = _typedList.sublist(start, limit);
+    final collection = _getTypedList().sublist(start, limit);
 
     return Vector.fromList(collection, dtype: dtype);
   }
@@ -733,7 +752,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector set(int index, num value) {
-    final copy = Float64List.fromList(_typedList);
+    final copy = Float64List.fromList(_getTypedList());
 
     copy[index] = value.toDouble();
 
@@ -805,9 +824,10 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   double _getHammingDistance(Vector other) {
     var dist = 0.0;
+    final list = _getTypedList();
 
-    for (var i = 0; i < _typedList.length; i++) {
-      if (other[i] != _typedList[i]) {
+    for (var i = 0; i < list.length; i++) {
+      if (other[i] != list[i]) {
         dist++;
       }
     }

@@ -1,4 +1,4 @@
-// Approx. 2.0 seconds (MacBook Pro 2019), Dart version: 2.16.0
+// Approx. 1.8 seconds (MacBook Pro 2019), Dart version: 2.16.0
 // Approx. 3.2 sec (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
