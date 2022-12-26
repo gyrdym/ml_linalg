@@ -1,4 +1,5 @@
-// Approx. 1 microsecond (MacBook Air mid 2017)
+// Approx. 0.5 microsecond (MacBook Pro 2019), Dart version: 2.16.0
+// Approx. 1.0 microsecond (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
