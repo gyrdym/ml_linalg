@@ -825,12 +825,11 @@ class Float32Matrix
   }
 
   Matrix _matrixScalarAdd(double scalar) {
-    final simdSize = _simdSize;
     final realLength = rowsNum * columnsNum;
-    final residual = realLength % simdSize;
+    final residual = realLength % _simdSize;
     final dim = residual == 0
         ? realLength
-        : (realLength + simdSize - residual) ~/ simdSize;
+        : (realLength + _simdSize - residual) ~/ _simdSize;
     final source = Float32x4List(dim);
     final list =
         (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
