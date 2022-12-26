@@ -866,10 +866,9 @@ class Float32Matrix
 
   Matrix _matrixByScalarDiv(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
-    final thisAsVector = Vector.fromList(asFlattenedList, dtype: dtype);
 
-    for (var i = 0; i < thisAsVector.length; i++) {
-      source[i] = thisAsVector[i] / scalar;
+    for (var i = 0; i < asFlattenedList.length; i++) {
+      source[i] = asFlattenedList[i] / scalar;
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
