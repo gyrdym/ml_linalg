@@ -26,6 +26,8 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
+const _simdSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
+
 class Float32Matrix
     with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     implements Matrix {
@@ -823,14 +825,24 @@ class Float32Matrix
   }
 
   Matrix _matrixScalarAdd(double scalar) {
-    final source = Float32List(rowsNum * columnsNum);
-    final list = _dataManager.flattenedList;
+    final simdSize = _simdSize;
+    final realLength = rowsNum * columnsNum;
+    final residual = realLength % simdSize;
+    final dim = residual == 0
+        ? realLength
+        : (realLength + simdSize - residual) ~/ simdSize;
+    final source = Float32x4List(dim);
+    final list =
+        (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
+    final scalarAsSimd = Float32x4.splat(scalar);
 
     for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] + scalar;
+      source[i] = list[i] + scalarAsSimd;
     }
 
-    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(
+        source.buffer.asFloat32List(), rowsNum, columnsNum,
+        dtype: dtype);
   }
 
   Matrix _matrixScalarSub(double scalar) {
@@ -855,9 +867,10 @@ class Float32Matrix
 
   Matrix _matrixByScalarDiv(double scalar) {
     final source = Float32List(rowsNum * columnsNum);
+    final thisAsVector = Vector.fromList(asFlattenedList, dtype: dtype);
 
-    for (var i = 0; i < asFlattenedList.length; i++) {
-      source[i] = asFlattenedList[i] / scalar;
+    for (var i = 0; i < thisAsVector.length; i++) {
+      source[i] = thisAsVector[i] / scalar;
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);

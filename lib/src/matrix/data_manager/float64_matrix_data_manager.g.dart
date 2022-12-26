@@ -101,7 +101,7 @@ class Float64MatrixDataManager implements MatrixDataManager {
             source is Float64List ? source : Float64List.fromList(source),
         areAllRowsCached = false,
         areAllColumnsCached = false {
-    if (source.length != rowsNum * colsNum) {
+    if (source.length < rowsNum * colsNum) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowsNum x $colsNum, but given a collection of length '
           '${source.length}');

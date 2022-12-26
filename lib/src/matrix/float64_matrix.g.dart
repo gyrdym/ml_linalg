@@ -28,6 +28,8 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
+const _simdSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
+
 class Float64Matrix
     with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     implements Matrix {
@@ -825,14 +827,24 @@ class Float64Matrix
   }
 
   Matrix _matrixScalarAdd(double scalar) {
-    final source = Float64List(rowsNum * columnsNum);
-    final list = _dataManager.flattenedList;
+    final simdSize = _simdSize;
+    final realLength = rowsNum * columnsNum;
+    final residual = realLength % simdSize;
+    final dim = residual == 0
+        ? realLength
+        : (realLength + simdSize - residual) ~/ simdSize;
+    final source = Float64x2List(dim);
+    final list =
+        (_dataManager.flattenedList as Float64List).buffer.asFloat64x2List();
+    final scalarAsSimd = Float64x2.splat(scalar);
 
     for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] + scalar;
+      source[i] = list[i] + scalarAsSimd;
     }
 
-    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(
+        source.buffer.asFloat64List(), rowsNum, columnsNum,
+        dtype: dtype);
   }
 
   Matrix _matrixScalarSub(double scalar) {
@@ -857,9 +869,10 @@ class Float64Matrix
 
   Matrix _matrixByScalarDiv(double scalar) {
     final source = Float64List(rowsNum * columnsNum);
+    final thisAsVector = Vector.fromList(asFlattenedList, dtype: dtype);
 
-    for (var i = 0; i < asFlattenedList.length; i++) {
-      source[i] = asFlattenedList[i] / scalar;
+    for (var i = 0; i < thisAsVector.length; i++) {
+      source[i] = thisAsVector[i] / scalar;
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
