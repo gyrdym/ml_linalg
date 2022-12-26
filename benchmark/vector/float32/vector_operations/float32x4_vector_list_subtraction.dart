@@ -1,3 +1,4 @@
+// Approx. 2.4 sec (MacBook Pro 2019), Dart version: 2.16.0
 // Approx. 7.5 sec (MacBook Air mid 2017)
 
 import 'package:benchmark_harness/benchmark_harness.dart';
@@ -35,7 +36,7 @@ class Float32x4VectorAndListSubtractionBenchmark extends BenchmarkBase {
     );
     list = Vector.randomFilled(
       amountOfElements,
-      seed: 1,
+      seed: 2,
       min: -1000,
       max: 1000,
       dtype: DType.float32,
