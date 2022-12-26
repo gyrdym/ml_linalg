@@ -847,9 +847,10 @@ class Float64Matrix
   }
 
   Matrix _matrixScalarSub(double scalar) {
-    final source = Float64List(rowsNum * columnsNum);
+    final size = rowsNum * columnsNum;
+    final source = Float64List(size);
 
-    for (var i = 0; i < asFlattenedList.length; i++) {
+    for (var i = 0; i < size; i++) {
       source[i] = asFlattenedList[i] - scalar;
     }
 
@@ -857,9 +858,10 @@ class Float64Matrix
   }
 
   Matrix _matrixScalarMul(double scalar) {
-    final source = Float64List(rowsNum * columnsNum);
+    final size = rowsNum * columnsNum;
+    final source = Float64List(size);
 
-    for (var i = 0; i < asFlattenedList.length; i++) {
+    for (var i = 0; i < size; i++) {
       source[i] = asFlattenedList[i] * scalar;
     }
 
@@ -867,9 +869,10 @@ class Float64Matrix
   }
 
   Matrix _matrixByScalarDiv(double scalar) {
+    final size = rowsNum * columnsNum;
     final source = Float64List(rowsNum * columnsNum);
 
-    for (var i = 0; i < asFlattenedList.length; i++) {
+    for (var i = 0; i < size; i++) {
       source[i] = asFlattenedList[i] / scalar;
     }
 
