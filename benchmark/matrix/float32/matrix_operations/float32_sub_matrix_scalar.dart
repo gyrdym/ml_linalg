@@ -12,7 +12,7 @@ class Float32MatrixSubMatrixScalarBenchmark extends BenchmarkBase {
       : super('Matrix float32, matrix and scalar subtraction');
 
   final matrix =
-  Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 5);
+      Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 5);
 
   final other = 1234.55;
 

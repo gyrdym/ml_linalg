@@ -852,7 +852,7 @@ class Float32Matrix
         : (realLength + _simdSize - residual) ~/ _simdSize;
     final source = Float32x4List(dim);
     final list =
-    (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
+        (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
     final scalarAsSimd = Float32x4.splat(scalar);
 
     for (var i = 0; i < list.length; i++) {
@@ -872,7 +872,7 @@ class Float32Matrix
         : (realLength + _simdSize - residual) ~/ _simdSize;
     final source = Float32x4List(dim);
     final list =
-    (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
+        (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
     final scalarAsSimd = Float32x4.splat(scalar);
 
     for (var i = 0; i < list.length; i++) {
@@ -892,7 +892,7 @@ class Float32Matrix
         : (realLength + _simdSize - residual) ~/ _simdSize;
     final source = Float32x4List(dim);
     final list =
-    (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
+        (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
     final scalarAsSimd = Float32x4.splat(scalar);
 
     for (var i = 0; i < list.length; i++) {
