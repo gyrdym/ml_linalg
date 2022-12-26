@@ -1,3 +1,4 @@
+// Approx. 0.4 sec (MacBook Pro 2019), Dart version: 2.16.0
 // Approx. 0.5 sec (MacBook Air mid 2017), Dart VM version: 2.16.0
 
 import 'dart:typed_data';

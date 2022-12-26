@@ -1,5 +1,10 @@
 # Changelog
 
+## 13.11.10
+- Vector:
+  - getter `_simdList` changed to function => performance improved for a lot of operations
+  - getter `_typedList` changed to function => performance improved for a lot of operations
+
 ## 13.11.9
 - Add more tests for:
   - `Matrix.columnIndices`

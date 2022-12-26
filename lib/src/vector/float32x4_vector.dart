@@ -107,12 +107,12 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   late int _numOfBuckets;
 
   @override
-  Iterator<double> get iterator => _typedList.iterator;
+  Iterator<double> get iterator => _getTypedList().iterator;
 
-  Float32x4List get _simdList => _cachedSimdList ??= _buffer.asFloat32x4List();
+  Float32x4List _getSimdList() => _cachedSimdList ??= _buffer.asFloat32x4List();
   Float32x4List? _cachedSimdList;
 
-  Float32List get _typedList =>
+  Float32List _getTypedList() =>
       _cachedTypedList ??= _buffer.asFloat32List(0, length);
   Float32List? _cachedTypedList;
 
@@ -125,8 +125,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         return false;
       }
 
+      final firstList = _getSimdList();
+      final secondList = other._getSimdList();
+
       for (var i = 0; i < _numOfBuckets; i++) {
-        if (!_simdHelper.areLanesEqual(_simdList[i], other._simdList[i])) {
+        if (!_simdHelper.areLanesEqual(firstList[i], secondList[i])) {
           return false;
         }
       }
@@ -145,7 +148,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
         var i = 0;
 
-        final summed = _simdList
+        final summed = _getSimdList()
             .reduce((sum, element) => sum + element.scale((31 * (i++)) * 1.0));
 
         return length + _simdHelper.sumLanesForHash(summed).hashCode;
@@ -162,9 +165,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       }
 
       final result = Float32x4List(_numOfBuckets);
+      final firstList = _getSimdList();
+      final secondList = other._getSimdList();
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        result[i] = _simdList[i] + other._simdList[i];
+        result[i] = firstList[i] + secondList[i];
       }
 
       return Vector.fromSimdList(result, length, dtype: dtype);
@@ -178,16 +183,21 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] + value[i];
+          result[i] = list[i] + value[i];
         }
       } else {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+        ;
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] + value.elementAt(i);
+          result[i] = list[i] + value.elementAt(i);
         }
       }
 
@@ -197,9 +207,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     if (value is num) {
       final arg = Float32x4.splat(value.toDouble());
       final source = Float32x4List(_numOfBuckets);
+      final list = _getSimdList();
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        source[i] = _simdList[i] + arg;
+        source[i] = list[i] + arg;
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
@@ -220,9 +231,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       }
 
       final source = Float32x4List(_numOfBuckets);
+      final firstList = _getSimdList();
+      final secondList = other._getSimdList();
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        source[i] = _simdList[i] - other._simdList[i];
+        source[i] = firstList[i] - secondList[i];
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
@@ -236,16 +249,20 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] - value[i];
+          result[i] = list[i] - value[i];
         }
       } else {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] - value.elementAt(i);
+          result[i] = list[i] - value.elementAt(i);
         }
       }
 
@@ -255,9 +272,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     if (value is num) {
       final arg = Float32x4.splat(value.toDouble());
       final source = Float32x4List(_numOfBuckets);
+      final list = _getSimdList();
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        source[i] = _simdList[i] - arg;
+        source[i] = list[i] - arg;
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
@@ -277,9 +295,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       }
 
       final source = Float32x4List(_numOfBuckets);
+      final firstList = _getSimdList();
+      final secondList = other._getSimdList();
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        source[i] = _simdList[i] * other._simdList[i];
+        source[i] = firstList[i] * secondList[i];
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
@@ -297,16 +317,20 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] * value[i];
+          result[i] = list[i] * value[i];
         }
       } else {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] * value.elementAt(i);
+          result[i] = list[i] * value.elementAt(i);
         }
       }
 
@@ -315,9 +339,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
     if (value is num) {
       final source = Float32x4List(_numOfBuckets);
+      final list = _getSimdList();
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        source[i] = _simdList[i].scale(value.toDouble());
+        source[i] = list[i].scale(value.toDouble());
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
@@ -337,9 +362,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       }
 
       final source = Float32x4List(_numOfBuckets);
+      final firstList = _getSimdList();
+      final secondList = other._getSimdList();
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        source[i] = _simdList[i] / other._simdList[i];
+        source[i] = firstList[i] / secondList[i];
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
@@ -353,16 +380,20 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
           throw VectorsLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] / value[i];
+          result[i] = list[i] / value[i];
         }
       } else {
         if (value.length != length) {
           throw VectorListLengthMismatchException(length, value.length);
         }
 
+        final list = _getTypedList();
+
         for (var i = 0; i < length; i++) {
-          result[i] = _typedList[i] / value.elementAt(i);
+          result[i] = list[i] / value.elementAt(i);
         }
       }
 
@@ -371,9 +402,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
     if (value is num) {
       final source = Float32x4List(_numOfBuckets);
+      final list = _getSimdList();
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        source[i] = _simdList[i].scale(1 / value);
+        source[i] = list[i].scale(1 / value);
       }
 
       return Vector.fromSimdList(source, length, dtype: dtype);
@@ -386,9 +418,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   @override
   Vector sqrt({bool skipCaching = false}) => _cache.get(vectorSqrtKey, () {
         final source = Float32x4List(_numOfBuckets);
+        final list = _getSimdList();
 
         for (var i = 0; i < _numOfBuckets; i++) {
-          source[i] = _simdList[i].sqrt();
+          source[i] = list[i].sqrt();
         }
 
         return Vector.fromSimdList(source, length, dtype: dtype);
@@ -403,9 +436,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   @override
   Vector exp({bool skipCaching = false}) => _cache.get(vectorLogKey, () {
         final source = Float32List(length);
+        final list = _getTypedList();
 
         for (var i = 0; i < length; i++) {
-          source[i] = math.exp(_typedList[i]);
+          source[i] = math.exp(list[i]);
         }
 
         return Vector.fromList(source, dtype: dtype);
@@ -414,9 +448,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   @override
   Vector log({bool skipCaching = false}) => _cache.get(vectorLogKey, () {
         final source = Float32List(length);
+        final list = _getTypedList();
 
         for (var i = 0; i < length; i++) {
-          source[i] = math.log(_typedList[i]);
+          source[i] = math.log(list[i]);
         }
 
         return Vector.fromList(source, dtype: dtype);
@@ -425,9 +460,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   @override
   Vector abs({bool skipCaching = false}) => _cache.get(vectorAbsKey, () {
         final source = Float32x4List(_numOfBuckets);
+        final list = _getSimdList();
 
         for (var i = 0; i < _numOfBuckets; i++) {
-          source[i] = _simdList[i].abs();
+          source[i] = list[i].abs();
         }
 
         return Vector.fromSimdList(source, length, dtype: dtype);
@@ -440,10 +476,12 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
 
     if (vector is Float32x4Vector) {
+      final firstList = _getSimdList();
+      final secondList = vector._getSimdList();
       var sum = Float32x4(0, 0, 0, 0);
 
       for (var i = 0; i < _numOfBuckets; i++) {
-        sum += _simdList[i] * vector._simdList[i];
+        sum += firstList[i] * secondList[i];
       }
 
       return _simdHelper.sumLanes(sum);
@@ -459,7 +497,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
 
     return _cache.get(vectorSumKey,
-        () => _simdHelper.sumLanes(_simdList.reduce((a, b) => a + b)),
+        () => _simdHelper.sumLanes(_getSimdList().reduce((a, b) => a + b)),
         skipCaching: skipCaching);
   }
 
@@ -523,7 +561,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
         return this[0];
       }
 
-      final sorted = Float32List.fromList(_typedList)..sort();
+      final sorted = Float32List.fromList(_getTypedList())..sort();
       final isOdd = length % 2 != 0;
       final midIndex = ((length - 1) / 2).floor();
 
@@ -564,21 +602,23 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       return double.nan;
     }
 
+    final list = _getSimdList();
+
     if (_isLastBucketNotFull) {
-      final fullBucketsList = _simdList.take(_numOfBuckets - 1);
+      final fullBucketsList = list.take(_numOfBuckets - 1);
       final product = fullBucketsList.isNotEmpty
           ? fullBucketsList.reduce((result, value) => result * value)
           : _simdOnes;
 
       return _simdHelper
-          .simdValueToList(_simdList.last)
+          .simdValueToList(list.last)
           .take(length % _bucketSize)
           .fold(_simdHelper.multLanes(product),
               (result, value) => result * value);
     }
 
     return _simdHelper
-        .multLanes(_simdList.reduce((result, value) => result * value));
+        .multLanes(list.reduce((result, value) => result * value));
   }
 
   double _findExtrema(
@@ -587,21 +627,23 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     Float32x4 Function(Float32x4 first, Float32x4 second) getExtremalBucket,
     double Function(double first, double second) getExtremalValue,
   ) {
+    final list = _getSimdList();
+
     if (_isLastBucketNotFull) {
       var extrema = initialValue;
-      final fullBucketsList = _simdList.take(_numOfBuckets - 1);
+      final fullBucketsList = list.take(_numOfBuckets - 1);
 
       if (fullBucketsList.isNotEmpty) {
         extrema = getExtremalLane(fullBucketsList.reduce(getExtremalBucket));
       }
 
       return _simdHelper
-          .simdValueToList(_simdList.last)
+          .simdValueToList(list.last)
           .take(length % _bucketSize)
           .fold(extrema, getExtremalValue);
     }
 
-    return getExtremalLane(_simdList.reduce(getExtremalBucket));
+    return getExtremalLane(list.reduce(getExtremalBucket));
   }
 
   @override
@@ -627,7 +669,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector fastMap<T>(T Function(T element) mapper) {
-    final source = _simdList
+    final source = _getSimdList()
         .map<Float32x4>((value) => mapper(value as T) as Float32x4)
         .toList(growable: false);
     return Vector.fromSimdList(Float32x4List.fromList(source), length,
@@ -636,13 +678,13 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector mapToVector(double Function(double value) mapper) =>
-      Vector.fromList(_typedList.map(mapper).toList(), dtype: dtype);
+      Vector.fromList(_getTypedList().map(mapper).toList(), dtype: dtype);
 
   @override
   Vector filterElements(bool Function(double element, int idx) predicate) {
     var i = 0;
     return Vector.fromList(
-        _typedList.where((element) => predicate(element, i++)).toList(),
+        _getTypedList().where((element) => predicate(element, i++)).toList(),
         dtype: dtype);
   }
 
@@ -656,7 +698,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       throw RangeError.index(index, this);
     }
 
-    return _typedList[index];
+    return _getTypedList()[index];
   }
 
   @override
@@ -685,7 +727,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
 
     final limit = end == null || end > length ? length : end;
-    final collection = _typedList.sublist(start, limit);
+    final collection = _getTypedList().sublist(start, limit);
 
     return Vector.fromList(collection, dtype: dtype);
   }
@@ -708,7 +750,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   Vector set(int index, num value) {
-    final copy = Float32List.fromList(_typedList);
+    final copy = Float32List.fromList(_getTypedList());
 
     copy[index] = value.toDouble();
 
@@ -739,9 +781,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   Vector _elementWiseIntegerPow(int exponent) {
     final source = Float32x4List(_numOfBuckets);
+    final list = _getSimdList();
 
     for (var i = 0; i < _numOfBuckets; i++) {
-      source[i] = _simdToIntPow(_simdList[i], exponent);
+      source[i] = _simdToIntPow(list[i], exponent);
     }
 
     return Vector.fromSimdList(source, length, dtype: dtype);
@@ -749,9 +792,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   Vector _elementWiseFloatPow(double exponent) {
     final source = Float32x4List(_numOfBuckets);
+    final list = _getSimdList();
 
     for (var i = 0; i < _numOfBuckets; i++) {
-      source[i] = _simdToFloatPow(_simdList[i], exponent);
+      source[i] = _simdToFloatPow(list[i], exponent);
     }
 
     return Vector.fromSimdList(source, length, dtype: dtype);
@@ -778,9 +822,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   double _getHammingDistance(Vector other) {
     var dist = 0.0;
+    final list = _getTypedList();
 
-    for (var i = 0; i < _typedList.length; i++) {
-      if (other[i] != _typedList[i]) {
+    for (var i = 0; i < list.length; i++) {
+      if (other[i] != list[i]) {
         dist++;
       }
     }
