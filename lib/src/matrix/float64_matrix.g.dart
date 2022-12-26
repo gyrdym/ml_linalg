@@ -827,12 +827,11 @@ class Float64Matrix
   }
 
   Matrix _matrixScalarAdd(double scalar) {
-    final simdSize = _simdSize;
     final realLength = rowsNum * columnsNum;
-    final residual = realLength % simdSize;
+    final residual = realLength % _simdSize;
     final dim = residual == 0
         ? realLength
-        : (realLength + simdSize - residual) ~/ simdSize;
+        : (realLength + _simdSize - residual) ~/ _simdSize;
     final source = Float64x2List(dim);
     final list =
         (_dataManager.flattenedList as Float64List).buffer.asFloat64x2List();
@@ -869,10 +868,9 @@ class Float64Matrix
 
   Matrix _matrixByScalarDiv(double scalar) {
     final source = Float64List(rowsNum * columnsNum);
-    final thisAsVector = Vector.fromList(asFlattenedList, dtype: dtype);
 
-    for (var i = 0; i < thisAsVector.length; i++) {
-      source[i] = thisAsVector[i] / scalar;
+    for (var i = 0; i < asFlattenedList.length; i++) {
+      source[i] = asFlattenedList[i] / scalar;
     }
 
     return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
