@@ -244,6 +244,61 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
+        test('should perform addition of a scalar, matrix 1x6', () {
+          final matrix = Matrix.fromList([
+            [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+          ], dtype: dtype);
+
+          final actual = matrix + 7;
+
+          final expected = [
+            [8.0, 9.0, 10.0, 11.0, 12.0, 13.0],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 1);
+          expect(actual.columnsNum, 6);
+          expect(actual.dtype, dtype);
+        });
+
+        test('should perform addition of a scalar, matrix 2x7', () {
+          final matrix = Matrix.fromList([
+            [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0],
+            [7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0],
+          ], dtype: dtype);
+
+          final actual = matrix + 10;
+
+          final expected = [
+            [11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0],
+            [17.0, 16.0, 15.0, 14.0, 13.0, 12.0, 11.0],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 2);
+          expect(actual.columnsNum, 7);
+          expect(actual.dtype, dtype);
+        });
+
+        test('should perform addition of a scalar, matrix 2x9', () {
+          final matrix = Matrix.fromList([
+            [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0],
+            [7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 9.0, 8.0],
+          ], dtype: dtype);
+
+          final actual = matrix + 11;
+
+          final expected = [
+            [12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0],
+            [18.0, 17.0, 16.0, 15.0, 14.0, 13.0, 12.0, 20.0, 19.0],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 2);
+          expect(actual.columnsNum, 9);
+          expect(actual.dtype, dtype);
+        });
+
         test('should perform addition of a scalar, scalar is 0', () {
           final matrix = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
