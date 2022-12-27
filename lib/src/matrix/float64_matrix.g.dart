@@ -1,5 +1,4 @@
 /* This file is auto generated, do not change it manually */
-// ignore_for_file: type=lint
 
 import 'dart:collection';
 import 'dart:math' as math;
