@@ -9,12 +9,15 @@ final _defaultMapping = {
 
   RegExp('\/float32x4([^/]*)\.dart'): (Match match) =>
       '/float64x2${match.group(1)}.g.dart',
-  RegExp(r'Float32x4\(0\.?0*,\s*0\.?0*,\s*0\.?0*,\s*0\.?0*\)'): (Match match) =>
-      'Float64x2(0, 0)',
+
+  RegExp(r'Float32x4\(\s*(.*),\s*(.*),\s*(.*),\s*(.*)\s*\)'): (Match match) =>
+      'Float64x2(${match.group(1)}, ${match.group(2)})',
+
   RegExp('(F|f)loat32x4'): (Match match) => '${match.group(1)}loat64x2',
 
   RegExp('\/float32([^/]*)\.dart'): (Match match) =>
       '/float64${match.group(1)}.g.dart',
+
   RegExp('(F|f)loat32'): (Match match) => '${match.group(1)}loat64',
 };
 
@@ -23,7 +26,7 @@ Future<Null> generateClassFromTemplate(
   String templateFileName, {
   Map<Pattern, String Function(Match)>? mapping,
   String comment =
-      '/* This file is auto generated, do not change it manually */\n\n',
+      '/* This file is auto generated, do not change it manually */\n// ignore_for_file: unused_local_variable\n\n',
 }) async {
   final targetFile = File(targetFileName);
 

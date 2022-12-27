@@ -7,7 +7,7 @@ import '../../../../dtype_to_title.dart';
 void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('- operator', () {
-        test('should perform matricies subtraction', () {
+        test('should perform matrices subtraction', () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
             [5.0, 6.0, 7.0, 8.0],
@@ -31,6 +31,106 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
           expect(actual, equals(expected));
           expect(actual.rowsNum, 3);
           expect(actual.columnsNum, 4);
+          expect(actual.dtype, dtype);
+        });
+
+        test('should subtract a scalar from a 3x5 matrix', () {
+          final matrix = Matrix.fromList([
+            [1, 2, 3, 4, 5],
+            [6, 7, 8, 9, 10],
+            [11, 12, 13, 14, 15],
+          ], dtype: dtype);
+          final expected = [
+            [-10, -9, -8, -7, -6],
+            [-5, -4, -3, -2, -1],
+            [0, 1, 2, 3, 4],
+          ];
+          final actual = matrix - 11;
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 3);
+          expect(actual.columnsNum, 5);
+          expect(actual.dtype, dtype);
+        });
+
+        test(
+            'should subtract a scalar from a 3x5 matrix, fromFlattenedList constructor',
+            () {
+          final matrix = Matrix.fromFlattenedList([
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+          ], 3, 5, dtype: dtype);
+          final expected = [
+            [-10, -9, -8, -7, -6],
+            [-5, -4, -3, -2, -1],
+            [0, 1, 2, 3, 4],
+          ];
+          final actual = matrix - 11;
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 3);
+          expect(actual.columnsNum, 5);
+          expect(actual.dtype, dtype);
+        });
+
+        test('should subtract a scalar from a 5x1 matrix', () {
+          final matrix = Matrix.fromList([
+            [1],
+            [2],
+            [3],
+            [4],
+            [5],
+          ], dtype: dtype);
+          final expected = [
+            [-10],
+            [-9],
+            [-8],
+            [-7],
+            [-6],
+          ];
+          final actual = matrix - 11;
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 5);
+          expect(actual.columnsNum, 1);
+          expect(actual.dtype, dtype);
+        });
+
+        test(
+            'should subtract a scalar from a 5x1 matrix, fromFlattenedList constructor',
+            () {
+          final matrix = Matrix.fromFlattenedList([
+            1,
+            2,
+            3,
+            4,
+            5,
+          ], 5, 1, dtype: dtype);
+          final expected = [
+            [-10],
+            [-9],
+            [-8],
+            [-7],
+            [-6],
+          ];
+          final actual = matrix - 11;
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 5);
+          expect(actual.columnsNum, 1);
           expect(actual.dtype, dtype);
         });
       });
