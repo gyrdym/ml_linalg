@@ -74,7 +74,7 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
         });
 
         test(
-            'should throw an error if one tries to multiplicate a matrix with '
+            'should throw an error if one tries to multiply a matrix with '
             'another matrix of improper dimensions', () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
