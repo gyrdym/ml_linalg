@@ -1,5 +1,5 @@
 /* This file is auto generated, do not change it manually */
-// ignore_for_file: type=lint
+// ignore_for_file: unused_local_variable
 
 import 'dart:typed_data';
 import 'dart:math' as math;
