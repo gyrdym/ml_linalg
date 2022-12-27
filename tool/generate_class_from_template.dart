@@ -26,7 +26,7 @@ Future<Null> generateClassFromTemplate(
   String templateFileName, {
   Map<Pattern, String Function(Match)>? mapping,
   String comment =
-      '/* This file is auto generated, do not change it manually */\n\n',
+      '/* This file is auto generated, do not change it manually */\n// ignore_for_file: unused_local_variable\n\n',
 }) async {
   final targetFile = File(targetFileName);
 
