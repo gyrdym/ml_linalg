@@ -36,17 +36,17 @@ class Float32Matrix
     this._cache,
   );
 
-  final MatrixDataManager _dataManager;
+  final MatrixDataManager<Float32x4, Float32x4List> _dataManager;
   final CacheManager _cache;
 
   @override
   DType get dtype => _dataManager.dtype;
 
   @override
-  int get rowsNum => _dataManager.rowsNum;
+  int get rowsNum => _dataManager.rowCount;
 
   @override
-  int get columnsNum => _dataManager.columnsNum;
+  int get columnsNum => _dataManager.colCount;
 
   @override
   bool get hasData => _dataManager.hasData;
@@ -825,82 +825,62 @@ class Float32Matrix
   }
 
   Matrix _matrixScalarAdd(double scalar) {
-    final realLength = rowsNum * columnsNum;
-    final residual = realLength % _simdSize;
-    final dim = residual == 0
-        ? realLength
-        : (realLength + _simdSize - residual) ~/ _simdSize;
-    final source = Float32x4List(dim);
-    final list =
-        (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
+    final result = _dataManager.createEmptySimdList();
+    final thisAsSimdList = _dataManager.getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
 
-    for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] + scalarAsSimd;
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      result[i] = thisAsSimdList[i] + scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
-        source.buffer.asFloat32List(), rowsNum, columnsNum,
+        result.buffer.asFloat32List(), rowsNum, columnsNum,
         dtype: dtype);
   }
 
   Matrix _matrixScalarSub(double scalar) {
-    final realLength = rowsNum * columnsNum;
-    final residual = realLength % _simdSize;
-    final dim = residual == 0
-        ? realLength
-        : (realLength + _simdSize - residual) ~/ _simdSize;
-    final source = Float32x4List(dim);
-    final list =
-        (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
+    final result = _dataManager.createEmptySimdList();
+    final thisAsSimdList = _dataManager.getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
 
-    for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] - scalarAsSimd;
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      result[i] = thisAsSimdList[i] - scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
-        source.buffer.asFloat32List(), rowsNum, columnsNum,
+        result.buffer.asFloat32List(), rowsNum, columnsNum,
         dtype: dtype);
   }
 
   Matrix _matrixScalarMul(double scalar) {
-    final realLength = rowsNum * columnsNum;
-    final residual = realLength % _simdSize;
-    final dim = residual == 0
-        ? realLength
-        : (realLength + _simdSize - residual) ~/ _simdSize;
-    final source = Float32x4List(dim);
-    final list =
-        (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
+    final result = _dataManager.createEmptySimdList();
+    final thisAsSimdList = _dataManager.getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
 
-    for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] * scalarAsSimd;
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      result[i] = thisAsSimdList[i] * scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
-        source.buffer.asFloat32List(), rowsNum, columnsNum,
+        result.buffer.asFloat32List(), rowsNum, columnsNum,
         dtype: dtype);
   }
 
   Matrix _matrixByScalarDiv(double scalar) {
-    final realLength = rowsNum * columnsNum;
-    final residual = realLength % _simdSize;
-    final dim = residual == 0
-        ? realLength
-        : (realLength + _simdSize - residual) ~/ _simdSize;
-    final source = Float32x4List(dim);
-    final list =
-        (_dataManager.flattenedList as Float32List).buffer.asFloat32x4List();
+    final result = _dataManager.createEmptySimdList();
+    final thisAsSimdList = _dataManager.getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
 
-    for (var i = 0; i < list.length; i++) {
-      source[i] = list[i] / scalarAsSimd;
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      result[i] = thisAsSimdList[i] / scalarAsSimd;
+    }
+
+    if (_dataManager.lastSimd != null) {
+      result[result.length - 1] = _dataManager.lastSimd! / scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
-        source.buffer.asFloat32List(), rowsNum, columnsNum,
+        result.buffer.asFloat32List(), rowsNum, columnsNum,
         dtype: dtype);
   }
 }

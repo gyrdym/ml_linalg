@@ -151,5 +151,22 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
           expect(actual.columnsNum, 4);
           expect(actual.dtype, dtype);
         });
+
+        test('should perform division of a 1x5 matrix by a scalar', () {
+          final matrix1 = Matrix.fromList([
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+          ], dtype: dtype);
+
+          final scalar = 2.0;
+          final actual = matrix1 / scalar;
+          final expected = [
+            [.5, 1.0, 1.5, 2.0, 2.5],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 1);
+          expect(actual.columnsNum, 5);
+          expect(actual.dtype, dtype);
+        });
       });
     });

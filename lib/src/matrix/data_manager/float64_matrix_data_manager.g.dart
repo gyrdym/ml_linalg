@@ -12,11 +12,13 @@ import 'package:ml_linalg/src/matrix/iterator/float64_matrix_iterator.g.dart';
 import 'package:ml_linalg/vector.dart';
 
 const _bytesPerElement = Float64List.bytesPerElement;
+const _simdSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
 
-class Float64MatrixDataManager implements MatrixDataManager {
+class Float64MatrixDataManager
+    implements MatrixDataManager<Float64x2, Float64x2List> {
   Float64MatrixDataManager.fromList(List<List<double>> source)
-      : rowsNum = get2dIterableLength(source),
-        columnsNum = getLengthOfFirstOrZero(source),
+      : rowCount = get2dIterableLength(source),
+        colCount = getLengthOfFirstOrZero(source),
         rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
         columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         _rowsCache = List<Vector?>.filled(source.length, null),
@@ -26,20 +28,20 @@ class Float64MatrixDataManager implements MatrixDataManager {
         areAllRowsCached = false,
         areAllColumnsCached = false {
     for (var i = 0; i < source.length; i++) {
-      if (source[i].length != columnsNum) {
+      if (source[i].length != colCount) {
         throw Exception('Wrong nested list length: ${source[i].length}, '
-            'expected length: $columnsNum');
+            'expected length: $colCount');
       }
 
       for (var j = 0; j < source[i].length; j++) {
-        flattenedList[i * columnsNum + j] = source[i][j];
+        flattenedList[i * colCount + j] = source[i][j];
       }
     }
   }
 
   Float64MatrixDataManager.fromRows(List<Vector> source)
-      : rowsNum = get2dIterableLength(source),
-        columnsNum = getLengthOfFirstOrZero(source),
+      : rowCount = get2dIterableLength(source),
+        colCount = getLengthOfFirstOrZero(source),
         rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
         columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         _rowsCache = [...source],
@@ -51,21 +53,21 @@ class Float64MatrixDataManager implements MatrixDataManager {
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
 
-      if (row.length != columnsNum) {
+      if (row.length != colCount) {
         throw Exception('Vectors of different length are provided, expected '
-            'vector length: `$columnsNum`, given: ${row.length}');
+            'vector length: `$colCount`, given: ${row.length}');
       }
 
       for (final value in row) {
-        flattenedList[i * columnsNum + j] = value;
+        flattenedList[i * colCount + j] = value;
         j++;
       }
     }
   }
 
   Float64MatrixDataManager.fromColumns(List<Vector> source)
-      : rowsNum = getLengthOfFirstOrZero(source),
-        columnsNum = get2dIterableLength(source),
+      : rowCount = getLengthOfFirstOrZero(source),
+        colCount = get2dIterableLength(source),
         rowIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
         columnIndices = getZeroBasedIndices(get2dIterableLength(source)),
         _rowsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
@@ -77,13 +79,13 @@ class Float64MatrixDataManager implements MatrixDataManager {
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
 
-      if (column.length != rowsNum) {
+      if (column.length != rowCount) {
         throw Exception('Vectors of different length are provided, expected '
-            'vector length: `$rowsNum`, given: ${column.length}');
+            'vector length: `$rowCount`, given: ${column.length}');
       }
 
       for (final value in column) {
-        flattenedList[j * columnsNum + i] = value;
+        flattenedList[j * colCount + i] = value;
         j++;
       }
     }
@@ -91,8 +93,8 @@ class Float64MatrixDataManager implements MatrixDataManager {
 
   Float64MatrixDataManager.fromFlattened(
       List<double> source, int rowsNum, int colsNum)
-      : rowsNum = rowsNum,
-        columnsNum = colsNum,
+      : rowCount = rowsNum,
+        colCount = colsNum,
         rowIndices = getZeroBasedIndices(rowsNum),
         columnIndices = getZeroBasedIndices(colsNum),
         _rowsCache = List<Vector?>.filled(rowsNum, null),
@@ -110,8 +112,8 @@ class Float64MatrixDataManager implements MatrixDataManager {
 
   Float64MatrixDataManager.fromByteData(
       ByteData source, int rowsNum, int colsNum)
-      : rowsNum = rowsNum,
-        columnsNum = colsNum,
+      : rowCount = rowsNum,
+        colCount = colsNum,
         rowIndices = getZeroBasedIndices(rowsNum),
         columnIndices = getZeroBasedIndices(colsNum),
         _rowsCache = List<Vector?>.filled(rowsNum, null),
@@ -121,14 +123,14 @@ class Float64MatrixDataManager implements MatrixDataManager {
         areAllColumnsCached = false {
     if (source.lengthInBytes != rowsNum * colsNum * _bytesPerElement) {
       throw Exception('Invalid matrix dimension has been provided - '
-          '$rowsNum x $colsNum (${rowsNum * columnsNum} elements), but byte data of '
+          '$rowsNum x $colsNum (${rowsNum * colCount} elements), but byte data of '
           '${source.lengthInBytes / _bytesPerElement} elements has been given');
     }
   }
 
   Float64MatrixDataManager.diagonal(List<double> source)
-      : rowsNum = source.length,
-        columnsNum = source.length,
+      : rowCount = source.length,
+        colCount = source.length,
         rowIndices = getZeroBasedIndices(source.length),
         columnIndices = getZeroBasedIndices(source.length),
         _rowsCache = List<Vector?>.filled(source.length, null),
@@ -136,14 +138,14 @@ class Float64MatrixDataManager implements MatrixDataManager {
         flattenedList = Float64List(source.length * source.length),
         areAllRowsCached = false,
         areAllColumnsCached = false {
-    for (var i = 0; i < rowsNum; i++) {
-      flattenedList[i * columnsNum + i] = source[i];
+    for (var i = 0; i < rowCount; i++) {
+      flattenedList[i * colCount + i] = source[i];
     }
   }
 
   Float64MatrixDataManager.scalar(double scalar, int size)
-      : rowsNum = size,
-        columnsNum = size,
+      : rowCount = size,
+        colCount = size,
         rowIndices = getZeroBasedIndices(size),
         columnIndices = getZeroBasedIndices(size),
         _rowsCache = List<Vector?>.filled(size, null),
@@ -152,14 +154,14 @@ class Float64MatrixDataManager implements MatrixDataManager {
         areAllRowsCached = false,
         areAllColumnsCached = false {
     for (var i = 0; i < size; i++) {
-      flattenedList[i * columnsNum + i] = scalar;
+      flattenedList[i * colCount + i] = scalar;
     }
   }
 
   Float64MatrixDataManager.random(DType dtype, int rowsNum, int columnsNum,
       {num min = -1000, num max = 1000, int? seed})
-      : rowsNum = rowsNum,
-        columnsNum = columnsNum,
+      : rowCount = rowsNum,
+        colCount = columnsNum,
         rowIndices = getZeroBasedIndices(rowsNum),
         columnIndices = getZeroBasedIndices(columnsNum),
         _rowsCache = List<Vector?>.filled(rowsNum, null),
@@ -187,10 +189,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
   final DType dtype = DType.float64;
 
   @override
-  final int columnsNum;
+  final int colCount;
 
   @override
-  final int rowsNum;
+  final int rowCount;
 
   @override
   final Iterable<int> rowIndices;
@@ -209,10 +211,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
 
   @override
   Iterator<Iterable<double>> get iterator =>
-      Float64MatrixIterator(flattenedList, rowsNum, columnsNum);
+      Float64MatrixIterator(flattenedList, rowCount, colCount);
 
   @override
-  bool get hasData => rowsNum > 0 && columnsNum > 0;
+  bool get hasData => rowCount > 0 && colCount > 0;
 
   @override
   Vector getRow(int index) {
@@ -220,14 +222,14 @@ class Float64MatrixDataManager implements MatrixDataManager {
       throw Exception('Matrix is empty');
     }
 
-    final indexFrom = index * columnsNum;
+    final indexFrom = index * colCount;
 
-    if (indexFrom >= rowsNum * columnsNum) {
-      throw RangeError.range(indexFrom, 0, rowsNum * columnsNum);
+    if (indexFrom >= rowCount * colCount) {
+      throw RangeError.range(indexFrom, 0, rowCount * colCount);
     }
 
     if (_rowsCache[index] == null) {
-      final values = flattenedList.sublist(indexFrom, indexFrom + columnsNum);
+      final values = flattenedList.sublist(indexFrom, indexFrom + colCount);
 
       _rowsCache[index] = Vector.fromList(values, dtype: dtype);
     }
@@ -242,10 +244,10 @@ class Float64MatrixDataManager implements MatrixDataManager {
     }
 
     if (_colsCache[index] == null) {
-      final column = Float64List(rowsNum);
+      final column = Float64List(rowCount);
 
-      for (var i = 0; i < rowsNum; i++) {
-        column[i] = flattenedList[i * columnsNum + index];
+      for (var i = 0; i < rowCount; i++) {
+        column[i] = flattenedList[i * colCount + index];
       }
 
       _colsCache[index] = Vector.fromList(column, dtype: dtype);
@@ -253,4 +255,45 @@ class Float64MatrixDataManager implements MatrixDataManager {
 
     return _colsCache[index]!;
   }
+
+  @override
+  Float64x2List createEmptySimdList() {
+    final realLength = rowCount * colCount;
+    final residual = realLength % _simdSize;
+    final dim = residual == 0
+        ? realLength
+        : (realLength + _simdSize - residual) ~/ _simdSize;
+
+    return Float64x2List(dim);
+  }
+
+  @override
+  Float64x2List getFlattenedSimdList() {
+    if (_cachedSimdList == null) {
+      final realLength = rowCount * colCount;
+      final residual = realLength % _simdSize;
+
+      if (residual != 0) {
+        final lastSimdFirstIdx = flattenedList.length - residual;
+        final x = flattenedList[lastSimdFirstIdx];
+        final y = lastSimdFirstIdx + 1 < flattenedList.length
+            ? flattenedList[lastSimdFirstIdx + 1]
+            : 0.0;
+        final z = lastSimdFirstIdx + 2 < flattenedList.length
+            ? flattenedList[lastSimdFirstIdx + 2]
+            : 0.0;
+
+        lastSimd = Float64x2(x, y);
+      }
+
+      _cachedSimdList = flattenedList.buffer.asFloat64x2List();
+    }
+
+    return _cachedSimdList!;
+  }
+
+  Float64x2List? _cachedSimdList;
+
+  @override
+  Float64x2? lastSimd;
 }
