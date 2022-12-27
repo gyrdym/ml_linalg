@@ -1,4 +1,5 @@
 /* This file is auto generated, do not change it manually */
+// ignore_for_file: type=lint
 
 import 'dart:collection';
 import 'dart:math' as math;
@@ -27,8 +28,6 @@ import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
-
-const _simdSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
 
 class Float64Matrix
     with IterableMixin<Iterable<double>>, MatrixValidatorMixin

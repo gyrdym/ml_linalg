@@ -26,8 +26,6 @@ import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
-const _simdSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
-
 class Float32Matrix
     with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     implements Matrix {
