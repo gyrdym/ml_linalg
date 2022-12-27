@@ -501,6 +501,46 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
+        test(
+            'should add a scalar, matrix 2x9, fromFlattenedList constructor, source list has more elements than needed, case 2',
+            () {
+          final matrix = Matrix.fromFlattenedList([
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0,
+            7.0,
+            8.0,
+            9.0,
+            7.0,
+            6.0,
+            5.0,
+            4.0,
+            3.0,
+            2.0,
+            1.0,
+            9.0,
+            8.0,
+            10.0,
+            11.0,
+            12.0,
+          ], 2, 9, dtype: dtype);
+
+          final actual = matrix + 11;
+
+          final expected = [
+            [12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0],
+            [18.0, 17.0, 16.0, 15.0, 14.0, 13.0, 12.0, 20.0, 19.0],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 2);
+          expect(actual.columnsNum, 9);
+          expect(actual.dtype, dtype);
+        });
+
         test('should add a scalar, scalar is 0', () {
           final matrix = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
