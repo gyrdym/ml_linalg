@@ -834,6 +834,10 @@ class Float64Matrix
       result[i] = thisAsSimdList[i] + scalarAsSimd;
     }
 
+    if (_dataManager.lastSimd != null) {
+      result[result.length - 1] = _dataManager.lastSimd! + scalarAsSimd;
+    }
+
     return Matrix.fromFlattenedList(
         result.buffer.asFloat64List(), rowsNum, columnsNum,
         dtype: dtype);
@@ -848,6 +852,10 @@ class Float64Matrix
       result[i] = thisAsSimdList[i] - scalarAsSimd;
     }
 
+    if (_dataManager.lastSimd != null) {
+      result[result.length - 1] = _dataManager.lastSimd! - scalarAsSimd;
+    }
+
     return Matrix.fromFlattenedList(
         result.buffer.asFloat64List(), rowsNum, columnsNum,
         dtype: dtype);
@@ -860,6 +868,10 @@ class Float64Matrix
 
     for (var i = 0; i < thisAsSimdList.length; i++) {
       result[i] = thisAsSimdList[i] * scalarAsSimd;
+    }
+
+    if (_dataManager.lastSimd != null) {
+      result[result.length - 1] = _dataManager.lastSimd! * scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(

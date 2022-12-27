@@ -177,7 +177,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
           expect(actual, throwsException);
         });
 
-        test('should perform addition of a scalar', () {
+        test('should perform addition of a scalar, matrix 3x4', () {
           final matrix = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
             [5.0, 6.0, 7.0, 8.0],
@@ -195,6 +195,52 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
           expect(actual, equals(expected));
           expect(actual.rowsNum, 3);
           expect(actual.columnsNum, 4);
+          expect(actual.dtype, dtype);
+        });
+
+        test('should perform addition of a scalar, matrix 3x1', () {
+          final matrix = Matrix.fromList([
+            [1.0],
+            [5.0],
+            [9.0],
+          ], dtype: dtype);
+
+          final actual = matrix + 7;
+
+          final expected = [
+            [8.0],
+            [12.0],
+            [16.0],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 3);
+          expect(actual.columnsNum, 1);
+          expect(actual.dtype, dtype);
+        });
+
+        test('should perform addition of a scalar, matrix 5x1', () {
+          final matrix = Matrix.fromList([
+            [1.0],
+            [5.0],
+            [9.0],
+            [13.0],
+            [17.0],
+          ], dtype: dtype);
+
+          final actual = matrix + 7;
+
+          final expected = [
+            [8.0],
+            [12.0],
+            [16.0],
+            [20.0],
+            [24.0],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowsNum, 5);
+          expect(actual.columnsNum, 1);
           expect(actual.dtype, dtype);
         });
 

@@ -831,6 +831,10 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] + scalarAsSimd;
     }
 
+    if (_dataManager.lastSimd != null) {
+      result[result.length - 1] = _dataManager.lastSimd! + scalarAsSimd;
+    }
+
     return Matrix.fromFlattenedList(
         result.buffer.asFloat32List(), rowsNum, columnsNum,
         dtype: dtype);
@@ -845,6 +849,10 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] - scalarAsSimd;
     }
 
+    if (_dataManager.lastSimd != null) {
+      result[result.length - 1] = _dataManager.lastSimd! - scalarAsSimd;
+    }
+
     return Matrix.fromFlattenedList(
         result.buffer.asFloat32List(), rowsNum, columnsNum,
         dtype: dtype);
@@ -857,6 +865,10 @@ class Float32Matrix
 
     for (var i = 0; i < thisAsSimdList.length; i++) {
       result[i] = thisAsSimdList[i] * scalarAsSimd;
+    }
+
+    if (_dataManager.lastSimd != null) {
+      result[result.length - 1] = _dataManager.lastSimd! * scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
