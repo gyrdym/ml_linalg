@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.11
+- Matrix:
+  - SIMD used in matrix-scalar operations => performance improved for a lot of operations
+
 ## 13.11.10
 - Vector:
   - getter `_simdList` changed to function => performance improved for a lot of operations

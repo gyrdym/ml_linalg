@@ -7,9 +7,9 @@ import 'package:ml_linalg/matrix.dart';
 const numOfRows = 20001;
 const numOfColumns = 2001;
 
-class Float32MatrixAddMatrixScalarBenchmark extends BenchmarkBase {
-  Float32MatrixAddMatrixScalarBenchmark()
-      : super('Matrix float32, matrix and scalar summation');
+class Float32MatrixDivMatrixScalarBenchmark extends BenchmarkBase {
+  Float32MatrixDivMatrixScalarBenchmark()
+      : super('Matrix float32, matrix and scalar division');
 
   final matrix =
       Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 5);
@@ -17,15 +17,15 @@ class Float32MatrixAddMatrixScalarBenchmark extends BenchmarkBase {
   final other = 1234.55;
 
   static void main() {
-    Float32MatrixAddMatrixScalarBenchmark().report();
+    Float32MatrixDivMatrixScalarBenchmark().report();
   }
 
   @override
   void run() {
-    matrix + other;
+    matrix / other;
   }
 }
 
 void main() {
-  Float32MatrixAddMatrixScalarBenchmark.main();
+  Float32MatrixDivMatrixScalarBenchmark.main();
 }
