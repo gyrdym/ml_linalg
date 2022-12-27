@@ -275,12 +275,12 @@ class Float64MatrixDataManager
       final residual = realLength % _simdSize;
 
       if (residual != 0) {
-        final lastSimdFirstIdx = flattenedList.length - residual;
+        final lastSimdFirstIdx = realLength - residual;
         final x = flattenedList[lastSimdFirstIdx];
-        final y = lastSimdFirstIdx + 1 < flattenedList.length
+        final y = lastSimdFirstIdx + 1 < realLength
             ? flattenedList[lastSimdFirstIdx + 1]
             : 0.0;
-        final z = lastSimdFirstIdx + 2 < flattenedList.length
+        final z = lastSimdFirstIdx + 2 < realLength
             ? flattenedList[lastSimdFirstIdx + 2]
             : 0.0;
 
