@@ -4,18 +4,18 @@ mixin MatrixValidatorMixin {
   void checkShape(Matrix first, Matrix second,
       {String errorMessage = 'Cannot perform the operation'}) {
     if (first.rowCount != second.rowCount ||
-        first.colCount != second.colCount) {
+        first.columnCount != second.columnCount) {
       throw Exception('$errorMessage: matrices have different shapes - '
-          '(${first.rowCount} x ${first.colCount}) and '
-          '(${second.rowCount} x ${second.colCount})');
+          '(${first.rowCount} x ${first.columnCount}) and '
+          '(${second.rowCount} x ${second.columnCount})');
     }
   }
 
   void checkColumnsAndRowsNumber(Matrix first, Matrix second,
       {String errorMessage = 'Cannot perform the operation'}) {
-    if (first.colCount != second.rowCount) {
+    if (first.columnCount != second.rowCount) {
       throw Exception(
-          '$errorMessage: column number (${first.colCount}) of the first '
+          '$errorMessage: column number (${first.columnCount}) of the first '
           'matrix is not equal to row number (${second.rowCount}) of the '
           'second matrix');
     }

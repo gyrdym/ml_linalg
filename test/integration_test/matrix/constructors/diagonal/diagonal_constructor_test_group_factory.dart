@@ -31,7 +31,7 @@ void matrixDiagonalConstructorTestGroupFactory(DType dtype) =>
 
           expect(matrix, equals(<Iterable<double>>[]));
           expect(matrix.rowCount, 0);
-          expect(matrix.colCount, 0);
+          expect(matrix.columnCount, 0);
           expect(matrix.hasData, isFalse);
           expect(matrix.dtype, dtype);
         });

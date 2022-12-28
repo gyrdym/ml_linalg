@@ -22,7 +22,7 @@ void main() {
 
         expect(actual, equals(expected));
         expect(actual.rowCount, 3);
-        expect(actual.colCount, 5);
+        expect(actual.columnCount, 5);
         expect(actual.dtype, DType.float32);
       });
     });
@@ -37,7 +37,7 @@ void main() {
 
         expect(actual, equals(expected));
         expect(actual.rowCount, 3);
-        expect(actual.colCount, 5);
+        expect(actual.columnCount, 5);
         expect(actual.dtype, DType.float64);
       });
     });

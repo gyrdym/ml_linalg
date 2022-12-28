@@ -841,7 +841,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       throw MatrixRowsAndVectorLengthMismatchException(matrix.rowCount, length);
     }
 
-    final source = Float64List(matrix.colCount);
+    final source = Float64List(matrix.columnCount);
 
     for (var i = 0; i < source.length; i++) {
       source[i] = dot(matrix.getColumn(i));

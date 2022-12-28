@@ -29,7 +29,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 4);
+          expect(actual.columnCount, 4);
           expect(actual.dtype, dtype);
           expect(actual, isNot(same(matrix1)));
         });
@@ -74,7 +74,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 4);
+          expect(actual.columnCount, 4);
           expect(actual.dtype, dtype);
           expect(actual, isNot(same(matrix1)));
         });
@@ -101,7 +101,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 5);
+          expect(actual.columnCount, 5);
           expect(actual.dtype, dtype);
           expect(actual, isNot(same(matrix1)));
         });
@@ -128,7 +128,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 5);
+          expect(actual.columnCount, 5);
           expect(actual.dtype, dtype);
           expect(actual, isNot(same(matrix1)));
         });
@@ -149,7 +149,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 1);
-          expect(actual.colCount, 1);
+          expect(actual.columnCount, 1);
           expect(actual.dtype, dtype);
           expect(actual, isNot(same(matrix1)));
         });
@@ -176,7 +176,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 1);
+          expect(actual.columnCount, 1);
           expect(actual.dtype, dtype);
           expect(actual, isNot(same(matrix1)));
         });
@@ -203,7 +203,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 5);
+          expect(actual.columnCount, 5);
           expect(actual.dtype, dtype);
           expect(actual, isNot(same(matrix1)));
         });
@@ -239,7 +239,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 4);
+          expect(actual.columnCount, 4);
           expect(actual.dtype, dtype);
         });
 
@@ -260,7 +260,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 1);
+          expect(actual.columnCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -285,7 +285,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 5);
-          expect(actual.colCount, 1);
+          expect(actual.columnCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -311,7 +311,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 5);
-          expect(actual.colCount, 1);
+          expect(actual.columnCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -338,7 +338,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 6);
-          expect(actual.colCount, 1);
+          expect(actual.columnCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -367,7 +367,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 7);
-          expect(actual.colCount, 1);
+          expect(actual.columnCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -384,7 +384,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 1);
-          expect(actual.colCount, 6);
+          expect(actual.columnCount, 6);
           expect(actual.dtype, dtype);
         });
 
@@ -403,7 +403,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 2);
-          expect(actual.colCount, 7);
+          expect(actual.columnCount, 7);
           expect(actual.dtype, dtype);
         });
 
@@ -422,7 +422,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 2);
-          expect(actual.colCount, 9);
+          expect(actual.columnCount, 9);
           expect(actual.dtype, dtype);
         });
 
@@ -458,7 +458,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 2);
-          expect(actual.colCount, 9);
+          expect(actual.columnCount, 9);
           expect(actual.dtype, dtype);
         });
 
@@ -497,7 +497,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 2);
-          expect(actual.colCount, 9);
+          expect(actual.columnCount, 9);
           expect(actual.dtype, dtype);
         });
 
@@ -537,7 +537,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 2);
-          expect(actual.colCount, 9);
+          expect(actual.columnCount, 9);
           expect(actual.dtype, dtype);
         });
 
@@ -558,7 +558,7 @@ void matrixAddOperatorTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
           expect(actual.rowCount, 3);
-          expect(actual.colCount, 4);
+          expect(actual.columnCount, 4);
           expect(actual.dtype, dtype);
         });
       });

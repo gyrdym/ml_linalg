@@ -510,6 +510,12 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Returns a lazy iterable of column vectors of the matrix
   Iterable<Vector> get columns;
 
+  /// Returns a number of matrix row
+  int get rowCount;
+
+  /// Returns a number of matrix columns
+  int get columnCount;
+
   /// Returns a lazy iterable of row indices
   Iterable<int> get rowIndices;
 
@@ -535,12 +541,6 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   List<double> get asFlattenedList;
 
   /// Returns a number of matrix row
-  int get rowCount;
-
-  /// Returns a number of matrix columns
-  int get colCount;
-
-  /// Returns a number of matrix row
   @Deprecated('use "rowCount" instead')
   int get rowsNum;
 
@@ -552,7 +552,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// getter from [Iterable] interface, since the latter may return falsy true
   bool get hasData;
 
-  /// Returns `true` if the [Matrix]'s [colCount] and [rowCount] are equal
+  /// Returns `true` if the [Matrix]'s [columnCount] and [rowCount] are equal
   bool get isSquare;
 
   /// Returns a matrix row on an [index] (the operator is an alias for
@@ -580,7 +580,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// will be automatically detected:
   /// - if [rowCount] is equal to the vector's length, the division will be
   /// applied column-wise
-  /// - if [colCount] is equal to the vector's length, the division will be
+  /// - if [columnCount] is equal to the vector's length, the division will be
   /// applied row-wise
   /// - if this [Matrix] is square, an exception will be thrown.
   ///
@@ -653,7 +653,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// ```
   ///
-  /// It fails, if both [colCount] and [rowCount] are greater than `1`:
+  /// It fails, if both [columnCount] and [rowCount] are greater than `1`:
   ///
   /// ````dart
   /// import 'package:ml_linalg/matrix.dart';

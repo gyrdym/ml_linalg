@@ -13,7 +13,7 @@ void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
           final matrix = Matrix.empty(dtype: dtype);
 
           expect(matrix.rowCount, 0);
-          expect(matrix.colCount, 0);
+          expect(matrix.columnCount, 0);
         });
 
         test(

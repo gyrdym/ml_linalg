@@ -19,7 +19,7 @@ void matrixRandomSPDConstructorTestGroupFactory(DType dtype) =>
           });
 
           expect(matrix.rowCount, 30);
-          expect(matrix.colCount, 30);
+          expect(matrix.columnCount, 30);
           expect(matrix.dtype, dtype);
         });
       });

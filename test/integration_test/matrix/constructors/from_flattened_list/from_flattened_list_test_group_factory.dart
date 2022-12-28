@@ -20,7 +20,7 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual.rowCount, 2);
-          expect(actual.colCount, 3);
+          expect(actual.columnCount, 3);
           expect(actual, equals(expected));
           expect(actual.dtype, dtype);
         });
@@ -38,7 +38,7 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual.rowCount, 2);
-          expect(actual.colCount, 3);
+          expect(actual.columnCount, 3);
           expect(actual, equals(expected));
           expect(actual.dtype, dtype);
         });
@@ -54,7 +54,7 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual.rowCount, 1);
-          expect(actual.colCount, 3);
+          expect(actual.columnCount, 3);
           expect(actual, equals(expected));
           expect(actual.dtype, dtype);
         });
@@ -71,7 +71,7 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual.rowCount, 1);
-          expect(actual.colCount, 5);
+          expect(actual.columnCount, 5);
           expect(actual, equals(expected));
           expect(actual.dtype, dtype);
         });
@@ -88,7 +88,7 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual.rowCount, 1);
-          expect(actual.colCount, 5);
+          expect(actual.columnCount, 5);
           expect(actual, equals(expected));
           expect(actual.dtype, dtype);
         });
@@ -109,7 +109,7 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual.rowCount, 5);
-          expect(actual.colCount, 2);
+          expect(actual.columnCount, 2);
           expect(actual, equals(expected));
           expect(actual.dtype, dtype);
         });
@@ -142,7 +142,7 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual.rowCount, 5);
-          expect(actual.colCount, 2);
+          expect(actual.columnCount, 2);
           expect(actual, equals(expected));
           expect(actual.dtype, dtype);
         });
@@ -152,7 +152,7 @@ void matrixFromFlattenedListConstructorTestGroupFactory(DType dtype) =>
           final expected = <double>[];
 
           expect(actual.rowCount, 0);
-          expect(actual.colCount, 0);
+          expect(actual.columnCount, 0);
           expect(actual, equals(expected));
           expect(actual.dtype, dtype);
         });
