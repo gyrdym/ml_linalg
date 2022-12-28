@@ -9,7 +9,7 @@ import 'package:ml_linalg/inverse.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
+import 'package:ml_linalg/src/common/cache_manager/cache_manager_impl.dart';
 import 'package:ml_linalg/src/common/exception/backward_substitution_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_inappropriate_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix_exception.dart';
@@ -17,43 +17,234 @@ import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_m
 import 'package:ml_linalg/src/common/exception/lu_decomposition_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
-import 'package:ml_linalg/src/matrix/data_manager/matrix_data_manager.dart';
 import 'package:ml_linalg/src/matrix/eigen.dart';
 import 'package:ml_linalg/src/matrix/eigen_method.dart';
+import 'package:ml_linalg/src/matrix/helper/get_2d_iterable_length.dart';
+import 'package:ml_linalg/src/matrix/helper/get_length_of_first_or_zero.dart';
+import 'package:ml_linalg/src/matrix/helper/get_zero_based_indices.dart';
+import 'package:ml_linalg/src/matrix/iterator/float32_matrix_iterator.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
 
+const _bytesPerElement = Float32List.bytesPerElement;
+const _simdSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
+
 class Float32Matrix
     with IterableMixin<Iterable<double>>, MatrixValidatorMixin
     implements Matrix {
-  Float32Matrix(
-    this._dataManager,
-    this._cache,
-  );
+  Float32Matrix.fromList(List<List<double>> source)
+      : rowCount = get2dIterableLength(source),
+        colCount = getLengthOfFirstOrZero(source),
+        rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
+        columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
+        _rowsCache = List<Vector?>.filled(source.length, null),
+        _colsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
+        _flattenedList =
+            Float32List(source.length * getLengthOfFirstOrZero(source)),
+        _areAllRowsCached = false,
+        _areAllColumnsCached = false {
+    for (var i = 0; i < source.length; i++) {
+      if (source[i].length != colCount) {
+        throw Exception('Wrong nested list length: ${source[i].length}, '
+            'expected length: $colCount');
+      }
 
-  final MatrixDataManager<Float32x4, Float32x4List> _dataManager;
-  final CacheManager _cache;
+      for (var j = 0; j < source[i].length; j++) {
+        _flattenedList[i * colCount + j] = source[i][j];
+      }
+    }
+  }
+
+  Float32Matrix.fromRows(List<Vector> source)
+      : rowCount = get2dIterableLength(source),
+        colCount = getLengthOfFirstOrZero(source),
+        rowIndices = getZeroBasedIndices(get2dIterableLength(source)),
+        columnIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
+        _rowsCache = [...source],
+        _colsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
+        _flattenedList =
+            Float32List(source.length * getLengthOfFirstOrZero(source)),
+        _areAllRowsCached = true,
+        _areAllColumnsCached = false {
+    for (var i = 0, j = 0; i < source.length; i++, j = 0) {
+      final row = source[i];
+
+      if (row.length != colCount) {
+        throw Exception('Vectors of different length are provided, expected '
+            'vector length: `$colCount`, given: ${row.length}');
+      }
+
+      for (final value in row) {
+        _flattenedList[i * colCount + j] = value;
+        j++;
+      }
+    }
+  }
+
+  Float32Matrix.fromColumns(List<Vector> source)
+      : rowCount = getLengthOfFirstOrZero(source),
+        colCount = get2dIterableLength(source),
+        rowIndices = getZeroBasedIndices(getLengthOfFirstOrZero(source)),
+        columnIndices = getZeroBasedIndices(get2dIterableLength(source)),
+        _rowsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
+        _colsCache = [...source],
+        _flattenedList =
+            Float32List(source.length * getLengthOfFirstOrZero(source)),
+        _areAllRowsCached = false,
+        _areAllColumnsCached = true {
+    for (var i = 0, j = 0; i < source.length; i++, j = 0) {
+      final column = source[i];
+
+      if (column.length != rowCount) {
+        throw Exception('Vectors of different length are provided, expected '
+            'vector length: `$rowCount`, given: ${column.length}');
+      }
+
+      for (final value in column) {
+        _flattenedList[j * colCount + i] = value;
+        j++;
+      }
+    }
+  }
+
+  Float32Matrix.fromFlattened(List<double> source, int rowsNum, int colsNum)
+      : rowCount = rowsNum,
+        colCount = colsNum,
+        rowIndices = getZeroBasedIndices(rowsNum),
+        columnIndices = getZeroBasedIndices(colsNum),
+        _rowsCache = List<Vector?>.filled(rowsNum, null),
+        _colsCache = List<Vector?>.filled(colsNum, null),
+        _flattenedList =
+            source is Float32List ? source : Float32List.fromList(source),
+        _areAllRowsCached = false,
+        _areAllColumnsCached = false {
+    if (source.length < rowsNum * colsNum) {
+      throw Exception('Invalid matrix dimension has been provided - '
+          '$rowsNum x $colsNum, but given a collection of length '
+          '${source.length}');
+    }
+  }
+
+  Float32Matrix.fromByteData(ByteData source, int rowsNum, int colsNum)
+      : rowCount = rowsNum,
+        colCount = colsNum,
+        rowIndices = getZeroBasedIndices(rowsNum),
+        columnIndices = getZeroBasedIndices(colsNum),
+        _rowsCache = List<Vector?>.filled(rowsNum, null),
+        _colsCache = List<Vector?>.filled(colsNum, null),
+        _flattenedList = source.buffer.asFloat32List(),
+        _areAllRowsCached = false,
+        _areAllColumnsCached = false {
+    if (source.lengthInBytes != rowsNum * colsNum * _bytesPerElement) {
+      throw Exception('Invalid matrix dimension has been provided - '
+          '$rowsNum x $colsNum (${rowsNum * colCount} elements), but byte data of '
+          '${source.lengthInBytes / _bytesPerElement} elements has been given');
+    }
+  }
+
+  Float32Matrix.diagonal(List<double> source)
+      : rowCount = source.length,
+        colCount = source.length,
+        rowIndices = getZeroBasedIndices(source.length),
+        columnIndices = getZeroBasedIndices(source.length),
+        _rowsCache = List<Vector?>.filled(source.length, null),
+        _colsCache = List<Vector?>.filled(source.length, null),
+        _flattenedList = Float32List(source.length * source.length),
+        _areAllRowsCached = false,
+        _areAllColumnsCached = false {
+    for (var i = 0; i < rowCount; i++) {
+      _flattenedList[i * colCount + i] = source[i];
+    }
+  }
+
+  Float32Matrix.scalar(double scalar, int size)
+      : rowCount = size,
+        colCount = size,
+        rowIndices = getZeroBasedIndices(size),
+        columnIndices = getZeroBasedIndices(size),
+        _rowsCache = List<Vector?>.filled(size, null),
+        _colsCache = List<Vector?>.filled(size, null),
+        _flattenedList = Float32List(size * size),
+        _areAllRowsCached = false,
+        _areAllColumnsCached = false {
+    for (var i = 0; i < size; i++) {
+      _flattenedList[i * colCount + i] = scalar;
+    }
+  }
+
+  Float32Matrix.random(DType dtype, int rowsNum, int columnsNum,
+      {num min = -1000, num max = 1000, int? seed})
+      : rowCount = rowsNum,
+        colCount = columnsNum,
+        rowIndices = getZeroBasedIndices(rowsNum),
+        columnIndices = getZeroBasedIndices(columnsNum),
+        _rowsCache = List<Vector?>.filled(rowsNum, null),
+        _colsCache = List<Vector?>.filled(columnsNum, null),
+        _flattenedList = Float32List(rowsNum * columnsNum),
+        _areAllRowsCached = false,
+        _areAllColumnsCached = false {
+    if (min >= max) {
+      throw ArgumentError.value(min,
+          'Argument `min` should be less than `max`, min: $min, max: $max');
+    }
+
+    final generator = math.Random(seed);
+    final diff = max - min;
+
+    for (var i = 0; i < columnsNum * rowsNum; i++) {
+      _flattenedList[i] = generator.nextDouble() * diff + min;
+    }
+  }
 
   @override
-  DType get dtype => _dataManager.dtype;
+  final DType dtype = DType.float32;
 
   @override
-  int get rowsNum => _dataManager.rowCount;
+  final int colCount;
 
   @override
-  int get columnsNum => _dataManager.colCount;
+  final int rowCount;
 
   @override
-  bool get hasData => _dataManager.hasData;
+  final Iterable<int> rowIndices;
+
+  @override
+  final Iterable<int> columnIndices;
+
+  final bool _areAllRowsCached;
+  final bool _areAllColumnsCached;
+  final List<Vector?> _rowsCache;
+  final List<Vector?> _colsCache;
+  final Float32List _flattenedList;
+  final _cache = CacheManagerImpl(matrixCacheKeys);
+
+  @override
+  Iterator<Iterable<double>> get iterator =>
+      Float32MatrixIterator(_flattenedList, rowCount, colCount);
+
+  @override
+  bool get hasData => rowCount > 0 && colCount > 0;
+
+  @override
+  int get rowsNum => rowCount;
+
+  @override
+  int get columnsNum => colCount;
 
   @override
   bool get isSquare => columnsNum == rowsNum;
 
   @override
-  Iterator<Iterable<double>> get iterator => _dataManager.iterator;
+  Iterable<Vector> get rows => rowIndices.map(getRow);
+
+  @override
+  Iterable<Vector> get columns => columnIndices.map(getColumn);
+
+  @override
+  List<double> get asFlattenedList => _flattenedList;
 
   @override
   Matrix operator +(Object value) {
@@ -131,7 +322,7 @@ class Float32Matrix
 
   @override
   Matrix transpose() {
-    final list = _dataManager.flattenedList;
+    final list = _flattenedList;
     final source = Float32List(columnsNum * rowsNum);
 
     for (var i = 0; i < list.length; i++) {
@@ -145,10 +336,44 @@ class Float32Matrix
   }
 
   @override
-  Vector getRow(int index) => _dataManager.getRow(index);
+  Vector getRow(int index) {
+    if (!hasData) {
+      throw Exception('Matrix is empty');
+    }
+
+    final indexFrom = index * colCount;
+
+    if (indexFrom >= rowCount * colCount) {
+      throw RangeError.range(indexFrom, 0, rowCount * colCount);
+    }
+
+    if (_rowsCache[index] == null) {
+      final values = _flattenedList.sublist(indexFrom, indexFrom + colCount);
+
+      _rowsCache[index] = Vector.fromList(values, dtype: dtype);
+    }
+
+    return _rowsCache[index]!;
+  }
 
   @override
-  Vector getColumn(int index) => _dataManager.getColumn(index);
+  Vector getColumn(int index) {
+    if (!hasData) {
+      throw Exception('Matrix is empty');
+    }
+
+    if (_colsCache[index] == null) {
+      final column = Float32List(rowCount);
+
+      for (var i = 0; i < rowCount; i++) {
+        column[i] = _flattenedList[i * colCount + index];
+      }
+
+      _colsCache[index] = Vector.fromList(column, dtype: dtype);
+    }
+
+    return _colsCache[index]!;
+  }
 
   @override
   Matrix sample({
@@ -193,7 +418,7 @@ class Float32Matrix
 
   @override
   Matrix mapElements(double Function(double element) mapper) =>
-      _dataManager.areAllRowsCached
+      _areAllRowsCached
           ? mapRows((row) => row.mapToVector(mapper))
           : mapColumns((column) => column.mapToVector(mapper));
 
@@ -220,7 +445,7 @@ class Float32Matrix
   Matrix uniqueRows() {
     final checked = <Vector>[];
 
-    for (final i in _dataManager.rowIndices) {
+    for (final i in rowIndices) {
       final row = getRow(i);
 
       if (!checked.contains(row)) {
@@ -388,21 +613,6 @@ class Float32Matrix
   }
 
   @override
-  Iterable<Vector> get rows => _dataManager.rowIndices.map(getRow);
-
-  @override
-  Iterable<Vector> get columns => _dataManager.columnIndices.map(getColumn);
-
-  @override
-  Iterable<int> get rowIndices => _dataManager.rowIndices;
-
-  @override
-  Iterable<int> get columnIndices => _dataManager.columnIndices;
-
-  @override
-  List<double> get asFlattenedList => _dataManager.flattenedList;
-
-  @override
   Matrix fastMap<T>(T Function(T element) mapper) {
     final source = List.generate(rowsNum, (int i) => getRow(i).fastMap(mapper));
 
@@ -410,7 +620,7 @@ class Float32Matrix
   }
 
   @override
-  Matrix pow(num exponent) => _dataManager.areAllRowsCached
+  Matrix pow(num exponent) => _areAllRowsCached
       ? Matrix.fromRows(rows.map((row) => row.pow(exponent)).toList(),
           dtype: dtype)
       : Matrix.fromColumns(
@@ -420,7 +630,7 @@ class Float32Matrix
   @override
   Matrix exp({bool skipCaching = false}) => _cache.get(
       matrixExpKey,
-      () => _dataManager.areAllRowsCached
+      () => _areAllRowsCached
           ? Matrix.fromRows(
               rows
                   .map((row) => row.exp(
@@ -440,7 +650,7 @@ class Float32Matrix
   @override
   Matrix log({bool skipCaching = false}) => _cache.get(
       matrixLogKey,
-      () => _dataManager.areAllRowsCached
+      () => _areAllRowsCached
           ? Matrix.fromRows(
               rows
                   .map((row) => row.log(
@@ -461,7 +671,7 @@ class Float32Matrix
   Matrix multiply(Matrix other) {
     checkShape(this, other, errorMessage: 'Cannot find Hadamard product');
 
-    return _dataManager.areAllRowsCached
+    return _areAllRowsCached
         ? Matrix.fromRows(
             zip([rows, other.rows])
                 .map((pair) => pair.first * pair.last)
@@ -482,7 +692,7 @@ class Float32Matrix
 
     return _cache.get(
         matrixSumKey,
-        () => _dataManager.areAllRowsCached
+        () => _areAllRowsCached
             ? rows.fold(0, (result, row) => result + row.sum())
             : columns.fold(0, (result, column) => result + column.sum()));
   }
@@ -495,7 +705,7 @@ class Float32Matrix
 
     return _cache.get(
         matrixProdKey,
-        () => _dataManager.areAllRowsCached
+        () => _areAllRowsCached
             ? rows.fold(0, (result, row) => result * row.prod())
             : columns.fold(0, (result, column) => result * column.prod()));
   }
@@ -578,7 +788,7 @@ class Float32Matrix
     }
 
     final X = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.flattenedList;
+    final thisAsList = _flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var row = 0; row < rowsNum; row++) {
@@ -602,7 +812,7 @@ class Float32Matrix
     }
 
     final X = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.flattenedList;
+    final thisAsList = _flattenedList;
 
     for (var i = rowsNum - 1; i >= 0; i--) {
       for (var row = rowsNum - 1; row >= 0; row--) {
@@ -627,7 +837,7 @@ class Float32Matrix
 
     final L = Float32List(rowsNum * rowsNum);
     final U = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.flattenedList;
+    final thisAsList = _flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j <= i; j++) {
@@ -670,7 +880,7 @@ class Float32Matrix
 
     final L = Float32List(rowsNum * rowsNum);
     final U = Float32List(rowsNum * rowsNum);
-    final thisAsList = _dataManager.flattenedList;
+    final thisAsList = _flattenedList;
 
     for (var i = 0; i < rowsNum; i++) {
       for (var j = 0; j < rowsNum; j++) {
@@ -752,7 +962,7 @@ class Float32Matrix
     final source = Float32List(rowsNum);
 
     for (var i = 0; i < source.length; i++) {
-      source[i] = vector.dot(_dataManager.getRow(i));
+      source[i] = vector.dot(getRow(i));
     }
 
     final vectorColumn = Vector.fromList(source, dtype: dtype);
@@ -802,17 +1012,16 @@ class Float32Matrix
     checkShape(this, other, errorMessage: 'Cannot perform matrix addition');
 
     if (other is Float32Matrix) {
-      final result = _dataManager.createEmptySimdList();
-      final thisAsSimdList = _dataManager.getFlattenedSimdList();
-      final otherAsSimdList = other._dataManager.getFlattenedSimdList();
+      final result = _createEmptySimdList();
+      final thisAsSimdList = _getFlattenedSimdList();
+      final otherAsSimdList = other._getFlattenedSimdList();
 
       for (var i = 0; i < thisAsSimdList.length; i++) {
         result[i] = thisAsSimdList[i] + otherAsSimdList[i];
       }
 
-      if (_dataManager.lastSimd != null) {
-        result[result.length - 1] =
-            _dataManager.lastSimd! + other._dataManager.lastSimd!;
+      if (lastSimd != null) {
+        result[result.length - 1] = lastSimd! + other.lastSimd!;
       }
 
       return Matrix.fromFlattenedList(
@@ -833,17 +1042,16 @@ class Float32Matrix
     checkShape(this, other, errorMessage: 'Cannot perform matrix subtraction');
 
     if (other is Float32Matrix) {
-      final result = _dataManager.createEmptySimdList();
-      final thisAsSimdList = _dataManager.getFlattenedSimdList();
-      final otherAsSimdList = other._dataManager.getFlattenedSimdList();
+      final result = _createEmptySimdList();
+      final thisAsSimdList = _getFlattenedSimdList();
+      final otherAsSimdList = other._getFlattenedSimdList();
 
       for (var i = 0; i < thisAsSimdList.length; i++) {
         result[i] = thisAsSimdList[i] - otherAsSimdList[i];
       }
 
-      if (_dataManager.lastSimd != null) {
-        result[result.length - 1] =
-            _dataManager.lastSimd! - other._dataManager.lastSimd!;
+      if (lastSimd != null) {
+        result[result.length - 1] = lastSimd! - other.lastSimd!;
       }
 
       return Matrix.fromFlattenedList(
@@ -861,16 +1069,16 @@ class Float32Matrix
   }
 
   Matrix _matrixScalarAdd(double scalar) {
-    final result = _dataManager.createEmptySimdList();
-    final thisAsSimdList = _dataManager.getFlattenedSimdList();
+    final result = _createEmptySimdList();
+    final thisAsSimdList = _getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
 
     for (var i = 0; i < thisAsSimdList.length; i++) {
       result[i] = thisAsSimdList[i] + scalarAsSimd;
     }
 
-    if (_dataManager.lastSimd != null) {
-      result[result.length - 1] = _dataManager.lastSimd! + scalarAsSimd;
+    if (lastSimd != null) {
+      result[result.length - 1] = lastSimd! + scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -879,16 +1087,16 @@ class Float32Matrix
   }
 
   Matrix _matrixScalarSub(double scalar) {
-    final result = _dataManager.createEmptySimdList();
-    final thisAsSimdList = _dataManager.getFlattenedSimdList();
+    final result = _createEmptySimdList();
+    final thisAsSimdList = _getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
 
     for (var i = 0; i < thisAsSimdList.length; i++) {
       result[i] = thisAsSimdList[i] - scalarAsSimd;
     }
 
-    if (_dataManager.lastSimd != null) {
-      result[result.length - 1] = _dataManager.lastSimd! - scalarAsSimd;
+    if (lastSimd != null) {
+      result[result.length - 1] = lastSimd! - scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -897,16 +1105,16 @@ class Float32Matrix
   }
 
   Matrix _matrixScalarMul(double scalar) {
-    final result = _dataManager.createEmptySimdList();
-    final thisAsSimdList = _dataManager.getFlattenedSimdList();
+    final result = _createEmptySimdList();
+    final thisAsSimdList = _getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
 
     for (var i = 0; i < thisAsSimdList.length; i++) {
       result[i] = thisAsSimdList[i] * scalarAsSimd;
     }
 
-    if (_dataManager.lastSimd != null) {
-      result[result.length - 1] = _dataManager.lastSimd! * scalarAsSimd;
+    if (lastSimd != null) {
+      result[result.length - 1] = lastSimd! * scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -915,20 +1123,58 @@ class Float32Matrix
   }
 
   Matrix _matrixByScalarDiv(double scalar) {
-    final result = _dataManager.createEmptySimdList();
-    final thisAsSimdList = _dataManager.getFlattenedSimdList();
+    final result = _createEmptySimdList();
+    final thisAsSimdList = _getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
 
     for (var i = 0; i < thisAsSimdList.length; i++) {
       result[i] = thisAsSimdList[i] / scalarAsSimd;
     }
 
-    if (_dataManager.lastSimd != null) {
-      result[result.length - 1] = _dataManager.lastSimd! / scalarAsSimd;
+    if (lastSimd != null) {
+      result[result.length - 1] = lastSimd! / scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
         result.buffer.asFloat32List(), rowsNum, columnsNum,
         dtype: dtype);
   }
+
+  Float32x4List _createEmptySimdList() {
+    final realLength = rowCount * colCount;
+    final residual = realLength % _simdSize;
+    final dim = residual == 0
+        ? realLength
+        : ((realLength + _simdSize - residual) / _simdSize).floor();
+
+    return Float32x4List(dim);
+  }
+
+  Float32x4List _getFlattenedSimdList() {
+    if (_cachedSimdList == null) {
+      final realLength = rowCount * colCount;
+      final residual = realLength % _simdSize;
+
+      if (residual != 0) {
+        final lastSimdFirstIdx = realLength - residual;
+        final x = _flattenedList[lastSimdFirstIdx];
+        final y = lastSimdFirstIdx + 1 < realLength
+            ? _flattenedList[lastSimdFirstIdx + 1]
+            : 0.0;
+        final z = lastSimdFirstIdx + 2 < realLength
+            ? _flattenedList[lastSimdFirstIdx + 2]
+            : 0.0;
+
+        lastSimd = Float32x4(x, y, z, 0.0);
+      }
+
+      _cachedSimdList = _flattenedList.buffer.asFloat32x4List();
+    }
+
+    return _cachedSimdList!;
+  }
+
+  Float32x4List? _cachedSimdList;
+
+  Float32x4? lastSimd;
 }
