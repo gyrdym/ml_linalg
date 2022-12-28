@@ -260,7 +260,7 @@ class Float32MatrixDataManager
     final residual = realLength % _simdSize;
     final dim = residual == 0
         ? realLength
-        : (realLength + _simdSize - residual) ~/ _simdSize;
+        : ((realLength + _simdSize - residual) / _simdSize).floor();
 
     return Float32x4List(dim);
   }

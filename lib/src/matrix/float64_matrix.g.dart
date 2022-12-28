@@ -804,6 +804,25 @@ class Float64Matrix
   Matrix _matrixAdd(Matrix other) {
     checkShape(this, other, errorMessage: 'Cannot perform matrix addition');
 
+    if (other is Float64Matrix) {
+      final result = _dataManager.createEmptySimdList();
+      final thisAsSimdList = _dataManager.getFlattenedSimdList();
+      final otherAsSimdList = other._dataManager.getFlattenedSimdList();
+
+      for (var i = 0; i < thisAsSimdList.length; i++) {
+        result[i] = thisAsSimdList[i] + otherAsSimdList[i];
+      }
+
+      if (_dataManager.lastSimd != null) {
+        result[result.length - 1] =
+            _dataManager.lastSimd! + other._dataManager.lastSimd!;
+      }
+
+      return Matrix.fromFlattenedList(
+          result.buffer.asFloat64List(), rowsNum, columnsNum,
+          dtype: dtype);
+    }
+
     final source = Float64List(rowsNum * columnsNum);
 
     for (var i = 0; i < source.length; i++) {
@@ -815,6 +834,25 @@ class Float64Matrix
 
   Matrix _matrixSub(Matrix other) {
     checkShape(this, other, errorMessage: 'Cannot perform matrix subtraction');
+
+    if (other is Float64Matrix) {
+      final result = _dataManager.createEmptySimdList();
+      final thisAsSimdList = _dataManager.getFlattenedSimdList();
+      final otherAsSimdList = other._dataManager.getFlattenedSimdList();
+
+      for (var i = 0; i < thisAsSimdList.length; i++) {
+        result[i] = thisAsSimdList[i] - otherAsSimdList[i];
+      }
+
+      if (_dataManager.lastSimd != null) {
+        result[result.length - 1] =
+            _dataManager.lastSimd! - other._dataManager.lastSimd!;
+      }
+
+      return Matrix.fromFlattenedList(
+          result.buffer.asFloat64List(), rowsNum, columnsNum,
+          dtype: dtype);
+    }
 
     final source = Float64List(rowsNum * columnsNum);
 

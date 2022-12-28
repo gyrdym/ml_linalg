@@ -23,7 +23,7 @@ class Float32MatrixAddMatrixMatrixBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    matrix + other;
+    matrix - other;
   }
 }
 

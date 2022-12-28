@@ -263,7 +263,7 @@ class Float64MatrixDataManager
     final residual = realLength % _simdSize;
     final dim = residual == 0
         ? realLength
-        : (realLength + _simdSize - residual) ~/ _simdSize;
+        : ((realLength + _simdSize - residual) / _simdSize).floor();
 
     return Float64x2List(dim);
   }
