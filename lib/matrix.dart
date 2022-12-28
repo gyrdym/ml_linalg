@@ -177,7 +177,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   }
 
   /// Creates a matrix from flattened list of length equal to
-  /// [rowsNum] * [columnsNum]
+  /// [rowCount] * [colCount]
   ///
   /// A simple usage example:
   ///
@@ -202,16 +202,16 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   factory Matrix.fromFlattenedList(
     List<double> source,
-    int rowsNum,
-    int columnsNum, {
+    int rowCount,
+    int colCount, {
     DType dtype = DType.float32,
   }) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.fromFlattened(source, rowsNum, columnsNum);
+        return Float32Matrix.fromFlattened(source, rowCount, colCount);
 
       case DType.float64:
-        return Float64Matrix.fromFlattened(source, rowsNum, columnsNum);
+        return Float64Matrix.fromFlattened(source, rowCount, colCount);
 
       default:
         throw UnimplementedError(
@@ -219,7 +219,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
     }
   }
 
-  /// Creates a matrix from byte data of [rowsNum] * [columnsNum] elements
+  /// Creates a matrix from byte data of [rowCount] * [colCount] elements
   ///
   /// A simple usage example:
   ///
@@ -249,16 +249,16 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   factory Matrix.fromByteData(
     ByteData data,
-    int rowsNum,
-    int columnsNum, {
+    int rowCount,
+    int colCount, {
     DType dtype = DType.float32,
   }) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.fromByteData(data, rowsNum, columnsNum);
+        return Float32Matrix.fromByteData(data, rowCount, colCount);
 
       case DType.float64:
-        return Float64Matrix.fromByteData(data, rowsNum, columnsNum);
+        return Float64Matrix.fromByteData(data, rowCount, colCount);
 
       default:
         throw UnimplementedError(
@@ -422,19 +422,19 @@ abstract class Matrix implements Iterable<Iterable<double>> {
     }
   }
 
-  /// Returns randomly filled matrix of [rowsNum]x[columnsCount] dimension
-  factory Matrix.random(int rowsNum, int columnsCount,
+  /// Returns randomly filled matrix of [rowCount]x[colCount] dimension
+  factory Matrix.random(int rowCount, int colCount,
       {DType dtype = DType.float32,
       num min = -1000,
       num max = 1000,
       int? seed}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.random(dtype, rowsNum, columnsCount,
+        return Float32Matrix.random(dtype, rowCount, colCount,
             min: min, max: max, seed: seed);
 
       case DType.float64:
-        return Float64Matrix.random(dtype, rowsNum, columnsCount,
+        return Float64Matrix.random(dtype, rowCount, colCount,
             min: min, max: max, seed: seed);
 
       default:
@@ -552,7 +552,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// getter from [Iterable] interface, since the latter may return falsy true
   bool get hasData;
 
-  /// Returns `true` if the [Matrix]'s [columnsNum] and [rowsNum] are equal
+  /// Returns `true` if the [Matrix]'s [colCount] and [rowCount] are equal
   bool get isSquare;
 
   /// Returns a matrix row on an [index] (the operator is an alias for
@@ -578,9 +578,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   ///
   /// If division by a vector is taking place, the direction of the division
   /// will be automatically detected:
-  /// - if [rowsNum] is equal to the vector's length, the division will be
+  /// - if [rowCount] is equal to the vector's length, the division will be
   /// applied column-wise
-  /// - if [columnsNum] is equal to the vector's length, the division will be
+  /// - if [colCount] is equal to the vector's length, the division will be
   /// applied row-wise
   /// - if this [Matrix] is square, an exception will be thrown.
   ///
@@ -653,7 +653,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// ```
   ///
-  /// It fails, if both [columnsNum] and [rowsNum] are greater than `1`:
+  /// It fails, if both [colCount] and [rowCount] are greater than `1`:
   ///
   /// ````dart
   /// import 'package:ml_linalg/matrix.dart';

@@ -113,37 +113,37 @@ class Float64Matrix
     }
   }
 
-  Float64Matrix.fromFlattened(List<double> source, int rowsNum, int colsNum)
-      : rowCount = rowsNum,
-        colCount = colsNum,
-        rowIndices = getZeroBasedIndices(rowsNum),
-        columnIndices = getZeroBasedIndices(colsNum),
-        _rowsCache = List<Vector?>.filled(rowsNum, null),
-        _colsCache = List<Vector?>.filled(colsNum, null),
+  Float64Matrix.fromFlattened(List<double> source, int rowCount, int colCount)
+      : rowCount = rowCount,
+        colCount = colCount,
+        rowIndices = getZeroBasedIndices(rowCount),
+        columnIndices = getZeroBasedIndices(colCount),
+        _rowsCache = List<Vector?>.filled(rowCount, null),
+        _colsCache = List<Vector?>.filled(colCount, null),
         _flattenedList =
             source is Float64List ? source : Float64List.fromList(source),
         _areAllRowsCached = false,
         _areAllColumnsCached = false {
-    if (source.length < rowsNum * colsNum) {
+    if (source.length < rowCount * colCount) {
       throw Exception('Invalid matrix dimension has been provided - '
-          '$rowsNum x $colsNum, but given a collection of length '
+          '$rowCount x $colCount, but given a collection of length '
           '${source.length}');
     }
   }
 
-  Float64Matrix.fromByteData(ByteData source, int rowsNum, int colsNum)
-      : rowCount = rowsNum,
-        colCount = colsNum,
-        rowIndices = getZeroBasedIndices(rowsNum),
-        columnIndices = getZeroBasedIndices(colsNum),
-        _rowsCache = List<Vector?>.filled(rowsNum, null),
-        _colsCache = List<Vector?>.filled(colsNum, null),
+  Float64Matrix.fromByteData(ByteData source, int rowCount, int columnCount)
+      : rowCount = rowCount,
+        colCount = columnCount,
+        rowIndices = getZeroBasedIndices(rowCount),
+        columnIndices = getZeroBasedIndices(columnCount),
+        _rowsCache = List<Vector?>.filled(rowCount, null),
+        _colsCache = List<Vector?>.filled(columnCount, null),
         _flattenedList = source.buffer.asFloat64List(),
         _areAllRowsCached = false,
         _areAllColumnsCached = false {
-    if (source.lengthInBytes != rowsNum * colsNum * _bytesPerElement) {
+    if (source.lengthInBytes != rowCount * columnCount * _bytesPerElement) {
       throw Exception('Invalid matrix dimension has been provided - '
-          '$rowsNum x $colsNum (${rowsNum * colCount} elements), but byte data of '
+          '$rowCount x $colCount (${rowCount * colCount} elements), but byte data of '
           '${source.lengthInBytes / _bytesPerElement} elements has been given');
     }
   }
@@ -178,15 +178,15 @@ class Float64Matrix
     }
   }
 
-  Float64Matrix.random(DType dtype, int rowsNum, int columnsNum,
+  Float64Matrix.random(DType dtype, int rowCount, int colCount,
       {num min = -1000, num max = 1000, int? seed})
-      : rowCount = rowsNum,
-        colCount = columnsNum,
-        rowIndices = getZeroBasedIndices(rowsNum),
-        columnIndices = getZeroBasedIndices(columnsNum),
-        _rowsCache = List<Vector?>.filled(rowsNum, null),
-        _colsCache = List<Vector?>.filled(columnsNum, null),
-        _flattenedList = Float64List(rowsNum * columnsNum),
+      : rowCount = rowCount,
+        colCount = colCount,
+        rowIndices = getZeroBasedIndices(rowCount),
+        columnIndices = getZeroBasedIndices(colCount),
+        _rowsCache = List<Vector?>.filled(rowCount, null),
+        _colsCache = List<Vector?>.filled(colCount, null),
+        _flattenedList = Float64List(rowCount * colCount),
         _areAllRowsCached = false,
         _areAllColumnsCached = false {
     if (min >= max) {
@@ -197,7 +197,7 @@ class Float64Matrix
     final generator = math.Random(seed);
     final diff = max - min;
 
-    for (var i = 0; i < columnsNum * rowsNum; i++) {
+    for (var i = 0; i < colCount * rowCount; i++) {
       _flattenedList[i] = generator.nextDouble() * diff + min;
     }
   }
@@ -238,7 +238,7 @@ class Float64Matrix
   int get columnsNum => colCount;
 
   @override
-  bool get isSquare => columnsNum == rowsNum;
+  bool get isSquare => colCount == rowCount;
 
   @override
   Iterable<Vector> get rows => rowIndices.map(getRow);
@@ -326,16 +326,16 @@ class Float64Matrix
   @override
   Matrix transpose() {
     final list = _flattenedList;
-    final source = Float64List(columnsNum * rowsNum);
+    final source = Float64List(colCount * rowCount);
 
     for (var i = 0; i < list.length; i++) {
-      final rowIdx = i ~/ columnsNum;
-      final colIdx = i - columnsNum * rowIdx;
+      final rowIdx = i ~/ colCount;
+      final colIdx = i - colCount * rowIdx;
 
-      source[colIdx * rowsNum + rowIdx] = list[i];
+      source[colIdx * rowCount + rowIdx] = list[i];
     }
 
-    return Matrix.fromFlattenedList(source, columnsNum, rowsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(source, colCount, rowCount, dtype: dtype);
   }
 
   @override
@@ -384,7 +384,7 @@ class Float64Matrix
     Iterable<int> columnIndices = const [],
   }) {
     final indices = rowIndices.isEmpty
-        ? count(0).take(rowsNum).map((i) => i.toInt())
+        ? count(0).take(rowCount).map((i) => i.toInt())
         : rowIndices;
     final targetMatrixSource = indices.map((index) {
       final sourceRow = getRow(index);
@@ -404,7 +404,7 @@ class Float64Matrix
   }) =>
       _reduce(
         combiner,
-        columnsNum,
+        colCount,
         getColumn,
         initValue: initValue,
       );
@@ -414,7 +414,7 @@ class Float64Matrix
           {Vector? initValue}) =>
       _reduce(
         combiner,
-        rowsNum,
+        rowCount,
         getRow,
         initValue: initValue,
       );
@@ -428,7 +428,7 @@ class Float64Matrix
   @override
   Matrix mapColumns(Vector Function(Vector columns) mapper) =>
       Matrix.fromColumns(
-          List.generate(columnsNum, (int i) => mapper(getColumn(i))),
+          List.generate(colCount, (int i) => mapper(getColumn(i))),
           dtype: dtype);
 
   @override
@@ -441,7 +441,7 @@ class Float64Matrix
 
   @override
   Matrix mapRows(Vector Function(Vector row) mapper) =>
-      Matrix.fromRows(List.generate(rowsNum, (int i) => mapper(getRow(i))),
+      Matrix.fromRows(List.generate(rowCount, (int i) => mapper(getRow(i))),
           dtype: dtype);
 
   @override
@@ -499,11 +499,11 @@ class Float64Matrix
     switch (axis) {
       case Axis.columns:
         return _cache.get(
-            matrixVarianceByColumnsKey, () => _variance(rows, means, rowsNum));
+            matrixVarianceByColumnsKey, () => _variance(rows, means, rowCount));
 
       case Axis.rows:
-        return _cache.get(matrixVarianceByRowsKey,
-            () => _variance(columns, means, columnsNum));
+        return _cache.get(
+            matrixVarianceByRowsKey, () => _variance(columns, means, colCount));
 
       default:
         throw UnimplementedError('Deviation calculation for axis $axis is not '
@@ -519,24 +519,24 @@ class Float64Matrix
 
   @override
   Vector toVector() {
-    if (columnsNum == 1) {
+    if (colCount == 1) {
       return getColumn(0);
     }
 
-    if (rowsNum == 1) {
+    if (rowCount == 1) {
       return getRow(0);
     }
 
     throw Exception(
-        'Cannot convert $rowsNum x $columnsNum matrix into a vector');
+        'Cannot convert $rowCount x $colCount matrix into a vector');
   }
 
   @override
   String toString() {
     final columnsLimit = 5;
     final rowsLimit = 5;
-    final eol = columnsNum > columnsLimit ? ', ...)' : ')';
-    var result = 'Matrix $rowsNum x $columnsNum:\n';
+    final eol = colCount > columnsLimit ? ', ...)' : ')';
+    var result = 'Matrix $rowCount x $colCount:\n';
     var i = 1;
 
     for (final row in this) {
@@ -573,7 +573,7 @@ class Float64Matrix
   Matrix insertColumns(int targetIndex, List<Vector> columns) {
     final columnsIterator = columns.iterator;
     final indices =
-        count(0).take(columnsNum + columns.length).map((i) => i.toInt());
+        count(0).take(colCount + columns.length).map((i) => i.toInt());
     final newColumns = indices.map((index) {
       if (index < targetIndex) {
         return getColumn(index);
@@ -617,7 +617,8 @@ class Float64Matrix
 
   @override
   Matrix fastMap<T>(T Function(T element) mapper) {
-    final source = List.generate(rowsNum, (int i) => getRow(i).fastMap(mapper));
+    final source =
+        List.generate(rowCount, (int i) => getRow(i).fastMap(mapper));
 
     return Matrix.fromRows(source, dtype: dtype);
   }
@@ -720,7 +721,7 @@ class Float64Matrix
       int iterationCount = 10,
       int? seed}) {
     var eigenVector =
-        (initial ?? Vector.randomFilled(columnsNum, dtype: dtype, seed: seed))
+        (initial ?? Vector.randomFilled(colCount, dtype: dtype, seed: seed))
             .normalize();
 
     switch (method) {
@@ -787,71 +788,71 @@ class Float64Matrix
 
   Matrix _forwardSubstitutionInverse() {
     if (!isSquare) {
-      throw ForwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
+      throw ForwardSubstitutionNonSquareMatrixException(rowCount, colCount);
     }
 
-    final X = Float64List(rowsNum * rowsNum);
+    final X = Float64List(rowCount * rowCount);
     final thisAsList = _flattenedList;
 
-    for (var i = 0; i < rowsNum; i++) {
-      for (var row = 0; row < rowsNum; row++) {
+    for (var i = 0; i < rowCount; i++) {
+      for (var row = 0; row < rowCount; row++) {
         var sum = 0.0;
         var b = row == i ? 1.0 : 0.0;
 
         for (var col = 0; col < row; col++) {
-          sum += thisAsList[row * rowsNum + col] * X[col * rowsNum + i];
+          sum += thisAsList[row * rowCount + col] * X[col * rowCount + i];
         }
 
-        X[row * rowsNum + i] = (b - sum) / thisAsList[row * rowsNum + row];
+        X[row * rowCount + i] = (b - sum) / thisAsList[row * rowCount + row];
       }
     }
 
-    return Matrix.fromFlattenedList(X, rowsNum, rowsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(X, rowCount, rowCount, dtype: dtype);
   }
 
   Matrix _backwardSubstitutionInverse() {
     if (!isSquare) {
-      throw BackwardSubstitutionNonSquareMatrixException(rowsNum, columnsNum);
+      throw BackwardSubstitutionNonSquareMatrixException(rowCount, colCount);
     }
 
-    final X = Float64List(rowsNum * rowsNum);
+    final X = Float64List(rowCount * rowCount);
     final thisAsList = _flattenedList;
 
-    for (var i = rowsNum - 1; i >= 0; i--) {
-      for (var row = rowsNum - 1; row >= 0; row--) {
+    for (var i = rowCount - 1; i >= 0; i--) {
+      for (var row = rowCount - 1; row >= 0; row--) {
         var sum = 0.0;
         var b = row == i ? 1.0 : 0.0;
 
-        for (var col = rowsNum - 1; col > row; col--) {
-          sum += thisAsList[row * rowsNum + col] * X[col * rowsNum + i];
+        for (var col = rowCount - 1; col > row; col--) {
+          sum += thisAsList[row * rowCount + col] * X[col * rowCount + i];
         }
 
-        X[row * rowsNum + i] = (b - sum) / thisAsList[row * rowsNum + row];
+        X[row * rowCount + i] = (b - sum) / thisAsList[row * rowCount + row];
       }
     }
 
-    return Matrix.fromFlattenedList(X, rowsNum, rowsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(X, rowCount, rowCount, dtype: dtype);
   }
 
   Iterable<Matrix> _choleskyDecomposition() {
     if (!isSquare) {
-      throw CholeskyNonSquareMatrixException(rowsNum, columnsNum);
+      throw CholeskyNonSquareMatrixException(rowCount, colCount);
     }
 
-    final L = Float64List(rowsNum * rowsNum);
-    final U = Float64List(rowsNum * rowsNum);
+    final L = Float64List(rowCount * rowCount);
+    final U = Float64List(rowCount * rowCount);
     final thisAsList = _flattenedList;
 
-    for (var i = 0; i < rowsNum; i++) {
+    for (var i = 0; i < rowCount; i++) {
       for (var j = 0; j <= i; j++) {
         var sum = 0.0;
 
         for (var k = 0; k < j; k++) {
-          sum += (L[i * rowsNum + k] * L[j * rowsNum + k]);
+          sum += (L[i * rowCount + k] * L[j * rowCount + k]);
         }
 
         if (j == i) {
-          final idx = j * rowsNum + j;
+          final idx = j * rowCount + j;
           final value = math.sqrt(thisAsList[idx] - sum);
 
           L[idx] = value;
@@ -861,33 +862,33 @@ class Float64Matrix
             throw CholeskyInappropriateMatrixException();
           }
         } else {
-          final idx = i * columnsNum + j;
-          final value = (thisAsList[idx] - sum) / L[j * rowsNum + j];
+          final idx = i * colCount + j;
+          final value = (thisAsList[idx] - sum) / L[j * rowCount + j];
 
           L[idx] = value;
-          U[j * rowsNum + i] = value;
+          U[j * rowCount + i] = value;
         }
       }
     }
 
     return [
-      Matrix.fromFlattenedList(L, rowsNum, rowsNum, dtype: dtype),
-      Matrix.fromFlattenedList(U, rowsNum, rowsNum, dtype: dtype)
+      Matrix.fromFlattenedList(L, rowCount, rowCount, dtype: dtype),
+      Matrix.fromFlattenedList(U, rowCount, rowCount, dtype: dtype)
     ];
   }
 
   Iterable<Matrix> _luDecomposition() {
     if (!isSquare) {
-      throw LUDecompositionNonSquareMatrixException(rowsNum, columnsNum);
+      throw LUDecompositionNonSquareMatrixException(rowCount, colCount);
     }
 
-    final L = Float64List(rowsNum * rowsNum);
-    final U = Float64List(rowsNum * rowsNum);
+    final L = Float64List(rowCount * rowCount);
+    final U = Float64List(rowCount * rowCount);
     final thisAsList = _flattenedList;
 
-    for (var i = 0; i < rowsNum; i++) {
-      for (var j = 0; j < rowsNum; j++) {
-        final idx = i * rowsNum + j;
+    for (var i = 0; i < rowCount; i++) {
+      for (var j = 0; j < rowCount; j++) {
+        final idx = i * rowCount + j;
 
         if (i == j) {
           L[idx] = 1;
@@ -896,20 +897,20 @@ class Float64Matrix
         var sum = 0.0;
 
         for (var k = 0; k < i; k++) {
-          sum += L[i * rowsNum + k] * U[k * rowsNum + j];
+          sum += L[i * rowCount + k] * U[k * rowCount + j];
         }
 
         if (i <= j) {
           U[idx] = thisAsList[idx] - sum;
         } else {
-          L[idx] = (thisAsList[idx] - sum) / U[j * rowsNum + j];
+          L[idx] = (thisAsList[idx] - sum) / U[j * rowCount + j];
         }
       }
     }
 
     return [
-      Matrix.fromFlattenedList(L, rowsNum, rowsNum, dtype: dtype),
-      Matrix.fromFlattenedList(U, rowsNum, rowsNum, dtype: dtype)
+      Matrix.fromFlattenedList(L, rowCount, rowCount, dtype: dtype),
+      Matrix.fromFlattenedList(U, rowCount, rowCount, dtype: dtype)
     ];
   }
 
@@ -938,7 +939,7 @@ class Float64Matrix
   double _findExtrema(double Function(Vector vector) callback) {
     final rowIterator = rows.iterator;
     final minValues = List<double>.generate(
-        rowsNum, (i) => callback((rowIterator..moveNext()).current));
+        rowCount, (i) => callback((rowIterator..moveNext()).current));
 
     return callback(Vector.fromList(minValues, dtype: dtype));
   }
@@ -957,12 +958,12 @@ class Float64Matrix
   }
 
   Matrix _matrixVectorMul(Vector vector) {
-    if (vector.length != columnsNum) {
+    if (vector.length != colCount) {
       throw Exception(
           'Matrix column count and vector length mismatch, matrix column count: $columnsNum, vector length: ${vector.length}');
     }
 
-    final source = Float64List(rowsNum);
+    final source = Float64List(rowCount);
 
     for (var i = 0; i < source.length; i++) {
       source[i] = vector.dot(getRow(i));
@@ -976,25 +977,25 @@ class Float64Matrix
   Matrix _matrixMul(Matrix matrix) {
     checkColumnsAndRowsNumber(this, matrix);
 
-    final source = List.generate(rowsNum, (i) => getRow(i) * matrix);
+    final source = List.generate(rowCount, (i) => getRow(i) * matrix);
 
     return Matrix.fromRows(source, dtype: dtype);
   }
 
   Matrix _matrixByVectorDiv(Vector vector) {
     if (isSquare) {
-      throw SquareMatrixDivisionByVectorException(rowsNum, columnsNum);
+      throw SquareMatrixDivisionByVectorException(rowCount, colCount);
     }
 
-    if (vector.length == rowsNum) {
+    if (vector.length == rowCount) {
       return mapColumns((column) => column / vector);
     }
 
-    if (vector.length == columnsNum) {
+    if (vector.length == colCount) {
       return mapRows((row) => row / vector);
     }
 
-    throw MatrixDivisionByVectorException(rowsNum, columnsNum, vector.length);
+    throw MatrixDivisionByVectorException(rowCount, colCount, vector.length);
   }
 
   Matrix _matrixByMatrixDiv(Matrix other) {
@@ -1002,13 +1003,13 @@ class Float64Matrix
         errorMessage: 'Cannot perform matrix by matrix '
             'division');
 
-    final source = Float64List(rowsNum * columnsNum);
+    final source = Float64List(rowCount * colCount);
 
     for (var i = 0; i < source.length; i++) {
       source[i] = asFlattenedList[i] / other.asFlattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(source, rowCount, colCount, dtype: dtype);
   }
 
   Matrix _matrixAdd(Matrix other) {
@@ -1028,17 +1029,17 @@ class Float64Matrix
       }
 
       return Matrix.fromFlattenedList(
-          result.buffer.asFloat64List(), rowsNum, columnsNum,
+          result.buffer.asFloat64List(), rowCount, colCount,
           dtype: dtype);
     }
 
-    final source = Float64List(rowsNum * columnsNum);
+    final source = Float64List(rowCount * colCount);
 
     for (var i = 0; i < source.length; i++) {
       source[i] = asFlattenedList[i] + other.asFlattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(source, rowCount, colCount, dtype: dtype);
   }
 
   Matrix _matrixSub(Matrix other) {
@@ -1058,17 +1059,17 @@ class Float64Matrix
       }
 
       return Matrix.fromFlattenedList(
-          result.buffer.asFloat64List(), rowsNum, columnsNum,
+          result.buffer.asFloat64List(), rowCount, colCount,
           dtype: dtype);
     }
 
-    final source = Float64List(rowsNum * columnsNum);
+    final source = Float64List(rowCount * colCount);
 
     for (var i = 0; i < source.length; i++) {
       source[i] = asFlattenedList[i] - other.asFlattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(source, rowsNum, columnsNum, dtype: dtype);
+    return Matrix.fromFlattenedList(source, rowCount, colCount, dtype: dtype);
   }
 
   Matrix _matrixScalarAdd(double scalar) {
@@ -1085,7 +1086,7 @@ class Float64Matrix
     }
 
     return Matrix.fromFlattenedList(
-        result.buffer.asFloat64List(), rowsNum, columnsNum,
+        result.buffer.asFloat64List(), rowCount, colCount,
         dtype: dtype);
   }
 
@@ -1103,7 +1104,7 @@ class Float64Matrix
     }
 
     return Matrix.fromFlattenedList(
-        result.buffer.asFloat64List(), rowsNum, columnsNum,
+        result.buffer.asFloat64List(), rowCount, colCount,
         dtype: dtype);
   }
 
@@ -1121,7 +1122,7 @@ class Float64Matrix
     }
 
     return Matrix.fromFlattenedList(
-        result.buffer.asFloat64List(), rowsNum, columnsNum,
+        result.buffer.asFloat64List(), rowCount, colCount,
         dtype: dtype);
   }
 
@@ -1139,7 +1140,7 @@ class Float64Matrix
     }
 
     return Matrix.fromFlattenedList(
-        result.buffer.asFloat64List(), rowsNum, columnsNum,
+        result.buffer.asFloat64List(), rowCount, colCount,
         dtype: dtype);
   }
 

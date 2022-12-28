@@ -25,8 +25,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 3);
-          expect(actual.columnsNum, 1);
+          expect(actual.rowCount, 3);
+          expect(actual.colCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -68,8 +68,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 3);
-          expect(actual.columnsNum, 2);
+          expect(actual.rowCount, 3);
+          expect(actual.colCount, 2);
           expect(actual.dtype, dtype);
         });
 
@@ -107,8 +107,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 3);
-          expect(actual.columnsNum, 4);
+          expect(actual.rowCount, 3);
+          expect(actual.colCount, 4);
           expect(actual.dtype, dtype);
         });
 
@@ -139,8 +139,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 3);
-          expect(actual.columnsNum, 4);
+          expect(actual.rowCount, 3);
+          expect(actual.colCount, 4);
           expect(actual.dtype, dtype);
         });
 
@@ -156,8 +156,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 1);
-          expect(actual.columnsNum, 5);
+          expect(actual.rowCount, 1);
+          expect(actual.colCount, 5);
           expect(actual.dtype, dtype);
         });
 
@@ -175,8 +175,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 2);
-          expect(actual.columnsNum, 5);
+          expect(actual.rowCount, 2);
+          expect(actual.colCount, 5);
           expect(actual.dtype, dtype);
         });
 
@@ -192,8 +192,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 1);
-          expect(actual.columnsNum, 7);
+          expect(actual.rowCount, 1);
+          expect(actual.colCount, 7);
           expect(actual.dtype, dtype);
         });
 
@@ -209,8 +209,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 1);
-          expect(actual.columnsNum, 9);
+          expect(actual.rowCount, 1);
+          expect(actual.colCount, 9);
           expect(actual.dtype, dtype);
         });
 
@@ -236,8 +236,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 1);
-          expect(actual.columnsNum, 9);
+          expect(actual.rowCount, 1);
+          expect(actual.colCount, 9);
           expect(actual.dtype, dtype);
         });
 
@@ -269,8 +269,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 9);
-          expect(actual.columnsNum, 1);
+          expect(actual.rowCount, 9);
+          expect(actual.colCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -304,8 +304,8 @@ void matrixMultiplicationOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 9);
-          expect(actual.columnsNum, 1);
+          expect(actual.rowCount, 9);
+          expect(actual.colCount, 1);
           expect(actual.dtype, dtype);
         });
       });

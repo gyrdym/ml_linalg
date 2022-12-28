@@ -21,8 +21,8 @@ void main() {
             matrix.fastMap((Float32x4 element) => element.scale(4.0));
 
         expect(actual, equals(expected));
-        expect(actual.rowsNum, 3);
-        expect(actual.columnsNum, 5);
+        expect(actual.rowCount, 3);
+        expect(actual.colCount, 5);
         expect(actual.dtype, DType.float32);
       });
     });
@@ -36,8 +36,8 @@ void main() {
             matrix.fastMap((Float64x2 element) => element.scale(4.0));
 
         expect(actual, equals(expected));
-        expect(actual.rowsNum, 3);
-        expect(actual.columnsNum, 5);
+        expect(actual.rowCount, 3);
+        expect(actual.colCount, 5);
         expect(actual.dtype, DType.float64);
       });
     });

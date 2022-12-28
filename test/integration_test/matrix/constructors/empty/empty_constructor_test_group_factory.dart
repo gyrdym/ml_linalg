@@ -8,16 +8,16 @@ void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('empty constructor', () {
         test(
-            'should create a matrix with both rowsNum and columnsNum '
+            'should create a matrix with both rowCount and colCount '
             'equal 0', () {
           final matrix = Matrix.empty(dtype: dtype);
 
-          expect(matrix.rowsNum, 0);
-          expect(matrix.columnsNum, 0);
+          expect(matrix.rowCount, 0);
+          expect(matrix.colCount, 0);
         });
 
         test(
-            'should create a matrix with empty rows and colums '
+            'should create a matrix with empty rows and columns '
             'collections', () {
           final matrix = Matrix.empty(dtype: dtype);
 

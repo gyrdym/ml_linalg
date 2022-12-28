@@ -25,8 +25,8 @@ void matrixFromColumnsConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 5);
-          expect(actual.columnsNum, 2);
+          expect(actual.rowCount, 5);
+          expect(actual.colCount, 2);
           expect(actual.dtype, dtype);
         });
 
@@ -35,8 +35,8 @@ void matrixFromColumnsConstructorTestGroupFactory(DType dtype) =>
           final expected = <double>[];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 0);
-          expect(actual.columnsNum, 0);
+          expect(actual.rowCount, 0);
+          expect(actual.colCount, 0);
           expect(actual.dtype, dtype);
         });
 

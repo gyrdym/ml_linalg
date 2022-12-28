@@ -29,8 +29,8 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 3);
-          expect(actual.columnsNum, 4);
+          expect(actual.rowCount, 3);
+          expect(actual.colCount, 4);
           expect(actual.dtype, dtype);
         });
 
@@ -48,8 +48,8 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
           final actual = matrix - 11;
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 3);
-          expect(actual.columnsNum, 5);
+          expect(actual.rowCount, 3);
+          expect(actual.colCount, 5);
           expect(actual.dtype, dtype);
         });
 
@@ -81,8 +81,8 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
           final actual = matrix - 11;
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 3);
-          expect(actual.columnsNum, 5);
+          expect(actual.rowCount, 3);
+          expect(actual.colCount, 5);
           expect(actual.dtype, dtype);
         });
 
@@ -104,8 +104,8 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
           final actual = matrix - 11;
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 5);
-          expect(actual.columnsNum, 1);
+          expect(actual.rowCount, 5);
+          expect(actual.colCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -129,8 +129,8 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
           final actual = matrix - 11;
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 5);
-          expect(actual.columnsNum, 1);
+          expect(actual.rowCount, 5);
+          expect(actual.colCount, 1);
           expect(actual.dtype, dtype);
         });
       });
