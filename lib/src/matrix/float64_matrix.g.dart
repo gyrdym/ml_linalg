@@ -47,8 +47,7 @@ class Float64Matrix
         _colsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _flattenedList =
             Float64List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = false,
-        _areAllColumnsCached = false {
+        _areAllRowsCached = false {
     for (var i = 0; i < source.length; i++) {
       if (source[i].length != colCount) {
         throw Exception('Wrong nested list length: ${source[i].length}, '
@@ -70,8 +69,7 @@ class Float64Matrix
         _colsCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _flattenedList =
             Float64List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = true,
-        _areAllColumnsCached = false {
+        _areAllRowsCached = true {
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
 
@@ -96,8 +94,7 @@ class Float64Matrix
         _colsCache = [...source],
         _flattenedList =
             Float64List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = false,
-        _areAllColumnsCached = true {
+        _areAllRowsCached = false {
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
 
@@ -122,8 +119,7 @@ class Float64Matrix
         _colsCache = List<Vector?>.filled(colCount, null),
         _flattenedList =
             source is Float64List ? source : Float64List.fromList(source),
-        _areAllRowsCached = false,
-        _areAllColumnsCached = false {
+        _areAllRowsCached = false {
     if (source.length < rowCount * colCount) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowCount x $colCount, but given a collection of length '
@@ -139,8 +135,7 @@ class Float64Matrix
         _rowsCache = List<Vector?>.filled(rowCount, null),
         _colsCache = List<Vector?>.filled(columnCount, null),
         _flattenedList = source.buffer.asFloat64List(),
-        _areAllRowsCached = false,
-        _areAllColumnsCached = false {
+        _areAllRowsCached = false {
     if (source.lengthInBytes != rowCount * columnCount * _bytesPerElement) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowCount x $colCount (${rowCount * colCount} elements), but byte data of '
@@ -156,8 +151,7 @@ class Float64Matrix
         _rowsCache = List<Vector?>.filled(source.length, null),
         _colsCache = List<Vector?>.filled(source.length, null),
         _flattenedList = Float64List(source.length * source.length),
-        _areAllRowsCached = false,
-        _areAllColumnsCached = false {
+        _areAllRowsCached = false {
     for (var i = 0; i < rowCount; i++) {
       _flattenedList[i * colCount + i] = source[i];
     }
@@ -171,8 +165,7 @@ class Float64Matrix
         _rowsCache = List<Vector?>.filled(size, null),
         _colsCache = List<Vector?>.filled(size, null),
         _flattenedList = Float64List(size * size),
-        _areAllRowsCached = false,
-        _areAllColumnsCached = false {
+        _areAllRowsCached = false {
     for (var i = 0; i < size; i++) {
       _flattenedList[i * colCount + i] = scalar;
     }
@@ -187,8 +180,7 @@ class Float64Matrix
         _rowsCache = List<Vector?>.filled(rowCount, null),
         _colsCache = List<Vector?>.filled(colCount, null),
         _flattenedList = Float64List(rowCount * colCount),
-        _areAllRowsCached = false,
-        _areAllColumnsCached = false {
+        _areAllRowsCached = false {
     if (min >= max) {
       throw ArgumentError.value(min,
           'Argument `min` should be less than `max`, min: $min, max: $max');
@@ -218,7 +210,6 @@ class Float64Matrix
   final Iterable<int> columnIndices;
 
   final bool _areAllRowsCached;
-  final bool _areAllColumnsCached;
   final List<Vector?> _rowsCache;
   final List<Vector?> _colsCache;
   final Float64List _flattenedList;
