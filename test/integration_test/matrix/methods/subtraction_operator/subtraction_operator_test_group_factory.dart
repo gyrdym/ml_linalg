@@ -7,7 +7,7 @@ import '../../../../dtype_to_title.dart';
 void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('- operator', () {
-        test('should perform matrices subtraction', () {
+        test('should subtract matrix from another matrix', () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
             [5.0, 6.0, 7.0, 8.0],
@@ -32,6 +32,68 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
           expect(actual.rowCount, 3);
           expect(actual.columnCount, 4);
           expect(actual.dtype, dtype);
+        });
+
+        test('should subtract 3x5 matrix from another 3x5 matrix', () {
+          final matrix1 = Matrix.fromList([
+            [1.0, 2.0, 3.0, 4.0, 10],
+            [5.0, 6.0, 7.0, 8.0, 20],
+            [9.0, .0, -2.0, -3.0, 30],
+          ], dtype: dtype);
+
+          final matrix2 = Matrix.fromList([
+            [10.0, 20.0, 30.0, 40.0, 3],
+            [-5.0, 16.0, 2.0, 18.0, 4],
+            [2.0, -1.0, -2.0, -7.0, 5],
+          ], dtype: dtype);
+
+          final actual = matrix1 - matrix2;
+
+          final expected = [
+            [-9.0, -18.0, -27.0, -36.0, 7],
+            [10.0, -10.0, 5.0, -10.0, 16],
+            [7.0, 1.0, .0, 4.0, 25],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowCount, 3);
+          expect(actual.columnCount, 5);
+          expect(actual.dtype, dtype);
+          expect(actual, isNot(same(matrix1)));
+        });
+
+        test('should subtract 5x3 matrix from another 5x3 matrix', () {
+          final matrix1 = Matrix.fromList([
+            [1.0, 2.0, 3.0],
+            [4.0, 10, 5.0],
+            [6.0, 7.0, 8.0],
+            [20, 9.0, .0],
+            [-2.0, -3.0, 30],
+          ], dtype: dtype);
+
+          final matrix2 = Matrix.fromList([
+            [10.0, 20.0, 30.0],
+            [40.0, 3, -5.0],
+            [16.0, 2.0, 18.0],
+            [4, 2.0, -1.0],
+            [-2.0, -7.0, 5],
+          ], dtype: dtype);
+
+          final actual = matrix1 - matrix2;
+
+          final expected = [
+            [-9.0, -18.0, -27.0],
+            [-36.0, 7, 10.0],
+            [-10.0, 5.0, -10.0],
+            [16, 7.0, 1.0],
+            [.0, 4.0, 25],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowCount, 5);
+          expect(actual.columnCount, 3);
+          expect(actual.dtype, dtype);
+          expect(actual, isNot(same(matrix1)));
         });
 
         test('should subtract a scalar from a 3x5 matrix', () {
