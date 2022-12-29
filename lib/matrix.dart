@@ -6,8 +6,10 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/inverse.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
+import 'package:ml_linalg/src/common/exception/unimplemented_matrix_exception.dart';
 import 'package:ml_linalg/src/matrix/eigen_method.dart';
-import 'package:ml_linalg/src/matrix/helper/create_matrix.dart';
+import 'package:ml_linalg/src/matrix/float32_matrix.dart';
+import 'package:ml_linalg/src/matrix/float64_matrix.g.dart';
 import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/vector.dart';
 
@@ -44,8 +46,18 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.fromList(
     List<List<double>> source, {
     DType dtype = DType.float32,
-  }) =>
-      createMatrixFactory().fromList(dtype, source);
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.fromList(source);
+
+      case DType.float64:
+        return Float64Matrix.fromList(source);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Creates a matrix with predefined row vectors
   ///
@@ -72,8 +84,18 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// (6.0, 7.0, 8.0, 9.0, 0.0)
   /// ```
-  factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) =>
-      createMatrixFactory().fromRows(dtype, source);
+  factory Matrix.fromRows(List<Vector> source, {DType dtype = DType.float32}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.fromRows(source);
+
+      case DType.float64:
+        return Float64Matrix.fromRows(source);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Creates a matrix with predefined column vectors
   ///
@@ -106,8 +128,18 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.fromColumns(
     List<Vector> source, {
     DType dtype = DType.float32,
-  }) =>
-      createMatrixFactory().fromColumns(dtype, source);
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.fromColumns(source);
+
+      case DType.float64:
+        return Float64Matrix.fromColumns(source);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Creates a matrix of shape 0 x 0 (no rows, no columns)
   ///
@@ -128,11 +160,21 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   /// Matrix 0 x 0
   /// ```
-  factory Matrix.empty({DType dtype = DType.float32}) =>
-      createMatrixFactory().empty(dtype);
+  factory Matrix.empty({DType dtype = DType.float32}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.fromList([]);
+
+      case DType.float64:
+        return Float64Matrix.fromList([]);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Creates a matrix from flattened list of length equal to
-  /// [rowsNum] * [columnsNum]
+  /// [rowCount] * [columnCount]
   ///
   /// A simple usage example:
   ///
@@ -157,18 +199,23 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   factory Matrix.fromFlattenedList(
     List<double> source,
-    int rowsNum,
-    int columnsNum, {
+    int rowCount,
+    int columnCount, {
     DType dtype = DType.float32,
-  }) =>
-      createMatrixFactory().fromFlattenedList(
-        dtype,
-        source,
-        rowsNum,
-        columnsNum,
-      );
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.fromFlattenedList(source, rowCount, columnCount);
 
-  /// Creates a matrix from byte data of [rowsNum] * [columnsNum] elements
+      case DType.float64:
+        return Float64Matrix.fromFlattenedList(source, rowCount, columnCount);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
+
+  /// Creates a matrix from byte data of [rowCount] * [columnCount] elements
   ///
   /// A simple usage example:
   ///
@@ -198,16 +245,21 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   factory Matrix.fromByteData(
     ByteData data,
-    int rowsNum,
-    int columnsNum, {
+    int rowCount,
+    int columnCount, {
     DType dtype = DType.float32,
-  }) =>
-      createMatrixFactory().fromByteData(
-        dtype,
-        data,
-        rowsNum,
-        columnsNum,
-      );
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.fromByteData(data, rowCount, columnCount);
+
+      case DType.float64:
+        return Float64Matrix.fromByteData(data, rowCount, columnCount);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Creates a matrix, where elements from [source] are the elements for the
   /// matrix main diagonal, the rest of the elements are zero
@@ -235,8 +287,18 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.diagonal(
     List<double> source, {
     DType dtype = DType.float32,
-  }) =>
-      createMatrixFactory().diagonal(dtype, source);
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.diagonal(source);
+
+      case DType.float64:
+        return Float64Matrix.diagonal(source);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Creates a matrix of [size] * [size] dimension, where all the main
   /// diagonal elements are equal to [scalar], the rest of the elements are 0
@@ -265,12 +327,18 @@ abstract class Matrix implements Iterable<Iterable<double>> {
     double scalar,
     int size, {
     DType dtype = DType.float32,
-  }) =>
-      createMatrixFactory().scalar(
-        dtype,
-        scalar,
-        size,
-      );
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.scalar(scalar, size);
+
+      case DType.float64:
+        return Float64Matrix.scalar(scalar, size);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Creates a matrix of [size] * [size] dimension, where all the main
   /// diagonal elements are equal to 1, the rest of the elements are 0
@@ -298,8 +366,18 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.identity(
     int size, {
     DType dtype = DType.float32,
-  }) =>
-      createMatrixFactory().identity(dtype, size);
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.scalar(1.0, size);
+
+      case DType.float64:
+        return Float64Matrix.scalar(1.0, size);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Creates a matrix, consisting of just one row (aka `Row matrix`)
   ///
@@ -322,17 +400,38 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.row(
     List<double> source, {
     DType dtype = DType.float32,
-  }) =>
-      createMatrixFactory().row(dtype, source);
+  }) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.fromRows([Vector.fromList(source, dtype: dtype)]);
 
-  /// Returns randomly filled matrix of [rowsNum]x[columnsCount] dimension
-  factory Matrix.random(int rowsNum, int columnsCount,
-          {DType dtype = DType.float32,
-          num min = -1000,
-          num max = 1000,
-          int? seed}) =>
-      createMatrixFactory()
-          .random(dtype, rowsNum, columnsCount, max: max, min: min, seed: seed);
+      case DType.float64:
+        return Float64Matrix.fromRows([Vector.fromList(source, dtype: dtype)]);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
+
+  /// Returns randomly filled matrix of [rowCount]x[columnCount] dimension
+  factory Matrix.random(int rowCount, int columnCount,
+      {DType dtype = DType.float32,
+      num min = -1000,
+      num max = 1000,
+      int? seed}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.random(dtype, rowCount, columnCount,
+            min: min, max: max, seed: seed);
+
+      case DType.float64:
+        return Float64Matrix.random(dtype, rowCount, columnCount,
+            min: min, max: max, seed: seed);
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// Returns randomly filled symmetric and positive definite matrix of
   /// [size]x[size] dimension
@@ -340,12 +439,15 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Keep in mind that [min] and [max] are constraints for a random
   /// intermediate matrix which is used to build the result matrix
   factory Matrix.randomSPD(int size,
-          {DType dtype = DType.float32,
-          num min = -1000,
-          num max = 1000,
-          int? seed}) =>
-      createMatrixFactory()
-          .randomSPD(dtype, size, max: max, min: min, seed: seed);
+      {DType dtype = DType.float32,
+      num min = -1000,
+      num max = 1000,
+      int? seed}) {
+    final A =
+        Matrix.random(size, size, dtype: dtype, max: max, min: min, seed: seed);
+
+    return A * A.transpose() + Matrix.scalar(size * 1.0, size, dtype: dtype);
+  }
 
   /// Returns a restored matrix from a serializable map
   factory Matrix.fromJson(Map<String, dynamic> json) => fromMatrixJson(json)!;
@@ -372,8 +474,21 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (4.0)
   /// (5.0)
   /// ```
-  factory Matrix.column(List<double> source, {DType dtype = DType.float32}) =>
-      createMatrixFactory().column(dtype, source);
+  factory Matrix.column(List<double> source, {DType dtype = DType.float32}) {
+    switch (dtype) {
+      case DType.float32:
+        return Float32Matrix.fromColumns(
+          [Vector.fromList(source, dtype: dtype)],
+        );
+
+      case DType.float64:
+        return Float64Matrix.fromColumns(
+            ([Vector.fromList(source, dtype: dtype)]));
+
+      default:
+        throw UnimplementedMatrixException(dtype);
+    }
+  }
 
   /// A data type of [Matrix] elements
   DType get dtype;
@@ -383,6 +498,12 @@ abstract class Matrix implements Iterable<Iterable<double>> {
 
   /// Returns a lazy iterable of column vectors of the matrix
   Iterable<Vector> get columns;
+
+  /// Returns a number of matrix rows
+  int get rowCount;
+
+  /// Returns a number of matrix columns
+  int get columnCount;
 
   /// Returns a lazy iterable of row indices
   Iterable<int> get rowIndices;
@@ -408,17 +529,19 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Runtime type can be Float32List or Float64List, it depends on the [dtype]
   List<double> get asFlattenedList;
 
-  /// Returns a number of matrix row
+  /// Returns a number of matrix rows
+  @Deprecated('use "rowCount" instead')
   int get rowsNum;
 
   /// Returns a number of matrix columns
+  @Deprecated('use "columnCount" instead')
   int get columnsNum;
 
   /// Returns `true` if the [Matrix] is not empty. Use it instead of `isEmpty`
   /// getter from [Iterable] interface, since the latter may return falsy true
   bool get hasData;
 
-  /// Returns `true` if the [Matrix]'s [columnsNum] and [rowsNum] are equal
+  /// Returns `true` if the [Matrix]'s [columnCount] and [rowCount] are equal
   bool get isSquare;
 
   /// Returns a matrix row on an [index] (the operator is an alias for
@@ -444,9 +567,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   ///
   /// If division by a vector is taking place, the direction of the division
   /// will be automatically detected:
-  /// - if [rowsNum] is equal to the vector's length, the division will be
+  /// - if [rowCount] is equal to the vector's length, the division will be
   /// applied column-wise
-  /// - if [columnsNum] is equal to the vector's length, the division will be
+  /// - if [columnCount] is equal to the vector's length, the division will be
   /// applied row-wise
   /// - if this [Matrix] is square, an exception will be thrown.
   ///
@@ -519,7 +642,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// (1.0, 2.0, 3.0, 4.0, 5.0)
   /// ```
   ///
-  /// It fails, if both [columnsNum] and [rowsNum] are greater than `1`:
+  /// It fails, if both [columnCount] and [rowCount] are greater than `1`:
   ///
   /// ````dart
   /// import 'package:ml_linalg/matrix.dart';

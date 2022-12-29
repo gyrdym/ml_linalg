@@ -18,8 +18,8 @@ void matrixFromListConstructorTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 2);
-          expect(actual.columnsNum, 5);
+          expect(actual.rowCount, 2);
+          expect(actual.columnCount, 5);
           expect(actual.dtype, dtype);
         });
 
@@ -30,8 +30,8 @@ void matrixFromListConstructorTestGroupFactory(DType dtype) =>
           final expected = <double>[];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 0);
-          expect(actual.columnsNum, 0);
+          expect(actual.rowCount, 0);
+          expect(actual.columnCount, 0);
           expect(actual.dtype, dtype);
         });
 

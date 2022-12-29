@@ -25,8 +25,8 @@ void matrixTransposeTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 4);
-          expect(actual.columnsNum, 3);
+          expect(actual.rowCount, 4);
+          expect(actual.columnCount, 3);
           expect(actual.dtype, dtype);
         });
 
@@ -44,8 +44,8 @@ void matrixTransposeTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowsNum, 4);
-          expect(actual.columnsNum, 1);
+          expect(actual.rowCount, 4);
+          expect(actual.columnCount, 1);
           expect(actual.dtype, dtype);
         });
 
@@ -59,8 +59,8 @@ void matrixTransposeTestGroupFactory(DType dtype) =>
           ];
 
           expect(actual, equals(expected));
-          expect(actual.columnsNum, 4);
-          expect(actual.rowsNum, 1);
+          expect(actual.columnCount, 4);
+          expect(actual.rowCount, 1);
           expect(actual.dtype, dtype);
         });
       });

@@ -834,11 +834,11 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   }
 
   Vector _matrixMul(Matrix matrix) {
-    if (length != matrix.rowsNum) {
-      throw MatrixRowsAndVectorLengthMismatchException(matrix.rowsNum, length);
+    if (length != matrix.rowCount) {
+      throw MatrixRowsAndVectorLengthMismatchException(matrix.rowCount, length);
     }
 
-    final source = Float32List(matrix.columnsNum);
+    final source = Float32List(matrix.columnCount);
 
     for (var i = 0; i < source.length; i++) {
       source[i] = dot(matrix.getColumn(i));

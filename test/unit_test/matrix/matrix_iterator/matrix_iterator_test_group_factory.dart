@@ -9,7 +9,7 @@ import '../../../helpers.dart';
 void matrixIteratorTestGroupFactory(
         DType dtype,
         Iterator<Iterable<double>> Function(
-                Float32List data, int rowsNum, int colsNum)
+                Float32List data, int rowCount, int colCount)
             createIterator,
         List<double> Function(List<double> data) createSource) =>
     group(dtypeToMatrixIteratorTestTitle[dtype], () {

@@ -8,7 +8,8 @@ import 'matrix_iterator_test_group_factory.dart';
 void main() {
   matrixIteratorTestGroupFactory(
     DType.float32,
-    (data, rowsNum, colsNum) => Float32MatrixIterator(data, rowsNum, colsNum),
+    (data, rowCount, colCount) =>
+        Float32MatrixIterator(data, rowCount, colCount),
     (data) => Float32List.fromList(data),
   );
 }
