@@ -29,6 +29,58 @@ void matrixMultiplyTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
+        test('should return Hadamard product, 3x5 matrix', () {
+          final matrix1 = Matrix.fromList([
+            [1.0, 2.0, 3.0, 4.0, -3.0],
+            [5.0, 6.0, 7.0, 8.0, -11.0],
+            [9.0, .0, -2.0, -3.0, 7.0],
+          ], dtype: dtype);
+          final matrix2 = Matrix.fromList([
+            [-11.0, 17.0, 1.0, 1.0, 2.0],
+            [523.0, 0.0, -27.0, 9.0, 3.0],
+            [11.0, 9.0, 10001.0, -21.0, 4.0],
+          ], dtype: dtype);
+          final actual = matrix1.multiply(matrix2);
+          final expected = [
+            [-11, 34, 3, 4, -6],
+            [2615, 0, -189, 72, -33],
+            [99, 0, -20002, 63, 28],
+          ];
+
+          expect(actual, expected);
+          expect(actual.dtype, dtype);
+          expect(actual, isNot(same(matrix1)));
+        });
+
+        test('should return Hadamard product, 5x3 matrix', () {
+          final matrix1 = Matrix.fromList([
+            [1.0, 2.0, 3.0],
+            [4.0, -3.0, 5.0],
+            [6.0, 7.0, 8.0],
+            [-11.0, 9.0, .0],
+            [-2.0, -3.0, 7.0],
+          ], dtype: dtype);
+          final matrix2 = Matrix.fromList([
+            [-11.0, 17.0, 1.0],
+            [1.0, 2.0, 523.0],
+            [0.0, -27.0, 9.0],
+            [3.0, 11.0, 9.0],
+            [10001.0, -21.0, 4.0],
+          ], dtype: dtype);
+          final actual = matrix1.multiply(matrix2);
+          final expected = [
+            [-11, 34, 3],
+            [4, -6, 2615],
+            [0, -189, 72],
+            [-33, 99, 0],
+            [-20002, 63, 28],
+          ];
+
+          expect(actual, expected);
+          expect(actual.dtype, dtype);
+          expect(actual, isNot(same(matrix1)));
+        });
+
         test('should handle column matrices', () {
           final matrix1 = Matrix.column([-12, 20, 30, 2, 7], dtype: dtype);
           final matrix2 = Matrix.column([-1, 3, 2, 9, 17], dtype: dtype);
