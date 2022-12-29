@@ -241,7 +241,7 @@ class Float32Matrix
   @override
   Matrix operator +(Object value) {
     if (value is Matrix) {
-      return _matrixAdd(value);
+      return _matrixMatrixAdd(value);
     }
 
     if (value is num) {
@@ -255,7 +255,7 @@ class Float32Matrix
   @override
   Matrix operator -(Object value) {
     if (value is Matrix) {
-      return _matrixSub(value);
+      return _matrixMatrixSub(value);
     }
 
     if (value is num) {
@@ -275,15 +275,15 @@ class Float32Matrix
   @override
   Matrix operator *(Object value) {
     if (value is Vector) {
-      return _matrixVectorMul(value);
+      return _matrixByVectorMult(value);
     }
 
     if (value is Matrix) {
-      return _matrixMul(value);
+      return _matrixByMatrixMult(value);
     }
 
     if (value is num) {
-      return _matrixScalarMul(value.toDouble());
+      return _matrixByScalarMult(value.toDouble());
     }
 
     throw UnsupportedError(
@@ -948,7 +948,7 @@ class Float32Matrix
     return reduced;
   }
 
-  Matrix _matrixVectorMul(Vector vector) {
+  Matrix _matrixByVectorMult(Vector vector) {
     if (vector.length != columnCount) {
       throw Exception(
           'Matrix column count and vector length mismatch, matrix column count: $columnsNum, vector length: ${vector.length}');
@@ -965,7 +965,7 @@ class Float32Matrix
     return Matrix.fromColumns([vectorColumn], dtype: dtype);
   }
 
-  Matrix _matrixMul(Matrix matrix) {
+  Matrix _matrixByMatrixMult(Matrix matrix) {
     validateMatricesMultEligibility(this, matrix);
 
     final source = List.generate(rowCount, (i) => getRow(i) * matrix);
@@ -994,6 +994,24 @@ class Float32Matrix
         errorMessage: 'Cannot perform matrix by matrix '
             'division');
 
+    if (other is Float32Matrix) {
+      final result = _createEmptySimdList();
+      final thisAsSimdList = _getFlattenedSimdList();
+      final otherAsSimdList = other._getFlattenedSimdList();
+
+      for (var i = 0; i < thisAsSimdList.length; i++) {
+        result[i] = thisAsSimdList[i] / otherAsSimdList[i];
+      }
+
+      if (_lastSimd != null) {
+        result[result.length - 1] = _lastSimd! / other._lastSimd!;
+      }
+
+      return Matrix.fromFlattenedList(
+          result.buffer.asFloat32List(), rowCount, columnCount,
+          dtype: dtype);
+    }
+
     final source = Float32List(rowCount * columnCount);
 
     for (var i = 0; i < source.length; i++) {
@@ -1004,7 +1022,7 @@ class Float32Matrix
         dtype: dtype);
   }
 
-  Matrix _matrixAdd(Matrix other) {
+  Matrix _matrixMatrixAdd(Matrix other) {
     validateMatricesShapeEquality(this, other,
         errorMessage: 'Cannot perform matrix addition');
 
@@ -1017,8 +1035,8 @@ class Float32Matrix
         result[i] = thisAsSimdList[i] + otherAsSimdList[i];
       }
 
-      if (lastSimd != null) {
-        result[result.length - 1] = lastSimd! + other.lastSimd!;
+      if (_lastSimd != null) {
+        result[result.length - 1] = _lastSimd! + other._lastSimd!;
       }
 
       return Matrix.fromFlattenedList(
@@ -1036,7 +1054,7 @@ class Float32Matrix
         dtype: dtype);
   }
 
-  Matrix _matrixSub(Matrix other) {
+  Matrix _matrixMatrixSub(Matrix other) {
     validateMatricesShapeEquality(this, other,
         errorMessage: 'Cannot perform matrix subtraction');
 
@@ -1049,8 +1067,8 @@ class Float32Matrix
         result[i] = thisAsSimdList[i] - otherAsSimdList[i];
       }
 
-      if (lastSimd != null) {
-        result[result.length - 1] = lastSimd! - other.lastSimd!;
+      if (_lastSimd != null) {
+        result[result.length - 1] = _lastSimd! - other._lastSimd!;
       }
 
       return Matrix.fromFlattenedList(
@@ -1077,8 +1095,8 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] + scalarAsSimd;
     }
 
-    if (lastSimd != null) {
-      result[result.length - 1] = lastSimd! + scalarAsSimd;
+    if (_lastSimd != null) {
+      result[result.length - 1] = _lastSimd! + scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -1095,8 +1113,8 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] - scalarAsSimd;
     }
 
-    if (lastSimd != null) {
-      result[result.length - 1] = lastSimd! - scalarAsSimd;
+    if (_lastSimd != null) {
+      result[result.length - 1] = _lastSimd! - scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -1104,7 +1122,7 @@ class Float32Matrix
         dtype: dtype);
   }
 
-  Matrix _matrixScalarMul(double scalar) {
+  Matrix _matrixByScalarMult(double scalar) {
     final result = _createEmptySimdList();
     final thisAsSimdList = _getFlattenedSimdList();
     final scalarAsSimd = Float32x4.splat(scalar);
@@ -1113,8 +1131,8 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] * scalarAsSimd;
     }
 
-    if (lastSimd != null) {
-      result[result.length - 1] = lastSimd! * scalarAsSimd;
+    if (_lastSimd != null) {
+      result[result.length - 1] = _lastSimd! * scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -1131,8 +1149,8 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] / scalarAsSimd;
     }
 
-    if (lastSimd != null) {
-      result[result.length - 1] = lastSimd! / scalarAsSimd;
+    if (_lastSimd != null) {
+      result[result.length - 1] = _lastSimd! / scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -1165,7 +1183,7 @@ class Float32Matrix
             ? _flattenedList[lastSimdFirstIdx + 2]
             : 0.0;
 
-        lastSimd = Float32x4(x, y, z, 0.0);
+        _lastSimd = Float32x4(x, y, z, 0.0);
       }
 
       _cachedSimdList = _flattenedList.buffer.asFloat32x4List();
@@ -1176,5 +1194,5 @@ class Float32Matrix
 
   Float32x4List? _cachedSimdList;
 
-  Float32x4? lastSimd;
+  Float32x4? _lastSimd;
 }
