@@ -86,7 +86,7 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
               throwsA(isA<SquareMatrixDivisionByVectorException>()));
         });
 
-        test('should perform division of a matrix by another matrix', () {
+        test('should divide a matrix by another matrix element-wise', () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
             [5.0, 6.0, 7.0, 8.0],
@@ -111,6 +111,64 @@ void matrixDivisionOperatorTestGroupFactory(DType dtype) =>
           expect(actual.rowCount, 3);
           expect(actual.columnCount, 4);
           expect(actual.dtype, dtype);
+        });
+
+        test('should divide a 2x5 matrix by another 2x5 matrix element-wise',
+            () {
+          final matrix1 = Matrix.fromList([
+            [10.0, 20.0, 30.0, 40.0, 50.0],
+            [6.0, 7.0, 8.0, 9.0, 10.0],
+          ], dtype: dtype);
+
+          final matrix2 = Matrix.fromList([
+            [2.0, 5.0, 3.0, 8.0, 10.0],
+            [3.0, 2.0, 4.0, 3.0, 5.0],
+          ], dtype: dtype);
+
+          final actual = matrix1 / matrix2;
+          final expected = [
+            [5.0, 4.0, 10.0, 5.0, 5.0],
+            [2.0, 3.5, 2.0, 3.0, 2.0],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowCount, 2);
+          expect(actual.columnCount, 5);
+          expect(actual.dtype, dtype);
+          expect(actual, isNot(same(matrix1)));
+        });
+
+        test('should divide a 5x2 matrix by another 5x2 matrix', () {
+          final matrix1 = Matrix.fromList([
+            [10.0, 20.0],
+            [30.0, 40.0],
+            [50.0, 6.0],
+            [7.0, 8.0],
+            [9.0, 10.0],
+          ], dtype: dtype);
+
+          final matrix2 = Matrix.fromList([
+            [2.0, 5.0],
+            [3.0, 8.0],
+            [10.0, 3.0],
+            [2.0, 4.0],
+            [3.0, 5.0],
+          ], dtype: dtype);
+
+          final actual = matrix1 / matrix2;
+          final expected = [
+            [5.0, 4.0],
+            [10.0, 5.0],
+            [5.0, 2.0],
+            [3.5, 2.0],
+            [3.0, 2.0],
+          ];
+
+          expect(actual, equals(expected));
+          expect(actual.rowCount, 5);
+          expect(actual.columnCount, 2);
+          expect(actual.dtype, dtype);
+          expect(actual, isNot(same(matrix1)));
         });
 
         test(
