@@ -18,8 +18,8 @@ void matrixRandomConstructorTestGroupFactory(DType dtype) =>
             });
           });
 
-          expect(matrix.rowsNum, 20);
-          expect(matrix.columnsNum, 30);
+          expect(matrix.rowCount, 20);
+          expect(matrix.columnCount, 30);
           expect(matrix.dtype, dtype);
         });
       });

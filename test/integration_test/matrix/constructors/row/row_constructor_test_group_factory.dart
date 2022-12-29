@@ -17,8 +17,8 @@ void matrixRowConstructorTestGroupFactory(DType dtype) =>
                 [1, 2, 3, 4, 5]
               ]));
 
-          expect(matrix.columnsNum, 5);
-          expect(matrix.rowsNum, 1);
+          expect(matrix.columnCount, 5);
+          expect(matrix.rowCount, 1);
           expect(matrix.dtype, dtype);
         });
 
@@ -27,8 +27,8 @@ void matrixRowConstructorTestGroupFactory(DType dtype) =>
           final matrix = Matrix.row(source, dtype: dtype);
 
           expect(matrix, equals(<Iterable<double>>[]));
-          expect(matrix.rowsNum, 0);
-          expect(matrix.columnsNum, 0);
+          expect(matrix.rowCount, 0);
+          expect(matrix.columnCount, 0);
           expect(matrix.hasData, isFalse);
           expect(matrix.dtype, dtype);
         });
