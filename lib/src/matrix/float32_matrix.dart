@@ -213,6 +213,9 @@ class Float32Matrix
   final Float32List _flattenedList;
   final _cache = CacheManagerImpl(matrixCacheKeys);
 
+  Float32x4List? _cachedSimdList;
+  Float32x4? _lastSimd;
+
   @override
   Iterator<Iterable<double>> get iterator =>
       Float32MatrixIterator(_flattenedList, rowCount, columnCount);
@@ -1191,8 +1194,4 @@ class Float32Matrix
 
     return _cachedSimdList!;
   }
-
-  Float32x4List? _cachedSimdList;
-
-  Float32x4? _lastSimd;
 }

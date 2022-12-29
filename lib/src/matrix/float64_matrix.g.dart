@@ -216,6 +216,9 @@ class Float64Matrix
   final Float64List _flattenedList;
   final _cache = CacheManagerImpl(matrixCacheKeys);
 
+  Float64x2List? _cachedSimdList;
+  Float64x2? _lastSimd;
+
   @override
   Iterator<Iterable<double>> get iterator =>
       Float64MatrixIterator(_flattenedList, rowCount, columnCount);
@@ -1194,8 +1197,4 @@ class Float64Matrix
 
     return _cachedSimdList!;
   }
-
-  Float64x2List? _cachedSimdList;
-
-  Float64x2? _lastSimd;
 }
