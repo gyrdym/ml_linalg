@@ -333,17 +333,17 @@ class Float64Matrix
 
   @override
   Vector getRow(int index) {
-    if (!hasData) {
-      throw Exception('Matrix is empty');
-    }
-
-    final indexFrom = index * columnCount;
-
-    if (indexFrom >= rowCount * columnCount) {
-      throw RangeError.range(indexFrom, 0, rowCount * columnCount);
-    }
-
     if (_rowCache[index] == null) {
+      if (!hasData) {
+        throw Exception('Matrix is empty');
+      }
+
+      final indexFrom = index * columnCount;
+
+      if (indexFrom >= rowCount * columnCount) {
+        throw RangeError.range(indexFrom, 0, rowCount * columnCount);
+      }
+
       final values = _flattenedList.sublist(indexFrom, indexFrom + columnCount);
 
       _rowCache[index] = Vector.fromList(values, dtype: dtype);
@@ -354,11 +354,11 @@ class Float64Matrix
 
   @override
   Vector getColumn(int index) {
-    if (!hasData) {
-      throw Exception('Matrix is empty');
-    }
-
     if (_colCache[index] == null) {
+      if (!hasData) {
+        throw Exception('Matrix is empty');
+      }
+
       final column = Float64List(rowCount);
 
       for (var i = 0; i < rowCount; i++) {
