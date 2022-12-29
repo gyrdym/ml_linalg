@@ -334,10 +334,6 @@ class Float32Matrix
   @override
   Vector getRow(int index) {
     if (_rowCache[index] == null) {
-      if (!hasData) {
-        throw Exception('Matrix is empty');
-      }
-
       final indexFrom = index * columnCount;
 
       if (indexFrom >= rowCount * columnCount) {
@@ -355,10 +351,6 @@ class Float32Matrix
   @override
   Vector getColumn(int index) {
     if (_colCache[index] == null) {
-      if (!hasData) {
-        throw Exception('Matrix is empty');
-      }
-
       final column = Float32List(rowCount);
 
       for (var i = 0; i < rowCount; i++) {

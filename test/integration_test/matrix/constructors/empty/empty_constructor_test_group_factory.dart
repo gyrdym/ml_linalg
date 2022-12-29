@@ -31,13 +31,13 @@ void matrixEmptyConstructorTestGroupFactory(DType dtype) =>
             'access its elements by index', () {
           final matrix = Matrix.empty(dtype: dtype);
 
-          expect(() => matrix.getRow(0), throwsException);
-          expect(() => matrix.getRow(10), throwsException);
-          expect(() => matrix[0], throwsException);
-          expect(() => matrix[10], throwsException);
+          expect(() => matrix.getRow(0), throwsRangeError);
+          expect(() => matrix.getRow(10), throwsRangeError);
+          expect(() => matrix[0], throwsRangeError);
+          expect(() => matrix[10], throwsRangeError);
 
-          expect(() => matrix.getColumn(0), throwsException);
-          expect(() => matrix.getColumn(20), throwsException);
+          expect(() => matrix.getColumn(0), throwsRangeError);
+          expect(() => matrix.getColumn(20), throwsRangeError);
 
           expect(matrix.dtype, dtype);
         });
