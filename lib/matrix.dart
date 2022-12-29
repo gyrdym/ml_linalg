@@ -174,7 +174,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   }
 
   /// Creates a matrix from flattened list of length equal to
-  /// [rowCount] * [colCount]
+  /// [rowCount] * [columnCount]
   ///
   /// A simple usage example:
   ///
@@ -200,22 +200,22 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.fromFlattenedList(
     List<double> source,
     int rowCount,
-    int colCount, {
+    int columnCount, {
     DType dtype = DType.float32,
   }) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.fromFlattenedList(source, rowCount, colCount);
+        return Float32Matrix.fromFlattenedList(source, rowCount, columnCount);
 
       case DType.float64:
-        return Float64Matrix.fromFlattenedList(source, rowCount, colCount);
+        return Float64Matrix.fromFlattenedList(source, rowCount, columnCount);
 
       default:
         throw UnimplementedMatrixException(dtype);
     }
   }
 
-  /// Creates a matrix from byte data of [rowCount] * [colCount] elements
+  /// Creates a matrix from byte data of [rowCount] * [columnCount] elements
   ///
   /// A simple usage example:
   ///
@@ -246,15 +246,15 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   factory Matrix.fromByteData(
     ByteData data,
     int rowCount,
-    int colCount, {
+    int columnCount, {
     DType dtype = DType.float32,
   }) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.fromByteData(data, rowCount, colCount);
+        return Float32Matrix.fromByteData(data, rowCount, columnCount);
 
       case DType.float64:
-        return Float64Matrix.fromByteData(data, rowCount, colCount);
+        return Float64Matrix.fromByteData(data, rowCount, columnCount);
 
       default:
         throw UnimplementedMatrixException(dtype);
@@ -413,19 +413,19 @@ abstract class Matrix implements Iterable<Iterable<double>> {
     }
   }
 
-  /// Returns randomly filled matrix of [rowCount]x[colCount] dimension
-  factory Matrix.random(int rowCount, int colCount,
+  /// Returns randomly filled matrix of [rowCount]x[columnCount] dimension
+  factory Matrix.random(int rowCount, int columnCount,
       {DType dtype = DType.float32,
       num min = -1000,
       num max = 1000,
       int? seed}) {
     switch (dtype) {
       case DType.float32:
-        return Float32Matrix.random(dtype, rowCount, colCount,
+        return Float32Matrix.random(dtype, rowCount, columnCount,
             min: min, max: max, seed: seed);
 
       case DType.float64:
-        return Float64Matrix.random(dtype, rowCount, colCount,
+        return Float64Matrix.random(dtype, rowCount, columnCount,
             min: min, max: max, seed: seed);
 
       default:
