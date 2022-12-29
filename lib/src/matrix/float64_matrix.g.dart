@@ -27,7 +27,7 @@ import 'package:ml_linalg/src/matrix/helper/get_length_of_first_or_zero.dart';
 import 'package:ml_linalg/src/matrix/helper/get_zero_based_indices.dart';
 import 'package:ml_linalg/src/matrix/iterator/float64_matrix_iterator.g.dart';
 import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
-import 'package:ml_linalg/src/matrix/mixin/matrix_validator_mixin.dart';
+import 'package:ml_linalg/src/matrix/mixin/matrix_shape_validation_mixin.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:quiver/iterables.dart';
@@ -36,7 +36,7 @@ const _bytesPerElement = Float64List.bytesPerElement;
 const _simdSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
 
 class Float64Matrix
-    with IterableMixin<Iterable<double>>, MatrixValidatorMixin
+    with IterableMixin<Iterable<double>>, MatrixShapeValidationMixin
     implements Matrix {
   Float64Matrix.fromList(List<List<double>> source)
       : rowCount = get2dIterableLength(source),
@@ -666,7 +666,8 @@ class Float64Matrix
 
   @override
   Matrix multiply(Matrix other) {
-    checkShape(this, other, errorMessage: 'Cannot find Hadamard product');
+    validateMatricesShapeEquality(this, other,
+        errorMessage: 'Cannot find Hadamard product');
 
     return _areAllRowsCached
         ? Matrix.fromRows(
@@ -968,7 +969,7 @@ class Float64Matrix
   }
 
   Matrix _matrixMul(Matrix matrix) {
-    checkColumnsAndRowsNumber(this, matrix);
+    validateMatricesMultEligibility(this, matrix);
 
     final source = List.generate(rowCount, (i) => getRow(i) * matrix);
 
@@ -992,7 +993,7 @@ class Float64Matrix
   }
 
   Matrix _matrixByMatrixDiv(Matrix other) {
-    checkShape(this, other,
+    validateMatricesShapeEquality(this, other,
         errorMessage: 'Cannot perform matrix by matrix '
             'division');
 
@@ -1007,7 +1008,8 @@ class Float64Matrix
   }
 
   Matrix _matrixAdd(Matrix other) {
-    checkShape(this, other, errorMessage: 'Cannot perform matrix addition');
+    validateMatricesShapeEquality(this, other,
+        errorMessage: 'Cannot perform matrix addition');
 
     if (other is Float64Matrix) {
       final result = _createEmptySimdList();
@@ -1038,7 +1040,8 @@ class Float64Matrix
   }
 
   Matrix _matrixSub(Matrix other) {
-    checkShape(this, other, errorMessage: 'Cannot perform matrix subtraction');
+    validateMatricesShapeEquality(this, other,
+        errorMessage: 'Cannot perform matrix subtraction');
 
     if (other is Float64Matrix) {
       final result = _createEmptySimdList();
