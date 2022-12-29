@@ -107,7 +107,8 @@ class Float32Matrix
     }
   }
 
-  Float32Matrix.fromFlattened(List<double> source, int rowCount, int colCount)
+  Float32Matrix.fromFlattenedList(
+      List<double> source, int rowCount, int colCount)
       : rowCount = rowCount,
         columnCount = colCount,
         rowIndices = getZeroBasedIndices(rowCount),

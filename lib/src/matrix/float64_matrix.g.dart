@@ -110,7 +110,8 @@ class Float64Matrix
     }
   }
 
-  Float64Matrix.fromFlattened(List<double> source, int rowCount, int colCount)
+  Float64Matrix.fromFlattenedList(
+      List<double> source, int rowCount, int colCount)
       : rowCount = rowCount,
         columnCount = colCount,
         rowIndices = getZeroBasedIndices(rowCount),
