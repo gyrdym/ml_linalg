@@ -499,7 +499,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Returns a lazy iterable of column vectors of the matrix
   Iterable<Vector> get columns;
 
-  /// Returns a number of matrix row
+  /// Returns a number of matrix rows
   int get rowCount;
 
   /// Returns a number of matrix columns
@@ -529,7 +529,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Runtime type can be Float32List or Float64List, it depends on the [dtype]
   List<double> get asFlattenedList;
 
-  /// Returns a number of matrix row
+  /// Returns a number of matrix rows
   @Deprecated('use "rowCount" instead')
   int get rowsNum;
 
