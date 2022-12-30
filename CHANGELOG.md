@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.14
+- Benchmarks:
+  - Added new baseline scenarios for List-List addition
+
 ## 13.11.13
 - Matrix: 
   - Little optimization for 'getRow' and 'getColumn'
