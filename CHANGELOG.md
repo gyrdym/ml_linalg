@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.15
+- Matrix:
+  - Flattened SIMD list length fixed
+
 ## 13.11.14
 - Benchmarks:
   - Added new baseline scenarios for List-List addition
