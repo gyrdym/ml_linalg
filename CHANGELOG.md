@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.13
+- Matrix: 
+  - Little optimization for 'getRow' and 'getColumn'
+
 ## 13.11.12
 - Matrix:
   - SIMD used in matrix-matrix operations => performance improved for a lot of operations
