@@ -481,7 +481,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     if (vector is Float64x2Vector) {
       final firstList = _getSimdList();
       final secondList = vector._getSimdList();
-      var sum = Float64x2(0, 0);
+      var sum = Float64x2.zero();
 
       for (var i = 0; i < _numOfBuckets; i++) {
         sum += firstList[i] * secondList[i];
