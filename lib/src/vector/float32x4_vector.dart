@@ -478,7 +478,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     if (vector is Float32x4Vector) {
       final firstList = _getSimdList();
       final secondList = vector._getSimdList();
-      var sum = Float32x4(0, 0, 0, 0);
+      var sum = Float32x4.zero();
 
       for (var i = 0; i < _numOfBuckets; i++) {
         sum += firstList[i] * secondList[i];

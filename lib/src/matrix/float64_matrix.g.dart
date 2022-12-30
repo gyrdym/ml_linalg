@@ -216,6 +216,9 @@ class Float64Matrix
   final Float64List _flattenedList;
   final _cache = CacheManagerImpl(matrixCacheKeys);
 
+  Float64x2List? _cachedSimdList;
+  Float64x2? _lastSimd;
+
   @override
   Iterator<Iterable<double>> get iterator =>
       Float64MatrixIterator(_flattenedList, rowCount, columnCount);
@@ -333,17 +336,13 @@ class Float64Matrix
 
   @override
   Vector getRow(int index) {
-    if (!hasData) {
-      throw Exception('Matrix is empty');
-    }
-
-    final indexFrom = index * columnCount;
-
-    if (indexFrom >= rowCount * columnCount) {
-      throw RangeError.range(indexFrom, 0, rowCount * columnCount);
-    }
-
     if (_rowCache[index] == null) {
+      final indexFrom = index * columnCount;
+
+      if (indexFrom >= rowCount * columnCount) {
+        throw RangeError.range(indexFrom, 0, rowCount * columnCount);
+      }
+
       final values = _flattenedList.sublist(indexFrom, indexFrom + columnCount);
 
       _rowCache[index] = Vector.fromList(values, dtype: dtype);
@@ -354,10 +353,6 @@ class Float64Matrix
 
   @override
   Vector getColumn(int index) {
-    if (!hasData) {
-      throw Exception('Matrix is empty');
-    }
-
     if (_colCache[index] == null) {
       final column = Float64List(rowCount);
 
@@ -1194,8 +1189,4 @@ class Float64Matrix
 
     return _cachedSimdList!;
   }
-
-  Float64x2List? _cachedSimdList;
-
-  Float64x2? _lastSimd;
 }
