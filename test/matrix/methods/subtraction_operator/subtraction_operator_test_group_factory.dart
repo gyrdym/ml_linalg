@@ -119,10 +119,10 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
           final actual = result + matrix2;
 
           expect(actual, equals(matrix1));
-          expect(result.rowCount, 5);
-          expect(result.columnCount, 3);
-          expect(result.dtype, dtype);
-          expect(result, isNot(same(matrix1)));
+          expect(actual.rowCount, 5);
+          expect(actual.columnCount, 3);
+          expect(actual.dtype, dtype);
+          expect(actual, isNot(same(matrix1)));
         });
 
         test('should subtract 5x5 matrix from another 5x5 matrix', () {
