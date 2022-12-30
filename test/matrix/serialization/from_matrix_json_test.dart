@@ -4,7 +4,7 @@ import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 import 'package:test/test.dart';
 
-import '../../../helpers.dart';
+import '../../helpers.dart';
 
 void main() {
   group('fromMatrixJson', () {
