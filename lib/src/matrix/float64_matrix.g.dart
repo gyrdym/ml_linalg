@@ -1184,7 +1184,8 @@ class Float64Matrix
         _lastSimd = Float64x2(x, y);
       }
 
-      _cachedSimdList = _flattenedList.buffer.asFloat64x2List();
+      _cachedSimdList =
+          _flattenedList.buffer.asFloat64x2List(0, realLength ~/ _simdSize);
     }
 
     return _cachedSimdList!;
