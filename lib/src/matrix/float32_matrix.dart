@@ -1181,7 +1181,8 @@ class Float32Matrix
         _lastSimd = Float32x4(x, y, z, 0.0);
       }
 
-      _cachedSimdList = _flattenedList.buffer.asFloat32x4List();
+      _cachedSimdList =
+          _flattenedList.buffer.asFloat32x4List(0, realLength ~/ _simdSize);
     }
 
     return _cachedSimdList!;
