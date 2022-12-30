@@ -19,8 +19,8 @@ import 'vector/float32/vector_operations/float32x4_vector_sqrt.dart';
 import 'vector/float32/vector_operations/float32x4_vector_sum.dart';
 import 'vector/float32/vector_operations/float32x4_vector_pow.dart';
 import 'vector/float32/vector_operations/float32x4_vector_unique.dart';
-import 'vector/float32/vector_operations/float32x4_vector_vector_addition.dart';
-import 'vector/float32/vector_operations/float32x4_vector_vector_multiplication.dart';
+import 'vector/float32/vector_operations/float32x4_vector32_vector32_addition.dart';
+import 'vector/float32/vector_operations/float32x4_vector32_vector32_multiplication.dart';
 
 void main() {
   // Vector's benchmarks
