@@ -3,32 +3,35 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
-import '../../../../dtype_to_title.dart';
+import '../../../dtype_to_title.dart';
 
-void matrixFromRowsConstructorTestGroupFactory(DType dtype) =>
+void matrixFromColumnsConstructorTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
-      group('fromRows constructor', () {
+      group('fromColumns constructor', () {
         test(
             'should create an instance with predefined vectors as matrix '
-            'rows', () {
-          final actual = Matrix.fromRows([
+            'columns', () {
+          final actual = Matrix.fromColumns([
             Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype),
             Vector.fromList([6.0, 7.0, 8.0, 9.0, 0.0], dtype: dtype),
           ], dtype: dtype);
 
           final expected = [
-            [1.0, 2.0, 3.0, 4.0, 5.0],
-            [6.0, 7.0, 8.0, 9.0, 0.0],
+            [1.0, 6.0],
+            [2.0, 7.0],
+            [3.0, 8.0],
+            [4.0, 9.0],
+            [5.0, 0.0],
           ];
 
           expect(actual, equals(expected));
-          expect(actual.rowCount, 2);
-          expect(actual.columnCount, 5);
+          expect(actual.rowCount, 5);
+          expect(actual.columnCount, 2);
           expect(actual.dtype, dtype);
         });
 
         test('should create an instance based on an empty list', () {
-          final actual = Matrix.fromRows([], dtype: dtype);
+          final actual = Matrix.fromColumns([], dtype: dtype);
           final expected = <double>[];
 
           expect(actual, equals(expected));
@@ -46,7 +49,8 @@ void matrixFromRowsConstructorTestGroupFactory(DType dtype) =>
             Vector.fromList([9, 8, 7], dtype: dtype),
           ];
 
-          expect(() => Matrix.fromRows(source, dtype: dtype), throwsException);
+          expect(
+              () => Matrix.fromColumns(source, dtype: dtype), throwsException);
         });
 
         test('should not use reference to a source list for the cache ', () {
@@ -55,12 +59,16 @@ void matrixFromRowsConstructorTestGroupFactory(DType dtype) =>
             Vector.fromList([1, 2, 3], dtype: dtype),
             Vector.fromList([9, 8, 7], dtype: dtype),
           ];
-          final matrix1 = Matrix.fromRows(source, dtype: dtype);
+          final matrix1 = Matrix.fromColumns(source, dtype: dtype);
 
           source[1] = Vector.fromList([100, 200, 300], dtype: dtype);
 
-          final matrix2 = Matrix.fromRows(source, dtype: dtype);
-          final result = matrix1 + matrix2;
+          final matrix2 = Matrix.fromColumns(source, dtype: dtype);
+          final result = [
+            matrix1.getColumn(0) + matrix2.getColumn(0),
+            matrix1.getColumn(1) + matrix2.getColumn(1),
+            matrix1.getColumn(2) + matrix2.getColumn(2),
+          ];
 
           expect(result, [
             [2, 4, 6],

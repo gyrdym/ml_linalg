@@ -4,7 +4,7 @@ import 'package:ml_linalg/src/common/dtype_serializer/dtype_to_json.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_json_keys.dart';
 import 'package:test/test.dart';
 
-import '../../../../dtype_to_title.dart';
+import '../../../dtype_to_title.dart';
 
 void matrixFromJsonTestGroupFactory(DType dtype) {
   group(dtypeToMatrixTestTitle[dtype], () {
