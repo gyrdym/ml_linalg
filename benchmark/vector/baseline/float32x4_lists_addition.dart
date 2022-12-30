@@ -10,7 +10,7 @@ const amountOfElements = 10000000 ~/ 4;
 class RegularListsAdditionBenchmark extends BenchmarkBase {
   RegularListsAdditionBenchmark()
       : super('Regular lists addition; '
-      '$amountOfElements elements');
+            '$amountOfElements elements');
 
   late Float32x4List list1;
   late Float32x4List list2;
@@ -33,10 +33,20 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
     final generator = Random(13);
 
     list1 = Float32x4List.fromList(List.generate(
-        amountOfElements, (_) => Float32x4(generator.nextDouble() * 2000 - 1000, generator.nextDouble() * 2000 - 1000, generator.nextDouble() * 2000 - 1000, generator.nextDouble() * 2000 - 1000)));
+        amountOfElements,
+        (_) => Float32x4(
+            generator.nextDouble() * 2000 - 1000,
+            generator.nextDouble() * 2000 - 1000,
+            generator.nextDouble() * 2000 - 1000,
+            generator.nextDouble() * 2000 - 1000)));
 
     list2 = Float32x4List.fromList(List.generate(
-        amountOfElements, (_) => Float32x4(generator.nextDouble() * 2000 - 1000, generator.nextDouble() * 2000 - 1000, generator.nextDouble() * 2000 - 1000, generator.nextDouble() * 2000 - 1000)));
+        amountOfElements,
+        (_) => Float32x4(
+            generator.nextDouble() * 2000 - 1000,
+            generator.nextDouble() * 2000 - 1000,
+            generator.nextDouble() * 2000 - 1000,
+            generator.nextDouble() * 2000 - 1000)));
   }
 }
 

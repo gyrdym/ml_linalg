@@ -10,7 +10,7 @@ const amountOfElements = 10000000;
 class RegularListsAdditionBenchmark extends BenchmarkBase {
   RegularListsAdditionBenchmark()
       : super('Regular lists addition; '
-      '$amountOfElements elements');
+            '$amountOfElements elements');
 
   late Float32List list1;
   late Float32List list2;
