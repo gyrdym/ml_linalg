@@ -99,8 +99,6 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
         test(
             'should subtract 5x3 matrix from another 5x3 matrix and restore original matrix',
             () {
-          print('!======');
-
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0],
             [4.0, 10, 5.0],
@@ -119,8 +117,6 @@ void matrixSubtractionOperatorTestGroupFactory(DType dtype) =>
 
           final result = matrix1 - matrix2;
           final actual = result + matrix2;
-
-          print('!======');
 
           expect(actual, equals(matrix1));
           expect(result.rowCount, 5);
