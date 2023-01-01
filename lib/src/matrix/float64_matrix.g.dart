@@ -244,6 +244,8 @@ class Float64Matrix
   @override
   List<double> get asFlattenedList => _flattenedList;
 
+  int get elementCount => rowCount * columnCount;
+
   @override
   Matrix operator +(Object value) {
     if (value is Matrix) {
@@ -320,17 +322,16 @@ class Float64Matrix
 
   @override
   Matrix transpose() {
-    final list = _flattenedList;
-    final source = Float64List(columnCount * rowCount);
+    final transposed = Float64List(elementCount);
 
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0; i < transposed.length; i++) {
       final rowIdx = i ~/ columnCount;
       final colIdx = i - columnCount * rowIdx;
 
-      source[colIdx * rowCount + rowIdx] = list[i];
+      transposed[colIdx * rowCount + rowIdx] = _flattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(source, columnCount, rowCount,
+    return Matrix.fromFlattenedList(transposed, columnCount, rowCount,
         dtype: dtype);
   }
 
