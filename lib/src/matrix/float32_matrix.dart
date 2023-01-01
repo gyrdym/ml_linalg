@@ -370,10 +370,20 @@ class Float32Matrix
     Iterable<int> columnIndices = const [],
   }) {
     if (rowIndices.isNotEmpty) {
-      final maxRowIdx = quiver.max(rowIndices);
+      var maxRowIdx = 0;
+      var minRowIdx = 0;
 
-      if (maxRowIdx != null && maxRowIdx >= rowCount) {
+      rowIndices.forEach((idx) {
+        maxRowIdx = idx > maxRowIdx ? idx : maxRowIdx;
+        minRowIdx = idx < minRowIdx ? idx : minRowIdx;
+      });
+
+      if (maxRowIdx >= rowCount) {
         throw RangeError.range(maxRowIdx, 0, rowCount - 1);
+      }
+
+      if (minRowIdx < 0) {
+        throw RangeError.range(minRowIdx, 0, rowCount - 1);
       }
     }
 
@@ -405,10 +415,10 @@ class Float32Matrix
     final sampled = Float32List(sampledRowCount * sampledColCount);
 
     for (var i = 0; i < sampled.length; i++) {
-      final rowIdx = i ~/ sampledColCount;
-      final colIdx = i - sampledColCount * rowIdx;
-      final thisRowIdx = rowIndicesAsList[rowIdx];
-      final thisColIdx = colIndicesAsList[colIdx];
+      final sampledRowIdx = i ~/ sampledColCount;
+      final sampledColIdx = i - sampledColCount * sampledRowIdx;
+      final thisRowIdx = rowIndicesAsList[sampledRowIdx];
+      final thisColIdx = colIndicesAsList[sampledColIdx];
 
       sampled[i] = _flattenedList[thisRowIdx * columnCount + thisColIdx];
     }
