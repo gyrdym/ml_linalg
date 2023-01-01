@@ -229,8 +229,6 @@ class Float32Matrix
   @override
   int get columnsNum => columnCount;
 
-  int get elementCount => rowCount * columnCount;
-
   @override
   bool get isSquare => columnCount == rowCount;
 
@@ -242,6 +240,8 @@ class Float32Matrix
 
   @override
   List<double> get asFlattenedList => _flattenedList;
+
+  int get elementCount => rowCount * columnCount;
 
   @override
   Matrix operator +(Object value) {
@@ -319,14 +319,13 @@ class Float32Matrix
 
   @override
   Matrix transpose() {
-    final list = _flattenedList;
     final source = Float32List(elementCount);
 
     for (var i = 0; i < source.length; i++) {
       final rowIdx = i ~/ columnCount;
       final colIdx = i - columnCount * rowIdx;
 
-      source[colIdx * rowCount + rowIdx] = list[i];
+      source[colIdx * rowCount + rowIdx] = _flattenedList[i];
     }
 
     return Matrix.fromFlattenedList(source, columnCount, rowCount,
