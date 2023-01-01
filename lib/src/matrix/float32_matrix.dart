@@ -319,16 +319,16 @@ class Float32Matrix
 
   @override
   Matrix transpose() {
-    final source = Float32List(elementCount);
+    final result = Float32List(elementCount);
 
-    for (var i = 0; i < source.length; i++) {
+    for (var i = 0; i < result.length; i++) {
       final rowIdx = i ~/ columnCount;
       final colIdx = i - columnCount * rowIdx;
 
-      source[colIdx * rowCount + rowIdx] = _flattenedList[i];
+      result[colIdx * rowCount + rowIdx] = _flattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(source, columnCount, rowCount,
+    return Matrix.fromFlattenedList(result, columnCount, rowCount,
         dtype: dtype);
   }
 
