@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.18
+- Matrix:
+  - `mapElements` method speed up
+
 ## 13.11.17
 - Matrix: 
   - `sample` method speed up
