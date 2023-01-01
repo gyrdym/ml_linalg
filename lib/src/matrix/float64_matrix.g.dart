@@ -322,16 +322,16 @@ class Float64Matrix
 
   @override
   Matrix transpose() {
-    final result = Float64List(elementCount);
+    final transposed = Float64List(elementCount);
 
-    for (var i = 0; i < result.length; i++) {
+    for (var i = 0; i < transposed.length; i++) {
       final rowIdx = i ~/ columnCount;
       final colIdx = i - columnCount * rowIdx;
 
-      result[colIdx * rowCount + rowIdx] = _flattenedList[i];
+      transposed[colIdx * rowCount + rowIdx] = _flattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(result, columnCount, rowCount,
+    return Matrix.fromFlattenedList(transposed, columnCount, rowCount,
         dtype: dtype);
   }
 
