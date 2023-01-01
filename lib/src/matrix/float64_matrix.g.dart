@@ -398,19 +398,19 @@ class Float64Matrix
       }
     }
 
-    final rowIndicesList = (rowIndices.isEmpty ? this.rowIndices : rowIndices)
+    final rowIndicesAsList = (rowIndices.isEmpty ? this.rowIndices : rowIndices)
         .toList(growable: false);
     final colIndicesAsList =
         (columnIndices.isEmpty ? this.columnIndices : columnIndices)
             .toList(growable: false);
-    final sampledRowCount = rowIndicesList.length;
+    final sampledRowCount = rowIndicesAsList.length;
     final sampledColCount = colIndicesAsList.length;
     final sampled = Float64List(sampledRowCount * sampledColCount);
 
     for (var i = 0; i < sampled.length; i++) {
       final rowIdx = i ~/ sampledColCount;
       final colIdx = i - sampledColCount * rowIdx;
-      final thisRowIdx = rowIndicesList[rowIdx];
+      final thisRowIdx = rowIndicesAsList[rowIdx];
       final thisColIdx = colIndicesAsList[colIdx];
 
       sampled[i] = _flattenedList[thisRowIdx * columnCount + thisColIdx];
