@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.16
+- Matrix:
+  - `transpose` method fixed for oversized flattened list
+
 ## 13.11.15
 - Matrix:
   - Flattened SIMD list length fixed
