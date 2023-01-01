@@ -232,6 +232,8 @@ class Float64Matrix
   @override
   int get columnsNum => columnCount;
 
+  int get elementCount => rowCount * columnCount;
+
   @override
   bool get isSquare => columnCount == rowCount;
 
@@ -321,9 +323,9 @@ class Float64Matrix
   @override
   Matrix transpose() {
     final list = _flattenedList;
-    final source = Float64List(columnCount * rowCount);
+    final source = Float64List(elementCount);
 
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0; i < source.length; i++) {
       final rowIdx = i ~/ columnCount;
       final colIdx = i - columnCount * rowIdx;
 
