@@ -36,7 +36,7 @@ void matrixSampleTestGroupFactory(DType dtype) =>
         });
 
         test(
-            'should create a new matrix from the diffrent segments of the '
+            'should create a new matrix from the different segments of the '
             'original matrix even if there are repeating row indices in '
             '`rowIndices` parameter', () {
           final matrix = Matrix.fromList([

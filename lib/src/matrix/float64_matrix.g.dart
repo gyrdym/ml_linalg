@@ -30,7 +30,7 @@ import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_shape_validation_mixin.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
-import 'package:quiver/iterables.dart';
+import 'package:quiver/iterables.dart' as quiver;
 
 const _bytesPerElement = Float64List.bytesPerElement;
 const _simdSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
@@ -372,18 +372,44 @@ class Float64Matrix
     Iterable<int> rowIndices = const [],
     Iterable<int> columnIndices = const [],
   }) {
-    final indices = rowIndices.isEmpty
-        ? count(0).take(rowCount).map((i) => i.toInt())
-        : rowIndices;
-    final targetMatrixSource = indices.map((index) {
-      final sourceRow = getRow(index);
+    if (rowIndices.isNotEmpty) {
+      final rowIndicesAsSet = Set<int>.from(rowIndices);
+      final maxRowIdx = quiver.max(rowIndicesAsSet);
 
-      return columnIndices.isEmpty
-          ? sourceRow
-          : sourceRow.sample(columnIndices);
-    }).toList(growable: false);
+      if (maxRowIdx != null && maxRowIdx >= rowCount) {
+        throw RangeError.range(maxRowIdx, 0, rowCount - 1);
+      }
+    }
 
-    return Matrix.fromRows(targetMatrixSource, dtype: dtype);
+    if (columnIndices.isNotEmpty) {
+      final colIndicesAsSet = Set<int>.from(columnIndices);
+      final maxColIdx = quiver.max(colIndicesAsSet);
+
+      if (maxColIdx != null && maxColIdx >= columnCount) {
+        throw RangeError.range(maxColIdx, 0, columnCount - 1);
+      }
+    }
+
+    final rowIndicesList = (rowIndices.isEmpty ? this.rowIndices : rowIndices)
+        .toList(growable: false);
+    final colIndicesAsList =
+        (columnIndices.isEmpty ? this.columnIndices : columnIndices)
+            .toList(growable: false);
+    final sampledRowCount = rowIndicesList.length;
+    final sampledColCount = colIndicesAsList.length;
+    final sampled = Float64List(sampledRowCount * sampledColCount);
+
+    for (var i = 0; i < sampled.length; i++) {
+      final rowIdx = i ~/ sampledColCount;
+      final colIdx = i - sampledColCount * rowIdx;
+      final thisRowIdx = rowIndicesList[rowIdx];
+      final thisColIdx = colIndicesAsList[colIdx];
+
+      sampled[i] = _flattenedList[thisRowIdx * columnCount + thisColIdx];
+    }
+
+    return Matrix.fromFlattenedList(sampled, sampledRowCount, sampledColCount,
+        dtype: dtype);
   }
 
   @override
@@ -561,8 +587,10 @@ class Float64Matrix
   @override
   Matrix insertColumns(int targetIndex, List<Vector> columns) {
     final columnsIterator = columns.iterator;
-    final indices =
-        count(0).take(columnCount + columns.length).map((i) => i.toInt());
+    final indices = quiver
+        .count(0)
+        .take(columnCount + columns.length)
+        .map((i) => i.toInt());
     final newColumns = indices.map((index) {
       if (index < targetIndex) {
         return getColumn(index);
@@ -667,12 +695,14 @@ class Float64Matrix
 
     return _areAllRowsCached
         ? Matrix.fromRows(
-            zip([rows, other.rows])
+            quiver
+                .zip([rows, other.rows])
                 .map((pair) => pair.first * pair.last)
                 .toList(),
             dtype: dtype)
         : Matrix.fromColumns(
-            zip([columns, other.columns])
+            quiver
+                .zip([columns, other.columns])
                 .map((pair) => pair.first * pair.last)
                 .toList(),
             dtype: dtype);
