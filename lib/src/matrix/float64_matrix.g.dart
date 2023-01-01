@@ -381,10 +381,20 @@ class Float64Matrix
     }
 
     if (columnIndices.isNotEmpty) {
-      final maxColIdx = quiver.max(columnIndices);
+      var maxColIdx = 0;
+      var minColIdx = 0;
 
-      if (maxColIdx != null && maxColIdx >= columnCount) {
+      columnIndices.forEach((idx) {
+        maxColIdx = idx > maxColIdx ? idx : maxColIdx;
+        minColIdx = idx < minColIdx ? idx : minColIdx;
+      });
+
+      if (maxColIdx >= columnCount) {
         throw RangeError.range(maxColIdx, 0, columnCount - 1);
+      }
+
+      if (minColIdx < 0) {
+        throw RangeError.range(minColIdx, 0, columnCount - 1);
       }
     }
 
