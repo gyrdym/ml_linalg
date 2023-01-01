@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.17
+- Matrix: 
+  - `sample` method speed up
+
 ## 13.11.16
 - Matrix:
   - `transpose` method fixed for oversized flattened list

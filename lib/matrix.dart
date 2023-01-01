@@ -581,6 +581,80 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   Matrix transpose();
 
   /// Samples a new [Matrix] from parts of this [Matrix]
+  ///
+  /// Usage examples:
+  ///
+  /// - Create a new matrix from rows of the original matrix:
+  ///
+  /// ```dart
+  /// import 'package:ml_linalg/matrix.dart';
+  ///
+  /// void main() {
+  ///   final matrix = Matrix.fromList([
+  ///     [10, 20, 30, 40, 50],
+  ///     [22, 33, 44, 55, 66],
+  ///     [11, 89, 79, 69, 59],
+  ///   ]);
+  ///   final sampled = matrix.sample(rowIndices: [0, 2, 1, 1]);
+  ///
+  ///   print(sampled);
+  ///   // [
+  ///   //   [10, 20, 30, 40, 50],
+  ///   //   [11, 89, 79, 69, 59],
+  ///   //   [22, 33, 44, 55, 66],
+  ///   //   [22, 33, 44, 55, 66],
+  ///   // ]
+  ///   //
+  /// }
+  /// ```
+  ///
+  /// - Create a new matrix from columns of the original matrix:
+  ///
+  /// ```dart
+  /// import 'package:ml_linalg/matrix.dart';
+  ///
+  /// void main() {
+  ///   final matrix = Matrix.fromList([
+  ///     [10, 20, 30, 40, 50],
+  ///     [22, 33, 44, 55, 66],
+  ///     [11, 89, 79, 69, 59],
+  ///   ]);
+  ///   final sampled = matrix.sample(columnIndices: [4, 4, 2]);
+  ///
+  ///   print(sampled);
+  ///   // [
+  ///   //   [50, 50, 30],
+  ///   //   [66, 66, 44],
+  ///   //   [59, 59, 79],
+  ///   // ]
+  ///   //
+  /// }
+  /// ```
+  ///
+  /// - Create a new matrix from both rows and columns of the original matrix:
+  ///
+  /// ```dart
+  /// import 'package:ml_linalg/matrix.dart';
+  ///
+  /// void main() {
+  ///   final matrix = Matrix.fromList([
+  ///     [10, 20, 30, 40, 50],
+  ///     [22, 33, 44, 55, 66],
+  ///     [11, 89, 79, 69, 59],
+  ///   ]);
+  ///   final sampled = matrix.sample(
+  ///     rowIndices: [1, 1],
+  ///     columnIndices: [4, 4, 2],
+  ///   );
+  ///
+  ///   print(sampled);
+  ///   // [
+  ///   //   [66, 66, 44],
+  ///   //   [66, 66, 44],
+  ///   // ]
+  ///   //
+  /// }
+  /// ```
   Matrix sample({
     Iterable<int> rowIndices,
     Iterable<int> columnIndices,
