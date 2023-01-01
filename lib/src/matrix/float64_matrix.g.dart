@@ -373,8 +373,7 @@ class Float64Matrix
     Iterable<int> columnIndices = const [],
   }) {
     if (rowIndices.isNotEmpty) {
-      final rowIndicesAsSet = Set<int>.from(rowIndices);
-      final maxRowIdx = quiver.max(rowIndicesAsSet);
+      final maxRowIdx = quiver.max(rowIndices);
 
       if (maxRowIdx != null && maxRowIdx >= rowCount) {
         throw RangeError.range(maxRowIdx, 0, rowCount - 1);
@@ -382,8 +381,7 @@ class Float64Matrix
     }
 
     if (columnIndices.isNotEmpty) {
-      final colIndicesAsSet = Set<int>.from(columnIndices);
-      final maxColIdx = quiver.max(colIndicesAsSet);
+      final maxColIdx = quiver.max(columnIndices);
 
       if (maxColIdx != null && maxColIdx >= columnCount) {
         throw RangeError.range(maxColIdx, 0, columnCount - 1);
