@@ -631,7 +631,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// }
   /// ```
   ///
-  /// - Create a new matrix from both row and columns of the original matrix:
+  /// - Create a new matrix from both rows and columns of the original matrix:
   ///
   /// ```dart
   /// import 'package:ml_linalg/matrix.dart';
