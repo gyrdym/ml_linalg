@@ -450,10 +450,16 @@ class Float32Matrix
       );
 
   @override
-  Matrix mapElements(double Function(double element) mapper) =>
-      _areAllRowsCached
-          ? mapRows((row) => row.mapToVector(mapper))
-          : mapColumns((column) => column.mapToVector(mapper));
+  Matrix mapElements(double Function(double element) mapper) {
+    final mapped = Float32List(elementCount);
+
+    for (var i = 0; i < mapped.length; i++) {
+      mapped[i] = mapper(_flattenedList[i]);
+    }
+
+    return Matrix.fromFlattenedList(mapped, rowCount, columnCount,
+        dtype: dtype);
+  }
 
   @override
   Matrix mapColumns(Vector Function(Vector columns) mapper) =>
