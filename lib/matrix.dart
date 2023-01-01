@@ -649,8 +649,8 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   ///
   ///   print(sampled);
   ///   // [
-  ///   //   [66, 44],
-  ///   //   [66, 44],
+  ///   //   [66, 66, 44],
+  ///   //   [66, 66, 44],
   ///   // ]
   ///   //
   /// }
