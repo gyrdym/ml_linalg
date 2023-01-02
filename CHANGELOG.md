@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.19
+- Matrix:
+  - `norm` method speed up (frobenius case)
+
 ## 13.11.18
 - Matrix:
   - `mapElements` method speed up
