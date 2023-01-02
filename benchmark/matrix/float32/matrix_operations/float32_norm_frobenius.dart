@@ -8,7 +8,8 @@ const numOfRows = 10001;
 const numOfColumns = 10001;
 
 class Float32MatrixNormBenchmark extends BenchmarkBase {
-  Float32MatrixNormBenchmark() : super('Matrix float32 norm method');
+  Float32MatrixNormBenchmark()
+      : super('Matrix float32 norm (frobenius) method');
 
   final Matrix _source =
       Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 12);
