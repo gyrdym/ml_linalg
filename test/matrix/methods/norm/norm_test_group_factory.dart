@@ -170,7 +170,7 @@ void matrixNormTestGroupFactory(DType dtype) =>
             2,
             3,
             4,
-          ], 9, 2, dtype: dtype);
+          ], 2, 9, dtype: dtype);
 
           final norm = matrix.norm(MatrixNorm.frobenius);
           final expected = 24.2693;
