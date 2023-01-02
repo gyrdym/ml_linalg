@@ -180,7 +180,7 @@ void matrixNormTestGroupFactory(DType dtype) =>
         });
 
         test(
-            'should find a frobenius norm, 2x9 matrix, fromFlattenedList constructor, the source list has more elements than needed',
+            'should find a frobenius norm, 9x2 matrix, fromFlattenedList constructor, the source list has more elements than needed',
             () {
           final matrix = Matrix.fromFlattenedList([
             1,
