@@ -618,7 +618,7 @@ class Float32Matrix
     }
 
     if (_lastSimd != null) {
-      summed += _lastSimd!;
+      summed += _lastSimd! * _lastSimd!;
     }
 
     return math.sqrt(_simdHelper.sumLanes(summed));
