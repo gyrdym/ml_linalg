@@ -10,7 +10,7 @@ final _defaultMapping = {
   // First, replace imports and names for float32x4 data type, then replace imports and names for float32 data type
   RegExp('\/float32x4([^/]*)\.dart'): (Match match) {
     if (excludedImports.contains(match.group(0))) {
-      return match.group(0)!;
+      return '/float64x2${match.group(1)}.dart';
     }
 
     return '/float64x2${match.group(1)}.g.dart';
