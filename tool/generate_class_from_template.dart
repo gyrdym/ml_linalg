@@ -3,12 +3,18 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
+const excludedImports = ['/float32x4_helper.dart'];
+
 final _defaultMapping = {
   // Order is important!
   // First, replace imports and names for float32x4 data type, then replace imports and names for float32 data type
+  RegExp('\/float32x4([^/]*)\.dart'): (Match match) {
+    if (excludedImports.contains(match.group(0))) {
+      return '/float64x2${match.group(1)}.dart';
+    }
 
-  RegExp('\/float32x4([^/]*)\.dart'): (Match match) =>
-      '/float64x2${match.group(1)}.g.dart',
+    return '/float64x2${match.group(1)}.g.dart';
+  },
 
   RegExp(r'Float32x4\(\s*(.*),\s*(.*),\s*(.*),\s*(.*)\s*\)'): (Match match) =>
       'Float64x2(${match.group(1)}, ${match.group(2)})',

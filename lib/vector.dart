@@ -4,11 +4,11 @@ import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory_impl.dart';
+import 'package:ml_linalg/src/common/simd_helper/float32x4_helper.dart';
+import 'package:ml_linalg/src/common/simd_helper/float64x2_helper.dart';
 import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_linalg/src/vector/float64x2_vector.g.dart';
 import 'package:ml_linalg/src/vector/serialization/from_vector_json.dart';
-import 'package:ml_linalg/src/vector/simd_helper/float32x4_helper.dart';
-import 'package:ml_linalg/src/vector/simd_helper/float64x2_helper.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 
 /// An algebraic vector with SIMD (single instruction, multiple data)

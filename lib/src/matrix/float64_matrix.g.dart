@@ -20,6 +20,7 @@ import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_m
 import 'package:ml_linalg/src/common/exception/lu_decomposition_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
+import 'package:ml_linalg/src/common/simd_helper/float64x2_helper.dart';
 import 'package:ml_linalg/src/matrix/eigen.dart';
 import 'package:ml_linalg/src/matrix/eigen_method.dart';
 import 'package:ml_linalg/src/matrix/helper/get_2d_iterable_length.dart';
@@ -215,6 +216,7 @@ class Float64Matrix
   final List<Vector?> _colCache;
   final Float64List _flattenedList;
   final _cache = CacheManagerImpl(matrixCacheKeys);
+  final _simdHelper = const Float64x2Helper();
 
   Float64x2List? _cachedSimdList;
   Float64x2? _lastSimd;
@@ -601,11 +603,28 @@ class Float64Matrix
   double norm([MatrixNorm norm = MatrixNorm.frobenius]) {
     switch (norm) {
       case MatrixNorm.frobenius:
-        // ignore: deprecated_member_use_from_same_package
-        return math.sqrt(reduceRows((sum, row) => sum + row.pow(2)).sum());
+        return _frobeniusNorm();
+
       default:
         throw UnsupportedError('Unsupported matrix norm type: $norm');
     }
+  }
+
+  double _frobeniusNorm() {
+    final thisAsSimdList = _getFlattenedSimdList();
+    var summed = Float64x2.zero();
+
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      final value = thisAsSimdList[i];
+
+      summed += value * value;
+    }
+
+    if (_lastSimd != null) {
+      summed += _lastSimd! * _lastSimd!;
+    }
+
+    return math.sqrt(_simdHelper.sumLanes(summed));
   }
 
   @override
