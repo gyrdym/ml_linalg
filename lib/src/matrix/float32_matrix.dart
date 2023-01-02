@@ -213,7 +213,7 @@ class Float32Matrix
   final List<Vector?> _colCache;
   final Float32List _flattenedList;
   final _cache = CacheManagerImpl(matrixCacheKeys);
-  final _simdHelper = Float32x4Helper();
+  final _simdHelper = const Float32x4Helper();
 
   Float32x4List? _cachedSimdList;
   Float32x4? _lastSimd;

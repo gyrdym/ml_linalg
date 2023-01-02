@@ -2,7 +2,7 @@
 
 ## 13.11.19
 - Matrix:
-  - `norm` method speed up
+  - `norm` method speed up (frobenius case)
 
 ## 13.11.18
 - Matrix:

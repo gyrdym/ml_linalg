@@ -216,7 +216,7 @@ class Float64Matrix
   final List<Vector?> _colCache;
   final Float64List _flattenedList;
   final _cache = CacheManagerImpl(matrixCacheKeys);
-  final _simdHelper = Float64x2Helper();
+  final _simdHelper = const Float64x2Helper();
 
   Float64x2List? _cachedSimdList;
   Float64x2? _lastSimd;
