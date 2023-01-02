@@ -11,6 +11,7 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/common/exception/unsupported_operand_type_exception.dart';
+import 'package:ml_linalg/src/common/simd_helper/simd_helper.dart';
 import 'package:ml_linalg/src/matrix/float64_matrix.g.dart';
 import 'package:ml_linalg/src/vector/exception/cosine_of_zero_vector_exception.dart';
 import 'package:ml_linalg/src/vector/exception/empty_vector_exception.dart';
@@ -20,7 +21,6 @@ import 'package:ml_linalg/src/vector/exception/unsupported_norm_type_exception.d
 import 'package:ml_linalg/src/vector/exception/vector_list_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
-import 'package:ml_linalg/src/vector/simd_helper/simd_helper.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
