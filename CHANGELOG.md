@@ -2,7 +2,7 @@
 
 ## 13.11.20
 - Matrix:
-  - `sum`, `prod`, `exp`, `log` methods speed up
+  - `pow`, `sum`, `prod`, `exp`, `log` methods speed up
 
 ## 13.11.19
 - Matrix:
