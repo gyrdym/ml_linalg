@@ -684,12 +684,16 @@ class Float64Matrix
   }
 
   @override
-  Matrix pow(num exponent) => _areAllRowsCached
-      ? Matrix.fromRows(rows.map((row) => row.pow(exponent)).toList(),
-          dtype: dtype)
-      : Matrix.fromColumns(
-          columns.map((column) => column.pow(exponent)).toList(),
-          dtype: dtype);
+  Matrix pow(num exponent) {
+    final result = Float64List(elementCount);
+
+    for (var i = 0; i < result.length; i++) {
+      result[i] = math.pow(_flattenedList[i], exponent).toDouble();
+    }
+
+    return Matrix.fromFlattenedList(result, rowCount, columnCount,
+        dtype: dtype);
+  }
 
   @override
   Matrix exp({bool skipCaching = false}) => _cache.get(
