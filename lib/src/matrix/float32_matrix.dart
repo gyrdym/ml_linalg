@@ -693,44 +693,28 @@ class Float32Matrix
   }
 
   @override
-  Matrix exp({bool skipCaching = false}) => _cache.get(
-      matrixExpKey,
-      () => _areAllRowsCached
-          ? Matrix.fromRows(
-              rows
-                  .map((row) => row.exp(
-                        skipCaching: skipCaching,
-                      ))
-                  .toList(),
-              dtype: dtype)
-          : Matrix.fromColumns(
-              columns
-                  .map((column) => column.exp(
-                        skipCaching: skipCaching,
-                      ))
-                  .toList(),
-              dtype: dtype),
-      skipCaching: skipCaching);
+  Matrix exp({bool skipCaching = false}) {
+    final result = Float32List(elementCount);
+
+    for (var i = 0; i < result.length; i++) {
+      result[i] = math.exp(_flattenedList[i]);
+    }
+
+    return Matrix.fromFlattenedList(result, rowCount, columnCount,
+        dtype: dtype);
+  }
 
   @override
-  Matrix log({bool skipCaching = false}) => _cache.get(
-      matrixLogKey,
-      () => _areAllRowsCached
-          ? Matrix.fromRows(
-              rows
-                  .map((row) => row.log(
-                        skipCaching: skipCaching,
-                      ))
-                  .toList(),
-              dtype: dtype)
-          : Matrix.fromColumns(
-              columns
-                  .map((column) => column.log(
-                        skipCaching: skipCaching,
-                      ))
-                  .toList(),
-              dtype: dtype),
-      skipCaching: skipCaching);
+  Matrix log({bool skipCaching = false}) {
+    final result = Float32List(elementCount);
+
+    for (var i = 0; i < result.length; i++) {
+      result[i] = math.log(_flattenedList[i]);
+    }
+
+    return Matrix.fromFlattenedList(result, rowCount, columnCount,
+        dtype: dtype);
+  }
 
   @override
   Matrix multiply(Matrix other) {
@@ -758,11 +742,18 @@ class Float32Matrix
       return double.nan;
     }
 
-    return _cache.get(
-        matrixSumKey,
-        () => _areAllRowsCached
-            ? rows.fold(0, (result, row) => result + row.sum())
-            : columns.fold(0, (result, column) => result + column.sum()));
+    final simdList = _getFlattenedSimdList();
+    var sum = Float32x4.zero();
+
+    for (var i = 0; i < simdList.length; i++) {
+      sum += simdList[i];
+    }
+
+    if (_lastSimd != null) {
+      sum += _lastSimd!;
+    }
+
+    return _simdHelper.sumLanes(sum);
   }
 
   @override
@@ -771,11 +762,18 @@ class Float32Matrix
       return double.nan;
     }
 
-    return _cache.get(
-        matrixProdKey,
-        () => _areAllRowsCached
-            ? rows.fold(0, (result, row) => result * row.prod())
-            : columns.fold(0, (result, column) => result * column.prod()));
+    final simdList = _getFlattenedSimdList();
+    var sum = Float32x4(1, 1, 1, 1);
+
+    for (var i = 0; i < simdList.length; i++) {
+      sum *= simdList[i];
+    }
+
+    if (_lastSimd != null) {
+      sum *= _lastSimd!;
+    }
+
+    return _simdHelper.multLanes(sum);
   }
 
   @override
