@@ -8,7 +8,7 @@ import '../../../helpers.dart';
 void matrixPowTestGroupFactory(DType dtype) =>
     group(dtypeToMatrixTestTitle[dtype], () {
       group('pow method', () {
-        test('should raise all the matrix elements to the provided power', () {
+        test('should raise all matrix elements to the provided power', () {
           final matrix = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0],
             [5.0, 6.0, 7.0, 8.0],
@@ -22,6 +22,106 @@ void matrixPowTestGroupFactory(DType dtype) =>
             [729.0, 0.0, -8.0, -27.0],
           ]);
           expect(matrix.dtype, dtype);
+        });
+
+        test(
+            'should raise all matrix elements to the provided power, 2x5 matrix',
+            () {
+          final matrix = Matrix.fromList([
+            [1, 2, 3, 4, 5],
+            [6, 7, 8, 9, 0],
+          ], dtype: dtype);
+          final raised = matrix.pow(3);
+
+          expect(raised, [
+            [1, 8, 27, 64, 125],
+            [216, 343, 512, 729, 0],
+          ]);
+
+          expect(matrix.dtype, dtype);
+          expect(raised, isNot(same(matrix)));
+        });
+
+        test(
+            'should raise all matrix elements to the provided power, 2x5 matrix, fromFlattenedList constructor',
+            () {
+          final matrix = Matrix.fromFlattenedList([
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            0,
+          ], 2, 5, dtype: dtype);
+          final raised = matrix.pow(3);
+
+          expect(raised, [
+            [1, 8, 27, 64, 125],
+            [216, 343, 512, 729, 0],
+          ]);
+
+          expect(matrix.dtype, dtype);
+          expect(raised, isNot(same(matrix)));
+        });
+
+        test(
+            'should raise all matrix elements to the provided power, 1x9 matrix, fromFlattenedList constructor',
+            () {
+          final matrix = Matrix.fromFlattenedList([
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+          ], 1, 9, dtype: dtype);
+          final raised = matrix.pow(3);
+
+          expect(raised, [
+            [1, 8, 27, 64, 125, 216, 343, 512, 729],
+          ]);
+
+          expect(matrix.dtype, dtype);
+          expect(raised, isNot(same(matrix)));
+        });
+
+        test(
+            'should raise all matrix elements to the provided power, 9x1 matrix, fromFlattenedList constructor',
+            () {
+          final matrix = Matrix.fromFlattenedList([
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+          ], 9, 1, dtype: dtype);
+          final raised = matrix.pow(3);
+
+          expect(raised, [
+            [1],
+            [8],
+            [27],
+            [64],
+            [125],
+            [216],
+            [343],
+            [512],
+            [729],
+          ]);
+
+          expect(matrix.dtype, dtype);
+          expect(raised, isNot(same(matrix)));
         });
 
         test('should raise all the matrix elements to 0', () {
