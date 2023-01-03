@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.20
+- Matrix:
+  - `pow`, `sum`, `prod`, `exp`, `log` methods speed up
+
 ## 13.11.19
 - Matrix:
   - `norm` method speed up (frobenius case)
