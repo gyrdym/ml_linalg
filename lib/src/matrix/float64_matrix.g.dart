@@ -724,19 +724,30 @@ class Float64Matrix
     validateMatricesShapeEquality(this, other,
         errorMessage: 'Cannot find Hadamard product');
 
-    return _areAllRowsCached
-        ? Matrix.fromRows(
-            quiver
-                .zip([rows, other.rows])
-                .map((pair) => pair.first * pair.last)
-                .toList(),
-            dtype: dtype)
-        : Matrix.fromColumns(
-            quiver
-                .zip([columns, other.columns])
-                .map((pair) => pair.first * pair.last)
-                .toList(),
-            dtype: dtype);
+    if (other is Float64Matrix) {
+      final thisAsSimdList = _getFlattenedSimdList();
+      final otherAsSimdList = other._getFlattenedSimdList();
+      final result = _createEmptySimdList();
+
+      for (var i = 0; i < thisAsSimdList.length; i++) {
+        result[i] = thisAsSimdList[i] * otherAsSimdList[i];
+      }
+
+      if (_lastSimd != null) {
+        result[result.length - 1] = _lastSimd! * other._lastSimd!;
+      }
+
+      return Float64Matrix.fromFlattenedList(
+          result.buffer.asFloat64List(), rowCount, columnCount);
+    }
+
+    final result = Float64List(elementCount);
+
+    for (var i = 0; i < result.length; i++) {
+      result[i] = _flattenedList[i] * other.asFlattenedList[i];
+    }
+
+    return Float64Matrix.fromFlattenedList(result, rowCount, columnCount);
   }
 
   @override
