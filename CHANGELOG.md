@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.21
+- Matrix:
+  - `mutiply` method (Hadamard product) speed up
+
 ## 13.11.20
 - Matrix:
   - `pow`, `sum`, `prod`, `exp`, `log` methods speed up
