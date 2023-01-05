@@ -44,8 +44,7 @@ class Float32Matrix
         _rowCache = List<Vector?>.filled(source.length, null),
         _colCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _flattenedList =
-            Float32List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = false {
+            Float32List(source.length * getLengthOfFirstOrZero(source)) {
     for (var i = 0; i < source.length; i++) {
       if (source[i].length != columnCount) {
         throw Exception('Wrong nested list length: ${source[i].length}, '
@@ -66,8 +65,7 @@ class Float32Matrix
         _rowCache = [...source],
         _colCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _flattenedList =
-            Float32List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = true {
+            Float32List(source.length * getLengthOfFirstOrZero(source)) {
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
 
@@ -91,8 +89,7 @@ class Float32Matrix
         _rowCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _colCache = [...source],
         _flattenedList =
-            Float32List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = false {
+            Float32List(source.length * getLengthOfFirstOrZero(source)) {
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
 
@@ -117,8 +114,7 @@ class Float32Matrix
         _rowCache = List<Vector?>.filled(rowCount, null),
         _colCache = List<Vector?>.filled(colCount, null),
         _flattenedList =
-            source is Float32List ? source : Float32List.fromList(source),
-        _areAllRowsCached = false {
+            source is Float32List ? source : Float32List.fromList(source) {
     if (source.length < rowCount * colCount) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowCount x $colCount, but given a collection of length '
@@ -133,8 +129,7 @@ class Float32Matrix
         columnIndices = getZeroBasedIndices(colCount),
         _rowCache = List<Vector?>.filled(rowCount, null),
         _colCache = List<Vector?>.filled(colCount, null),
-        _flattenedList = source.buffer.asFloat32List(),
-        _areAllRowsCached = false {
+        _flattenedList = source.buffer.asFloat32List() {
     if (source.lengthInBytes != rowCount * colCount * _bytesPerElement) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowCount x $columnCount (${rowCount * columnCount} elements), but byte data of '
@@ -149,8 +144,7 @@ class Float32Matrix
         columnIndices = getZeroBasedIndices(source.length),
         _rowCache = List<Vector?>.filled(source.length, null),
         _colCache = List<Vector?>.filled(source.length, null),
-        _flattenedList = Float32List(source.length * source.length),
-        _areAllRowsCached = false {
+        _flattenedList = Float32List(source.length * source.length) {
     for (var i = 0; i < rowCount; i++) {
       _flattenedList[i * columnCount + i] = source[i];
     }
@@ -163,8 +157,7 @@ class Float32Matrix
         columnIndices = getZeroBasedIndices(size),
         _rowCache = List<Vector?>.filled(size, null),
         _colCache = List<Vector?>.filled(size, null),
-        _flattenedList = Float32List(size * size),
-        _areAllRowsCached = false {
+        _flattenedList = Float32List(size * size) {
     for (var i = 0; i < size; i++) {
       _flattenedList[i * columnCount + i] = scalar;
     }
@@ -178,8 +171,7 @@ class Float32Matrix
         columnIndices = getZeroBasedIndices(colCount),
         _rowCache = List<Vector?>.filled(rowCount, null),
         _colCache = List<Vector?>.filled(colCount, null),
-        _flattenedList = Float32List(rowCount * colCount),
-        _areAllRowsCached = false {
+        _flattenedList = Float32List(rowCount * colCount) {
     if (min >= max) {
       throw ArgumentError.value(min,
           'Argument `min` should be less than `max`, min: $min, max: $max');
@@ -208,7 +200,6 @@ class Float32Matrix
   @override
   final Iterable<int> columnIndices;
 
-  final bool _areAllRowsCached;
   final List<Vector?> _rowCache;
   final List<Vector?> _colCache;
   final Float32List _flattenedList;
@@ -721,19 +712,30 @@ class Float32Matrix
     validateMatricesShapeEquality(this, other,
         errorMessage: 'Cannot find Hadamard product');
 
-    return _areAllRowsCached
-        ? Matrix.fromRows(
-            quiver
-                .zip([rows, other.rows])
-                .map((pair) => pair.first * pair.last)
-                .toList(),
-            dtype: dtype)
-        : Matrix.fromColumns(
-            quiver
-                .zip([columns, other.columns])
-                .map((pair) => pair.first * pair.last)
-                .toList(),
-            dtype: dtype);
+    if (other is Float32Matrix) {
+      final thisAsSimdList = _getFlattenedSimdList();
+      final otherAsSimdList = other._getFlattenedSimdList();
+      final result = _createEmptySimdList();
+
+      for (var i = 0; i < thisAsSimdList.length; i++) {
+        result[i] = thisAsSimdList[i] * otherAsSimdList[i];
+      }
+
+      if (_lastSimd != null) {
+        result[result.length - 1] = _lastSimd! * other._lastSimd!;
+      }
+
+      return Float32Matrix.fromFlattenedList(
+          result.buffer.asFloat32List(), rowCount, columnCount);
+    }
+
+    final result = Float32List(elementCount);
+
+    for (var i = 0; i < result.length; i++) {
+      result[i] = _flattenedList[i] * other.asFlattenedList[i];
+    }
+
+    return Float32Matrix.fromFlattenedList(result, rowCount, columnCount);
   }
 
   @override
