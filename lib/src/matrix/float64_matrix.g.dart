@@ -47,8 +47,7 @@ class Float64Matrix
         _rowCache = List<Vector?>.filled(source.length, null),
         _colCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _flattenedList =
-            Float64List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = false {
+            Float64List(source.length * getLengthOfFirstOrZero(source)) {
     for (var i = 0; i < source.length; i++) {
       if (source[i].length != columnCount) {
         throw Exception('Wrong nested list length: ${source[i].length}, '
@@ -69,8 +68,7 @@ class Float64Matrix
         _rowCache = [...source],
         _colCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _flattenedList =
-            Float64List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = true {
+            Float64List(source.length * getLengthOfFirstOrZero(source)) {
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final row = source[i];
 
@@ -94,8 +92,7 @@ class Float64Matrix
         _rowCache = List<Vector?>.filled(getLengthOfFirstOrZero(source), null),
         _colCache = [...source],
         _flattenedList =
-            Float64List(source.length * getLengthOfFirstOrZero(source)),
-        _areAllRowsCached = false {
+            Float64List(source.length * getLengthOfFirstOrZero(source)) {
     for (var i = 0, j = 0; i < source.length; i++, j = 0) {
       final column = source[i];
 
@@ -120,8 +117,7 @@ class Float64Matrix
         _rowCache = List<Vector?>.filled(rowCount, null),
         _colCache = List<Vector?>.filled(colCount, null),
         _flattenedList =
-            source is Float64List ? source : Float64List.fromList(source),
-        _areAllRowsCached = false {
+            source is Float64List ? source : Float64List.fromList(source) {
     if (source.length < rowCount * colCount) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowCount x $colCount, but given a collection of length '
@@ -136,8 +132,7 @@ class Float64Matrix
         columnIndices = getZeroBasedIndices(colCount),
         _rowCache = List<Vector?>.filled(rowCount, null),
         _colCache = List<Vector?>.filled(colCount, null),
-        _flattenedList = source.buffer.asFloat64List(),
-        _areAllRowsCached = false {
+        _flattenedList = source.buffer.asFloat64List() {
     if (source.lengthInBytes != rowCount * colCount * _bytesPerElement) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowCount x $columnCount (${rowCount * columnCount} elements), but byte data of '
@@ -152,8 +147,7 @@ class Float64Matrix
         columnIndices = getZeroBasedIndices(source.length),
         _rowCache = List<Vector?>.filled(source.length, null),
         _colCache = List<Vector?>.filled(source.length, null),
-        _flattenedList = Float64List(source.length * source.length),
-        _areAllRowsCached = false {
+        _flattenedList = Float64List(source.length * source.length) {
     for (var i = 0; i < rowCount; i++) {
       _flattenedList[i * columnCount + i] = source[i];
     }
@@ -166,8 +160,7 @@ class Float64Matrix
         columnIndices = getZeroBasedIndices(size),
         _rowCache = List<Vector?>.filled(size, null),
         _colCache = List<Vector?>.filled(size, null),
-        _flattenedList = Float64List(size * size),
-        _areAllRowsCached = false {
+        _flattenedList = Float64List(size * size) {
     for (var i = 0; i < size; i++) {
       _flattenedList[i * columnCount + i] = scalar;
     }
@@ -181,8 +174,7 @@ class Float64Matrix
         columnIndices = getZeroBasedIndices(colCount),
         _rowCache = List<Vector?>.filled(rowCount, null),
         _colCache = List<Vector?>.filled(colCount, null),
-        _flattenedList = Float64List(rowCount * colCount),
-        _areAllRowsCached = false {
+        _flattenedList = Float64List(rowCount * colCount) {
     if (min >= max) {
       throw ArgumentError.value(min,
           'Argument `min` should be less than `max`, min: $min, max: $max');
@@ -211,7 +203,6 @@ class Float64Matrix
   @override
   final Iterable<int> columnIndices;
 
-  final bool _areAllRowsCached;
   final List<Vector?> _rowCache;
   final List<Vector?> _colCache;
   final Float64List _flattenedList;
