@@ -238,22 +238,7 @@ class Float32Matrix
 
   int get _lastSimdSize => elementCount % _simdSize;
 
-  Float32x4? get _lastSimd {
-    if (_lastSimdSize != 0) {
-      final lastSimdFirstIdx = elementCount - _lastSimdSize;
-      final x = _flattenedList[lastSimdFirstIdx];
-      final y = lastSimdFirstIdx + 1 < elementCount
-          ? _flattenedList[lastSimdFirstIdx + 1]
-          : 0.0;
-      final z = lastSimdFirstIdx + 2 < elementCount
-          ? _flattenedList[lastSimdFirstIdx + 2]
-          : 0.0;
-
-      _cachedLastSimd = Float32x4(x, y, z, 0.0);
-    }
-
-    return _cachedLastSimd;
-  }
+  bool get _hasLastSimd => _lastSimdSize != 0;
 
   @override
   Matrix operator +(Object value) {
@@ -610,9 +595,9 @@ class Float32Matrix
       max = thisAsSimdList[i].max(max);
     }
 
-    if (_lastSimd != null) {
+    if (_hasLastSimd) {
       final maxFromLastSimd = _simdHelper
-          .simdValueToList(_lastSimd!, _lastSimdSize)
+          .simdValueToList(_getLastSimd(), _lastSimdSize)
           .reduce((value, element) => math.max(value, element));
 
       max = max.max(Float32x4.splat(maxFromLastSimd));
@@ -631,9 +616,9 @@ class Float32Matrix
       min = thisAsSimdList[i].min(min);
     }
 
-    if (_lastSimd != null) {
+    if (_hasLastSimd) {
       final minFromLastSimd = _simdHelper
-          .simdValueToList(_lastSimd!, _lastSimdSize)
+          .simdValueToList(_getLastSimd(), _lastSimdSize)
           .reduce((value, element) => math.min(value, element));
 
       min = min.min(Float32x4.splat(minFromLastSimd));
@@ -663,8 +648,10 @@ class Float32Matrix
       summed += value * value;
     }
 
-    if (_lastSimd != null) {
-      summed += _lastSimd! * _lastSimd!;
+    if (_hasLastSimd) {
+      final lastSimd = _getLastSimd();
+
+      summed += lastSimd * lastSimd;
     }
 
     return math.sqrt(_simdHelper.sumLanes(summed));
@@ -776,8 +763,8 @@ class Float32Matrix
         result[i] = thisAsSimdList[i] * otherAsSimdList[i];
       }
 
-      if (_lastSimd != null) {
-        result[result.length - 1] = _lastSimd! * other._lastSimd!;
+      if (_hasLastSimd) {
+        result[result.length - 1] = _getLastSimd() * other._getLastSimd();
       }
 
       return Float32Matrix.fromFlattenedList(
@@ -806,8 +793,8 @@ class Float32Matrix
       sum += simdList[i];
     }
 
-    if (_lastSimd != null) {
-      sum += _lastSimd!;
+    if (_hasLastSimd) {
+      sum += _getLastSimd();
     }
 
     return _simdHelper.sumLanes(sum);
@@ -826,9 +813,9 @@ class Float32Matrix
       result *= simdList[i];
     }
 
-    if (_lastSimd != null) {
+    if (_hasLastSimd) {
       return _simdHelper.multLanes(result) *
-          _simdHelper.multLanes(_lastSimd!, _lastSimdSize);
+          _simdHelper.multLanes(_getLastSimd(), _lastSimdSize);
     }
 
     return _simdHelper.multLanes(result);
@@ -1124,8 +1111,8 @@ class Float32Matrix
         result[i] = thisAsSimdList[i] / otherAsSimdList[i];
       }
 
-      if (_lastSimd != null) {
-        result[result.length - 1] = _lastSimd! / other._lastSimd!;
+      if (_hasLastSimd) {
+        result[result.length - 1] = _getLastSimd() / other._getLastSimd();
       }
 
       return Matrix.fromFlattenedList(
@@ -1156,8 +1143,8 @@ class Float32Matrix
         result[i] = thisAsSimdList[i] + otherAsSimdList[i];
       }
 
-      if (_lastSimd != null) {
-        result[result.length - 1] = _lastSimd! + other._lastSimd!;
+      if (_hasLastSimd) {
+        result[result.length - 1] = _getLastSimd() + other._getLastSimd();
       }
 
       return Matrix.fromFlattenedList(
@@ -1188,8 +1175,8 @@ class Float32Matrix
         result[i] = thisAsSimdList[i] - otherAsSimdList[i];
       }
 
-      if (_lastSimd != null) {
-        result[result.length - 1] = _lastSimd! - other._lastSimd!;
+      if (_hasLastSimd) {
+        result[result.length - 1] = _getLastSimd() - other._getLastSimd();
       }
 
       return Matrix.fromFlattenedList(
@@ -1216,8 +1203,8 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] + scalarAsSimd;
     }
 
-    if (_lastSimd != null) {
-      result[result.length - 1] = _lastSimd! + scalarAsSimd;
+    if (_hasLastSimd) {
+      result[result.length - 1] = _getLastSimd() + scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -1234,8 +1221,8 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] - scalarAsSimd;
     }
 
-    if (_lastSimd != null) {
-      result[result.length - 1] = _lastSimd! - scalarAsSimd;
+    if (_hasLastSimd) {
+      result[result.length - 1] = _getLastSimd() - scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -1252,8 +1239,8 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] * scalarAsSimd;
     }
 
-    if (_lastSimd != null) {
-      result[result.length - 1] = _lastSimd! * scalarAsSimd;
+    if (_hasLastSimd) {
+      result[result.length - 1] = _getLastSimd() * scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -1270,8 +1257,8 @@ class Float32Matrix
       result[i] = thisAsSimdList[i] / scalarAsSimd;
     }
 
-    if (_lastSimd != null) {
-      result[result.length - 1] = _lastSimd! / scalarAsSimd;
+    if (_hasLastSimd) {
+      result[result.length - 1] = _getLastSimd() / scalarAsSimd;
     }
 
     return Matrix.fromFlattenedList(
@@ -1292,5 +1279,18 @@ class Float32Matrix
         _flattenedList.buffer.asFloat32x4List(0, elementCount ~/ _simdSize);
 
     return _cachedSimdList!;
+  }
+
+  Float32x4 _getLastSimd() {
+    final lastSimdFirstIdx = elementCount - _lastSimdSize;
+    final x = _flattenedList[lastSimdFirstIdx];
+    final y = lastSimdFirstIdx + 1 < elementCount
+        ? _flattenedList[lastSimdFirstIdx + 1]
+        : 0.0;
+    final z = lastSimdFirstIdx + 2 < elementCount
+        ? _flattenedList[lastSimdFirstIdx + 2]
+        : 0.0;
+
+    return Float32x4(x, y, z, 0.0);
   }
 }
