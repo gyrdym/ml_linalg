@@ -35,7 +35,21 @@ class Float32x4Helper implements SimdHelper<Float32x4> {
       math.min(math.min(a.x, a.y), math.min(a.z, a.w));
 
   @override
-  List<double> simdValueToList(Float32x4 a) => [a.x, a.y, a.z, a.w];
+  List<double> simdValueToList(Float32x4 a, [int limit = 4]) {
+    if (limit >= 4) {
+      return [a.x, a.y, a.z, a.w];
+    }
+
+    if (limit == 3) {
+      return [a.x, a.y, a.z];
+    }
+
+    if (limit == 2) {
+      return [a.x, a.y];
+    }
+
+    return [a.x];
+  }
 
   @override
   Float32x4 pow(Float32x4 a, num exponent) => Float32x4(

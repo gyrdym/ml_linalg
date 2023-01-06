@@ -17,8 +17,9 @@ abstract class SimdHelper<E> {
   /// returns a minimal element (lane) of [a]
   double getMinLane(E a);
 
-  /// converts simd value [a] to regular list
-  List<double> simdValueToList(E a);
+  /// converts simd value [a] to regular list of length [limit] but not greater
+  /// than the simd value size
+  List<double> simdValueToList(E a, [int limit]);
 
   /// Raises all the lanes of [a] to the [exponent]
   E pow(E a, num exponent);

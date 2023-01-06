@@ -595,8 +595,7 @@ class Float64Matrix
 
     if (_lastSimd != null) {
       final maxFromLastSimd = _simdHelper
-          .simdValueToList(_lastSimd!)
-          .take(elementCount % _simdSize)
+          .simdValueToList(_lastSimd!, elementCount % _simdSize)
           .reduce((value, element) => math.max(value, element));
 
       max = max.max(Float64x2.splat(maxFromLastSimd));
@@ -616,8 +615,7 @@ class Float64Matrix
 
     if (_lastSimd != null) {
       final minFromLastSimd = _simdHelper
-          .simdValueToList(_lastSimd!)
-          .take(elementCount % _simdSize)
+          .simdValueToList(_lastSimd!, elementCount % _simdSize)
           .reduce((value, element) => math.min(value, element));
 
       min = min.min(Float64x2.splat(minFromLastSimd));
@@ -804,17 +802,21 @@ class Float64Matrix
     }
 
     final simdList = _getFlattenedSimdList();
-    var sum = Float64x2(1, 1);
+    var result = Float64x2(1, 1);
 
     for (var i = 0; i < simdList.length; i++) {
-      sum *= simdList[i];
+      result *= simdList[i];
     }
 
     if (_lastSimd != null) {
-      sum *= _lastSimd!;
+      final resultFromLastSimd = _simdHelper
+          .simdValueToList(_lastSimd!, elementCount % _simdSize)
+          .reduce((value, element) => value * element);
+
+      return _simdHelper.multLanes(result) * resultFromLastSimd;
     }
 
-    return _simdHelper.multLanes(sum);
+    return _simdHelper.multLanes(result);
   }
 
   @override

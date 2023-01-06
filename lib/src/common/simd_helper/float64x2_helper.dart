@@ -28,7 +28,13 @@ class Float64x2Helper implements SimdHelper<Float64x2> {
   double getMinLane(Float64x2 a) => math.min(a.x, a.y);
 
   @override
-  List<double> simdValueToList(Float64x2 a) => [a.x, a.y];
+  List<double> simdValueToList(Float64x2 a, [int limit = 2]) {
+    if (limit >= 2) {
+      return [a.x, a.y];
+    }
+
+    return [a.x];
+  }
 
   @override
   Float64x2 pow(Float64x2 a, num exponent) => Float64x2(
