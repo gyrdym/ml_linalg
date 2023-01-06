@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.22
+- Matrix:
+  - `max` and `min` methods speed up
+
 ## 13.11.21
 - Matrix:
   - `mutiply` method (Hadamard product) speed up
