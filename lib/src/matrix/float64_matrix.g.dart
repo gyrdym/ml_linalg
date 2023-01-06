@@ -594,7 +594,12 @@ class Float64Matrix
     }
 
     if (_lastSimd != null) {
-      max = max.max(_lastSimd!);
+      final maxFromLastSimd = _simdHelper
+          .simdValueToList(_lastSimd!)
+          .take(elementCount % _simdSize)
+          .reduce((value, element) => math.max(value, element));
+
+      max = max.max(Float64x2.splat(maxFromLastSimd));
     }
 
     return _simdHelper.getMaxLane(max);
