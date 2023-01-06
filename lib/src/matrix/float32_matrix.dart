@@ -55,8 +55,6 @@ class Float32Matrix
         _flattenedList[i * columnCount + j] = source[i][j];
       }
     }
-
-    _setLastSimd();
   }
 
   Float32Matrix.fromRows(List<Vector> source)
@@ -81,8 +79,6 @@ class Float32Matrix
         j++;
       }
     }
-
-    _setLastSimd();
   }
 
   Float32Matrix.fromColumns(List<Vector> source)
@@ -107,8 +103,6 @@ class Float32Matrix
         j++;
       }
     }
-
-    _setLastSimd();
   }
 
   Float32Matrix.fromFlattenedList(
@@ -126,8 +120,6 @@ class Float32Matrix
           '$rowCount x $colCount, but given a collection of length '
           '${source.length}');
     }
-
-    _setLastSimd();
   }
 
   Float32Matrix.fromByteData(ByteData source, int rowCount, int colCount)
@@ -143,8 +135,6 @@ class Float32Matrix
           '$rowCount x $columnCount (${rowCount * columnCount} elements), but byte data of '
           '${source.lengthInBytes / _bytesPerElement} elements has been given');
     }
-
-    _setLastSimd();
   }
 
   Float32Matrix.diagonal(List<double> source)
@@ -158,8 +148,6 @@ class Float32Matrix
     for (var i = 0; i < rowCount; i++) {
       _flattenedList[i * columnCount + i] = source[i];
     }
-
-    _setLastSimd();
   }
 
   Float32Matrix.scalar(double scalar, int size)
@@ -173,8 +161,6 @@ class Float32Matrix
     for (var i = 0; i < size; i++) {
       _flattenedList[i * columnCount + i] = scalar;
     }
-
-    _setLastSimd();
   }
 
   Float32Matrix.random(DType dtype, int rowCount, int colCount,
@@ -197,8 +183,6 @@ class Float32Matrix
     for (var i = 0; i < colCount * rowCount; i++) {
       _flattenedList[i] = generator.nextDouble() * diff + min;
     }
-
-    _setLastSimd();
   }
 
   @override
@@ -223,7 +207,7 @@ class Float32Matrix
   final _simdHelper = const Float32x4Helper();
 
   Float32x4List? _cachedSimdList;
-  Float32x4? _lastSimd;
+  Float32x4? _cachedLastSimd;
 
   @override
   Iterator<Iterable<double>> get iterator =>
@@ -253,6 +237,23 @@ class Float32Matrix
   int get elementCount => rowCount * columnCount;
 
   int get _lastSimdSize => elementCount % _simdSize;
+
+  Float32x4? get _lastSimd {
+    if (_lastSimdSize != 0) {
+      final lastSimdFirstIdx = elementCount - _lastSimdSize;
+      final x = _flattenedList[lastSimdFirstIdx];
+      final y = lastSimdFirstIdx + 1 < elementCount
+          ? _flattenedList[lastSimdFirstIdx + 1]
+          : 0.0;
+      final z = lastSimdFirstIdx + 2 < elementCount
+          ? _flattenedList[lastSimdFirstIdx + 2]
+          : 0.0;
+
+      _cachedLastSimd = Float32x4(x, y, z, 0.0);
+    }
+
+    return _cachedLastSimd;
+  }
 
   @override
   Matrix operator +(Object value) {
@@ -1291,20 +1292,5 @@ class Float32Matrix
         _flattenedList.buffer.asFloat32x4List(0, elementCount ~/ _simdSize);
 
     return _cachedSimdList!;
-  }
-
-  void _setLastSimd() {
-    if (_lastSimdSize != 0) {
-      final lastSimdFirstIdx = elementCount - _lastSimdSize;
-      final x = _flattenedList[lastSimdFirstIdx];
-      final y = lastSimdFirstIdx + 1 < elementCount
-          ? _flattenedList[lastSimdFirstIdx + 1]
-          : 0.0;
-      final z = lastSimdFirstIdx + 2 < elementCount
-          ? _flattenedList[lastSimdFirstIdx + 2]
-          : 0.0;
-
-      _lastSimd = Float32x4(x, y, z, 0.0);
-    }
   }
 }
