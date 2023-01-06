@@ -587,7 +587,11 @@ class Float64Matrix
   @override
   double max() {
     final thisAsSimdList = _getFlattenedSimdList();
-    var max = thisAsSimdList.reduce((value, element) => element.max(value));
+    var max = Float64x2(-double.infinity, -double.infinity);
+
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      max = thisAsSimdList[i].max(max);
+    }
 
     if (_lastSimd != null) {
       max = max.max(_lastSimd!);
@@ -599,7 +603,11 @@ class Float64Matrix
   @override
   double min() {
     final thisAsSimdList = _getFlattenedSimdList();
-    var min = thisAsSimdList.reduce((value, element) => element.min(value));
+    var min = Float64x2(double.infinity, double.infinity);
+
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      min = thisAsSimdList[i].min(min);
+    }
 
     if (_lastSimd != null) {
       min = min.min(_lastSimd!);

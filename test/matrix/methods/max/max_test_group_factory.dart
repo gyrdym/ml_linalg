@@ -87,5 +87,28 @@ void matrixMaxTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
         });
+
+        test(
+            'should find the matrix max value, 1x1 matrix, fromFlattenedList constructor',
+            () {
+          final matrix = Matrix.fromFlattenedList([1], 1, 1, dtype: dtype);
+
+          final actual = matrix.max();
+          final expected = 1;
+
+          expect(actual, equals(expected));
+        });
+
+        test(
+            'should find the matrix max value, 1x2 matrix, fromFlattenedList constructor, the matrix has infinite value',
+            () {
+          final matrix = Matrix.fromFlattenedList([double.infinity, 1e10], 1, 2,
+              dtype: dtype);
+
+          final actual = matrix.max();
+          final expected = double.infinity;
+
+          expect(actual, equals(expected));
+        });
       });
     });
