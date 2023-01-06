@@ -585,10 +585,46 @@ class Float64Matrix
   }
 
   @override
-  double max() => _findExtrema((Vector row) => row.max());
+  double max() {
+    final thisAsSimdList = _getFlattenedSimdList();
+    var max = Float64x2(-double.infinity, -double.infinity);
+
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      max = thisAsSimdList[i].max(max);
+    }
+
+    if (_lastSimd != null) {
+      final maxFromLastSimd = _simdHelper
+          .simdValueToList(_lastSimd!)
+          .take(elementCount % _simdSize)
+          .reduce((value, element) => math.max(value, element));
+
+      max = max.max(Float64x2.splat(maxFromLastSimd));
+    }
+
+    return _simdHelper.getMaxLane(max);
+  }
 
   @override
-  double min() => _findExtrema((Vector row) => row.min());
+  double min() {
+    final thisAsSimdList = _getFlattenedSimdList();
+    var min = Float64x2(double.infinity, double.infinity);
+
+    for (var i = 0; i < thisAsSimdList.length; i++) {
+      min = thisAsSimdList[i].min(min);
+    }
+
+    if (_lastSimd != null) {
+      final minFromLastSimd = _simdHelper
+          .simdValueToList(_lastSimd!)
+          .take(elementCount % _simdSize)
+          .reduce((value, element) => math.min(value, element));
+
+      min = min.min(Float64x2.splat(minFromLastSimd));
+    }
+
+    return _simdHelper.getMinLane(min);
+  }
 
   @override
   double norm([MatrixNorm norm = MatrixNorm.frobenius]) {
@@ -1001,14 +1037,6 @@ class Float64Matrix
             .toVector()
             .dot(eigenVector) /
         eigenVector.dot(eigenVector);
-  }
-
-  double _findExtrema(double Function(Vector vector) callback) {
-    final rowIterator = rows.iterator;
-    final minValues = List<double>.generate(
-        rowCount, (i) => callback((rowIterator..moveNext()).current));
-
-    return callback(Vector.fromList(minValues, dtype: dtype));
   }
 
   Vector _reduce(Vector Function(Vector combine, Vector vector) combiner,
