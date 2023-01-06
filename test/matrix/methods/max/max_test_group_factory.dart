@@ -110,5 +110,17 @@ void matrixMaxTestGroupFactory(DType dtype) =>
 
           expect(actual, equals(expected));
         });
+
+        test(
+            'should find the matrix max value, 1x2 matrix, fromFlattenedList constructor, the matrix has negative values',
+            () {
+          final matrix =
+              Matrix.fromFlattenedList([-100, -1e10], 1, 2, dtype: dtype);
+
+          final actual = matrix.max();
+          final expected = -100;
+
+          expect(actual, equals(expected));
+        });
       });
     });
