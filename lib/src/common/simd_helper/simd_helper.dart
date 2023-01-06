@@ -4,8 +4,8 @@ abstract class SimdHelper<E> {
   /// performs summation of all components of passed simd value [a]
   double sumLanes(E a);
 
-  /// performs multiplication of all components of passed simd value [a]
-  double multLanes(E a);
+  /// performs multiplication of [limit] elements of the passed simd value [a]
+  double multLanes(E a, [int limit]);
 
   /// Performs summation of the lanes of the given simd value to provide a
   /// hashcode. The method handles infinite and NaN values.

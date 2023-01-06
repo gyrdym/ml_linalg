@@ -58,6 +58,8 @@ class Float64Matrix
         _flattenedList[i * columnCount + j] = source[i][j];
       }
     }
+
+    _setLastSimd();
   }
 
   Float64Matrix.fromRows(List<Vector> source)
@@ -82,6 +84,8 @@ class Float64Matrix
         j++;
       }
     }
+
+    _setLastSimd();
   }
 
   Float64Matrix.fromColumns(List<Vector> source)
@@ -106,6 +110,8 @@ class Float64Matrix
         j++;
       }
     }
+
+    _setLastSimd();
   }
 
   Float64Matrix.fromFlattenedList(
@@ -123,6 +129,8 @@ class Float64Matrix
           '$rowCount x $colCount, but given a collection of length '
           '${source.length}');
     }
+
+    _setLastSimd();
   }
 
   Float64Matrix.fromByteData(ByteData source, int rowCount, int colCount)
@@ -138,6 +146,8 @@ class Float64Matrix
           '$rowCount x $columnCount (${rowCount * columnCount} elements), but byte data of '
           '${source.lengthInBytes / _bytesPerElement} elements has been given');
     }
+
+    _setLastSimd();
   }
 
   Float64Matrix.diagonal(List<double> source)
@@ -151,6 +161,8 @@ class Float64Matrix
     for (var i = 0; i < rowCount; i++) {
       _flattenedList[i * columnCount + i] = source[i];
     }
+
+    _setLastSimd();
   }
 
   Float64Matrix.scalar(double scalar, int size)
@@ -164,6 +176,8 @@ class Float64Matrix
     for (var i = 0; i < size; i++) {
       _flattenedList[i * columnCount + i] = scalar;
     }
+
+    _setLastSimd();
   }
 
   Float64Matrix.random(DType dtype, int rowCount, int colCount,
@@ -186,6 +200,8 @@ class Float64Matrix
     for (var i = 0; i < colCount * rowCount; i++) {
       _flattenedList[i] = generator.nextDouble() * diff + min;
     }
+
+    _setLastSimd();
   }
 
   @override
@@ -809,11 +825,8 @@ class Float64Matrix
     }
 
     if (_lastSimd != null) {
-      final resultFromLastSimd = _simdHelper
-          .simdValueToList(_lastSimd!, elementCount % _simdSize)
-          .reduce((value, element) => value * element);
-
-      return _simdHelper.multLanes(result) * resultFromLastSimd;
+      return _simdHelper.multLanes(result) *
+          _simdHelper.multLanes(_lastSimd!, elementCount % _simdSize);
     }
 
     return _simdHelper.multLanes(result);
@@ -1275,27 +1288,26 @@ class Float64Matrix
   }
 
   Float64x2List _getFlattenedSimdList() {
-    if (_cachedSimdList == null) {
-      final realLength = rowCount * columnCount;
-      final residual = realLength % _simdSize;
-
-      if (residual != 0) {
-        final lastSimdFirstIdx = realLength - residual;
-        final x = _flattenedList[lastSimdFirstIdx];
-        final y = lastSimdFirstIdx + 1 < realLength
-            ? _flattenedList[lastSimdFirstIdx + 1]
-            : 0.0;
-        final z = lastSimdFirstIdx + 2 < realLength
-            ? _flattenedList[lastSimdFirstIdx + 2]
-            : 0.0;
-
-        _lastSimd = Float64x2(x, y);
-      }
-
-      _cachedSimdList =
-          _flattenedList.buffer.asFloat64x2List(0, realLength ~/ _simdSize);
-    }
+    _cachedSimdList ??=
+        _flattenedList.buffer.asFloat64x2List(0, elementCount ~/ _simdSize);
 
     return _cachedSimdList!;
+  }
+
+  void _setLastSimd() {
+    final residual = elementCount % _simdSize;
+
+    if (residual != 0) {
+      final lastSimdFirstIdx = elementCount - residual;
+      final x = _flattenedList[lastSimdFirstIdx];
+      final y = lastSimdFirstIdx + 1 < elementCount
+          ? _flattenedList[lastSimdFirstIdx + 1]
+          : 0.0;
+      final z = lastSimdFirstIdx + 2 < elementCount
+          ? _flattenedList[lastSimdFirstIdx + 2]
+          : 0.0;
+
+      _lastSimd = Float64x2(x, y);
+    }
   }
 }

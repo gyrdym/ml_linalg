@@ -19,7 +19,13 @@ class Float64x2Helper implements SimdHelper<Float64x2> {
       (a.y.isNaN || a.y.isInfinite ? 0.0 : a.y);
 
   @override
-  double multLanes(Float64x2 a) => a.x * a.y;
+  double multLanes(Float64x2 a, [int limit = 2]) {
+    if (limit >= 2) {
+      return a.x * a.y;
+    }
+
+    return a.x;
+  }
 
   @override
   double getMaxLane(Float64x2 a) => math.max(a.x, a.y);
