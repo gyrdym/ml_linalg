@@ -1018,14 +1018,6 @@ class Float32Matrix
         eigenVector.dot(eigenVector);
   }
 
-  double _findExtrema(double Function(Vector vector) callback) {
-    final rowIterator = rows.iterator;
-    final minValues = List<double>.generate(
-        rowCount, (i) => callback((rowIterator..moveNext()).current));
-
-    return callback(Vector.fromList(minValues, dtype: dtype));
-  }
-
   Vector _reduce(Vector Function(Vector combine, Vector vector) combiner,
       int length, Vector Function(int index) getVector,
       {Vector? initValue}) {
