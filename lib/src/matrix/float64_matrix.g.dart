@@ -255,6 +255,8 @@ class Float64Matrix
 
   int get elementCount => rowCount * columnCount;
 
+  int get _lastSimdSize => elementCount % _simdSize;
+
   @override
   Matrix operator +(Object value) {
     if (value is Matrix) {
@@ -826,7 +828,7 @@ class Float64Matrix
 
     if (_lastSimd != null) {
       return _simdHelper.multLanes(result) *
-          _simdHelper.multLanes(_lastSimd!, elementCount % _simdSize);
+          _simdHelper.multLanes(_lastSimd!, _lastSimdSize);
     }
 
     return _simdHelper.multLanes(result);
@@ -1278,11 +1280,9 @@ class Float64Matrix
   }
 
   Float64x2List _createEmptySimdList() {
-    final realLength = rowCount * columnCount;
-    final residual = realLength % _simdSize;
-    final dim = residual == 0
-        ? realLength
-        : ((realLength + _simdSize - residual) / _simdSize).floor();
+    final dim = _lastSimdSize == 0
+        ? elementCount
+        : ((elementCount + _simdSize - _lastSimdSize) / _simdSize).floor();
 
     return Float64x2List(dim);
   }
@@ -1295,10 +1295,8 @@ class Float64Matrix
   }
 
   void _setLastSimd() {
-    final residual = elementCount % _simdSize;
-
-    if (residual != 0) {
-      final lastSimdFirstIdx = elementCount - residual;
+    if (_lastSimdSize != 0) {
+      final lastSimdFirstIdx = elementCount - _lastSimdSize;
       final x = _flattenedList[lastSimdFirstIdx];
       final y = lastSimdFirstIdx + 1 < elementCount
           ? _flattenedList[lastSimdFirstIdx + 1]
