@@ -29,6 +29,41 @@ void matrixMultiplyTestGroupFactory(DType dtype) =>
           expect(actual.dtype, dtype);
         });
 
+        test('should return Hadamard product, 1x1 matrices', () {
+          final matrix1 = Matrix.fromList([
+            [2],
+          ], dtype: dtype);
+          final matrix2 = Matrix.fromList([
+            [-11],
+          ], dtype: dtype);
+          final actual = matrix1.multiply(matrix2);
+          final expected = [
+            [-22],
+          ];
+
+          expect(actual, expected);
+          expect(actual.dtype, dtype);
+        });
+
+        test('should return Hadamard product, 2x2 matrices', () {
+          final matrix1 = Matrix.fromList([
+            [2, 3],
+            [4, 5],
+          ], dtype: dtype);
+          final matrix2 = Matrix.fromList([
+            [-11, -11],
+            [-11, -11],
+          ], dtype: dtype);
+          final actual = matrix1.multiply(matrix2);
+          final expected = [
+            [-22, -33],
+            [-44, -55],
+          ];
+
+          expect(actual, expected);
+          expect(actual.dtype, dtype);
+        });
+
         test('should return Hadamard product, 3x5 matrix', () {
           final matrix1 = Matrix.fromList([
             [1.0, 2.0, 3.0, 4.0, -3.0],
