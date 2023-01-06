@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.23
+- Matrix:
+  - `prod` method fixed
+
 ## 13.11.22
 - Matrix:
   - `max` and `min` methods speed up
