@@ -585,10 +585,28 @@ class Float64Matrix
   }
 
   @override
-  double max() => _findExtrema((Vector row) => row.max());
+  double max() {
+    final thisAsSimdList = _getFlattenedSimdList();
+    var max = thisAsSimdList.reduce((value, element) => element.max(value));
+
+    if (_lastSimd != null) {
+      max = max.max(_lastSimd!);
+    }
+
+    return _simdHelper.getMaxLane(max);
+  }
 
   @override
-  double min() => _findExtrema((Vector row) => row.min());
+  double min() {
+    final thisAsSimdList = _getFlattenedSimdList();
+    var min = thisAsSimdList.reduce((value, element) => element.min(value));
+
+    if (_lastSimd != null) {
+      min = min.min(_lastSimd!);
+    }
+
+    return _simdHelper.getMinLane(min);
+  }
 
   @override
   double norm([MatrixNorm norm = MatrixNorm.frobenius]) {

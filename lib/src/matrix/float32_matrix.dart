@@ -594,7 +594,16 @@ class Float32Matrix
   }
 
   @override
-  double min() => _findExtrema((Vector row) => row.min());
+  double min() {
+    final thisAsSimdList = _getFlattenedSimdList();
+    var min = thisAsSimdList.reduce((value, element) => element.min(value));
+
+    if (_lastSimd != null) {
+      min = min.min(_lastSimd!);
+    }
+
+    return _simdHelper.getMinLane(min);
+  }
 
   @override
   double norm([MatrixNorm norm = MatrixNorm.frobenius]) {

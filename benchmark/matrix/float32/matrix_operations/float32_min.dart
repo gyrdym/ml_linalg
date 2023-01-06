@@ -7,22 +7,22 @@ import 'package:ml_linalg/matrix.dart';
 const numOfRows = 20001;
 const numOfColumns = 2001;
 
-class Float32MatrixMaxBenchmark extends BenchmarkBase {
-  Float32MatrixMaxBenchmark() : super('Matrix float32 max method');
+class Float32MatrixMinBenchmark extends BenchmarkBase {
+  Float32MatrixMinBenchmark() : super('Matrix float32 min method');
 
   final Matrix _source =
       Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 12);
 
   static void main() {
-    Float32MatrixMaxBenchmark().report();
+    Float32MatrixMinBenchmark().report();
   }
 
   @override
   void run() {
-    _source.max();
+    _source.min();
   }
 }
 
 void main() {
-  Float32MatrixMaxBenchmark.main();
+  Float32MatrixMinBenchmark.main();
 }
