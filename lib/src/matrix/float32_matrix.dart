@@ -207,7 +207,6 @@ class Float32Matrix
   final _simdHelper = const Float32x4Helper();
 
   Float32x4List? _cachedSimdList;
-  Float32x4? _cachedLastSimd;
 
   @override
   Iterator<Iterable<double>> get iterator =>
