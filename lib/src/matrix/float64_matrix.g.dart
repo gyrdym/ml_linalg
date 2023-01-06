@@ -610,7 +610,12 @@ class Float64Matrix
     }
 
     if (_lastSimd != null) {
-      min = min.min(_lastSimd!);
+      final minFromLastSimd = _simdHelper
+          .simdValueToList(_lastSimd!)
+          .take(elementCount % _simdSize)
+          .reduce((value, element) => math.min(value, element));
+
+      min = min.min(Float64x2.splat(minFromLastSimd));
     }
 
     return _simdHelper.getMinLane(min);
