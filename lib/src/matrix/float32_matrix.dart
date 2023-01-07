@@ -572,9 +572,7 @@ class Float32Matrix
   }
 
   Vector _mean(Iterable<Vector> vectors) => Vector.fromList(
-      vectors
-          .map((vector) => vector.mean(skipCaching: true))
-          .toList(growable: false),
+      vectors.map((vector) => vector.mean()).toList(growable: false),
       dtype: dtype);
 
   @override

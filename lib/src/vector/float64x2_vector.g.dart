@@ -549,7 +549,8 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
       throw EmptyVectorException();
     }
 
-    return _cache.get(vectorMeanKey, () => sum(skipCaching: true) / length,
+    return _cache.get(
+        vectorMeanKey, () => sum(skipCaching: skipCaching) / length,
         skipCaching: skipCaching);
   }
 
