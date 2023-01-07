@@ -502,61 +502,73 @@ class Float32Matrix
         return _mean(columns);
 
       case Axis.rows:
-        final means = Float32List(rowCount);
-        var j = 0;
-
         if (columnCount < _simdSize) {
-          var sum = _flattenedList[0];
-
-          for (var i = 1; i < elementCount; i++) {
-            if (i % columnCount != 0) {
-              sum += _flattenedList[i];
-            } else {
-              means[j++] = sum / columnCount;
-              sum = _flattenedList[i];
-            }
-          }
-
-          means[j] = sum / columnCount;
-        } else {
-          for (var i = 0; i < rowCount; i++) {
-            var sum = Float32x4.zero();
-            final offset = i * Float32List.bytesPerElement * columnCount;
-            final sublist = _flattenedList.buffer
-                .asFloat32x4List(offset, columnCount ~/ _simdSize);
-
-            for (var k = 0; k < sublist.length; k++) {
-              sum += sublist[k];
-            }
-
-            var residualSum = 0.0;
-            var residual = columnCount % _simdSize;
-
-            if (residual > 0) {
-              final residualElements = _flattenedList.buffer.asFloat32List(
-                  offset +
-                      (columnCount - residual) * Float32List.bytesPerElement,
-                  residual);
-
-              residualSum = residualElements[0];
-
-              for (var k = 1; k < residualElements.length; k++) {
-                residualSum += residualElements[k];
-              }
-            }
-
-            means[j++] = _simdHelper.sumLanes(sum) / columnCount +
-                residualSum / columnCount;
-          }
+          return _rowMean();
         }
 
-        return Vector.fromList(means, dtype: dtype);
+        return _simdRowMean();
 
       default:
         throw UnimplementedError(
             'Mean values calculation for axis $axis is not '
             'supported yet');
     }
+  }
+
+  Vector _rowMean() {
+    final means = Float32List(rowCount);
+    var sum = _flattenedList[0];
+    var j = 0;
+
+    for (var i = 1; i < elementCount; i++) {
+      if (i % columnCount != 0) {
+        sum += _flattenedList[i];
+      } else {
+        means[j++] = sum / columnCount;
+        sum = _flattenedList[i];
+      }
+    }
+
+    means[j] = sum / columnCount;
+
+    return Vector.fromList(means, dtype: dtype);
+  }
+
+  Vector _simdRowMean() {
+    final means = Float32List(rowCount);
+    var j = 0;
+
+    for (var i = 0; i < rowCount; i++) {
+      final indexFrom = i * columnsNum;
+      final sublist = _flattenedList.sublist(indexFrom, indexFrom + columnsNum);
+      final sublistAsSimd = sublist.buffer.asFloat32x4List();
+      var sum = Float32x4.zero();
+
+      for (var k = 0; k < sublistAsSimd.length; k++) {
+        sum += sublistAsSimd[k];
+      }
+
+      var residualSum = 0.0;
+      var residual = columnCount % _simdSize;
+
+      if (residual > 0) {
+        final offset = i * Float32List.bytesPerElement * columnCount;
+        final residualElements = _flattenedList.buffer.asFloat32List(
+            offset + (columnCount - residual) * Float32List.bytesPerElement,
+            residual);
+
+        residualSum = residualElements[0];
+
+        for (var k = 1; k < residualElements.length; k++) {
+          residualSum += residualElements[k];
+        }
+      }
+
+      means[j++] =
+          _simdHelper.sumLanes(sum) / columnCount + residualSum / columnCount;
+    }
+
+    return Vector.fromList(means, dtype: dtype);
   }
 
   Vector _mean(Iterable<Vector> vectors) => Vector.fromList(

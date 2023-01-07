@@ -502,10 +502,14 @@ class Float64Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _cache.get(matrixMeansByColumnsKey, () => _mean(columns));
+        return _mean(columns);
 
       case Axis.rows:
-        return _cache.get(matrixMeansByRowsKey, () => _mean(rows));
+        if (columnCount < _simdSize) {
+          return _rowMean();
+        }
+
+        return _simdRowMean();
 
       default:
         throw UnimplementedError(
@@ -514,9 +518,67 @@ class Float64Matrix
     }
   }
 
-  Vector _mean(Iterable<Vector> vectors) =>
-      Vector.fromList(vectors.map((vector) => vector.mean()).toList(),
-          dtype: dtype);
+  Vector _rowMean() {
+    final means = Float64List(rowCount);
+    var sum = _flattenedList[0];
+    var j = 0;
+
+    for (var i = 1; i < elementCount; i++) {
+      if (i % columnCount != 0) {
+        sum += _flattenedList[i];
+      } else {
+        means[j++] = sum / columnCount;
+        sum = _flattenedList[i];
+      }
+    }
+
+    means[j] = sum / columnCount;
+
+    return Vector.fromList(means, dtype: dtype);
+  }
+
+  Vector _simdRowMean() {
+    final means = Float64List(rowCount);
+    var j = 0;
+
+    for (var i = 0; i < rowCount; i++) {
+      final indexFrom = i * columnsNum;
+      final sublist = _flattenedList.sublist(indexFrom, indexFrom + columnsNum);
+      final sublistAsSimd = sublist.buffer.asFloat64x2List();
+      var sum = Float64x2.zero();
+
+      for (var k = 0; k < sublistAsSimd.length; k++) {
+        sum += sublistAsSimd[k];
+      }
+
+      var residualSum = 0.0;
+      var residual = columnCount % _simdSize;
+
+      if (residual > 0) {
+        final offset = i * Float64List.bytesPerElement * columnCount;
+        final residualElements = _flattenedList.buffer.asFloat64List(
+            offset + (columnCount - residual) * Float64List.bytesPerElement,
+            residual);
+
+        residualSum = residualElements[0];
+
+        for (var k = 1; k < residualElements.length; k++) {
+          residualSum += residualElements[k];
+        }
+      }
+
+      means[j++] =
+          _simdHelper.sumLanes(sum) / columnCount + residualSum / columnCount;
+    }
+
+    return Vector.fromList(means, dtype: dtype);
+  }
+
+  Vector _mean(Iterable<Vector> vectors) => Vector.fromList(
+      vectors
+          .map((vector) => vector.mean(skipCaching: true))
+          .toList(growable: false),
+      dtype: dtype);
 
   @override
   Vector deviation([Axis axis = Axis.columns]) {

@@ -102,6 +102,27 @@ void matrixMeanTestGroupFactory(DType dtype) =>
           expect(means.dtype, dtype);
         });
 
+        test('should calculate mean values row-wise for 1x5 matrix', () {
+          final matrix = Matrix.fromList([
+            [10, 20, 30, 40, -10],
+          ], dtype: dtype);
+          final means = matrix.mean(Axis.rows);
+
+          expect(means, equals([18]));
+          expect(means.dtype, dtype);
+        });
+
+        test('should calculate mean values row-wise for 2x5 matrix', () {
+          final matrix = Matrix.fromList([
+            [10, 20, 30, 40, -10],
+            [6, 7, 8, 9, 10],
+          ], dtype: dtype);
+          final means = matrix.mean(Axis.rows);
+
+          expect(means, equals([18, 8]));
+          expect(means.dtype, dtype);
+        });
+
         test('should calculate mean values row-wise for an empty matrix', () {
           final matrix = Matrix.empty(dtype: dtype);
           final means = matrix.mean(Axis.rows);
