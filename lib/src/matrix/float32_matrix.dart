@@ -499,10 +499,58 @@ class Float32Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _cache.get(matrixMeansByColumnsKey, () => _mean(columns));
+        return _mean(columns);
 
       case Axis.rows:
-        return _cache.get(matrixMeansByRowsKey, () => _mean(rows));
+        final means = Float32List(rowCount);
+        var j = 0;
+
+        if (columnCount < _simdSize) {
+          var sum = _flattenedList[0];
+
+          for (var i = 1; i < elementCount; i++) {
+            if (i % columnCount != 0) {
+              sum += _flattenedList[i];
+            } else {
+              means[j++] = sum / columnCount;
+              sum = _flattenedList[i];
+            }
+          }
+
+          means[j] = sum / columnCount;
+        } else {
+          for (var i = 0; i < rowCount; i++) {
+            var sum = Float32x4.zero();
+            final offset = i * Float32List.bytesPerElement * columnCount;
+            final sublist = _flattenedList.buffer
+                .asFloat32x4List(offset, columnCount ~/ _simdSize);
+
+            for (var k = 0; k < sublist.length; k++) {
+              sum += sublist[k];
+            }
+
+            var residualSum = 0.0;
+            var residual = columnCount % _simdSize;
+
+            if (residual > 0) {
+              final residualElements = _flattenedList.buffer.asFloat32List(
+                  offset +
+                      (columnCount - residual) * Float32List.bytesPerElement,
+                  residual);
+
+              residualSum = residualElements[0];
+
+              for (var k = 1; k < residualElements.length; k++) {
+                residualSum += residualElements[k];
+              }
+            }
+
+            means[j++] = _simdHelper.sumLanes(sum) / columnCount +
+                residualSum / columnCount;
+          }
+        }
+
+        return Vector.fromList(means, dtype: dtype);
 
       default:
         throw UnimplementedError(
@@ -511,9 +559,11 @@ class Float32Matrix
     }
   }
 
-  Vector _mean(Iterable<Vector> vectors) =>
-      Vector.fromList(vectors.map((vector) => vector.mean()).toList(),
-          dtype: dtype);
+  Vector _mean(Iterable<Vector> vectors) => Vector.fromList(
+      vectors
+          .map((vector) => vector.mean(skipCaching: true))
+          .toList(growable: false),
+      dtype: dtype);
 
   @override
   Vector deviation([Axis axis = Axis.columns]) {
