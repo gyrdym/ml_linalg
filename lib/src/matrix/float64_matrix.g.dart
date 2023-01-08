@@ -502,7 +502,7 @@ class Float64Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _mean(columns);
+        return _columnMean();
 
       case Axis.rows:
         if (columnCount < _simdSize) {
@@ -516,6 +516,23 @@ class Float64Matrix
             'Mean values calculation for axis $axis is not '
             'supported yet');
     }
+  }
+
+  Vector _columnMean() {
+    final means = Float64List(columnCount);
+    var j = 0;
+
+    for (var i = 0; i < columnCount; i++) {
+      var sum = 0.0;
+
+      for (var k = 0; k < rowCount; k++) {
+        sum += _flattenedList[k * columnCount + i];
+      }
+
+      means[j++] = sum / rowCount;
+    }
+
+    return Vector.fromList(means, dtype: dtype);
   }
 
   Vector _rowMean() {
@@ -573,10 +590,6 @@ class Float64Matrix
 
     return Vector.fromList(means, dtype: dtype);
   }
-
-  Vector _mean(Iterable<Vector> vectors) => Vector.fromList(
-      vectors.map((vector) => vector.mean()).toList(growable: false),
-      dtype: dtype);
 
   @override
   Vector deviation([Axis axis = Axis.columns]) {

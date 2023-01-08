@@ -9,10 +9,11 @@ const numOfRows = 20000;
 const numOfColumns = 2000;
 
 class Float32MatrixMeanBenchmark extends BenchmarkBase {
-  Float32MatrixMeanBenchmark() : super('Matrix float32, matrix mean column-wise');
+  Float32MatrixMeanBenchmark()
+      : super('Matrix float32, matrix mean column-wise');
 
   final Matrix _source =
-  Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 12);
+      Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 12);
 
   static void main() {
     Float32MatrixMeanBenchmark().report();
