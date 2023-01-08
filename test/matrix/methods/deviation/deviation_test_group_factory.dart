@@ -102,7 +102,7 @@ void matrixDeviationTestGroupFactory(DType dtype) =>
 
         test(
             'should calculate standard deviation column-wise for a matrix with '
-            'just one column, 9x1 matrix', () {
+            'just one column, 9x2 matrix', () {
           final matrix = Matrix.fromList([
             [1, 1],
             [2, 2],
