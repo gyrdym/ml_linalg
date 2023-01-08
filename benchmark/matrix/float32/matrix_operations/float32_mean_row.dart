@@ -5,14 +5,14 @@ import 'package:ml_linalg/axis.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 
-const numOfRows = 20001;
-const numOfColumns = 2001;
+const rowCount = 20001;
+const columnCount = 2001;
 
 class Float32MatrixMeanBenchmark extends BenchmarkBase {
   Float32MatrixMeanBenchmark() : super('Matrix float32, matrix mean row-wise');
 
   final Matrix _source =
-      Matrix.random(numOfRows, numOfColumns, dtype: DType.float32, seed: 12);
+      Matrix.random(rowCount, columnCount, dtype: DType.float32, seed: 12);
 
   static void main() {
     Float32MatrixMeanBenchmark().report();
