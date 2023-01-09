@@ -347,18 +347,17 @@ class Float64Matrix
 
   @override
   Vector getColumn(int index) {
-    // if (_colCache[index] == null) {
-    final column = Float64List(rowCount);
+    if (_colCache[index] == null) {
+      final column = Float64List(rowCount);
 
-    for (var i = 0; i < rowCount; i++) {
-      column[i] = _flattenedList[i * columnCount + index];
+      for (var i = 0; i < rowCount; i++) {
+        column[i] = _flattenedList[i * columnCount + index];
+      }
+
+      _colCache[index] = Vector.fromList(column, dtype: dtype);
     }
 
-    // _colCache[index] = Vector.fromList(column, dtype: dtype);
-    return Vector.fromList(column, dtype: dtype);
-    // }
-    //
-    // return _colCache[index]!;
+    return _colCache[index]!;
   }
 
   @override
