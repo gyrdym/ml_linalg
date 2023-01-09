@@ -615,7 +615,6 @@ class Float64Matrix
 
   Vector _columnVariance(Vector means) {
     final variances = Float64List(columnCount);
-    var j = 0;
 
     for (var i = 0; i < columnCount; i++) {
       var sum = 0.0;
@@ -627,7 +626,7 @@ class Float64Matrix
         sum += diff * diff;
       }
 
-      variances[j++] = sum / rowCount;
+      variances[i] = sum / rowCount;
     }
 
     return Vector.fromList(variances, dtype: dtype);
