@@ -100,9 +100,8 @@ void matrixDeviationTestGroupFactory(DType dtype) =>
           expect(deviation.dtype, dtype);
         });
 
-        test(
-            'should calculate standard deviation column-wise for a matrix with '
-            'just one column, 9x2 matrix', () {
+        test('should calculate standard deviation column-wise for 9x2 matrix',
+            () {
           final matrix = Matrix.fromList([
             [1, 1],
             [2, 2],
@@ -146,9 +145,8 @@ void matrixDeviationTestGroupFactory(DType dtype) =>
           expect(deviation.dtype, dtype);
         });
 
-        test(
-            'should calculate standard deviation column-wise for a matrix with '
-            'just one row, 1x5 matrix', () {
+        test('should calculate standard deviation column-wise for 1x5 matrix',
+            () {
           final matrix = Matrix.fromList([
             [10, 20, 3000, 4000, -60000],
           ], dtype: dtype);
@@ -216,9 +214,7 @@ void matrixDeviationTestGroupFactory(DType dtype) =>
           expect(deviation.dtype, dtype);
         });
 
-        test(
-            'should calculate standard deviation row-wise for a matrix with '
-            'just one row, 1x5 matrix', () {
+        test('should calculate standard deviation row-wise for 1x5 matrix', () {
           final matrix = Matrix.fromList([
             [3, 4, 5, 6, 7],
           ], dtype: dtype);
@@ -237,9 +233,7 @@ void matrixDeviationTestGroupFactory(DType dtype) =>
           expect(deviation.dtype, dtype);
         });
 
-        test(
-            'should calculate standard deviation row-wise for a matrix with '
-            'just one row, 1x9 matrix', () {
+        test('should calculate standard deviation row-wise for 1x9 matrix', () {
           final matrix = Matrix.fromList([
             [3, 4, 5, 6, 7, 8, 9, 10, 11],
           ], dtype: dtype);
@@ -262,9 +256,7 @@ void matrixDeviationTestGroupFactory(DType dtype) =>
           expect(deviation.dtype, dtype);
         });
 
-        test(
-            'should calculate standard deviation row-wise for a matrix with '
-            'just one row, 2x5 matrix', () {
+        test('should calculate standard deviation row-wise for 2x5 matrix', () {
           final matrix = Matrix.fromList([
             [3, 4, 5, 6, 7],
             [1, 2, 3, 4, 5]
@@ -276,9 +268,7 @@ void matrixDeviationTestGroupFactory(DType dtype) =>
           expect(deviation.dtype, dtype);
         });
 
-        test(
-            'should calculate standard deviation row-wise for a matrix with '
-            'just one row, 2x9 matrix', () {
+        test('should calculate standard deviation row-wise for 2x9 matrix', () {
           final matrix = Matrix.fromList([
             [3, 4, 5, 6, 7, 8, 9, 10, 11],
             [3, 4, 5, 6, 7, 8, 9, 10, 11],
