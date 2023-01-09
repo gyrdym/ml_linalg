@@ -12,7 +12,6 @@ import 'package:ml_linalg/inverse.dart';
 import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/matrix_norm.dart';
 import 'package:ml_linalg/sort_direction.dart';
-import 'package:ml_linalg/src/common/cache_manager/cache_manager_impl.dart';
 import 'package:ml_linalg/src/common/exception/backward_substitution_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_inappropriate_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix_exception.dart';
@@ -27,7 +26,6 @@ import 'package:ml_linalg/src/matrix/helper/get_2d_iterable_length.dart';
 import 'package:ml_linalg/src/matrix/helper/get_length_of_first_or_zero.dart';
 import 'package:ml_linalg/src/matrix/helper/get_zero_based_indices.dart';
 import 'package:ml_linalg/src/matrix/iterator/float64_matrix_iterator.g.dart';
-import 'package:ml_linalg/src/matrix/matrix_cache_keys.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_shape_validation_mixin.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
@@ -206,7 +204,6 @@ class Float64Matrix
   final List<Vector?> _rowCache;
   final List<Vector?> _colCache;
   final Float64List _flattenedList;
-  final _cache = CacheManagerImpl(matrixCacheKeys);
   final _simdHelper = const Float64x2Helper();
 
   Float64x2List? _cachedSimdList;
@@ -350,17 +347,18 @@ class Float64Matrix
 
   @override
   Vector getColumn(int index) {
-    if (_colCache[index] == null) {
-      final column = Float64List(rowCount);
+    // if (_colCache[index] == null) {
+    final column = Float64List(rowCount);
 
-      for (var i = 0; i < rowCount; i++) {
-        column[i] = _flattenedList[i * columnCount + index];
-      }
-
-      _colCache[index] = Vector.fromList(column, dtype: dtype);
+    for (var i = 0; i < rowCount; i++) {
+      column[i] = _flattenedList[i * columnCount + index];
     }
 
-    return _colCache[index]!;
+    // _colCache[index] = Vector.fromList(column, dtype: dtype);
+    return Vector.fromList(column, dtype: dtype);
+    // }
+    //
+    // return _colCache[index]!;
   }
 
   @override
@@ -556,7 +554,6 @@ class Float64Matrix
 
   Vector _simdRowMean() {
     final means = Float64List(rowCount);
-    var j = 0;
 
     for (var i = 0; i < rowCount; i++) {
       final indexFrom = i * columnsNum;
@@ -584,7 +581,7 @@ class Float64Matrix
         }
       }
 
-      means[j++] =
+      means[i] =
           _simdHelper.sumLanes(sum) / columnCount + residualSum / columnCount;
     }
 
@@ -606,12 +603,10 @@ class Float64Matrix
 
     switch (axis) {
       case Axis.columns:
-        return _cache.get(
-            matrixVarianceByColumnsKey, () => _variance(rows, means, rowCount));
+        return _columnVariance(means);
 
       case Axis.rows:
-        return _cache.get(matrixVarianceByRowsKey,
-            () => _variance(columns, means, columnCount));
+        return _rowVariance(means);
 
       default:
         throw UnimplementedError('Deviation calculation for axis $axis is not '
@@ -619,11 +614,45 @@ class Float64Matrix
     }
   }
 
-  Vector _variance(Iterable<Vector> vectors, Vector means, int vectorsNum) =>
-      vectors
-          .map((vector) => (vector - means) * (vector - means))
-          .reduce((summed, vector) => summed + vector)
-          .scalarDiv(vectorsNum);
+  Vector _columnVariance(Vector means) {
+    final variances = Float64List(columnCount);
+    var j = 0;
+
+    for (var i = 0; i < columnCount; i++) {
+      var sum = 0.0;
+      var mean = means[i];
+
+      for (var k = 0; k < rowCount; k++) {
+        final diff = _flattenedList[k * columnCount + i] - mean;
+
+        sum += diff * diff;
+      }
+
+      variances[j++] = sum / rowCount;
+    }
+
+    return Vector.fromList(variances, dtype: dtype);
+  }
+
+  Vector _rowVariance(Vector means) {
+    final variances = Float64List(rowCount);
+
+    for (var i = 0; i < rowCount; i++) {
+      final offset = i * columnCount;
+      var sum = 0.0;
+      var mean = means[i];
+
+      for (var k = 0; k < columnCount; k++) {
+        final diff = _flattenedList[offset + k] - mean;
+
+        sum += diff * diff;
+      }
+
+      variances[i] = sum / columnCount;
+    }
+
+    return Vector.fromList(variances, dtype: dtype);
+  }
 
   @override
   Vector toVector() {

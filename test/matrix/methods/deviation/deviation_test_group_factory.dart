@@ -175,7 +175,7 @@ void matrixDeviationTestGroupFactory(DType dtype) =>
             'calculated values as a vector', () {
           final matrix = Matrix.fromList([
             [1, 1, 1],
-            [33, 0, 30000],
+            [33, 0, 30000], // 33 - 10011, 0 - 10011, 30000 - 10011
             [27, -20, 30000],
             [0, 0, 0],
           ], dtype: dtype); // means 1, 10011, 10002.33, 0,
