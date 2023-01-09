@@ -1,4 +1,4 @@
-// Approx. 2.5 seconds (MacBook Pro 2019), Dart version: 2.16.0
+// Approx. 4.7 seconds (MacBook Pro 2019), Dart version: 2.16.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/axis.dart';
@@ -10,7 +10,7 @@ const columnCount = 2001;
 
 class Float32MatrixMeanBenchmark extends BenchmarkBase {
   Float32MatrixMeanBenchmark()
-      : super('Matrix float32, matrix mean column-wise');
+      : super('Matrix float32, matrix deviation column-wise');
 
   final Matrix _source =
       Matrix.random(rowCount, columnCount, dtype: DType.float32, seed: 12);
@@ -21,7 +21,7 @@ class Float32MatrixMeanBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    _source.mean(Axis.columns);
+    _source.deviation(Axis.columns);
   }
 }
 
