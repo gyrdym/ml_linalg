@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.25
+- Matrix:
+  - `variance` method speed up
+
 ## 13.11.24
 - Matrix:
   - `mean` method speed up
