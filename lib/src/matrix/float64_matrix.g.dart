@@ -317,11 +317,12 @@ class Float64Matrix
   Matrix transpose() {
     final transposed = Float64List(elementCount);
 
-    for (var i = 0; i < transposed.length; i++) {
-      final rowIdx = i ~/ columnCount;
-      final colIdx = i - columnCount * rowIdx;
+    for (var i = 0; i < rowCount; i++) {
+      final offset = i * columnCount;
 
-      transposed[colIdx * rowCount + rowIdx] = _flattenedList[i];
+      for (var j = 0; j < columnCount; j++) {
+        transposed[j * rowCount + i] = _flattenedList[offset + j];
+      }
     }
 
     return Float64Matrix.fromFlattenedList(transposed, columnCount, rowCount);

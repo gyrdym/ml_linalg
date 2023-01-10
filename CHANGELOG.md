@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.28
+- Matrix:
+  - `transpose` method speed up
+  
 ## 13.11.27
 - Matrix:
   - `Float32Matrix`, `Float64Matrix`:
