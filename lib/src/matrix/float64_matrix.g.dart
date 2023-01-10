@@ -324,8 +324,7 @@ class Float64Matrix
       transposed[colIdx * rowCount + rowIdx] = _flattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(transposed, columnCount, rowCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(transposed, columnCount, rowCount);
   }
 
   @override
@@ -419,8 +418,8 @@ class Float64Matrix
       sampled[i] = _flattenedList[thisRowIdx * columnCount + thisColIdx];
     }
 
-    return Matrix.fromFlattenedList(sampled, sampledRowCount, sampledColCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(
+        sampled, sampledRowCount, sampledColCount);
   }
 
   @override
@@ -453,28 +452,24 @@ class Float64Matrix
       mapped[i] = mapper(_flattenedList[i]);
     }
 
-    return Matrix.fromFlattenedList(mapped, rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(mapped, rowCount, columnCount);
   }
 
   @override
   Matrix mapColumns(Vector Function(Vector columns) mapper) =>
-      Matrix.fromColumns(
-          List.generate(columnCount, (int i) => mapper(getColumn(i))),
-          dtype: dtype);
+      Float64Matrix.fromColumns(
+          List.generate(columnCount, (int i) => mapper(getColumn(i))));
 
   @override
   Matrix filterColumns(bool Function(Vector column, int idx) predicate) {
     var i = 0;
-    return Matrix.fromColumns(
-        columns.where((column) => predicate(column, i++)).toList(),
-        dtype: dtype);
+    return Float64Matrix.fromColumns(
+        columns.where((column) => predicate(column, i++)).toList());
   }
 
   @override
-  Matrix mapRows(Vector Function(Vector row) mapper) =>
-      Matrix.fromRows(List.generate(rowCount, (int i) => mapper(getRow(i))),
-          dtype: dtype);
+  Matrix mapRows(Vector Function(Vector row) mapper) => Float64Matrix.fromRows(
+      List.generate(rowCount, (int i) => mapper(getRow(i))));
 
   @override
   Matrix uniqueRows() {
@@ -488,7 +483,7 @@ class Float64Matrix
       }
     }
 
-    return Matrix.fromRows(checked, dtype: dtype);
+    return Float64Matrix.fromRows(checked);
   }
 
   @override
@@ -734,7 +729,7 @@ class Float64Matrix
       return getColumn(index - columns.length);
     }).toList(growable: false);
 
-    return Matrix.fromColumns(newColumns, dtype: dtype);
+    return Float64Matrix.fromColumns(newColumns);
   }
 
   @override
@@ -745,10 +740,10 @@ class Float64Matrix
 
     switch (axis) {
       case Axis.rows:
-        return Matrix.fromRows(doSort(rows), dtype: dtype);
+        return Float64Matrix.fromRows(doSort(rows));
 
       case Axis.columns:
-        return Matrix.fromColumns(doSort(columns), dtype: dtype);
+        return Float64Matrix.fromColumns(doSort(columns));
 
       default:
         throw UnsupportedError('Unsupported axis type $axis');
@@ -768,7 +763,7 @@ class Float64Matrix
     final source =
         List.generate(rowCount, (int i) => getRow(i).fastMap(mapper));
 
-    return Matrix.fromRows(source, dtype: dtype);
+    return Float64Matrix.fromRows(source);
   }
 
   @override
@@ -779,8 +774,7 @@ class Float64Matrix
       result[i] = math.pow(_flattenedList[i], exponent).toDouble();
     }
 
-    return Matrix.fromFlattenedList(result, rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(result, rowCount, columnCount);
   }
 
   @override
@@ -791,8 +785,7 @@ class Float64Matrix
       result[i] = math.exp(_flattenedList[i]);
     }
 
-    return Matrix.fromFlattenedList(result, rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(result, rowCount, columnCount);
   }
 
   @override
@@ -803,8 +796,7 @@ class Float64Matrix
       result[i] = math.log(_flattenedList[i]);
     }
 
-    return Matrix.fromFlattenedList(result, rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(result, rowCount, columnCount);
   }
 
   @override
@@ -972,7 +964,7 @@ class Float64Matrix
       }
     }
 
-    return Matrix.fromFlattenedList(X, rowCount, rowCount, dtype: dtype);
+    return Float64Matrix.fromFlattenedList(X, rowCount, rowCount);
   }
 
   Matrix _backwardSubstitutionInverse() {
@@ -996,7 +988,7 @@ class Float64Matrix
       }
     }
 
-    return Matrix.fromFlattenedList(X, rowCount, rowCount, dtype: dtype);
+    return Float64Matrix.fromFlattenedList(X, rowCount, rowCount);
   }
 
   Iterable<Matrix> _choleskyDecomposition() {
@@ -1037,8 +1029,8 @@ class Float64Matrix
     }
 
     return [
-      Matrix.fromFlattenedList(L, rowCount, rowCount, dtype: dtype),
-      Matrix.fromFlattenedList(U, rowCount, rowCount, dtype: dtype)
+      Float64Matrix.fromFlattenedList(L, rowCount, rowCount),
+      Float64Matrix.fromFlattenedList(U, rowCount, rowCount)
     ];
   }
 
@@ -1074,8 +1066,8 @@ class Float64Matrix
     }
 
     return [
-      Matrix.fromFlattenedList(L, rowCount, rowCount, dtype: dtype),
-      Matrix.fromFlattenedList(U, rowCount, rowCount, dtype: dtype)
+      Float64Matrix.fromFlattenedList(L, rowCount, rowCount),
+      Float64Matrix.fromFlattenedList(U, rowCount, rowCount)
     ];
   }
 
@@ -1095,7 +1087,7 @@ class Float64Matrix
   }
 
   num _rayleighQuotient(Vector eigenVector) {
-    return (Matrix.fromRows([eigenVector], dtype: dtype) * this)
+    return (Float64Matrix.fromRows([eigenVector]) * this)
             .toVector()
             .dot(eigenVector) /
         eigenVector.dot(eigenVector);
@@ -1128,7 +1120,7 @@ class Float64Matrix
 
     final vectorColumn = Vector.fromList(source, dtype: dtype);
 
-    return Matrix.fromColumns([vectorColumn], dtype: dtype);
+    return Float64Matrix.fromColumns([vectorColumn]);
   }
 
   Matrix _matrixByMatrixMult(Matrix matrix) {
@@ -1136,7 +1128,7 @@ class Float64Matrix
 
     final source = List.generate(rowCount, (i) => getRow(i) * matrix);
 
-    return Matrix.fromRows(source, dtype: dtype);
+    return Float64Matrix.fromRows(source);
   }
 
   Matrix _matrixByVectorDiv(Vector vector) {
@@ -1173,9 +1165,8 @@ class Float64Matrix
         result[result.length - 1] = _getLastSimd() / other._getLastSimd();
       }
 
-      return Matrix.fromFlattenedList(
-          result.buffer.asFloat64List(), rowCount, columnCount,
-          dtype: dtype);
+      return Float64Matrix.fromFlattenedList(
+          result.buffer.asFloat64List(), rowCount, columnCount);
     }
 
     final source = Float64List(rowCount * columnCount);
@@ -1184,8 +1175,7 @@ class Float64Matrix
       source[i] = asFlattenedList[i] / other.asFlattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(source, rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(source, rowCount, columnCount);
   }
 
   Matrix _matrixMatrixAdd(Matrix other) {
@@ -1205,9 +1195,8 @@ class Float64Matrix
         result[result.length - 1] = _getLastSimd() + other._getLastSimd();
       }
 
-      return Matrix.fromFlattenedList(
-          result.buffer.asFloat64List(), rowCount, columnCount,
-          dtype: dtype);
+      return Float64Matrix.fromFlattenedList(
+          result.buffer.asFloat64List(), rowCount, columnCount);
     }
 
     final source = Float64List(rowCount * columnCount);
@@ -1216,8 +1205,7 @@ class Float64Matrix
       source[i] = asFlattenedList[i] + other.asFlattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(source, rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(source, rowCount, columnCount);
   }
 
   Matrix _matrixMatrixSub(Matrix other) {
@@ -1237,9 +1225,8 @@ class Float64Matrix
         result[result.length - 1] = _getLastSimd() - other._getLastSimd();
       }
 
-      return Matrix.fromFlattenedList(
-          result.buffer.asFloat64List(), rowCount, columnCount,
-          dtype: dtype);
+      return Float64Matrix.fromFlattenedList(
+          result.buffer.asFloat64List(), rowCount, columnCount);
     }
 
     final source = Float64List(rowCount * columnCount);
@@ -1248,8 +1235,7 @@ class Float64Matrix
       source[i] = asFlattenedList[i] - other.asFlattenedList[i];
     }
 
-    return Matrix.fromFlattenedList(source, rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(source, rowCount, columnCount);
   }
 
   Matrix _matrixScalarAdd(double scalar) {
@@ -1265,9 +1251,8 @@ class Float64Matrix
       result[result.length - 1] = _getLastSimd() + scalarAsSimd;
     }
 
-    return Matrix.fromFlattenedList(
-        result.buffer.asFloat64List(), rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(
+        result.buffer.asFloat64List(), rowCount, columnCount);
   }
 
   Matrix _matrixScalarSub(double scalar) {
@@ -1283,9 +1268,8 @@ class Float64Matrix
       result[result.length - 1] = _getLastSimd() - scalarAsSimd;
     }
 
-    return Matrix.fromFlattenedList(
-        result.buffer.asFloat64List(), rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(
+        result.buffer.asFloat64List(), rowCount, columnCount);
   }
 
   Matrix _matrixByScalarMult(double scalar) {
@@ -1301,9 +1285,8 @@ class Float64Matrix
       result[result.length - 1] = _getLastSimd() * scalarAsSimd;
     }
 
-    return Matrix.fromFlattenedList(
-        result.buffer.asFloat64List(), rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(
+        result.buffer.asFloat64List(), rowCount, columnCount);
   }
 
   Matrix _matrixByScalarDiv(double scalar) {
@@ -1319,9 +1302,8 @@ class Float64Matrix
       result[result.length - 1] = _getLastSimd() / scalarAsSimd;
     }
 
-    return Matrix.fromFlattenedList(
-        result.buffer.asFloat64List(), rowCount, columnCount,
-        dtype: dtype);
+    return Float64Matrix.fromFlattenedList(
+        result.buffer.asFloat64List(), rowCount, columnCount);
   }
 
   Float64x2List _createEmptySimdList() {
