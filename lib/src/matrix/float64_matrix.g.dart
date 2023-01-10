@@ -502,11 +502,7 @@ class Float64Matrix
         return _columnMean();
 
       case Axis.rows:
-        if (columnCount < _simdSize) {
-          return _rowMean();
-        }
-
-        return _simdRowMean();
+        return _rowMean();
 
       default:
         throw UnimplementedError(
@@ -534,54 +530,16 @@ class Float64Matrix
 
   Vector _rowMean() {
     final means = Float64List(rowCount);
-    var sum = _flattenedList[0];
-    var j = 0;
-
-    for (var i = 1; i < elementCount; i++) {
-      if (i % columnCount != 0) {
-        sum += _flattenedList[i];
-      } else {
-        means[j++] = sum / columnCount;
-        sum = _flattenedList[i];
-      }
-    }
-
-    means[j] = sum / columnCount;
-
-    return Vector.fromList(means, dtype: dtype);
-  }
-
-  Vector _simdRowMean() {
-    final means = Float64List(rowCount);
 
     for (var i = 0; i < rowCount; i++) {
-      final indexFrom = i * columnsNum;
-      final sublist = _flattenedList.sublist(indexFrom, indexFrom + columnsNum);
-      final sublistAsSimd = sublist.buffer.asFloat64x2List();
-      var sum = Float64x2.zero();
+      final offset = i * columnCount;
+      var sum = 0.0;
 
-      for (var k = 0; k < sublistAsSimd.length; k++) {
-        sum += sublistAsSimd[k];
+      for (var k = 0; k < columnCount; k++) {
+        sum += _flattenedList[offset + k];
       }
 
-      var residualSum = 0.0;
-      var residual = columnCount % _simdSize;
-
-      if (residual > 0) {
-        final offset = i * Float64List.bytesPerElement * columnCount;
-        final residualElements = _flattenedList.buffer.asFloat64List(
-            offset + (columnCount - residual) * Float64List.bytesPerElement,
-            residual);
-
-        residualSum = residualElements[0];
-
-        for (var k = 1; k < residualElements.length; k++) {
-          residualSum += residualElements[k];
-        }
-      }
-
-      means[i] =
-          _simdHelper.sumLanes(sum) / columnCount + residualSum / columnCount;
+      means[i] = sum / columnCount;
     }
 
     return Vector.fromList(means, dtype: dtype);
