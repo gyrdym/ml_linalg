@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.26
+- Matrix:
+  - `mean`: redundant code removed
+
 ## 13.11.25
 - Matrix:
   - `variance` method speed up
