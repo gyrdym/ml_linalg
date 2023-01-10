@@ -1,5 +1,10 @@
 # Changelog
 
+## 13.11.27
+- Matrix:
+  - `Float32Matrix`, `Float64Matrix`:
+    - `Matrix` constructors replaced by specific ones
+
 ## 13.11.26
 - Matrix:
   - `mean`: redundant code removed
