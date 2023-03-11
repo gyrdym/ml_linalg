@@ -85,7 +85,7 @@
         - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
         - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
-- [vector_math and ml_linalg differences](#-vectormath--and--mllinalg--differences)
+- [vector_math and ml_linalg differences](#differences-between-vector-math-and-ml-linalg)
 - [Contacts](#contacts)
 </details>
 
@@ -1302,7 +1302,7 @@ import 'package:ml_linalg/linalg.dart';
 final matrix = Matrix.fromJson(serialized);
 ````
 
-## "vector_math" and "ml_linalg" differences
+## Differences between vector math and ml linalg
 
 There are similar solutions on the internet, the most famous of which is [vector_math](https://pub.dev/packages/vector_math) by the Google team. At first 
 glance, `vector_math` and `ml_linalg` look similar - both of them are based on SIMD, but in fact, these are two completely 
