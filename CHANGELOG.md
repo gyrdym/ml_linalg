@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.29
+- README:
+  - added differences between `vector_math` and `ml_linalg`
+
 ## 13.11.28
 - Matrix:
   - `transpose` method speed up
