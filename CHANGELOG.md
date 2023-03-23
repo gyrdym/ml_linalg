@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.11.30
+- `Vector`:
+  - Fixed typo in documentation for `min` method
+
 ## 13.11.29
 - README:
   - added differences between `vector_math` and `ml_linalg`

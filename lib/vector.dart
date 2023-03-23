@@ -366,10 +366,10 @@ abstract class Vector implements Iterable<double> {
   /// Returns the product of all the vector's elements
   double prod();
 
-  /// Returns maximum element among the all vector elements
+  /// Returns maximum element among all vector elements
   double max({bool skipCaching = false});
 
-  /// Returns maximum element among the all vector elements
+  /// Returns minimum element among all vector elements
   double min({bool skipCaching = false});
 
   /// Returns a new vector composed of elements which are located on the passed
