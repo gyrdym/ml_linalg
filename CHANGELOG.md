@@ -1,5 +1,8 @@
 # Changelog
 
+## 13.11.31
+- Lib migration to Dart 3.0.0 (only non-breaking changes)
+
 ## 13.11.30
 - `Vector`:
   - Fixed typo in documentation for `min` method
