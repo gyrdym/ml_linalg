@@ -981,7 +981,7 @@ print(matrix1 - matrix2);
 
 #### Solving a system of linear equations
 
-A matrix notation for a system of linear equations:
+A matrix notation for [a system of linear equations](https://en.wikipedia.org/wiki/System_of_linear_equations):
 
 ```
 AX=B

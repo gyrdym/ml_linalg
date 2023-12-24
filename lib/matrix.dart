@@ -808,7 +808,7 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Default value is [Inverse.LU]
   Matrix inverse([Inverse inverseType]);
 
-  /// Returns a solution for a system of linear equations:
+  /// Returns a solution for [a system of linear equations](https://en.wikipedia.org/wiki/System_of_linear_equations):
   ///
   /// ```
   /// A*X = B
