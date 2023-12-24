@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.12.0
+- `Matrix`:
+  - add `solve` method for solving a system of linear equations
+
 ## 13.11.31
 - Lib migration to Dart 3.0.0 (only non-breaking changes)
 

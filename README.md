@@ -68,6 +68,7 @@
         - [Matrix Cholesky inversion](#matrix-cholesky-inversion)
         - [Lower triangular matrix inversion](#lower-triangular-matrix-inversion)
         - [Upper triangular matrix inversion](#upper-triangular-matrix-inversion)
+        - [Solving a system of linear equations](#solving-a-system-of-linear-equations)
         - [Obtaining Matrix eigenvectors and eigenvalues, Power Iteration method](#obtaining-matrix-eigenvectors-and-eigenvalues-power-iteration-method)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)
@@ -976,6 +977,37 @@ print(matrix1 - matrix2);
   // [0, 1, 0],
   // [0, 0, 1],
 ```
+
+
+#### Solving a system of linear equations
+
+A matrix notation for [a system of linear equations](https://en.wikipedia.org/wiki/System_of_linear_equations):
+
+```
+AX=B
+```
+
+To solve the system and find `X`, one may use the `solve` method:
+
+````Dart
+import 'package:ml_linalg/linalg.dart';
+
+void main() {
+  final A = Matrix.fromList([
+    [1, 1, 1],
+    [0, 2, 5],
+    [2, 5, -1],
+  ], dtype: dtype);
+  final B = Matrix.fromList([
+    [6],
+    [-4],
+    [27],
+  ], dtype: dtype);
+  final result = A.solve(B);
+  
+  print(result); // the output is close to [[5], [3], [-2]]
+}
+````
 
 #### Obtaining Matrix eigenvectors and eigenvalues, Power Iteration method
 
