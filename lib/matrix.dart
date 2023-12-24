@@ -738,10 +738,10 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// ```
   Vector toVector();
 
-  /// Returns maximal value of the matrix
+  /// Returns a max value of the matrix
   double max();
 
-  /// Return minimal value of the matrix
+  /// Return a min value of the matrix
   double min();
 
   /// Returns a norm of a matrix
@@ -803,8 +803,25 @@ abstract class Matrix implements Iterable<Iterable<double>> {
       {EigenMethod method, Vector? initial, int iterationCount, int? seed});
 
   /// Finds the inverse of the original matrix. Product of the inverse and the original matrix results in singular matrix
-  /// Default value id [Inverse.LU]
+  /// Default value is [Inverse.LU]
   Matrix inverse([Inverse inverseType]);
+
+  /// Returns a solution for a system of linear equations:
+  ///
+  /// ```
+  /// A*X = B
+  /// ```
+  ///
+  /// where `A` is this Matrix, [B] is a column matrix of [this matrix row count]x1 dimension
+  ///
+  /// To solve the system, one should do the following
+  ///
+  /// ```
+  /// X = inverse(A)*B
+  /// ```
+  ///
+  /// To find the inverse of this matrix, one should specify the [Inverse] type through passing the [inverse] argument, default value is [Inverse.LU]
+  Matrix solve(Matrix B, [Inverse inverse]);
 
   /// Returns a serializable map
   Map<String, dynamic> toJson();

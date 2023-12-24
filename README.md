@@ -977,6 +977,31 @@ print(matrix1 - matrix2);
   // [0, 0, 1],
 ```
 
+
+#### Solving a system of linear equations
+
+To solve a system of linear equations, one may use a `solve` method
+
+````Dart
+import 'package:ml_linalg/linalg.dart';
+
+void main() {
+  final A = Matrix.fromList([
+    [1, 1, 1],
+    [0, 2, 5],
+    [2, 5, -1],
+  ], dtype: dtype);
+  final B = Matrix.fromList([
+    [6],
+    [-4],
+    [27],
+  ], dtype: dtype);
+  final result = A.solve(B);
+  
+  print(result); // the output is close to [[5], [3], [-2]]
+}
+````
+
 #### Obtaining Matrix eigenvectors and eigenvalues, Power Iteration method
 
 The method returns a collection of pairs of an eigenvector and its corresponding eigenvalue. 
