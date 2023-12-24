@@ -891,6 +891,11 @@ class Float32Matrix
   }
 
   @override
+  Matrix solve(Matrix B, [Inverse inverse = Inverse.LU]) {
+    return this.inverse(inverse) * B;
+  }
+
+  @override
   Iterable<Matrix> decompose(
       [Decomposition decompositionType = Decomposition.LU]) {
     switch (decompositionType) {
