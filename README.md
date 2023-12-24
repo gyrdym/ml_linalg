@@ -987,7 +987,7 @@ A matrix notation for [a system of linear equations](https://en.wikipedia.org/wi
 AX=B
 ```
 
-To solve the system and find `X`, one may use a `solve` method:
+To solve the system and find `X`, one may use the `solve` method:
 
 ````Dart
 import 'package:ml_linalg/linalg.dart';
