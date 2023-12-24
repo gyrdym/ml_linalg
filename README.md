@@ -981,7 +981,13 @@ print(matrix1 - matrix2);
 
 #### Solving a system of linear equations
 
-To solve a system of linear equations, one may use a `solve` method
+A matrix notation for a system of linear equations:
+
+```
+AX=B
+```
+
+To solve the system and find `X`, one may use a `solve` method:
 
 ````Dart
 import 'package:ml_linalg/linalg.dart';
