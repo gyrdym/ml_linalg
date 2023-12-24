@@ -774,14 +774,16 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Creates a new [Matrix] composed of Euler's numbers raised to powers which
   /// are the elements of this [Matrix]
   Matrix exp(
-      {@Deprecated('The flag is useless, it\'ll be removed in the next major update')
-          bool skipCaching = false});
+      {@Deprecated(
+          'The flag is useless, it\'ll be removed in the next major update')
+      bool skipCaching = false});
 
   /// Creates a new [Matrix] composed of natural logarithms of the source
   /// matrix elements
   Matrix log(
-      {@Deprecated('The flag is useless, it\'ll be removed in the next major update')
-          bool skipCaching = false});
+      {@Deprecated(
+          'The flag is useless, it\'ll be removed in the next major update')
+      bool skipCaching = false});
 
   /// Performs Hadamard product - element-wise matrices multiplication
   Matrix multiply(Matrix other);
