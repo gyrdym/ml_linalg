@@ -68,6 +68,7 @@
         - [Matrix Cholesky inversion](#matrix-cholesky-inversion)
         - [Lower triangular matrix inversion](#lower-triangular-matrix-inversion)
         - [Upper triangular matrix inversion](#upper-triangular-matrix-inversion)
+        - [Solving a system of linear equations](#solving-a-system-of-linear-equations)
         - [Obtaining Matrix eigenvectors and eigenvalues, Power Iteration method](#obtaining-matrix-eigenvectors-and-eigenvalues-power-iteration-method)
         - [Matrix row-wise reduce](#matrix-row-wise-reduce)
         - [Matrix column-wise reduce](#matrix-column-wise-reduce)

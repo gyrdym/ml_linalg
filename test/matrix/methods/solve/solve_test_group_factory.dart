@@ -20,7 +20,11 @@ void matrixSolveTestGroupFactory(DType dtype) =>
             [27],
           ], dtype: dtype);
           final actual = A.solve(B);
-          final expected = [[5], [3], [-2]];
+          final expected = [
+            [5],
+            [3],
+            [-2]
+          ];
 
           expect(actual, iterable2dAlmostEqualTo(expected, 1e-6));
         });
