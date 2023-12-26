@@ -437,7 +437,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   Vector pow(num exponent) => _elementWisePow(exponent);
 
   @override
-  Vector exp({bool skipCaching = false}) => _cache.get(vectorLogKey, () {
+  Vector exp({bool skipCaching = false}) => _cache.get(vectorExpKey, () {
         final source = Float64List(length);
         final list = _getTypedList();
 
@@ -506,7 +506,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   double prod({bool skipCaching = false}) =>
-      _cache.get(vectorSumKey, _findProduct, skipCaching: skipCaching);
+      _cache.get(vectorProdKey, _findProduct, skipCaching: skipCaching);
 
   @override
   double distanceTo(
