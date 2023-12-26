@@ -38,5 +38,17 @@ void vectorProdTestGroupFactory(DType dtype) =>
           final vector = Vector.fromList([], dtype: dtype);
           expect(vector.prod(), isNaN);
         });
+
+        test('should extract value from cache', () {
+          final vector =
+              Vector.fromList([1.0, 2.0, 3.0, 4.0, 5.0], dtype: dtype);
+
+          final sum = vector.sum();
+          final prod = vector.prod();
+          final prod2 = vector.prod();
+
+          expect(prod, prod2);
+          expect(prod, isNot(sum));
+        });
       });
     });

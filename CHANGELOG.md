@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.12.1
+- `Vector`:
+  - Extracting values from cache for `exp` and `prod` methods fixed
+
 ## 13.12.0
 - `Matrix`:
   - add `solve` method for solving a system of linear equations

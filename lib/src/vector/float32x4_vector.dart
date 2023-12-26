@@ -434,7 +434,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Vector pow(num exponent) => _elementWisePow(exponent);
 
   @override
-  Vector exp({bool skipCaching = false}) => _cache.get(vectorLogKey, () {
+  Vector exp({bool skipCaching = false}) => _cache.get(vectorExpKey, () {
         final source = Float32List(length);
         final list = _getTypedList();
 
@@ -503,7 +503,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   double prod({bool skipCaching = false}) =>
-      _cache.get(vectorSumKey, _findProduct, skipCaching: skipCaching);
+      _cache.get(vectorProdKey, _findProduct, skipCaching: skipCaching);
 
   @override
   double distanceTo(
