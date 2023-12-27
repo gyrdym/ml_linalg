@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.12.2
+- `README`:
+  - Add link to `solve` method api docs
+
 ## 13.12.1
 - `Vector`:
   - Extracting values from cache for `exp` and `prod` methods fixed
