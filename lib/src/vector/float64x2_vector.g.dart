@@ -34,12 +34,13 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   Float64x2Vector.fromList(List<num> source, this._cache, this._simdHelper)
       : length = source.length {
     _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
-    _buffer = ByteData(_numOfBuckets * _bytesPerSimdElement).buffer;
 
-    final asTypedList = _buffer.asFloat64List();
+    final typedList = Float64List(_numOfBuckets * _bucketSize);
+
+    _buffer = typedList.buffer;
 
     for (var i = 0; i < length; i++) {
-      asTypedList[i] = source[i].toDouble();
+      typedList[i] = source[i].toDouble();
     }
   }
 

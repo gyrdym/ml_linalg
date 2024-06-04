@@ -31,12 +31,13 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32x4Vector.fromList(List<num> source, this._cache, this._simdHelper)
       : length = source.length {
     _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
-    _buffer = ByteData(_numOfBuckets * _bytesPerSimdElement).buffer;
 
-    final asTypedList = _buffer.asFloat32List();
+    final typedList = Float32List(_numOfBuckets * _bucketSize);
+
+    _buffer = typedList.buffer;
 
     for (var i = 0; i < length; i++) {
-      asTypedList[i] = source[i].toDouble();
+      typedList[i] = source[i].toDouble();
     }
   }
 
