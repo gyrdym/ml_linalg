@@ -57,7 +57,9 @@ void vectorFromListConstructorTestGroupFactory(DType dtype) =>
           expect(vector.dtype, dtype);
         });
 
-        test('should provide correct size of vectors when summing up, length is 3', () {
+        test(
+            'should provide correct size of vectors when summing up, length is 3',
+            () {
           final vector1 = Vector.fromList([1, 2, 3], dtype: dtype);
           final vector2 = Vector.fromList([3, 4, 5], dtype: dtype);
           final vector = vector1 + vector2;
@@ -67,7 +69,9 @@ void vectorFromListConstructorTestGroupFactory(DType dtype) =>
           expect(vector.dtype, dtype);
         });
 
-        test('should provide correct size of vectors when summing up, length is 5', () {
+        test(
+            'should provide correct size of vectors when summing up, length is 5',
+            () {
           final vector1 = Vector.fromList([1, 2, 3, 4, 5], dtype: dtype);
           final vector2 = Vector.fromList([3, 4, 5, 6, 7], dtype: dtype);
           final vector = vector1 + vector2;
