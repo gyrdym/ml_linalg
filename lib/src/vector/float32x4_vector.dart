@@ -69,6 +69,10 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   Float32x4Vector.filled(
       this.length, num value, this._cache, this._simdHelper) {
+    if (length < 0) {
+      throw ArgumentError('Length cannot be negative');
+    }
+
     _numOfBuckets = _getNumOfBuckets(length, _bucketSize);
     final list = Float32List(_numOfBuckets * _bucketSize);
     _buffer = list.buffer;
