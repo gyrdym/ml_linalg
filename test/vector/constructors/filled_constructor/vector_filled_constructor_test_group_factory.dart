@@ -14,5 +14,17 @@ void vectorFilledConstructorTestGroupFactory(DType dtype) =>
           expect(vector.length, equals(10));
           expect(vector.dtype, dtype);
         });
+
+        test(
+            'should provide correct size of vectors when summing up, length is 5',
+            () {
+          final vector1 = Vector.filled(5, 2.0, dtype: dtype);
+          final vector2 = Vector.filled(5, 3.0, dtype: dtype);
+          final vector = vector1 + vector2;
+
+          expect(vector, equals([5.0, 5.0, 5.0, 5.0, 5.0]));
+          expect(vector.length, equals(5));
+          expect(vector.dtype, dtype);
+        });
       });
     });
