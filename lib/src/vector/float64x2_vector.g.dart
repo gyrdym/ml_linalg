@@ -72,12 +72,18 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   Float64x2Vector.filled(
       this.length, num value, this._cache, this._simdHelper) {
+    if (length < 0) {
+      throw ArgumentError('Length cannot be negative');
+    }
+
     _numOfBuckets = _getNumOfBuckets(length, _bucketSize);
-    final list = Float64List(_numOfBuckets * _bucketSize);
+    final list = Float64x2List(_numOfBuckets);
     _buffer = list.buffer;
 
-    for (var i = 0; i < length; i++) {
-      list[i] = value.toDouble();
+    final simdValue = Float64x2.splat(value.toDouble());
+
+    for (var i = 0; i < _numOfBuckets; i++) {
+      list[i] = simdValue;
     }
   }
 
