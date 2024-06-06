@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.12.4
+- `Vector.filled`:
+  - factory-constructor speed-up
+
 ## 13.12.3
 - `Vector.fromList`:
   - factory-constructor speed-up
