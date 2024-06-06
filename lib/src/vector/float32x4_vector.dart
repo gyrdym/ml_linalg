@@ -74,11 +74,13 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
 
     _numOfBuckets = _getNumOfBuckets(length, _bucketSize);
-    final list = Float32List(_numOfBuckets * _bucketSize);
+    final list = Float32x4List(_numOfBuckets);
     _buffer = list.buffer;
 
-    for (var i = 0; i < length; i++) {
-      list[i] = value.toDouble();
+    final simdValue = Float32x4.splat(value.toDouble());
+
+    for (var i = 0; i < _numOfBuckets; i++) {
+      list[i] = simdValue;
     }
   }
 
