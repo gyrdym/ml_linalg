@@ -24,7 +24,6 @@ import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
-const _bytesPerElement = Float64List.bytesPerElement;
 const _bytesPerSimdElement = Float64x2List.bytesPerElement;
 const _bucketSize =
     Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
@@ -55,6 +54,10 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
     if (min >= max) {
       throw ArgumentError.value(min,
           'Argument `min` should be less than `max`, min: $min, max: $max');
+    }
+
+    if (length < 0) {
+      throw ArgumentError('Length cannot be negative');
     }
 
     _numOfBuckets = _getNumOfBuckets(length, _bucketSize);

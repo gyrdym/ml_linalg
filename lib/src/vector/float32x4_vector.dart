@@ -21,7 +21,6 @@ import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
-const _bytesPerElement = Float32List.bytesPerElement;
 const _bytesPerSimdElement = Float32x4List.bytesPerElement;
 const _bucketSize =
     Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
