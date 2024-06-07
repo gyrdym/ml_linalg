@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.12.5
+- `Vector.randomFilled`:
+  - factory-constructor speed-up
+
 ## 13.12.4
 - `Vector.filled`:
   - factory-constructor speed-up
