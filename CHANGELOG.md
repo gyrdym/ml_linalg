@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.12.6
+- `Vector.hashCode`:
+  - Make hash code more reliable
+
 ## 13.12.5
 - `Vector.randomFilled`:
   - factory-constructor speed-up
