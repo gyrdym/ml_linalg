@@ -31,7 +31,6 @@ class Float32x4VectorHashBenchmark extends BenchmarkBase {
       max: 1000,
       dtype: DType.float32,
     );
-    print(vector.hashCode);
   }
 }
 
