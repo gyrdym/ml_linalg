@@ -121,6 +121,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   final SimdHelper<Float64x2> _simdHelper;
   late ByteBuffer _buffer;
   late int _numOfBuckets;
+  int _hash = 0;
 
   @override
   Iterator<double> get iterator => _getTypedList().iterator;
@@ -157,18 +158,24 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   }
 
   @override
-  int get hashCode => _cache.get(vectorHashKey, () {
-        if (isEmpty) {
-          return 0;
-        }
+  int get hashCode {
+    if (isEmpty) {
+      return 0;
+    }
 
-        var i = 0;
+    if (_hash != 0) {
+      return _hash;
+    }
 
-        final summed = _getSimdList()
-            .reduce((sum, element) => sum + element.scale((31 * (i++)) * 1.0));
+    _hash = 1;
+    final typesList = _getTypedList();
 
-        return length + _simdHelper.sumLanesForHash(summed).hashCode;
-      }, skipCaching: false);
+    for (var i = 0; i < length; i++) {
+      _hash = _hash * 31 + typesList[i].hashCode;
+    }
+
+    return _hash;
+  }
 
   @override
   Vector operator +(Object value) {
