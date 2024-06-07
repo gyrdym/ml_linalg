@@ -21,7 +21,6 @@ import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
-const _bytesPerElement = Float32List.bytesPerElement;
 const _bytesPerSimdElement = Float32x4List.bytesPerElement;
 const _bucketSize =
     Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
@@ -32,12 +31,12 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
       : length = source.length {
     _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
 
-    final typedList = Float32List(_numOfBuckets * _bucketSize);
+    final list = Float32List(_numOfBuckets * _bucketSize);
 
-    _buffer = typedList.buffer;
+    _buffer = list.buffer;
 
     for (var i = 0; i < length; i++) {
-      typedList[i] = source[i].toDouble();
+      list[i] = source[i].toDouble();
     }
   }
 
@@ -54,16 +53,21 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
           'Argument `min` should be less than `max`, min: $min, max: $max');
     }
 
+    if (length < 0) {
+      throw ArgumentError('Length cannot be negative');
+    }
+
     _numOfBuckets = _getNumOfBuckets(length, _bucketSize);
-    final byteData = ByteData(_numOfBuckets * _bytesPerSimdElement);
-    _buffer = byteData.buffer;
+
+    final list = Float32List(_numOfBuckets * _bucketSize);
+
+    _buffer = list.buffer;
 
     final generator = math.Random(seed);
     final diff = max - min;
 
     for (var i = 0; i < length; i++) {
-      byteData.setFloat32(_bytesPerElement * i,
-          generator.nextDouble() * diff + min, Endian.host);
+      list[i] = generator.nextDouble() * diff + min;
     }
   }
 
@@ -74,7 +78,9 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     }
 
     _numOfBuckets = _getNumOfBuckets(length, _bucketSize);
+
     final list = Float32x4List(_numOfBuckets);
+
     _buffer = list.buffer;
 
     final simdValue = Float32x4.splat(value.toDouble());
