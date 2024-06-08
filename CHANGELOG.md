@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.12.6
+- `Matrix.fromList`, `Matrix.fromFlattenedList`:
+  - speed up
+
 ## 13.12.5
 - `Vector.randomFilled`:
   - factory-constructor speed-up
