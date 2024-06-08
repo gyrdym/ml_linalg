@@ -44,13 +44,13 @@ class Float32Matrix
         _flattenedList =
             Float32List(source.length * getLengthOfFirstOrZero(source)) {
     for (var i = 0; i < source.length; i++) {
-      if (source[i].length != columnCount) {
-        throw Exception('Wrong nested list length: ${source[i].length}, '
+      final column = source[i];
+      if (column.length != columnCount) {
+        throw Exception('Wrong nested list length: ${column.length}, '
             'expected length: $columnCount');
       }
-
-      for (var j = 0; j < source[i].length; j++) {
-        _flattenedList[i * columnCount + j] = source[i][j];
+      for (var j = 0; j < column.length; j++) {
+        _flattenedList[i * columnCount + j] = column[j];
       }
     }
   }
@@ -112,11 +112,17 @@ class Float32Matrix
         _rowCache = List<Vector?>.filled(rowCount, null),
         _colCache = List<Vector?>.filled(colCount, null),
         _flattenedList =
-            source is Float32List ? source : Float32List.fromList(source) {
+            source is Float32List ? source : Float32List(source.length) {
     if (source.length < rowCount * colCount) {
       throw Exception('Invalid matrix dimension has been provided - '
           '$rowCount x $colCount, but given a collection of length '
           '${source.length}');
+    }
+
+    if (source is! Float32List) {
+      for (var i = 0; i < _flattenedList.length; i++) {
+        _flattenedList[i] = source[i];
+      }
     }
   }
 
