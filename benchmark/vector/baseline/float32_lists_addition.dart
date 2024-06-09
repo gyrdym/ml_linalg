@@ -20,6 +20,9 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
   }
 
   @override
+  void exercise() => run();
+
+  @override
   void run() {
     final result = Float32List(amountOfElements);
 

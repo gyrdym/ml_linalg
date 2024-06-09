@@ -1,40 +1,28 @@
-// Approx. 0.25 seconds (MacBook Pro 2019), Dart version: 2.16.0
-// Approx. 0.42 second (MacBook Air mid 2017)
+// Approx. 0.3 seconds (MacBook Pro 2019), Dart version: 3.2.4
 
-import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
-const amountOfElements = 10000000;
+const amountOfElements = 1e8;
 
-class Float32x4VectorAbsBenchmark extends BenchmarkBase {
-  Float32x4VectorAbsBenchmark()
-      : super('Vector `abs` method; $amountOfElements elements');
-
-  Vector? vector;
-
+class Float32x4VectorAbsBenchmark {
   static void main() {
-    Float32x4VectorAbsBenchmark().report();
-  }
-
-  @override
-  void run() {
-    vector!.abs(skipCaching: true);
-  }
-
-  @override
-  void setup() {
-    vector = Vector.randomFilled(
-      amountOfElements,
+    final length = amountOfElements.toInt();
+    final vector = Vector.randomFilled(
+      length,
       seed: 1,
       min: -1000,
       max: 1000,
       dtype: DType.float32,
     );
-  }
 
-  void tearDown() {
-    vector = null;
+    final start = DateTime.now();
+
+    vector.abs();
+
+    final time = DateTime.now().difference(start).inMicroseconds;
+
+    print('Vector `abs` method; $length elements (RunTime): $time us');
   }
 }
 
