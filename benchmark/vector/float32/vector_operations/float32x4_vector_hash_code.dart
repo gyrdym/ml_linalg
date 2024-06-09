@@ -6,7 +6,6 @@ import 'package:ml_linalg/vector.dart';
 const amountOfElements = 1e8;
 
 class Float32x4VectorHashCodeBenchmark {
-
   static void main() {
     final vector = Vector.randomFilled(
       amountOfElements.toInt(),

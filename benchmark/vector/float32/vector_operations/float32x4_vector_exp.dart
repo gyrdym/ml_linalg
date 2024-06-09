@@ -21,7 +21,8 @@ class Float32x4VectorExpBenchmark {
 
     final time = DateTime.now().difference(start).inMicroseconds;
 
-    print('Vector `exp` method; $amountOfElements elements (RunTime): $time us');
+    print(
+        'Vector `exp` method; $amountOfElements elements (RunTime): $time us');
   }
 }
 
