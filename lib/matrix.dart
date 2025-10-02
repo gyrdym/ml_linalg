@@ -529,6 +529,41 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Runtime type can be Float32List or Float64List, it depends on the [dtype]
   List<double> get asFlattenedList;
 
+  /// Computes the determinant of the matrix using LU decomposition.
+  ///
+  /// The determinant is a scalar value that can be interpreted as the signed
+  /// volume of the parallelepiped formed by the column vectors of the matrix.
+  /// It is defined only for square matrices ([isSquare] must be `true`). For
+  /// non-square matrices, an [Exception] is thrown.
+  ///
+  /// The determinant is computed as the product of the diagonal elements of the
+  /// upper triangular matrix `U` obtained from the LU decomposition of the
+  /// matrix (where `A = L * U`).
+  ///
+  /// A simple usage example:
+  ///
+  /// ```dart
+  /// import 'package:ml_linalg/matrix.dart';
+  ///
+  /// void main() {
+  ///   final matrix = Matrix.fromList([
+  ///     [1.0, 2.0],
+  ///     [3.0, 4.0],
+  ///   ]);
+  ///   final det = matrix.determinant();
+  ///
+  ///   print(det); // -2.0
+  /// }
+  /// ```
+  ///
+  /// For the empty matrix (0x0), the determinant is defined as 1.0.
+  ///
+  /// For more information, see [Determinant](https://en.wikipedia.org/wiki/Determinant).
+  double determinant();
+
+
+
+
   /// Returns a number of matrix rows
   @Deprecated('use "rowCount" instead')
   int get rowsNum;
@@ -827,4 +862,6 @@ abstract class Matrix implements Iterable<Iterable<double>> {
 
   /// Returns a serializable map
   Map<String, dynamic> toJson();
+
+
 }

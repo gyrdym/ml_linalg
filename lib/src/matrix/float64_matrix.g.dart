@@ -246,6 +246,24 @@ class Float64Matrix
   bool get _hasLastSimd => _lastSimdSize != 0;
 
   @override
+  double determinant() {
+    if (!isSquare) {
+      throw Exception('Determinant can only be computed for square matrices: $rowCount x $columnCount');
+    }
+
+    final matrices = _luDecomposition();
+    final U = matrices.last;
+    double det = 1.0;
+
+    for (int i = 0; i < rowCount; i++) {
+      det *= U[i][i];
+    }
+
+    return det;
+  }
+
+
+  @override
   Matrix operator +(Object value) {
     if (value is Matrix) {
       return _matrixMatrixAdd(value);
