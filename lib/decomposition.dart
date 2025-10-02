@@ -4,4 +4,7 @@ enum Decomposition {
 
   /// LU (Lower-Upper) decomposition
   LU,
+
+  /// QR (Orthogonal-Triangular) decomposition
+  QR,
 }

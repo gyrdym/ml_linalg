@@ -4,6 +4,7 @@ import 'package:ml_linalg/matrix.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_inappropriate_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/cholesky_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/lu_decomposition_non_square_matrix_exception.dart';
+import 'package:ml_linalg/src/common/exception/qr_decomposition_non_square_matrix_exception.dart';
 import 'package:test/test.dart';
 
 import '../../../dtype_to_title.dart';
@@ -188,6 +189,87 @@ void matrixDecomposeTestGroupFactory(DType dtype) =>
 
           expect(() => matrix.decompose(Decomposition.LU),
               throwsA(isA<LUDecompositionNonSquareMatrixException>()));
+        });
+
+        test('should perform QR decomposition, empty matrix', () {
+          final matrix = Matrix.empty(dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.QR);
+
+          expect(decomposed.first * decomposed.last, equals(matrix));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform QR decomposition, 1x1 matrix', () {
+          final matrix = Matrix.fromList([
+            [4],
+          ], dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.QR);
+
+          expect(decomposed.first * decomposed.last, equals(matrix));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform QR decomposition, 2x2 matrix', () {
+          final matrix = Matrix.fromList([
+            [1, 2],
+            [3, 4],
+          ], dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.QR);
+
+          expect(decomposed.first * decomposed.last,
+              iterable2dAlmostEqualTo(matrix, 1e-5));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform QR decomposition, 3x3 matrix', () {
+          final matrix = Matrix.fromList([
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 10],
+          ], dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.QR);
+
+          expect(decomposed.first * decomposed.last,
+              iterable2dAlmostEqualTo(matrix, 1e-5));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform QR decomposition, 4x4 matrix', () {
+          final matrix = Matrix.random(4, 4, seed: 1986, dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.QR);
+
+          expect(decomposed.first * decomposed.last,
+              iterable2dAlmostEqualTo(matrix, 1e-3));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should perform QR decomposition, 5x5 matrix', () {
+          final matrix = Matrix.random(5, 5, seed: 1986, dtype: dtype);
+          final decomposed = matrix.decompose(Decomposition.QR);
+
+          expect(decomposed.first * decomposed.last,
+              iterable2dAlmostEqualTo(matrix, 1e-3));
+          expect(matrix.dtype, dtype);
+        });
+
+        test('should throw exception if norm is zero during QR decomposition', () {
+          final matrix = Matrix.fromList([
+            [1, 1],
+            [1, 1],
+          ], dtype: dtype);
+
+          expect(() => matrix.decompose(Decomposition.QR),
+              throwsA(isA<Exception>()));
+        });
+
+        test('should throw exception (QR) if matrix is not square', () {
+          final matrix = Matrix.fromList([
+            [1, 2, 3],
+            [4, 5, 6],
+          ], dtype: dtype);
+
+          expect(() => matrix.decompose(Decomposition.QR),
+              throwsA(isA<QRDecompositionNonSquareMatrixException>()));
         });
       });
     });
