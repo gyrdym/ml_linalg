@@ -245,6 +245,23 @@ class Float64Matrix
 
   bool get _hasLastSimd => _lastSimdSize != 0;
 
+
+  @override
+  double trace(){
+    if (!isSquare) {
+      throw Exception('Trace can be calculated only for square matrices, '
+          'given matrix is $rowCount x $columnCount');
+    }
+
+    var traceSum = 0.0;
+
+    for (var i = 0; i < rowCount; i++) {
+      traceSum += _flattenedList[i * columnCount + i];
+    }
+
+    return traceSum;
+  }
+  
   @override
   Matrix operator +(Object value) {
     if (value is Matrix) {
