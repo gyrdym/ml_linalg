@@ -1,11 +1,10 @@
-// Approx. 0.15 second (MacBook Pro 2019), Dart version: 2.16.0
-// Approx. 0.30 second (MacBook Air 2017)
+// Approx. 0.15 seconds (MacBook Pro 2019), Dart version: 3.10.7
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
-const amountOfElements = 100000;
+const amountOfElements = 1e5;
 
 class Float32x4VectorUniqueBenchmark extends BenchmarkBase {
   Float32x4VectorUniqueBenchmark()
@@ -25,7 +24,7 @@ class Float32x4VectorUniqueBenchmark extends BenchmarkBase {
   @override
   void setup() {
     vector = Vector.randomFilled(
-      amountOfElements,
+      amountOfElements.toInt(),
       seed: 1,
       min: -1000,
       max: 1000,

@@ -1,11 +1,11 @@
-// Approx. 0.45 sec (MacBook Pro 2019)
+// Approx. 0.7 seconds (MacBook Pro 2019), Dart version: 3.10.7
 
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 
-const amountOfElements = 10000000;
+const amountOfElements = 1e8;
 
 class RegularListsAdditionBenchmark extends BenchmarkBase {
   RegularListsAdditionBenchmark()
@@ -24,7 +24,7 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    final result = Float32List(amountOfElements);
+    final result = Float32List(amountOfElements.toInt());
 
     for (var i = 0; i < amountOfElements; i++) {
       result[i] = list1[i] + list2[i];
@@ -36,10 +36,10 @@ class RegularListsAdditionBenchmark extends BenchmarkBase {
     final generator = Random(13);
 
     list1 = Float32List.fromList(List.generate(
-        amountOfElements, (_) => generator.nextDouble() * 2000 - 1000));
+        amountOfElements.toInt(), (_) => generator.nextDouble() * 2000 - 1000));
 
     list2 = Float32List.fromList(List.generate(
-        amountOfElements, (_) => generator.nextDouble() * 2000 - 1000));
+        amountOfElements.toInt(), (_) => generator.nextDouble() * 2000 - 1000));
   }
 }
 
