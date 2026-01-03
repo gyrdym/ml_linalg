@@ -1,11 +1,10 @@
-// Approx. 2.2 sec (MacBook Pro 2019), Dart version: 2.16.0
-// Approx. 7.5 sec (MacBook Air mid 2017)
+// Approx. 1.3 sec (MacBook Pro 2019), Dart version: 3.5.0
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
-const amountOfElements = 10000000;
+const amountOfElements = 1e8;
 
 class Float32x4VectorAndListSubtractionBenchmark extends BenchmarkBase {
   Float32x4VectorAndListSubtractionBenchmark()
@@ -21,6 +20,9 @@ class Float32x4VectorAndListSubtractionBenchmark extends BenchmarkBase {
   }
 
   @override
+  void exercise() => run();
+
+  @override
   void run() {
     result = vector - list;
   }
@@ -28,14 +30,14 @@ class Float32x4VectorAndListSubtractionBenchmark extends BenchmarkBase {
   @override
   void setup() {
     vector = Vector.randomFilled(
-      amountOfElements,
+      amountOfElements.toInt(),
       seed: 1,
       min: -1000,
       max: 1000,
       dtype: DType.float32,
     );
     list = Vector.randomFilled(
-      amountOfElements,
+      amountOfElements.toInt(),
       seed: 2,
       min: -1000,
       max: 1000,

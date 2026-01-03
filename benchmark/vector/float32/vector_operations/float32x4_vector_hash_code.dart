@@ -1,4 +1,4 @@
-// Approx. 0.2 seconds (MacBook Pro 2019), Dart version: 3.2.4
+// Approx. 0.3 seconds (MacBook Pro 2019), Dart version: 3.5.0
 
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
