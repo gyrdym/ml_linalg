@@ -236,6 +236,22 @@ class Float32Matrix
   @override
   List<double> get asFlattenedList => _flattenedList;
 
+  @override
+  double trace(){
+    if (!isSquare) {
+      throw Exception('Trace can be calculated only for square matrices, '
+          'given matrix is $rowCount x $columnCount');
+    }
+
+    var traceSum = 0.0;
+
+    for (var i = 0; i < rowCount; i++) {
+      traceSum += _flattenedList[i * columnCount + i];
+    }
+
+    return traceSum;
+  }
+
   int get elementCount => rowCount * columnCount;
 
   int get _lastSimdSize => elementCount % _simdSize;

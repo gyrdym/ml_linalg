@@ -529,6 +529,32 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Runtime type can be Float32List or Float64List, it depends on the [dtype]
   List<double> get asFlattenedList;
 
+  /// Computes the trace of the matrix, which is the sum of the elements on the main diagonal.
+  ///
+  /// The trace is defined only for square matrices ([isSquare] must be `true`). For non-square matrices, an [Exception] is thrown.
+  ///
+  /// For the empty matrix (0x0), the trace is defined as 0.0.
+  ///
+  /// A simple usage example:
+  ///
+  /// ```dart
+  /// import 'package:ml_linalg/matrix.dart';
+  ///
+  /// void main() {
+  ///   final matrix = Matrix.fromList([
+  ///     [1.0, 2.0],
+  ///     [3.0, 4.0],
+  ///   ]);
+  ///   final tr = matrix.trace();
+  ///
+  ///   print(tr); // 5.0
+  /// }
+  /// ```
+  ///
+  /// For more information, see [Trace (linear algebra)](https://en.wikipedia.org/wiki/Trace_(linear_algebra)).
+
+  double trace();
+
   /// Returns a number of matrix rows
   @Deprecated('use "rowCount" instead')
   int get rowsNum;
