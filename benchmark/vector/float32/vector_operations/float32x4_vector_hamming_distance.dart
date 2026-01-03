@@ -1,12 +1,11 @@
-// Approx. 1.3 seconds (MacBook Pro 2019), Dart version: 2.16.0
-// Approx. 2.7 seconds (MacBook Air mid 2017)
+// Approx. 1.2 seconds (MacBook Pro 2019), Dart version: 3.10.7
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
-const amountOfElements = 10000000;
+const amountOfElements = 1e8;
 
 class Float32x4VectorHammingDistanceBenchmark extends BenchmarkBase {
   Float32x4VectorHammingDistanceBenchmark()
@@ -20,6 +19,9 @@ class Float32x4VectorHammingDistanceBenchmark extends BenchmarkBase {
   }
 
   @override
+  void exercise() => run();
+
+  @override
   void run() {
     vector1.distanceTo(vector2, distance: Distance.hamming);
   }
@@ -27,14 +29,14 @@ class Float32x4VectorHammingDistanceBenchmark extends BenchmarkBase {
   @override
   void setup() {
     vector1 = Vector.randomFilled(
-      amountOfElements,
+      amountOfElements.toInt(),
       seed: 1,
       min: -1000,
       max: 1000,
       dtype: DType.float32,
     );
     vector2 = Vector.randomFilled(
-      amountOfElements,
+      amountOfElements.toInt(),
       seed: 2,
       min: -1000,
       max: 1000,

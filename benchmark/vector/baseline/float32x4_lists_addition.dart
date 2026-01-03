@@ -1,11 +1,11 @@
-// Approx. 0.3 sec (MacBook Pro 2019)
+// Approx. 2.6 sec (MacBook Pro 2019), Dart version: 3.10.7
 
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 
-const amountOfElements = 10000000 ~/ 4;
+const amountOfElements = 1e8 ~/ 4;
 
 class RegularListsAdditionBenchmark extends BenchmarkBase {
   RegularListsAdditionBenchmark()

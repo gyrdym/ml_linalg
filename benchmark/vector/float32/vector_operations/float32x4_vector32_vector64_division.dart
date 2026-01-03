@@ -1,11 +1,10 @@
-// Approx. 1.8 seconds (MacBook Pro 2019), Dart version: 2.16.0
-// Approx. 3.2 sec (MacBook Air mid 2017)
+// Approx. 1.7 seconds (MacBook Pro 2019), Dart version: 3.10.7
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 
-const amountOfElements = 10000000;
+const amountOfElements = 1e8;
 
 class Float32x4Vector32AndVector64DivisionBenchmark extends BenchmarkBase {
   Float32x4Vector32AndVector64DivisionBenchmark()
@@ -21,6 +20,9 @@ class Float32x4Vector32AndVector64DivisionBenchmark extends BenchmarkBase {
   }
 
   @override
+  void exercise() => run();
+
+  @override
   void run() {
     result = vector32 / vector64;
   }
@@ -28,14 +30,14 @@ class Float32x4Vector32AndVector64DivisionBenchmark extends BenchmarkBase {
   @override
   void setup() {
     vector32 = Vector.randomFilled(
-      amountOfElements,
+      amountOfElements.toInt(),
       seed: 1,
       min: -1000,
       max: 1000,
       dtype: DType.float32,
     );
     vector64 = Vector.randomFilled(
-      amountOfElements,
+      amountOfElements.toInt(),
       seed: 2,
       min: -1000,
       max: 1000,
