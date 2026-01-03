@@ -1,7 +1,5 @@
 [![Build Status](https://github.com/gyrdym/ml_linalg/workflows/CI%20pipeline/badge.svg)](https://github.com/gyrdym/ml_linalg/actions?query=branch%3Amaster+)
-[![Coverage Status](https://coveralls.io/repos/github/gyrdym/ml_linalg/badge.svg)](https://coveralls.io/github/gyrdym/ml_linalg)
 [![pub package](https://img.shields.io/pub/v/ml_linalg.svg)](https://pub.dartlang.org/packages/ml_linalg)
-[![Gitter Chat](https://badges.gitter.im/gyrdym/gyrdym.svg)](https://gitter.im/gyrdym/)
 
 **SIMD-based linear algebra and statistics for data science with Dart**
 
@@ -1346,5 +1344,4 @@ of potentially infinite length, keeping SIMD nature.
 ### Contacts
 If you have questions, feel free to write me on 
  - [Twitter](https://twitter.com/ilgyrd)
- - [Facebook](https://www.facebook.com/ilya.gyrdymov)
  - [Linkedin](https://www.linkedin.com/in/gyrdym/)

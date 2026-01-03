@@ -1,12 +1,11 @@
-// Approx. 1.0 seconds (MacBook Pro 2019), Dart version: 2.16.0
-// Approx. 2.2 seconds (MacBook Air mid 2017), Dart version: 2.16.0
+// Approx. 0.5 seconds (MacBook Pro 2019), Dart version: 3.10.7
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart';
 
 const numOfRows = 1000;
-const numOfColumns = 100;
+const numOfColumns = 1000;
 
 class Float32MatrixMultMatrixMatrixBenchmark extends BenchmarkBase {
   Float32MatrixMultMatrixMatrixBenchmark()
@@ -21,6 +20,9 @@ class Float32MatrixMultMatrixMatrixBenchmark extends BenchmarkBase {
   static void main() {
     Float32MatrixMultMatrixMatrixBenchmark().report();
   }
+
+  @override
+  void exercise() => run();
 
   @override
   void run() {

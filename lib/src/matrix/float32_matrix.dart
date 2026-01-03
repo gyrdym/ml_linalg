@@ -1012,15 +1012,18 @@ class Float32Matrix
     final thisAsList = _flattenedList;
 
     for (var i = 0; i < rowCount; i++) {
+      final LRowI = i * rowCount;
+
       for (var j = 0; j <= i; j++) {
+        final LRowJ = j * rowCount;
         var sum = 0.0;
 
         for (var k = 0; k < j; k++) {
-          sum += (L[i * rowCount + k] * L[j * rowCount + k]);
+          sum += (L[LRowI + k] * L[LRowJ + k]);
         }
 
         if (j == i) {
-          final idx = j * rowCount + j;
+          final idx = LRowJ + j;
           final value = math.sqrt(thisAsList[idx] - sum);
 
           L[idx] = value;
@@ -1030,11 +1033,11 @@ class Float32Matrix
             throw CholeskyInappropriateMatrixException();
           }
         } else {
-          final idx = i * columnCount + j;
-          final value = (thisAsList[idx] - sum) / L[j * rowCount + j];
+          final idx = LRowI + j;
+          final value = (thisAsList[idx] - sum) / L[LRowJ + j];
 
           L[idx] = value;
-          U[j * rowCount + i] = value;
+          U[LRowJ + i] = value;
         }
       }
     }
@@ -1064,8 +1067,10 @@ class Float32Matrix
 
         var sum = 0.0;
 
+        final offset = i * rowCount;
+
         for (var k = 0; k < i; k++) {
-          sum += L[i * rowCount + k] * U[k * rowCount + j];
+          sum += L[offset + k] * U[k * rowCount + j];
         }
 
         if (i <= j) {
@@ -1078,7 +1083,7 @@ class Float32Matrix
 
     return [
       Float32Matrix.fromFlattenedList(L, rowCount, rowCount),
-      Float32Matrix.fromFlattenedList(U, rowCount, rowCount)
+      Float32Matrix.fromFlattenedList(U, rowCount, rowCount),
     ];
   }
 

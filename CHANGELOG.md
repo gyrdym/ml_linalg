@@ -1,5 +1,8 @@
 # Changelog
 
+## 13.12.7
+- Actualize Vector benchmarks
+
 ## 13.12.6
 - `Matrix.fromList`, `Matrix.fromFlattenedList`:
   - speed up
