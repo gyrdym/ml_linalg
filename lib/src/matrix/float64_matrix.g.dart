@@ -19,6 +19,7 @@ import 'package:ml_linalg/src/common/exception/forward_substitution_non_square_m
 import 'package:ml_linalg/src/common/exception/lu_decomposition_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/exception/matrix_division_by_vector_exception.dart';
 import 'package:ml_linalg/src/common/exception/square_matrix_division_by_vector_exception.dart';
+import 'package:ml_linalg/src/common/exception/qr_decomposition_non_square_matrix_exception.dart';
 import 'package:ml_linalg/src/common/simd_helper/float64x2_helper.dart';
 import 'package:ml_linalg/src/matrix/eigen.dart';
 import 'package:ml_linalg/src/matrix/eigen_method.dart';
@@ -911,7 +912,8 @@ class Float64Matrix
 
       case Decomposition.LU:
         return _luDecomposition();
-
+      case Decomposition.QR:
+        return _qrDecomposition();
       default:
         throw UnimplementedError(
             'Unimplemented decomposition type $decompositionType');
@@ -1048,7 +1050,110 @@ class Float64Matrix
       Float64Matrix.fromFlattenedList(U, rowCount, rowCount)
     ];
   }
+  Iterable<Matrix> _qrDecomposition() {
+    if (!isSquare) {
+      throw QRDecompositionNonSquareMatrixException(rowCount, columnCount);
+    }
 
+    // Make a copy of the matrix that we'll transform into R
+    final R = Float64List.fromList(_flattenedList);
+    
+    // Q will be built up as a product of Householder reflections
+    // Start with identity
+    final Q = Float64List(rowCount * rowCount);
+    for (var i = 0; i < rowCount; i++) {
+      Q[i * rowCount + i] = 1.0;
+    }
+
+    final epsilon = dtype == DType.float32 ? 1e-6 : 1e-10;
+
+    // Apply Householder reflections for each column
+    for (var k = 0; k < columnCount; k++) {
+      // Extract the column below the diagonal
+      final columnNorm = _computeColumnNorm(R, k, k);
+      
+      if (columnNorm < epsilon) {
+        throw Exception('QR decomposition: Matrix is rank-deficient at column $k');
+      }
+
+      // Compute Householder vector
+      final v = Float64List(rowCount - k);
+      for (var i = k; i < rowCount; i++) {
+        v[i - k] = R[i * columnCount + k];
+      }
+
+      // Set v[0] = v[0] + sign(v[0]) * ||v||
+      final sign = v[0] >= 0 ? 1.0 : -1.0;
+      v[0] += sign * columnNorm;
+
+      // Normalize v
+      var vNorm = 0.0;
+      for (var i = 0; i < v.length; i++) {
+        vNorm += v[i] * v[i];
+      }
+      vNorm = math.sqrt(vNorm);
+
+      if (vNorm < epsilon) {
+        continue; // Skip if v is too small
+      }
+
+      for (var i = 0; i < v.length; i++) {
+        v[i] /= vNorm;
+      }
+
+      // Apply Householder reflection to R: R = (I - 2vv^T)R
+      _applyHouseholderToR(R, v, k);
+
+      // Apply Householder reflection to Q: Q = Q(I - 2vv^T)
+      _applyHouseholderToQ(Q, v, k);
+    }
+
+    final qMatrix = Float64Matrix.fromFlattenedList(Q, rowCount, rowCount);
+    final rMatrix = Float64Matrix.fromFlattenedList(R, rowCount, columnCount);
+
+    return [qMatrix, rMatrix];
+  }
+
+  double _computeColumnNorm(Float64List matrix, int col, int startRow) {
+    var sum = 0.0;
+    for (var i = startRow; i < rowCount; i++) {
+      final val = matrix[i * columnCount + col];
+      sum += val * val;
+    }
+    return math.sqrt(sum);
+  }
+
+  void _applyHouseholderToR(Float64List R, Float64List v, int k) {
+    // For each column from k onwards
+    for (var j = k; j < columnCount; j++) {
+      // Compute dot product of v with column j (from row k onwards)
+      var dot = 0.0;
+      for (var i = 0; i < v.length; i++) {
+        dot += v[i] * R[(k + i) * columnCount + j];
+      }
+
+      // Apply reflection: column = column - 2 * v * dot
+      for (var i = 0; i < v.length; i++) {
+        R[(k + i) * columnCount + j] -= 2.0 * v[i] * dot;
+      }
+    }
+  }
+
+  void _applyHouseholderToQ(Float64List Q, Float64List v, int k) {
+    // For each row of Q
+    for (var i = 0; i < rowCount; i++) {
+      // Compute dot product of row i with v
+      var dot = 0.0;
+      for (var j = 0; j < v.length; j++) {
+        dot += Q[i * rowCount + (k + j)] * v[j];
+      }
+
+      // Apply reflection: row = row - 2 * dot * v^T
+      for (var j = 0; j < v.length; j++) {
+        Q[i * rowCount + (k + j)] -= 2.0 * dot * v[j];
+      }
+    }
+  }
   Iterable<Matrix> _luDecomposition() {
     if (!isSquare) {
       throw LUDecompositionNonSquareMatrixException(rowCount, columnCount);
