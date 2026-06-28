@@ -1,5 +1,8 @@
 # Changelog
 
+## 13.12.8
+- `README.md`: remove obsolete contacts
+
 ## 13.12.7
 - Actualize Vector benchmarks
 

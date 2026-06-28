@@ -1344,4 +1344,3 @@ of potentially infinite length, keeping SIMD nature.
 ### Contacts
 If you have questions, feel free to write me on 
  - [Twitter](https://twitter.com/ilgyrd)
- - [Linkedin](https://www.linkedin.com/in/gyrdym/)
