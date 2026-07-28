@@ -77,6 +77,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   late final Int32List _indices;
   late final Float32List _values;
 
+  /// Number of non-zeros — how many explicitly stored (non-zero) elements.
   int get nnz => _indices.length;
 
   @override
