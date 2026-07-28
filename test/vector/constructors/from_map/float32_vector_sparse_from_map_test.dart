@@ -93,6 +93,24 @@ void main() {
       );
     });
 
+    test('should compare algebraically with another Vector by values', () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 1.0, 2: 3.0},
+        length: 3,
+      );
+      final sameSparse = Float32VectorSparse.fromMap(
+        {2: 3.0, 0: 1.0},
+        length: 3,
+      );
+      final dense = Vector.fromList([1.0, 0.0, 3.0], dtype: DType.float32);
+      final different = Vector.fromList([1.0, 0.0, 4.0], dtype: DType.float32);
+
+      expect(sparse == sameSparse, isTrue);
+      expect(sparse == dense, isTrue);
+      expect(sparse == different, isFalse);
+      expect(sparse.hashCode, sameSparse.hashCode);
+    });
+
     test('should update values through set and keep sparse representation', () {
       final sparse = Float32VectorSparse.fromMap(
         {0: 1.0, 2: 3.0},

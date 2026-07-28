@@ -108,16 +108,34 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       return true;
     }
 
-    if (other is! Float32VectorSparse) {
+    if (other is! Vector || length != other.length) {
       return false;
     }
 
-    if (length != other.length || nnz != other.nnz) {
-      return false;
+    // Same sparse shape ⇒ same algebraic vector.
+    if (other is Float32VectorSparse) {
+      if (nnz != other.nnz) {
+        return false;
+      }
+
+      for (var i = 0; i < nnz; i++) {
+        if (_indices[i] != other._indices[i] ||
+            _values[i] != other._values[i]) {
+          return false;
+        }
+      }
+
+      return true;
     }
 
-    for (var i = 0; i < nnz; i++) {
-      if (_indices[i] != other._indices[i] || _values[i] != other._values[i]) {
+    var sparsePosition = 0;
+
+    for (var i = 0; i < length; i++) {
+      final value = sparsePosition < nnz && _indices[sparsePosition] == i
+          ? _values[sparsePosition++]
+          : 0.0;
+
+      if (other[i] != value) {
         return false;
       }
     }
@@ -131,11 +149,12 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
           return 0;
         }
 
+        // Value-based hash of the full algebraic vector (including implicit
+        // zeros), so equal vectors share the same hashCode.
         var hash = length;
 
-        for (var i = 0; i < nnz; i++) {
-          hash = 31 * hash + _indices[i];
-          hash = 31 * hash + _values[i].hashCode;
+        for (final value in this) {
+          hash = 31 * hash + value.hashCode;
         }
 
         return hash;
