@@ -132,6 +132,73 @@ void main() {
       expect(powered.toList(), [4.0, 9.0, 16.0, 0.0]);
     });
 
+    test('should densify scalar multiply when nnz is at least half of length',
+        () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 1.0, 1: 2.0, 2: 3.0},
+        length: 4,
+      );
+
+      final scaled = sparse * 2;
+
+      expect(scaled, isNot(isA<Float32VectorSparse>()));
+      expect(scaled.toList(), [2.0, 4.0, 6.0, 0.0]);
+    });
+
+    test('should keep scalar divide sparse when nnz is less than half of length',
+        () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 2.0, 3: 4.0},
+        length: 5,
+      );
+
+      final divided = sparse / 2;
+
+      expect(divided, isA<Float32VectorSparse>());
+      expect(divided.toList(), [1.0, 0.0, 0.0, 2.0, 0.0]);
+    });
+
+    test('should densify scalar divide when nnz is at least half of length', () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 2.0, 1: 4.0, 2: 6.0},
+        length: 4,
+      );
+
+      final divided = sparse / 2;
+
+      expect(divided, isNot(isA<Float32VectorSparse>()));
+      expect(divided.toList(), [1.0, 2.0, 3.0, 0.0]);
+    });
+
+    test('should keep vector multiply sparse when nnz is less than half of length',
+        () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 2.0, 3: 4.0},
+        length: 5,
+      );
+      final other = Vector.fromList([3.0, 1.0, 1.0, 5.0, 1.0],
+          dtype: DType.float32);
+
+      final product = sparse * other;
+
+      expect(product, isA<Float32VectorSparse>());
+      expect(product.toList(), [6.0, 0.0, 0.0, 20.0, 0.0]);
+    });
+
+    test('should densify vector multiply when nnz is at least half of length',
+        () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 2.0, 1: 3.0, 2: 4.0},
+        length: 4,
+      );
+      final other = Vector.fromList([5.0, 6.0, 7.0, 8.0], dtype: DType.float32);
+
+      final product = sparse * other;
+
+      expect(product, isNot(isA<Float32VectorSparse>()));
+      expect(product.toList(), [10.0, 18.0, 28.0, 0.0]);
+    });
+
     test('should compute sparse-friendly aggregates', () {
       final sparse = Float32VectorSparse.fromMap(
         {0: 2.0, 2: -3.0, 4: 5.0},
