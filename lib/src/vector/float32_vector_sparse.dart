@@ -82,6 +82,9 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   /// Number of non-zeros — how many explicitly stored (non-zero) elements.
   int get nnz => _indices.length;
 
+  /// Whether the sparse path is preferred over densifying for element-wise ops.
+  bool get _isClearlySparse => nnz * 2 < length;
+
   @override
   DType get dtype => DType.float32;
 
@@ -224,7 +227,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   Vector sqrt({bool skipCaching = false}) => _cache.get(vectorSqrtKey, () {
         // Prefer the sparse path while clearly sparse; otherwise dense SIMD
         // sqrt can be competitive.
-        if (nnz * 2 < length) {
+        if (_isClearlySparse) {
           return _mapValues(math.sqrt);
         }
 
@@ -262,7 +265,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   Vector abs({bool skipCaching = false}) => _cache.get(vectorAbsKey, () {
         // Prefer the sparse path while clearly sparse; otherwise dense SIMD
         // abs can be competitive.
-        if (nnz * 2 < length) {
+        if (_isClearlySparse) {
           return _mapValues((value) => value.abs());
         }
 
