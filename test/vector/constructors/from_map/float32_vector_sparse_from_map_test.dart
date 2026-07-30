@@ -71,6 +71,30 @@ void main() {
       expect(scaled.toList(), [0.0, -4.0, 0.0, 8.0, 0.0]);
     });
 
+    test('should keep sqrt sparse when nnz is less than half of length', () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 4.0, 3: 9.0},
+        length: 5,
+      );
+
+      final rooted = sparse.sqrt();
+
+      expect(rooted, isA<Float32VectorSparse>());
+      expect(rooted.toList(), [2.0, 0.0, 0.0, 3.0, 0.0]);
+    });
+
+    test('should densify sqrt when nnz is at least half of length', () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 4.0, 1: 9.0, 2: 16.0},
+        length: 4,
+      );
+
+      final rooted = sparse.sqrt();
+
+      expect(rooted, isNot(isA<Float32VectorSparse>()));
+      expect(rooted.toList(), [2.0, 3.0, 4.0, 0.0]);
+    });
+
     test('should compute sparse-friendly aggregates', () {
       final sparse = Float32VectorSparse.fromMap(
         {0: 2.0, 2: -3.0, 4: 5.0},

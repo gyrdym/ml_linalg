@@ -221,9 +221,15 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   }
 
   @override
-  Vector sqrt({bool skipCaching = false}) =>
-      _cache.get(vectorSqrtKey, () => _asDense().sqrt(skipCaching: true),
-          skipCaching: skipCaching);
+  Vector sqrt({bool skipCaching = false}) => _cache.get(vectorSqrtKey, () {
+        // Prefer the sparse path while clearly sparse; otherwise dense SIMD
+        // sqrt can be competitive.
+        if (nnz * 2 < length) {
+          return _mapValues(math.sqrt);
+        }
+
+        return _asDense().sqrt(skipCaching: true);
+      }, skipCaching: skipCaching);
 
   @override
   Vector scalarDiv(num scalar) => this / scalar;
