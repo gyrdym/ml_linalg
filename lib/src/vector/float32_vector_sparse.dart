@@ -259,11 +259,15 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
           skipCaching: skipCaching);
 
   @override
-  Vector abs({bool skipCaching = false}) => _cache.get(
-        vectorAbsKey,
-        () => _mapValues((value) => value.abs()),
-        skipCaching: skipCaching,
-      );
+  Vector abs({bool skipCaching = false}) => _cache.get(vectorAbsKey, () {
+        // Prefer the sparse path while clearly sparse; otherwise dense SIMD
+        // abs can be competitive.
+        if (nnz * 2 < length) {
+          return _mapValues((value) => value.abs());
+        }
+
+        return _asDense().abs(skipCaching: true);
+      }, skipCaching: skipCaching);
 
   @override
   double dot(Vector vector) {

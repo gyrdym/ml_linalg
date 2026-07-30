@@ -95,6 +95,18 @@ void main() {
       expect(rooted.toList(), [2.0, 3.0, 4.0, 0.0]);
     });
 
+    test('should densify abs when nnz is at least half of length', () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: -1.0, 1: 2.0, 2: -3.0},
+        length: 4,
+      );
+
+      final absVector = sparse.abs();
+
+      expect(absVector, isNot(isA<Float32VectorSparse>()));
+      expect(absVector.toList(), [1.0, 2.0, 3.0, 0.0]);
+    });
+
     test('should compute sparse-friendly aggregates', () {
       final sparse = Float32VectorSparse.fromMap(
         {0: 2.0, 2: -3.0, 4: 5.0},
