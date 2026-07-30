@@ -9,6 +9,8 @@ import 'package:ml_linalg/norm.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
 import 'package:ml_linalg/src/common/cache_manager/cache_manager_factory_impl.dart';
 import 'package:ml_linalg/src/common/exception/unsupported_operand_type_exception.dart';
+import 'package:ml_linalg/src/common/hash/finalize_hash.dart';
+import 'package:ml_linalg/src/common/hash/mix_hash.dart';
 import 'package:ml_linalg/src/vector/exception/cosine_of_zero_vector_exception.dart';
 import 'package:ml_linalg/src/vector/exception/empty_vector_exception.dart';
 import 'package:ml_linalg/src/vector/exception/unsupported_distance_type_exception.dart';
@@ -154,11 +156,11 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
         var hash = length;
 
         for (var i = 0; i < nnz; i++) {
-          hash = _mixHash(hash, _indices[i]);
-          hash = _mixHash(hash, _values[i].hashCode);
+          hash = mixHash(hash, _indices[i]);
+          hash = mixHash(hash, _values[i].hashCode);
         }
 
-        return _finalizeHash(hash);
+        return finalizeHash(hash);
       }, skipCaching: false);
 
   @override
@@ -702,18 +704,6 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
     }
 
     return distance;
-  }
-
-  static int _mixHash(int hash, int value) {
-    hash = 0x1fffffff & (hash + value);
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int _finalizeHash(int hash) {
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    hash ^= hash >> 11;
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
 
