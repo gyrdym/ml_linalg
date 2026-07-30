@@ -107,6 +107,31 @@ void main() {
       expect(absVector.toList(), [1.0, 2.0, 3.0, 0.0]);
     });
 
+    test('should keep positive pow sparse when nnz is less than half of length',
+        () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 2.0, 3: 3.0},
+        length: 5,
+      );
+
+      final powered = sparse.pow(2);
+
+      expect(powered, isA<Float32VectorSparse>());
+      expect(powered.toList(), [4.0, 0.0, 0.0, 9.0, 0.0]);
+    });
+
+    test('should densify positive pow when nnz is at least half of length', () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: 2.0, 1: 3.0, 2: 4.0},
+        length: 4,
+      );
+
+      final powered = sparse.pow(2);
+
+      expect(powered, isNot(isA<Float32VectorSparse>()));
+      expect(powered.toList(), [4.0, 9.0, 16.0, 0.0]);
+    });
+
     test('should compute sparse-friendly aggregates', () {
       final sparse = Float32VectorSparse.fromMap(
         {0: 2.0, 2: -3.0, 4: 5.0},

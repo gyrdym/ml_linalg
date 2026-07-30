@@ -248,7 +248,13 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       return _asDense().pow(exponent);
     }
 
-    return _mapValues((value) => math.pow(value, exponent).toDouble());
+    // Prefer the sparse path while clearly sparse; otherwise dense SIMD
+    // pow can be competitive.
+    if (_isClearlySparse) {
+      return _mapValues((value) => math.pow(value, exponent).toDouble());
+    }
+
+    return _asDense().pow(exponent);
   }
 
   @override
