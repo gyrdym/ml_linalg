@@ -149,15 +149,16 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
           return 0;
         }
 
-        // Value-based hash of the full algebraic vector (including implicit
-        // zeros), so equal vectors share the same hashCode.
+        // O(nnz) hash over length and stored (index, value) pairs. Equal sparse
+        // vectors have the same non-zero layout, so they share hashCode.
         var hash = length;
 
-        for (final value in this) {
-          hash = 31 * hash + value.hashCode;
+        for (var i = 0; i < nnz; i++) {
+          hash = _mixHash(hash, _indices[i]);
+          hash = _mixHash(hash, _values[i].hashCode);
         }
 
-        return hash;
+        return _finalizeHash(hash);
       }, skipCaching: false);
 
   @override
@@ -701,6 +702,18 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
     }
 
     return distance;
+  }
+
+  static int _mixHash(int hash, int value) {
+    hash = 0x1fffffff & (hash + value);
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int _finalizeHash(int hash) {
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    hash ^= hash >> 11;
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
 
