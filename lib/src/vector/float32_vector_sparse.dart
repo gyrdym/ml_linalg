@@ -175,11 +175,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   @override
   Vector operator *(Object value) {
     if (value is num) {
-      if (_isClearlySparse) {
-        return _mapValues((element) => element * value.toDouble());
-      }
-
-      return _asDense() * value;
+      return _mapValues((element) => element * value.toDouble());
     }
 
     if (value is Float32VectorSparse) {
@@ -187,11 +183,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
         throw VectorsLengthMismatchException(length, value.length);
       }
 
-      if (_isClearlySparse) {
-        return _multiplySparse(value);
-      }
-
-      return _asDense() * value;
+      return _multiplySparse(value);
     }
 
     if (value is Vector) {
@@ -199,11 +191,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
         throw VectorsLengthMismatchException(length, value.length);
       }
 
-      if (_isClearlySparse) {
-        return _mapEntries((index, element) => element * value[index]);
-      }
-
-      return _asDense() * value;
+      return _mapEntries((index, element) => element * value[index]);
     }
 
     if (value is Iterable<num>) {
@@ -212,11 +200,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       }
 
       if (value is List<num>) {
-        if (_isClearlySparse) {
-          return _mapEntries((index, element) => element * value[index]);
-        }
-
-        return _asDense() * value;
+        return _mapEntries((index, element) => element * value[index]);
       }
 
       return _asDense() * value;
@@ -233,11 +217,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   @override
   Vector operator /(Object value) {
     if (value is num) {
-      if (_isClearlySparse) {
-        return _mapValues((element) => element / value.toDouble());
-      }
-
-      return _asDense() / value;
+      return _mapValues((element) => element / value.toDouble());
     }
 
     return _asDense() / value;
