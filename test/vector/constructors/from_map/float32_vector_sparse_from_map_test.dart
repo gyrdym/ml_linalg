@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/norm.dart';
@@ -197,6 +199,39 @@ void main() {
 
       expect(product, isNot(isA<Float32VectorSparse>()));
       expect(product.toList(), [10.0, 18.0, 28.0, 0.0]);
+    });
+
+    test('should keep exp sparse with fill equal to e^0', () {
+      final sparse = Float32VectorSparse.fromMap(
+        {2: math.log(2.0)},
+        length: 4,
+      );
+
+      final exponentiated = sparse.exp() as Float32VectorSparse;
+
+      expect(exponentiated, isA<Float32VectorSparse>());
+      expect(exponentiated.fill, 1.0);
+      expect(exponentiated.nnz, 1);
+      expect(exponentiated[0], 1.0);
+      expect(exponentiated[1], 1.0);
+      expect(exponentiated[2], closeTo(2.0, 1e-5));
+      expect(exponentiated[3], 1.0);
+      expect(exponentiated.sum(), closeTo(5.0, 1e-5));
+    });
+
+    test('should densify exp when nnz is at least half of length', () {
+      final sparse = Float32VectorSparse.fromMap(
+        {0: math.log(2.0), 1: math.log(3.0), 2: math.log(4.0)},
+        length: 4,
+      );
+
+      final exponentiated = sparse.exp();
+
+      expect(exponentiated, isNot(isA<Float32VectorSparse>()));
+      expect(exponentiated[0], closeTo(2.0, 1e-5));
+      expect(exponentiated[1], closeTo(3.0, 1e-5));
+      expect(exponentiated[2], closeTo(4.0, 1e-5));
+      expect(exponentiated[3], closeTo(1.0, 1e-5));
     });
 
     test('should compute sparse-friendly aggregates', () {

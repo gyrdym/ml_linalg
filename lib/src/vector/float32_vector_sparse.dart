@@ -21,18 +21,20 @@ import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
-/// A float32 sparse vector that stores only non-zero values.
+/// A float32 sparse vector that stores only values different from [fill].
 ///
-/// Missing indices are treated as `0.0`.
+/// Missing indices are treated as [fill] (defaults to `0.0`).
 class Float32VectorSparse with IterableMixin<double> implements Vector {
   /// Creates a sparse vector from [source], where keys are indices and values
   /// are vector elements.
   ///
-  /// Zero values in [source] are ignored. Indices must be in `[0, length)`.
+  /// Values equal to [fill] are ignored. Indices must be in `[0, length)`.
   Float32VectorSparse.fromMap(
     Map<int, num> source, {
     required this.length,
-  }) : _cache = const CacheManagerFactoryImpl().create(vectorCacheKeys) {
+    double fill = 0.0,
+  })  : _fill = fill,
+        _cache = const CacheManagerFactoryImpl().create(vectorCacheKeys) {
     if (length < 0) {
       throw ArgumentError.value(length, 'length', 'Cannot be negative');
     }
@@ -46,7 +48,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
 
       final doubleValue = value.toDouble();
 
-      if (doubleValue != 0.0) {
+      if (doubleValue != _fill) {
         entries.add(MapEntry(index, doubleValue));
       }
     });
@@ -67,30 +69,38 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
     required Int32List indices,
     required Float32List values,
     required CacheManager cache,
+    double fill = 0.0,
   })  : _indices = indices,
         _values = values,
-        _cache = cache;
+        _cache = cache,
+        _fill = fill;
 
   @override
   final int length;
 
   final CacheManager _cache;
+  final double _fill;
 
   late final Int32List _indices;
   late final Float32List _values;
 
-  /// Number of non-zeros — how many explicitly stored (non-zero) elements.
+  /// Value used for indices that are not stored explicitly.
+  double get fill => _fill;
+
+  /// Number of explicitly stored elements that differ from [fill].
   int get nnz => _indices.length;
 
   /// Whether the sparse path is preferred over densifying for element-wise ops.
   bool get _isClearlySparse => nnz * 2 < length;
+
+  bool get _hasZeroFill => _fill == 0.0;
 
   @override
   DType get dtype => DType.float32;
 
   @override
   Iterator<double> get iterator =>
-      _Float32VectorSparseIterator(_indices, _values, length);
+      _Float32VectorSparseIterator(_indices, _values, length, _fill);
 
   @override
   double operator [](int index) {
@@ -104,7 +114,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
 
     final position = _indexOf(index);
 
-    return position < 0 ? 0.0 : _values[position];
+    return position < 0 ? _fill : _values[position];
   }
 
   @override
@@ -117,8 +127,8 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       return false;
     }
 
-    // Same sparse shape ⇒ same algebraic vector.
-    if (other is Float32VectorSparse) {
+    // Same sparse shape and fill ⇒ same algebraic vector.
+    if (other is Float32VectorSparse && _fill == other._fill) {
       if (nnz != other.nnz) {
         return false;
       }
@@ -138,7 +148,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
     for (var i = 0; i < length; i++) {
       final value = sparsePosition < nnz && _indices[sparsePosition] == i
           ? _values[sparsePosition++]
-          : 0.0;
+          : _fill;
 
       if (other[i] != value) {
         return false;
@@ -154,9 +164,10 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
           return 0;
         }
 
-        // O(nnz) hash over length and stored (index, value) pairs. Equal sparse
-        // vectors have the same non-zero layout, so they share hashCode.
+        // O(nnz) hash over length, fill and stored (index, value) pairs.
         var hash = length;
+
+        hash = mixHash(hash, _fill.hashCode);
 
         for (var i = 0; i < nnz; i++) {
           hash = mixHash(hash, _indices[i]);
@@ -182,9 +193,18 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       return _asDense() * value;
     }
 
+    // Non-zero fill makes structural sparse multiply incorrect / densifying.
+    if (!_hasZeroFill) {
+      return _asDense() * value;
+    }
+
     if (value is Float32VectorSparse) {
       if (value.length != length) {
         throw VectorsLengthMismatchException(length, value.length);
+      }
+
+      if (!_hasZeroFill || !value._hasZeroFill) {
+        return _asDense() * value;
       }
 
       if (_isClearlySparse) {
@@ -263,7 +283,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       return Vector.filled(length, 1.0, dtype: dtype);
     }
 
-    // Negative exponents turn implicit zeros into infinities, so densify.
+    // Negative exponents turn fill/zeros into infinities, so densify.
     if (exponent < 0) {
       return _asDense().pow(exponent);
     }
@@ -278,9 +298,15 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   }
 
   @override
-  Vector exp({bool skipCaching = false}) =>
-      _cache.get(vectorExpKey, () => _asDense().exp(skipCaching: true),
-          skipCaching: skipCaching);
+  Vector exp({bool skipCaching = false}) => _cache.get(vectorExpKey, () {
+        // exp(fill) becomes the new fill (exp(0) = 1), so the result stays
+        // sparse without materializing the dense vector.
+        if (_isClearlySparse) {
+          return _mapValues(math.exp);
+        }
+
+        return _asDense().exp(skipCaching: true);
+      }, skipCaching: skipCaching);
 
   @override
   Vector log({bool skipCaching = false}) =>
@@ -304,10 +330,22 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       throw VectorsLengthMismatchException(length, vector.length);
     }
 
-    var result = 0.0;
+    if (_hasZeroFill) {
+      var result = 0.0;
+
+      for (var i = 0; i < nnz; i++) {
+        result += _values[i] * vector[_indices[i]];
+      }
+
+      return result;
+    }
+
+    // this[i] = fill + delta[i], so
+    // dot = fill * sum(other) + sum((value - fill) * other[index]).
+    var result = _fill * vector.sum(skipCaching: true);
 
     for (var i = 0; i < nnz; i++) {
-      result += _values[i] * vector[_indices[i]];
+      result += (_values[i] - _fill) * vector[_indices[i]];
     }
 
     return result;
@@ -395,6 +433,11 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
           sumOfPowers += math.pow(_values[i].abs(), power).toDouble();
         }
 
+        if (nnz < length) {
+          sumOfPowers +=
+              (length - nnz) * math.pow(_fill.abs(), power).toDouble();
+        }
+
         return math.pow(sumOfPowers, 1 / power).toDouble();
       }, skipCaching: skipCaching);
 
@@ -405,7 +448,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
     }
 
     return _cache.get(vectorSumKey, () {
-      var result = 0.0;
+      var result = _fill * (length - nnz);
 
       for (var i = 0; i < nnz; i++) {
         result += _values[i];
@@ -421,7 +464,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       return double.nan;
     }
 
-    if (nnz < length) {
+    if (_hasZeroFill && nnz < length) {
       return 0.0;
     }
 
@@ -429,6 +472,10 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
 
     for (var i = 0; i < nnz; i++) {
       result *= _values[i];
+    }
+
+    if (nnz < length) {
+      result *= math.pow(_fill, length - nnz).toDouble();
     }
 
     return result;
@@ -441,7 +488,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
         }
 
         if (nnz == 0) {
-          return 0.0;
+          return _fill;
         }
 
         var result = _values[0];
@@ -451,7 +498,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
         }
 
         if (nnz < length) {
-          result = math.max(result, 0.0);
+          result = math.max(result, _fill);
         }
 
         return result;
@@ -464,7 +511,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
         }
 
         if (nnz == 0) {
-          return 0.0;
+          return _fill;
         }
 
         var result = _values[0];
@@ -474,7 +521,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
         }
 
         if (nnz < length) {
-          result = math.min(result, 0.0);
+          result = math.min(result, _fill);
         }
 
         return result;
@@ -530,13 +577,13 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       for (var i = 0; i < nnz; i++) _indices[i]: _values[i],
     };
 
-    if (value == 0) {
+    if (value == _fill) {
       map.remove(index);
     } else {
       map[index] = value;
     }
 
-    return Float32VectorSparse.fromMap(map, length: length);
+    return Float32VectorSparse.fromMap(map, length: length, fill: _fill);
   }
 
   @override
@@ -598,7 +645,8 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       }
     }
 
-    return Float32VectorSparse.fromMap(map, length: limit - start);
+    return Float32VectorSparse.fromMap(map,
+        length: limit - start, fill: _fill);
   }
 
   @override
@@ -609,6 +657,10 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   Float32List _toFloat32List() {
     final result = Float32List(length);
 
+    if (_fill != 0.0) {
+      result.fillRange(0, length, _fill);
+    }
+
     for (var i = 0; i < nnz; i++) {
       result[_indices[i]] = _values[i];
     }
@@ -617,6 +669,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
   }
 
   Float32VectorSparse _mapValues(double Function(double value) mapper) {
+    final newFill = mapper(_fill);
     final indices = Int32List(nnz);
     final values = Float32List(nnz);
     var count = 0;
@@ -624,7 +677,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
     for (var i = 0; i < nnz; i++) {
       final mapped = mapper(_values[i]);
 
-      if (mapped != 0.0) {
+      if (mapped != newFill) {
         indices[count] = _indices[i];
         values[count] = mapped;
         count++;
@@ -636,11 +689,14 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       indices: Int32List.sublistView(indices, 0, count),
       values: Float32List.sublistView(values, 0, count),
       cache: const CacheManagerFactoryImpl().create(vectorCacheKeys),
+      fill: newFill,
     );
   }
 
   Float32VectorSparse _mapEntries(
       double Function(int index, double value) mapper) {
+    // Structural mapping of only stored entries is valid for zero-fill.
+    final newFill = _fill;
     final indices = Int32List(nnz);
     final values = Float32List(nnz);
     var count = 0;
@@ -648,7 +704,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
     for (var i = 0; i < nnz; i++) {
       final mapped = mapper(_indices[i], _values[i]);
 
-      if (mapped != 0.0) {
+      if (mapped != newFill) {
         indices[count] = _indices[i];
         values[count] = mapped;
         count++;
@@ -660,6 +716,7 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
       indices: Int32List.sublistView(indices, 0, count),
       values: Float32List.sublistView(values, 0, count),
       cache: const CacheManagerFactoryImpl().create(vectorCacheKeys),
+      fill: newFill,
     );
   }
 
@@ -747,11 +804,17 @@ class Float32VectorSparse with IterableMixin<double> implements Vector {
 }
 
 class _Float32VectorSparseIterator implements Iterator<double> {
-  _Float32VectorSparseIterator(this._indices, this._values, this._length);
+  _Float32VectorSparseIterator(
+    this._indices,
+    this._values,
+    this._length,
+    this._fill,
+  );
 
   final Int32List _indices;
   final Float32List _values;
   final int _length;
+  final double _fill;
 
   int _position = -1;
   int _sparsePosition = 0;
@@ -773,7 +836,7 @@ class _Float32VectorSparseIterator implements Iterator<double> {
       _current = _values[_sparsePosition];
       _sparsePosition++;
     } else {
-      _current = 0.0;
+      _current = _fill;
     }
 
     return true;
