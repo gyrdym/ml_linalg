@@ -41,7 +41,8 @@ void main() {
           Float32VectorSparse.fromMap(documentTerms, length: vocabSize);
     });
 
-    test('keeps bag-of-words vectors compressed over a large vocabulary', () {
+    test('should keep bag-of-words vectors compressed over a large vocabulary',
+        () {
       expect(query.length, vocabSize);
       expect(document.length, vocabSize);
       expect(query.nnz, queryTerms.length);
@@ -55,7 +56,8 @@ void main() {
       expect(document[9999], 0.0);
     });
 
-    test('ranks a document against a query with sparse cosine similarity', () {
+    test('should rank a document against a query with sparse cosine similarity',
+        () {
       // Simple TF scaling: emphasize repeated terms.
       final scaledQuery = query * 1.0;
       final scaledDocument = document * 1.0;
@@ -86,7 +88,7 @@ void main() {
       expect(score, closeTo(denseScore, 1e-5));
     });
 
-    test('intersects features with sparse element-wise multiply', () {
+    test('should intersect features with sparse element-wise multiply', () {
       final overlap = query * document;
 
       expect(overlap, isA<Float32VectorSparse>());
@@ -104,7 +106,7 @@ void main() {
       expect(overlap.norm(Norm.manhattan), 8.0);
     });
 
-    test('updates a live sparse representation through set', () {
+    test('should update a live sparse representation through set', () {
       final updated = query.set(12, 0).set(42, 5) as Float32VectorSparse;
 
       expect(updated.nnz, query.nnz); // removed one, added one
