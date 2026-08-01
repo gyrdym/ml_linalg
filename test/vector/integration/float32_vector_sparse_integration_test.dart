@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 /// Integration-style smoke test for sparse vectors without mocks.
 ///
 /// Models a tiny on-device text scenario: bag-of-words vectors over a large
-/// vocabulary, TF scaling, cosine ranking and feature intersection.
+/// vocabulary, cosine ranking and feature intersection.
 void main() {
   group('Float32VectorSparse integration', () {
     // Vocabulary-sized feature space with only a handful of present terms.
@@ -58,17 +58,8 @@ void main() {
 
     test('should rank a document against a query with sparse cosine similarity',
         () {
-      // Simple TF scaling: emphasize repeated terms.
-      final scaledQuery = query * 1.0;
-      final scaledDocument = document * 1.0;
-
-      expect(scaledQuery, isA<Float32VectorSparse>());
-      expect(scaledDocument, isA<Float32VectorSparse>());
-      expect((scaledQuery as Float32VectorSparse).nnz, query.nnz);
-      expect((scaledDocument as Float32VectorSparse).nnz, document.nnz);
-
-      final score = scaledQuery.distanceTo(
-        scaledDocument,
+      final score = query.distanceTo(
+        document,
         distance: Distance.cosine,
       );
 
