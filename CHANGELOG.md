@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.12.9
+- `Vector.fromList`:
+  - factory-constructor speed-up
+
 ## 13.12.8
 - `README.md`: remove obsolete contacts
 

@@ -35,8 +35,12 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
     _buffer = list.buffer;
 
-    for (var i = 0; i < length; i++) {
-      list[i] = source[i].toDouble();
+    if (source is Float32List) {
+      _copyFromTypedList(list, source, length);
+    } else if (source is List<double>) {
+      _copyFromDoubleList(list, source, length);
+    } else {
+      _copyFromNumList(list, source, length);
     }
   }
 
@@ -110,6 +114,24 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   static int _getNumOfBuckets(int length, int bucketSize) =>
       (length / bucketSize).ceil();
+
+  static void _copyFromTypedList(
+      Float32List list, Float32List source, int length) {
+    list.setRange(0, length, source);
+  }
+
+  static void _copyFromDoubleList(
+      Float32List list, List<double> source, int length) {
+    for (var i = 0; i < length; i++) {
+      list[i] = source[i];
+    }
+  }
+
+  static void _copyFromNumList(Float32List list, List<num> source, int length) {
+    for (var i = 0; i < length; i++) {
+      list[i] = source[i].toDouble();
+    }
+  }
 
   @override
   final int length;
