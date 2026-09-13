@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
@@ -77,6 +79,50 @@ void vectorFromListConstructorTestGroupFactory(DType dtype) =>
           final vector = vector1 + vector2;
 
           expect(vector, equals(<double>[4, 6, 8, 10, 12]));
+          expect(vector.length, 5);
+          expect(vector.dtype, dtype);
+        });
+
+        test(
+            'should create a vector from a typed list, length is greater than 4',
+            () {
+          final source = dtype == DType.float32
+              ? Float32List.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+              : Float64List.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+          final vector = Vector.fromList(source, dtype: dtype);
+
+          expect(vector, equals([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+          expect(vector.length, 6);
+          expect(vector.dtype, dtype);
+        });
+
+        test('should create a vector from a typed list, length is less than 4',
+            () {
+          final source = dtype == DType.float32
+              ? Float32List.fromList([1.0, 2.0, 3.0])
+              : Float64List.fromList([1.0, 2.0, 3.0]);
+          final vector = Vector.fromList(source, dtype: dtype);
+
+          expect(vector, equals([1.0, 2.0, 3.0]));
+          expect(vector.length, 3);
+          expect(vector.dtype, dtype);
+        });
+
+        test('should keep SIMD padding zeros when created from a typed list',
+            () {
+          final source = dtype == DType.float32
+              ? Float32List.fromList([1.0, 2.0, 3.0])
+              : Float64List.fromList([1.0, 2.0, 3.0]);
+          final vector = Vector.fromList(source, dtype: dtype);
+
+          expect(vector.sum(), 6.0);
+        });
+
+        test('should create a vector from a mixed List<num>', () {
+          final source = <num>[1, 2.5, 3, 4.25, 5];
+          final vector = Vector.fromList(source, dtype: dtype);
+
+          expect(vector, equals([1.0, 2.5, 3.0, 4.25, 5.0]));
           expect(vector.length, 5);
           expect(vector.dtype, dtype);
         });
