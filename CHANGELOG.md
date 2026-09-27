@@ -1,5 +1,9 @@
 # Changelog
 
+## 13.13.0
+- `Vector`:
+  - added in-place element-wise addition, subtraction, multiplication, and division
+
 ## 13.12.9
 - `Vector.fromList`:
   - factory-constructor speed-up

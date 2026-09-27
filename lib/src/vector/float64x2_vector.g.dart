@@ -453,6 +453,47 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         operationName: 'Vector "/" operator');
   }
 
+  Vector _applyInPlace(
+    Vector other,
+    double Function(double, double) operation,
+    Float64x2 Function(Float64x2, Float64x2) simdOperation,
+  ) {
+    if (other.length != length) {
+      throw VectorsLengthMismatchException(length, other.length);
+    }
+
+    if (other is Float64x2Vector) {
+      final list = _getSimdList();
+      final otherList = other._getSimdList();
+      for (var i = 0; i < _numOfBuckets; i++) {
+        list[i] = simdOperation(list[i], otherList[i]);
+      }
+    } else {
+      final list = _getTypedList();
+      for (var i = 0; i < length; i++) {
+        list[i] = operation(list[i], other[i]);
+      }
+    }
+    _cache.clear();
+    return this;
+  }
+
+  @override
+  Vector addInPlace(Vector vector) =>
+      _applyInPlace(vector, (a, b) => a + b, (a, b) => a + b);
+
+  @override
+  Vector subtractInPlace(Vector vector) =>
+      _applyInPlace(vector, (a, b) => a - b, (a, b) => a - b);
+
+  @override
+  Vector multiplyInPlace(Vector vector) =>
+      _applyInPlace(vector, (a, b) => a * b, (a, b) => a * b);
+
+  @override
+  Vector divideInPlace(Vector vector) =>
+      _applyInPlace(vector, (a, b) => a / b, (a, b) => a / b);
+
   @override
   Vector sqrt({bool skipCaching = false}) => _cache.get(vectorSqrtKey, () {
         final source = Float64x2List(_numOfBuckets);

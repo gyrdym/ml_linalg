@@ -314,6 +314,18 @@ abstract class Vector implements Iterable<double> {
   /// Element-wise division
   Vector operator /(Object value);
 
+  /// Adds [vector] to this vector in place and returns this vector.
+  Vector addInPlace(Vector vector);
+
+  /// Subtracts [vector] from this vector in place and returns this vector.
+  Vector subtractInPlace(Vector vector);
+
+  /// Multiplies this vector by [vector] element-wise in place.
+  Vector multiplyInPlace(Vector vector);
+
+  /// Divides this vector by [vector] element-wise in place.
+  Vector divideInPlace(Vector vector);
+
   /// Returns a new [Vector] consisting of square roots of elements of this
   /// [Vector]
   Vector sqrt({bool skipCaching = false});

@@ -24,6 +24,11 @@
         - [Element-wise Vector by Vector division](#element-wise-vector-by-vector-division)
         - [Element-wise Vector and List division](#element-wise-vector-and-list-division)
         - [Element-wise division of Vectors of different dtype](#element-wise-division-of-vectors-of-different-dtype)
+        - [In-place Vector operations](#in-place-vector-operations)
+            - [In-place vector addition](#in-place-vector-addition)
+            - [In-place vector subtraction](#in-place-vector-subtraction)
+            - [In-place element-wise vector multiplication](#in-place-element-wise-vector-multiplication)
+            - [In-place element-wise vector division](#in-place-element-wise-vector-division)
         - [Euclidean norm](#euclidean-norm)
         - [Manhattan norm](#manhattan-norm)
         - [Mean value](#mean-value)
@@ -374,6 +379,72 @@ the difference is significant.
   final result = vector1 / vector2;
 
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
+````
+
+#### In-place Vector operations
+
+In-place operations update the vector on which the method is called and return
+the same vector instance. The input vector must have the same length. When both
+vectors have the same dtype, the operations use SIMD.
+
+##### In-place vector addition
+
+`addInPlace` adds each element of the input vector to the corresponding element
+of the receiver.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, 2.0, 3.0]);
+  final other = Vector.fromList([2.0, 3.0, 4.0]);
+
+  vector.addInPlace(other);
+  print(vector.toList()); // [3.0, 5.0, 7.0]
+````
+
+##### In-place vector subtraction
+
+`subtractInPlace` subtracts each element of the input vector from the
+corresponding element of the receiver.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([3.0, 5.0, 7.0]);
+  final other = Vector.fromList([2.0, 3.0, 4.0]);
+
+  vector.subtractInPlace(other);
+  print(vector.toList()); // [1.0, 2.0, 3.0]
+````
+
+##### In-place element-wise vector multiplication
+
+`multiplyInPlace` multiplies each element of the receiver by the corresponding
+element of the input vector.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, 2.0, 3.0]);
+  final other = Vector.fromList([2.0, 3.0, 4.0]);
+
+  vector.multiplyInPlace(other);
+  print(vector.toList()); // [2.0, 6.0, 12.0]
+````
+
+##### In-place element-wise vector division
+
+`divideInPlace` divides each element of the receiver by the corresponding
+element of the input vector.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([2.0, 6.0, 12.0]);
+  final other = Vector.fromList([2.0, 3.0, 4.0]);
+
+  vector.divideInPlace(other);
+  print(vector.toList()); // [1.0, 2.0, 3.0]
 ````
 
 #### Euclidean norm
