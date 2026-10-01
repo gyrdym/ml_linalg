@@ -453,46 +453,97 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
         operationName: 'Vector "/" operator');
   }
 
-  Vector _applyInPlace(
-    Vector other,
-    double Function(double, double) operation,
-    Float64x2 Function(Float64x2, Float64x2) simdOperation,
-  ) {
-    if (other.length != length) {
-      throw VectorsLengthMismatchException(length, other.length);
+  @override
+  Vector addInPlace(Vector vector) {
+    if (vector.length != length) {
+      throw VectorsLengthMismatchException(length, vector.length);
     }
 
-    if (other is Float64x2Vector) {
+    if (vector is Float64x2Vector) {
       final list = _getSimdList();
-      final otherList = other._getSimdList();
+      final otherList = vector._getSimdList();
       for (var i = 0; i < _numOfBuckets; i++) {
-        list[i] = simdOperation(list[i], otherList[i]);
+        list[i] = list[i] + otherList[i];
       }
     } else {
       final list = _getTypedList();
       for (var i = 0; i < length; i++) {
-        list[i] = operation(list[i], other[i]);
+        list[i] = list[i] + vector[i];
       }
     }
+
     _cache.clear();
     return this;
   }
 
   @override
-  Vector addInPlace(Vector vector) =>
-      _applyInPlace(vector, (a, b) => a + b, (a, b) => a + b);
+  Vector subtractInPlace(Vector vector) {
+    if (vector.length != length) {
+      throw VectorsLengthMismatchException(length, vector.length);
+    }
+
+    if (vector is Float64x2Vector) {
+      final list = _getSimdList();
+      final otherList = vector._getSimdList();
+      for (var i = 0; i < _numOfBuckets; i++) {
+        list[i] = list[i] - otherList[i];
+      }
+    } else {
+      final list = _getTypedList();
+      for (var i = 0; i < length; i++) {
+        list[i] = list[i] - vector[i];
+      }
+    }
+
+    _cache.clear();
+    return this;
+  }
 
   @override
-  Vector subtractInPlace(Vector vector) =>
-      _applyInPlace(vector, (a, b) => a - b, (a, b) => a - b);
+  Vector multiplyInPlace(Vector vector) {
+    if (vector.length != length) {
+      throw VectorsLengthMismatchException(length, vector.length);
+    }
+
+    if (vector is Float64x2Vector) {
+      final list = _getSimdList();
+      final otherList = vector._getSimdList();
+      for (var i = 0; i < _numOfBuckets; i++) {
+        list[i] = list[i] * otherList[i];
+      }
+    } else {
+      final list = _getTypedList();
+      for (var i = 0; i < length; i++) {
+        list[i] = list[i] * vector[i];
+      }
+    }
+
+    _cache.clear();
+    return this;
+  }
 
   @override
-  Vector multiplyInPlace(Vector vector) =>
-      _applyInPlace(vector, (a, b) => a * b, (a, b) => a * b);
+  Vector divideInPlace(Vector vector) {
+    if (vector.length != length) {
+      throw VectorsLengthMismatchException(length, vector.length);
+    }
 
-  @override
-  Vector divideInPlace(Vector vector) =>
-      _applyInPlace(vector, (a, b) => a / b, (a, b) => a / b);
+    if (vector is Float64x2Vector) {
+      final list = _getSimdList();
+      final otherList = vector._getSimdList();
+      for (var i = 0; i < _numOfBuckets; i++) {
+        list[i] = list[i] / otherList[i];
+      }
+    } else {
+      final list = _getTypedList();
+      for (var i = 0; i < length; i++) {
+        list[i] = list[i] / vector[i];
+      }
+    }
+
+    _cache.clear();
+    return this;
+  }
 
   @override
   Vector sqrt({bool skipCaching = false}) => _cache.get(vectorSqrtKey, () {
