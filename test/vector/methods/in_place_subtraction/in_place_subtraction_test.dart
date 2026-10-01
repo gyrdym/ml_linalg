@@ -25,8 +25,8 @@ void main() {
             Vector.fromList([3.0, 4.0, 5.0, 6.0], dtype: dtype);
         final fiveElementVector =
             Vector.fromList([12.0, 20.0, 30.0, 40.0, 50.0], dtype: dtype);
-        final fiveElementOther = Vector.fromList(
-            [3.0, 4.0, 5.0, 6.0, 7.0], dtype: dtype);
+        final fiveElementOther =
+            Vector.fromList([3.0, 4.0, 5.0, 6.0, 7.0], dtype: dtype);
 
         fourElementVector.subtractInPlace(fourElementOther);
         fiveElementVector.subtractInPlace(fiveElementOther);
@@ -37,10 +37,10 @@ void main() {
 
       test('should subtract 5 elements with negative and fractional values',
           () {
-        final vector = Vector.fromList(
-            [-2.5, 1.5, -4.0, 6.25, -8.5], dtype: dtype);
-        final other = Vector.fromList(
-            [1.25, -2.5, 0.5, -1.25, 3.5], dtype: dtype);
+        final vector =
+            Vector.fromList([-2.5, 1.5, -4.0, 6.25, -8.5], dtype: dtype);
+        final other =
+            Vector.fromList([1.25, -2.5, 0.5, -1.25, 3.5], dtype: dtype);
 
         vector.subtractInPlace(other);
 
