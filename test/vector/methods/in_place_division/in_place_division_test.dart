@@ -33,8 +33,9 @@ void main() {
         expect(fourElementVector, equals([4.0, 5.0, 6.0, 5.0]));
         expect(fiveElementVector, equals([4.0, 5.0, 6.0, 5.0, 5.0]));
         expect(
-          fiveElementVector,
-          equals(Vector.fromList([4.0, 5.0, 6.0, 5.0, 5.0], dtype: dtype)),
+          fiveElementVector ==
+              Vector.fromList([4.0, 5.0, 6.0, 5.0, 5.0], dtype: dtype),
+          isTrue,
         );
       });
 
