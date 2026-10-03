@@ -528,8 +528,17 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
     if (vector is Float32x4Vector) {
       final list = _getSimdList();
       final otherList = vector._getSimdList();
-      for (var i = 0; i < _numOfBuckets; i++) {
+      final numOfFullBuckets = length ~/ _bucketSize;
+      for (var i = 0; i < numOfFullBuckets; i++) {
         list[i] = list[i] / otherList[i];
+      }
+
+      final startOfTail = numOfFullBuckets * _bucketSize;
+      if (startOfTail < length) {
+        final typedList = _getTypedList();
+        for (var i = startOfTail; i < length; i++) {
+          typedList[i] = typedList[i] / vector[i];
+        }
       }
     } else {
       final list = _getTypedList();

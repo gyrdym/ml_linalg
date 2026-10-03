@@ -32,6 +32,10 @@ void main() {
 
         expect(fourElementVector, equals([4.0, 5.0, 6.0, 5.0]));
         expect(fiveElementVector, equals([4.0, 5.0, 6.0, 5.0, 5.0]));
+        expect(
+          fiveElementVector,
+          equals(Vector.fromList([4.0, 5.0, 6.0, 5.0, 5.0], dtype: dtype)),
+        );
       });
 
       test('should divide 5 elements with negative and fractional values', () {
