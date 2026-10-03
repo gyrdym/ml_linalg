@@ -1,4 +1,4 @@
-// Approx. 0.27 seconds (MacBook Pro 2019), Dart version: 3.12.2
+// Approx. 0.1 seconds (MacBook Pro 2019), Dart version: 3.12.2
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:ml_linalg/dtype.dart';
