@@ -8,10 +8,10 @@ const _amountOfElements = 1e8;
 
 class Float32x4VectorInPlaceAdditionBenchmark extends BenchmarkBase {
   Float32x4VectorInPlaceAdditionBenchmark()
-      : super('Vector addInPlace, operands: vector32, zero vector32; '
+      : super('VectorBuffer.add, operands: vector32, zero vector32; '
             '$_amountOfElements elements');
 
-  late Vector vector;
+  late VectorBuffer vector;
   late Vector zeroVector;
 
   static void main() {
@@ -23,7 +23,7 @@ class Float32x4VectorInPlaceAdditionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.addInPlace(zeroVector);
+    vector.add(zeroVector);
   }
 
   @override
@@ -34,7 +34,7 @@ class Float32x4VectorInPlaceAdditionBenchmark extends BenchmarkBase {
       min: -1000,
       max: 1000,
       dtype: DType.float32,
-    );
+    ).toBuffer();
     zeroVector = Vector.zero(_amountOfElements.toInt(), dtype: DType.float32);
   }
 }

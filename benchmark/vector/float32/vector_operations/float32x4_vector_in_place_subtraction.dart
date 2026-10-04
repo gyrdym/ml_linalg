@@ -8,10 +8,10 @@ const _amountOfElements = 1e8;
 
 class Float32x4VectorInPlaceSubtractionBenchmark extends BenchmarkBase {
   Float32x4VectorInPlaceSubtractionBenchmark()
-      : super('Vector subtractInPlace, operands: vector32, zero vector32; '
+      : super('VectorBuffer.subtract, operands: vector32, zero vector32; '
             '$_amountOfElements elements');
 
-  late Vector vector;
+  late VectorBuffer vector;
   late Vector zeroVector;
 
   static void main() {
@@ -23,7 +23,7 @@ class Float32x4VectorInPlaceSubtractionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.subtractInPlace(zeroVector);
+    vector.subtract(zeroVector);
   }
 
   @override
@@ -34,7 +34,7 @@ class Float32x4VectorInPlaceSubtractionBenchmark extends BenchmarkBase {
       min: -1000,
       max: 1000,
       dtype: DType.float32,
-    );
+    ).toBuffer();
     zeroVector = Vector.zero(_amountOfElements.toInt(), dtype: DType.float32);
   }
 }

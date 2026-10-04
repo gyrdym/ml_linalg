@@ -24,11 +24,11 @@
         - [Element-wise Vector by Vector division](#element-wise-vector-by-vector-division)
         - [Element-wise Vector and List division](#element-wise-vector-and-list-division)
         - [Element-wise division of Vectors of different dtype](#element-wise-division-of-vectors-of-different-dtype)
-        - [In-place Vector operations](#in-place-vector-operations)
-            - [In-place vector addition](#in-place-vector-addition)
-            - [In-place vector subtraction](#in-place-vector-subtraction)
-            - [In-place element-wise vector multiplication](#in-place-element-wise-vector-multiplication)
-            - [In-place element-wise vector division](#in-place-element-wise-vector-division)
+        - [VectorBuffer](#vectorbuffer)
+            - [VectorBuffer addition](#vectorbuffer-addition)
+            - [VectorBuffer subtraction](#vectorbuffer-subtraction)
+            - [VectorBuffer element-wise multiplication](#vectorbuffer-element-wise-multiplication)
+            - [VectorBuffer element-wise division](#vectorbuffer-element-wise-division)
         - [Euclidean norm](#euclidean-norm)
         - [Manhattan norm](#manhattan-norm)
         - [Mean value](#mean-value)
@@ -186,14 +186,12 @@ they use 64 bits to represent numbers in the memory versus 32 bits for Float32x4
 &nbsp;&nbsp;&nbsp;&nbsp;Nevertheless, Float32x4 representation uses by default since usually 32 bits is enough for number precision, and along 
 with that, this representation is more performant.
 
-&nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable: once created, the vector cannot be changed. All the vector operations 
-lead to creation of a new vector instance (of course, if the operation is supposed to return a `Vector`).
+&nbsp;&nbsp;&nbsp;&nbsp;Regular `Vector` operations do not change their input and return a new vector when appropriate. A vector can also be accessed through the mutable `VectorBuffer` interface; see [VectorBuffer](#vectorbuffer).
 
 &nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface, so it's possible to use them as regular 
 iterable collections.
 
-&nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for `HashMap` and similar data structures 
-and to look up a value by the vector-key, since the hash code for equal vectors is the same:
+&nbsp;&nbsp;&nbsp;&nbsp;Vectors can be used as keys for `HashMap` and similar data structures while they are not being mutated through `VectorBuffer`:
 
 ```dart
 import 'package:ml_linalg/vector.dart';
@@ -381,69 +379,80 @@ the difference is significant.
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
 ````
 
-#### In-place Vector operations
+#### VectorBuffer
 
-In-place operations update the vector on which the method is called and return
-the same vector instance. The input vector must have the same length. When both
-vectors have the same dtype, the operations use SIMD.
+`VectorBuffer` is a mutable interface for changing values in a vector without
+creating a new vector. Its operations return the same buffer. The input vector
+must have the same length; operations between vectors of the same dtype use
+SIMD.
 
-##### In-place vector addition
-
-`addInPlace` adds each element of the input vector to the corresponding element
-of the receiver.
+Call `toBuffer()` to get a mutable interface to the same vector data. Changes
+made through the buffer are visible through the original vector:
 
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
   final vector = Vector.fromList([1.0, 2.0, 3.0]);
+  final buffer = vector.toBuffer();
   final other = Vector.fromList([2.0, 3.0, 4.0]);
 
-  vector.addInPlace(other);
+  buffer.add(other);
   print(vector.toList()); // [3.0, 5.0, 7.0]
 ````
 
-##### In-place vector subtraction
+##### VectorBuffer addition
 
-`subtractInPlace` subtracts each element of the input vector from the
-corresponding element of the receiver.
+`add` adds each element of the input vector to the corresponding element in the
+buffer.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, 2.0, 3.0]);
+  final buffer = vector.toBuffer();
+  buffer.add(Vector.fromList([2.0, 3.0, 4.0]));
+  print(vector.toList()); // [3.0, 5.0, 7.0]
+````
+
+##### VectorBuffer subtraction
+
+`subtract` subtracts each element of the input vector from the corresponding
+element in the buffer.
 
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
   final vector = Vector.fromList([3.0, 5.0, 7.0]);
-  final other = Vector.fromList([2.0, 3.0, 4.0]);
-
-  vector.subtractInPlace(other);
+  final buffer = vector.toBuffer();
+  buffer.subtract(Vector.fromList([2.0, 3.0, 4.0]));
   print(vector.toList()); // [1.0, 2.0, 3.0]
 ````
 
-##### In-place element-wise vector multiplication
+##### VectorBuffer element-wise multiplication
 
-`multiplyInPlace` multiplies each element of the receiver by the corresponding
-element of the input vector.
+`multiply` multiplies each element in the buffer by the corresponding element
+of the input vector.
 
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
   final vector = Vector.fromList([1.0, 2.0, 3.0]);
-  final other = Vector.fromList([2.0, 3.0, 4.0]);
-
-  vector.multiplyInPlace(other);
+  final buffer = vector.toBuffer();
+  buffer.multiply(Vector.fromList([2.0, 3.0, 4.0]));
   print(vector.toList()); // [2.0, 6.0, 12.0]
 ````
 
-##### In-place element-wise vector division
+##### VectorBuffer element-wise division
 
-`divideInPlace` divides each element of the receiver by the corresponding
-element of the input vector.
+`divide` divides each element in the buffer by the corresponding element of
+the input vector.
 
 ````Dart
   import 'package:ml_linalg/linalg.dart';
 
   final vector = Vector.fromList([2.0, 6.0, 12.0]);
-  final other = Vector.fromList([2.0, 3.0, 4.0]);
-
-  vector.divideInPlace(other);
+  final buffer = vector.toBuffer();
+  buffer.divide(Vector.fromList([2.0, 3.0, 4.0]));
   print(vector.toList()); // [1.0, 2.0, 3.0]
 ````
 

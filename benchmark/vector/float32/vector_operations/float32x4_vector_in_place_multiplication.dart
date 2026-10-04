@@ -8,10 +8,10 @@ const _amountOfElements = 1e8;
 
 class Float32x4VectorInPlaceMultiplicationBenchmark extends BenchmarkBase {
   Float32x4VectorInPlaceMultiplicationBenchmark()
-      : super('Vector multiplyInPlace, operands: vector32, ones vector32; '
+      : super('VectorBuffer.multiply, operands: vector32, ones vector32; '
             '$_amountOfElements elements');
 
-  late Vector vector;
+  late VectorBuffer vector;
   late Vector onesVector;
 
   static void main() {
@@ -23,7 +23,7 @@ class Float32x4VectorInPlaceMultiplicationBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.multiplyInPlace(onesVector);
+    vector.multiply(onesVector);
   }
 
   @override
@@ -34,7 +34,7 @@ class Float32x4VectorInPlaceMultiplicationBenchmark extends BenchmarkBase {
       min: -1000,
       max: 1000,
       dtype: DType.float32,
-    );
+    ).toBuffer();
     onesVector =
         Vector.filled(_amountOfElements.toInt(), 1, dtype: DType.float32);
   }

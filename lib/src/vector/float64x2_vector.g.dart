@@ -21,6 +21,7 @@ import 'package:ml_linalg/src/vector/exception/unsupported_norm_type_exception.d
 import 'package:ml_linalg/src/vector/exception/vector_list_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
+import 'package:ml_linalg/src/vector/float64x2_vector_buffer.g.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
@@ -29,7 +30,9 @@ const _bucketSize =
     Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
 final _simdOnes = Float64x2.splat(1.0);
 
-class Float64x2Vector with IterableMixin<double> implements Vector {
+class Float64x2Vector
+    with IterableMixin<double>
+    implements Vector, Float64x2VectorDataProvider {
   Float64x2Vector.fromList(List<num> source, this._cache, this._simdHelper)
       : length = source.length {
     _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
@@ -153,6 +156,14 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
   Float64List _getTypedList() =>
       _cachedTypedList ??= _buffer.asFloat64List(0, length);
   Float64List? _cachedTypedList;
+
+  @override
+  late final Float64x2VectorData bufferData = Float64x2VectorData(
+    _getSimdList(),
+    _getTypedList(),
+    length,
+    _cache,
+  );
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
@@ -451,107 +462,6 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
     throw UnsupportedOperandTypeException(value.runtimeType,
         operationName: 'Vector "/" operator');
-  }
-
-  @override
-  Vector addInPlace(Vector vector) {
-    if (vector.length != length) {
-      throw VectorsLengthMismatchException(length, vector.length);
-    }
-
-    if (vector is Float64x2Vector) {
-      final list = _getSimdList();
-      final otherList = vector._getSimdList();
-      for (var i = 0; i < _numOfBuckets; i++) {
-        list[i] = list[i] + otherList[i];
-      }
-    } else {
-      final list = _getTypedList();
-      for (var i = 0; i < length; i++) {
-        list[i] = list[i] + vector[i];
-      }
-    }
-
-    _cache.clear();
-    return this;
-  }
-
-  @override
-  Vector subtractInPlace(Vector vector) {
-    if (vector.length != length) {
-      throw VectorsLengthMismatchException(length, vector.length);
-    }
-
-    if (vector is Float64x2Vector) {
-      final list = _getSimdList();
-      final otherList = vector._getSimdList();
-      for (var i = 0; i < _numOfBuckets; i++) {
-        list[i] = list[i] - otherList[i];
-      }
-    } else {
-      final list = _getTypedList();
-      for (var i = 0; i < length; i++) {
-        list[i] = list[i] - vector[i];
-      }
-    }
-
-    _cache.clear();
-    return this;
-  }
-
-  @override
-  Vector multiplyInPlace(Vector vector) {
-    if (vector.length != length) {
-      throw VectorsLengthMismatchException(length, vector.length);
-    }
-
-    if (vector is Float64x2Vector) {
-      final list = _getSimdList();
-      final otherList = vector._getSimdList();
-      for (var i = 0; i < _numOfBuckets; i++) {
-        list[i] = list[i] * otherList[i];
-      }
-    } else {
-      final list = _getTypedList();
-      for (var i = 0; i < length; i++) {
-        list[i] = list[i] * vector[i];
-      }
-    }
-
-    _cache.clear();
-    return this;
-  }
-
-  @override
-  Vector divideInPlace(Vector vector) {
-    if (vector.length != length) {
-      throw VectorsLengthMismatchException(length, vector.length);
-    }
-
-    if (vector is Float64x2Vector) {
-      final list = _getSimdList();
-      final otherList = vector._getSimdList();
-      final numOfFullBuckets = length ~/ _bucketSize;
-      for (var i = 0; i < numOfFullBuckets; i++) {
-        list[i] = list[i] / otherList[i];
-      }
-
-      final startOfTail = numOfFullBuckets * _bucketSize;
-      if (startOfTail < length) {
-        final typedList = _getTypedList();
-        for (var i = startOfTail; i < length; i++) {
-          typedList[i] = typedList[i] / vector[i];
-        }
-      }
-    } else {
-      final list = _getTypedList();
-      for (var i = 0; i < length; i++) {
-        list[i] = list[i] / vector[i];
-      }
-    }
-
-    _cache.clear();
-    return this;
   }
 
   @override
@@ -989,4 +899,7 @@ class Float64x2Vector with IterableMixin<double> implements Vector {
 
   @override
   DType get dtype => DType.float64;
+
+  @override
+  VectorBuffer toBuffer() => Float64x2VectorBuffer(bufferData);
 }

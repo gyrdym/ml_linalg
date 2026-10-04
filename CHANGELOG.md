@@ -1,8 +1,9 @@
 # Changelog
 
 ## 13.13.0
-- `Vector`:
-  - added in-place element-wise addition, subtraction, multiplication, and division
+- `VectorBuffer`:
+  - moved mutable element-wise operations from `Vector` to `VectorBuffer` as
+    `add`, `subtract`, `multiply`, and `divide`
 
 ## 13.12.9
 - `Vector.fromList`:
