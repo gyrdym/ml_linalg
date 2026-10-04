@@ -1,5 +1,10 @@
 # Changelog
 
+## 13.13.0
+- `VectorBuffer`:
+  - moved mutable element-wise operations from `Vector` to `VectorBuffer` as
+    `add`, `subtract`, `multiply`, and `divide`
+
 ## 13.12.9
 - `Vector.fromList`:
   - factory-constructor speed-up

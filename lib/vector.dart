@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:ml_linalg/vector_buffer.dart';
+
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/norm.dart';
@@ -10,6 +12,8 @@ import 'package:ml_linalg/src/vector/float32x4_vector.dart';
 import 'package:ml_linalg/src/vector/float64x2_vector.g.dart';
 import 'package:ml_linalg/src/vector/serialization/from_vector_json.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
+
+export 'package:ml_linalg/vector_buffer.dart' show VectorBuffer;
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
 /// architecture support and extended functionality, adapted for data science
@@ -64,6 +68,13 @@ abstract class Vector implements Iterable<double> {
   /// Creates a vector from a simd-typed collection. It accepts only
   /// [Float32x4List] or [Float64x2List] lists as a source.
   ///
+  /// **Warning:** The vector shares the underlying buffer with [source]; it
+  /// does not copy the values. Mutating the source list or the vector through
+  /// a [VectorBuffer] operation changes the shared data. Mutating [source]
+  /// after the vector has cached a computed value can also leave that cache
+  /// stale.
+  /// Avoid modifying [source] while using the vector.
+  ///
   /// A usage example:
   ///
   /// ````dart
@@ -73,8 +84,8 @@ abstract class Vector implements Iterable<double> {
   /// final source1 = Float64x2List.fromList([1, 2, 3, 4, 5]);
   /// final source2 = Float32x4List.fromList([1, 2, 3, 4, 5]);
   ///
-  /// final vector1 = Vector.fromSimdList(source1, dtype: DType.float64);
-  /// final vector2 = Vector.fromSimdList(source2, dtype: DType.float32);
+  /// final vector1 = Vector.fromSimdList(source1, 5, dtype: DType.float64);
+  /// final vector2 = Vector.fromSimdList(source2, 5, dtype: DType.float32);
   ///
   /// print(vector1);
   /// print(vector2);
@@ -301,6 +312,12 @@ abstract class Vector implements Iterable<double> {
 
   /// Returns an element by its index in the vector
   double operator [](int index);
+
+  /// Returns a mutable interface to this vector's data.
+  ///
+  /// The returned [VectorBuffer] shares the data with this vector. Changes
+  /// made through the buffer are visible through this vector as well.
+  VectorBuffer toBuffer();
 
   /// Element-wise addition
   Vector operator +(Object value);
