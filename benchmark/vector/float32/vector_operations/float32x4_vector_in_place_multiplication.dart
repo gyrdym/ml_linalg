@@ -11,7 +11,7 @@ class Float32x4VectorInPlaceMultiplicationBenchmark extends BenchmarkBase {
       : super('VectorBuffer.multiply, operands: vector32, ones vector32; '
             '$_amountOfElements elements');
 
-  late VectorBuffer vector;
+  late VectorBuffer buffer;
   late Vector onesVector;
 
   static void main() {
@@ -23,12 +23,12 @@ class Float32x4VectorInPlaceMultiplicationBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.multiply(onesVector);
+    buffer.multiply(onesVector);
   }
 
   @override
   void setup() {
-    vector = Vector.randomFilled(
+    buffer = Vector.randomFilled(
       _amountOfElements.toInt(),
       seed: 1,
       min: -1000,

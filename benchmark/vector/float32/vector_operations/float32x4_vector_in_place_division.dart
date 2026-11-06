@@ -11,7 +11,7 @@ class Float32x4VectorInPlaceDivisionBenchmark extends BenchmarkBase {
       : super('VectorBuffer.divide, operands: vector32, ones vector32; '
             '$_amountOfElements elements');
 
-  late VectorBuffer vector;
+  late VectorBuffer buffer;
   late Vector onesVector;
 
   static void main() {
@@ -23,12 +23,12 @@ class Float32x4VectorInPlaceDivisionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.divide(onesVector);
+    buffer.divide(onesVector);
   }
 
   @override
   void setup() {
-    vector = Vector.randomFilled(
+    buffer = Vector.randomFilled(
       _amountOfElements.toInt(),
       seed: 1,
       min: -1000,

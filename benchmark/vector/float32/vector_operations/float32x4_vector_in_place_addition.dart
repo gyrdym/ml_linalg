@@ -11,7 +11,7 @@ class Float32x4VectorInPlaceAdditionBenchmark extends BenchmarkBase {
       : super('VectorBuffer.add, operands: vector32, zero vector32; '
             '$_amountOfElements elements');
 
-  late VectorBuffer vector;
+  late VectorBuffer buffer;
   late Vector zeroVector;
 
   static void main() {
@@ -23,12 +23,12 @@ class Float32x4VectorInPlaceAdditionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    vector.add(zeroVector);
+    buffer.add(zeroVector);
   }
 
   @override
   void setup() {
-    vector = Vector.randomFilled(
+    buffer = Vector.randomFilled(
       _amountOfElements.toInt(),
       seed: 1,
       min: -1000,
