@@ -1,8 +1,8 @@
 # Changelog
 
 ## 13.13.0
-- `VectorBuffer`:
-  - added a mutable vector buffer for in-place `add`, `subtract`, `multiply`,
+- `MutableVector`:
+  - added a mutable vector copy for in-place `add`, `subtract`, `multiply`,
     and `divide` operations
 
 ## 13.12.9

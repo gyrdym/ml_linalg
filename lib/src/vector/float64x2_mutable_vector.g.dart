@@ -1,39 +1,71 @@
 /* This file is auto generated, do not change it manually */
 // ignore_for_file: unused_local_variable
 
+import 'dart:collection';
 import 'dart:typed_data';
 
-import 'package:ml_linalg/src/common/cache_manager/cache_manager.dart';
+import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
 import 'package:ml_linalg/vector.dart' show Vector;
-import 'package:ml_linalg/vector_buffer.dart';
+import 'package:ml_linalg/mutable_vector.dart';
 
-/// Gives a float64 vector's internal data to its mutable buffer.
+/// Gives SIMD data to float64 vector implementations.
 abstract class Float64x2VectorDataProvider {
-  Float64x2VectorData get bufferData;
+  Float64x2VectorData get vectorData;
 }
 
-/// The internal float64 representation shared by a vector and its buffer.
+/// The typed views used by a float64 vector implementation.
 class Float64x2VectorData {
-  Float64x2VectorData(this.simd, this.values, this.length, this.cache);
+  Float64x2VectorData(this.simd, this.values, this.length);
 
   final Float64x2List simd;
   final Float64List values;
   final int length;
-  final CacheManager cache;
 }
 
-/// Mutable float64 operations over a vector's internal representation.
-class Float64x2VectorBuffer implements VectorBuffer {
-  Float64x2VectorBuffer(this._data);
+/// Mutable float64 vector with storage independent from its source vector.
+class Float64x2MutableVector
+    with IterableMixin<double>
+    implements MutableVector, Float64x2VectorDataProvider {
+  Float64x2MutableVector(Float64x2VectorData source)
+      : this._fromSimd(Float64x2List.fromList(source.simd), source.length);
+
+  Float64x2MutableVector._fromSimd(Float64x2List simd, this.length)
+      : _data = Float64x2VectorData(
+          simd,
+          simd.buffer.asFloat64List(0, length),
+          length,
+        );
 
   final Float64x2VectorData _data;
 
   @override
-  VectorBuffer add(Vector vector) {
+  final int length;
+
+  @override
+  DType get dtype => DType.float64;
+
+  @override
+  Iterator<double> get iterator => _data.values.iterator;
+
+  @override
+  double operator [](int index) => _data.values[index];
+
+  @override
+  Float64x2VectorData get vectorData => _data;
+
+  @override
+  Vector toVector() => Vector.fromSimdList(
+        Float64x2List.fromList(_data.simd),
+        length,
+        dtype: dtype,
+      );
+
+  @override
+  MutableVector add(Vector vector) {
     _checkLength(vector);
     if (vector is Float64x2VectorDataProvider) {
-      final other = (vector as Float64x2VectorDataProvider).bufferData.simd;
+      final other = (vector as Float64x2VectorDataProvider).vectorData.simd;
       final bucketSize =
           Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
       final fullBuckets = _data.length ~/ bucketSize;
@@ -48,15 +80,14 @@ class Float64x2VectorBuffer implements VectorBuffer {
         _data.values[i] += vector[i];
       }
     }
-    _data.cache.clear();
     return this;
   }
 
   @override
-  VectorBuffer subtract(Vector vector) {
+  MutableVector subtract(Vector vector) {
     _checkLength(vector);
     if (vector is Float64x2VectorDataProvider) {
-      final other = (vector as Float64x2VectorDataProvider).bufferData.simd;
+      final other = (vector as Float64x2VectorDataProvider).vectorData.simd;
       final bucketSize =
           Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
       final fullBuckets = _data.length ~/ bucketSize;
@@ -71,15 +102,14 @@ class Float64x2VectorBuffer implements VectorBuffer {
         _data.values[i] -= vector[i];
       }
     }
-    _data.cache.clear();
     return this;
   }
 
   @override
-  VectorBuffer multiply(Vector vector) {
+  MutableVector multiply(Vector vector) {
     _checkLength(vector);
     if (vector is Float64x2VectorDataProvider) {
-      final other = (vector as Float64x2VectorDataProvider).bufferData.simd;
+      final other = (vector as Float64x2VectorDataProvider).vectorData.simd;
       final bucketSize =
           Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
       final fullBuckets = _data.length ~/ bucketSize;
@@ -94,15 +124,14 @@ class Float64x2VectorBuffer implements VectorBuffer {
         _data.values[i] *= vector[i];
       }
     }
-    _data.cache.clear();
     return this;
   }
 
   @override
-  VectorBuffer divide(Vector vector) {
+  MutableVector divide(Vector vector) {
     _checkLength(vector);
     if (vector is Float64x2VectorDataProvider) {
-      final other = (vector as Float64x2VectorDataProvider).bufferData.simd;
+      final other = (vector as Float64x2VectorDataProvider).vectorData.simd;
       final bucketSize =
           Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
       final fullBuckets = _data.length ~/ bucketSize;
@@ -117,7 +146,6 @@ class Float64x2VectorBuffer implements VectorBuffer {
         _data.values[i] /= vector[i];
       }
     }
-    _data.cache.clear();
     return this;
   }
 

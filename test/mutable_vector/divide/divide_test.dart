@@ -4,19 +4,20 @@ import 'package:ml_linalg/vector.dart';
 import 'package:test/test.dart';
 
 import '../../dtype_to_title.dart';
-import '../vector_buffer_test_helpers.dart';
+import '../mutable_vector_test_helpers.dart';
 
 void main() {
   for (final dtype in [DType.float32, DType.float64]) {
     group(dtypeToVectorTestTitle[dtype], () {
-      test('should mutate the vector and return the same buffer', () {
+      test('should mutate the copy and return the same mutable vector', () {
         final vector = Vector.fromList([12.0, 20.0, 30.0], dtype: dtype);
         final other = Vector.fromList([3.0, 4.0, 5.0], dtype: dtype);
-        final buffer = vector.toBuffer();
-        final result = buffer.divide(other);
+        final mutable = vector.toMutable();
+        final result = mutable.divide(other);
 
-        expect(result, same(buffer));
-        expect(vector, equals([4.0, 5.0, 6.0]));
+        expect(result, same(mutable));
+        expect(mutable.toVector(), equals([4.0, 5.0, 6.0]));
+        expect(vector, equals([12.0, 20.0, 30.0]));
       });
 
       test('should divide vectors with 4 and 5 elements', () {
@@ -29,13 +30,15 @@ void main() {
         final fiveElementOther =
             Vector.fromList([3.0, 4.0, 5.0, 8.0, 10.0], dtype: dtype);
 
-        fourElementVector.toBuffer().divide(fourElementOther);
-        fiveElementVector.toBuffer().divide(fiveElementOther);
+        final fourElementMutable = fourElementVector.toMutable()
+          ..divide(fourElementOther);
+        final fiveElementMutable = fiveElementVector.toMutable()
+          ..divide(fiveElementOther);
 
-        expect(fourElementVector, equals([4.0, 5.0, 6.0, 5.0]));
-        expect(fiveElementVector, equals([4.0, 5.0, 6.0, 5.0, 5.0]));
+        expect(fourElementMutable.toVector(), equals([4.0, 5.0, 6.0, 5.0]));
+        expect(fiveElementMutable.toVector(), equals([4.0, 5.0, 6.0, 5.0, 5.0]));
         expect(
-          fiveElementVector ==
+          fiveElementMutable.toVector() ==
               Vector.fromList([4.0, 5.0, 6.0, 5.0, 5.0], dtype: dtype),
           isTrue,
         );
@@ -47,9 +50,9 @@ void main() {
         final other =
             Vector.fromList([0.5, -0.5, 2.0, -2.5, 4.0], dtype: dtype);
 
-        vector.toBuffer().divide(other);
+        final mutable = vector.toMutable()..divide(other);
 
-        expect(vector, equals([-5.0, -3.0, -2.0, -2.5, -2.125]));
+        expect(mutable.toVector(), equals([-5.0, -3.0, -2.0, -2.5, -2.125]));
       });
 
       test('should calculate the correct sum after division', () {
@@ -60,9 +63,9 @@ void main() {
           paddingValue: 0,
         );
 
-        vector.toBuffer().divide(other);
+        final mutable = vector.toMutable()..divide(other);
 
-        expect(vector.sum(), 5);
+        expect(mutable.toVector().sum(), 5);
       });
 
       test('should support a vector of a different dtype', () {
@@ -72,16 +75,16 @@ void main() {
           dtype: dtype == DType.float32 ? DType.float64 : DType.float32,
         );
 
-        vector.toBuffer().divide(other);
+        final mutable = vector.toMutable()..divide(other);
 
-        expect(vector, equals([4.0, 6.0]));
+        expect(mutable.toVector(), equals([4.0, 6.0]));
       });
 
       test('should throw when vector lengths do not match', () {
         final vector = Vector.fromList([1.0, 2.0], dtype: dtype);
         final other = Vector.fromList([1.0], dtype: dtype);
 
-        expect(() => vector.toBuffer().divide(other),
+        expect(() => vector.toMutable().divide(other),
             throwsA(isA<VectorsLengthMismatchException>()));
       });
     });

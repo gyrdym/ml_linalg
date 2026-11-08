@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ml_linalg/vector_buffer.dart';
+import 'package:ml_linalg/mutable_vector.dart';
 
 import 'package:ml_linalg/distance.dart';
 import 'package:ml_linalg/dtype.dart';
@@ -13,7 +13,7 @@ import 'package:ml_linalg/src/vector/float64x2_vector.g.dart';
 import 'package:ml_linalg/src/vector/serialization/from_vector_json.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 
-export 'package:ml_linalg/vector_buffer.dart' show VectorBuffer;
+export 'package:ml_linalg/mutable_vector.dart' show MutableVector;
 
 /// An algebraic vector with SIMD (single instruction, multiple data)
 /// architecture support and extended functionality, adapted for data science
@@ -69,10 +69,8 @@ abstract class Vector implements Iterable<double> {
   /// [Float32x4List] or [Float64x2List] lists as a source.
   ///
   /// **Warning:** The vector shares the underlying buffer with [source]; it
-  /// does not copy the values. Mutating the source list or the vector through
-  /// a [VectorBuffer] operation changes the shared data. Mutating [source]
-  /// after the vector has cached a computed value can also leave that cache
-  /// stale.
+  /// does not copy the values. Mutating [source] can change this vector and
+  /// leave cached values stale.
   /// Avoid modifying [source] while using the vector.
   ///
   /// A usage example:
@@ -313,11 +311,11 @@ abstract class Vector implements Iterable<double> {
   /// Returns an element by its index in the vector
   double operator [](int index);
 
-  /// Returns a mutable interface to this vector's data.
+  /// Returns a mutable copy of this vector.
   ///
-  /// The returned [VectorBuffer] shares the data with this vector. Changes
-  /// made through the buffer are visible through this vector as well.
-  VectorBuffer toBuffer();
+  /// The returned [MutableVector] has independent storage. Changes made to it
+  /// do not affect this vector.
+  MutableVector toMutable();
 
   /// Element-wise addition
   Vector operator +(Object value);

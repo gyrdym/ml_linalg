@@ -21,7 +21,7 @@ import 'package:ml_linalg/src/vector/exception/unsupported_norm_type_exception.d
 import 'package:ml_linalg/src/vector/exception/vector_list_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
-import 'package:ml_linalg/src/vector/float64x2_vector_buffer.g.dart';
+import 'package:ml_linalg/src/vector/float64x2_mutable_vector.g.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
@@ -158,11 +158,10 @@ class Float64x2Vector
   Float64List? _cachedTypedList;
 
   @override
-  late final Float64x2VectorData bufferData = Float64x2VectorData(
+  late final Float64x2VectorData vectorData = Float64x2VectorData(
     _getSimdList(),
     _getTypedList(),
     length,
-    _cache,
   );
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
@@ -901,5 +900,5 @@ class Float64x2Vector
   DType get dtype => DType.float64;
 
   @override
-  VectorBuffer toBuffer() => Float64x2VectorBuffer(bufferData);
+  MutableVector toMutable() => Float64x2MutableVector(vectorData);
 }

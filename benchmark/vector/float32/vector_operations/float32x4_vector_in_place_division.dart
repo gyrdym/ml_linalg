@@ -8,10 +8,10 @@ const _amountOfElements = 1e8;
 
 class Float32x4VectorInPlaceDivisionBenchmark extends BenchmarkBase {
   Float32x4VectorInPlaceDivisionBenchmark()
-      : super('VectorBuffer.divide, operands: vector32, ones vector32; '
+      : super('MutableVector.divide, operands: vector32, ones vector32; '
             '$_amountOfElements elements');
 
-  late VectorBuffer buffer;
+  late MutableVector mutable;
   late Vector onesVector;
 
   static void main() {
@@ -23,18 +23,18 @@ class Float32x4VectorInPlaceDivisionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    buffer.divide(onesVector);
+    mutable.divide(onesVector);
   }
 
   @override
   void setup() {
-    buffer = Vector.randomFilled(
+    mutable = Vector.randomFilled(
       _amountOfElements.toInt(),
       seed: 1,
       min: -1000,
       max: 1000,
       dtype: DType.float32,
-    ).toBuffer();
+    ).toMutable();
     onesVector =
         Vector.filled(_amountOfElements.toInt(), 1, dtype: DType.float32);
   }

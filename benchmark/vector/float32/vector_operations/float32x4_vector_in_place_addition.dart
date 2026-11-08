@@ -8,10 +8,10 @@ const _amountOfElements = 1e8;
 
 class Float32x4VectorInPlaceAdditionBenchmark extends BenchmarkBase {
   Float32x4VectorInPlaceAdditionBenchmark()
-      : super('VectorBuffer.add, operands: vector32, zero vector32; '
+      : super('MutableVector.add, operands: vector32, zero vector32; '
             '$_amountOfElements elements');
 
-  late VectorBuffer buffer;
+  late MutableVector mutable;
   late Vector zeroVector;
 
   static void main() {
@@ -23,18 +23,18 @@ class Float32x4VectorInPlaceAdditionBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    buffer.add(zeroVector);
+    mutable.add(zeroVector);
   }
 
   @override
   void setup() {
-    buffer = Vector.randomFilled(
+    mutable = Vector.randomFilled(
       _amountOfElements.toInt(),
       seed: 1,
       min: -1000,
       max: 1000,
       dtype: DType.float32,
-    ).toBuffer();
+    ).toMutable();
     zeroVector = Vector.zero(_amountOfElements.toInt(), dtype: DType.float32);
   }
 }
