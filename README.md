@@ -24,6 +24,11 @@
         - [Element-wise Vector by Vector division](#element-wise-vector-by-vector-division)
         - [Element-wise Vector and List division](#element-wise-vector-and-list-division)
         - [Element-wise division of Vectors of different dtype](#element-wise-division-of-vectors-of-different-dtype)
+        - [MutableVector](#mutablevector)
+            - [MutableVector addition](#mutablevector-addition)
+            - [MutableVector subtraction](#mutablevector-subtraction)
+            - [MutableVector element-wise multiplication](#mutablevector-element-wise-multiplication)
+            - [MutableVector element-wise division](#mutablevector-element-wise-division)
         - [Euclidean norm](#euclidean-norm)
         - [Manhattan norm](#manhattan-norm)
         - [Mean value](#mean-value)
@@ -85,7 +90,6 @@
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
         - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
 - [vector_math and ml_linalg differences](#differences-between-vector-math-and-ml-linalg)
-- [Contacts](#contacts)
 </details>
 
 ## Linear algebra
@@ -181,14 +185,12 @@ they use 64 bits to represent numbers in the memory versus 32 bits for Float32x4
 &nbsp;&nbsp;&nbsp;&nbsp;Nevertheless, Float32x4 representation uses by default since usually 32 bits is enough for number precision, and along 
 with that, this representation is more performant.
 
-&nbsp;&nbsp;&nbsp;&nbsp;The vectors are immutable: once created, the vector cannot be changed. All the vector operations 
-lead to creation of a new vector instance (of course, if the operation is supposed to return a `Vector`).
+&nbsp;&nbsp;&nbsp;&nbsp;Regular `Vector` operations do not change their input and return a new vector when appropriate. Use [MutableVector](#mutablevector) to make an independent mutable copy for in-place operations.
 
 &nbsp;&nbsp;&nbsp;&nbsp;Both classes implement `Iterable<double>` interface, so it's possible to use them as regular 
 iterable collections.
 
-&nbsp;&nbsp;&nbsp;&nbsp;It's possible to use vector instances as keys for `HashMap` and similar data structures 
-and to look up a value by the vector-key, since the hash code for equal vectors is the same:
+&nbsp;&nbsp;&nbsp;&nbsp;Mutable copies do not change their source vectors, so mutating a `MutableVector` does not affect vectors used as `HashMap` keys:
 
 ```dart
 import 'package:ml_linalg/vector.dart';
@@ -374,6 +376,84 @@ the difference is significant.
   final result = vector1 / vector2;
 
   print(result.toList()); // [2.0, 3.0, 4.0, 6.0, 8.0]
+````
+
+#### MutableVector
+
+`MutableVector` is an independent mutable copy of a `Vector`. Its in-place
+operations return the same mutable vector. The input vector must have the same
+length; operations between vectors of the same dtype use SIMD.
+
+Call `toMutable()` to copy a vector into mutable storage. Changes to the copy do
+not affect the original. Call `toVector()` to create an immutable vector copy
+of the current values:
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, 2.0, 3.0]);
+  final mutable = vector.toMutable();
+  final other = Vector.fromList([2.0, 3.0, 4.0]);
+
+  mutable.add(other);
+  print(mutable.toVector().toList()); // [3.0, 5.0, 7.0]
+  print(vector.toList()); // [1.0, 2.0, 3.0]
+````
+
+##### MutableVector addition
+
+`add` adds each element of the input vector to the corresponding element in
+the mutable vector.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, 2.0, 3.0]);
+  final mutable = vector.toMutable();
+  mutable.add(Vector.fromList([2.0, 3.0, 4.0]));
+  print(mutable.toVector().toList()); // [3.0, 5.0, 7.0]
+````
+
+##### MutableVector subtraction
+
+`subtract` subtracts each element of the input vector from the corresponding
+element in the mutable vector.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([3.0, 5.0, 7.0]);
+  final mutable = vector.toMutable();
+  mutable.subtract(Vector.fromList([2.0, 3.0, 4.0]));
+  print(mutable.toVector().toList()); // [1.0, 2.0, 3.0]
+````
+
+##### MutableVector element-wise multiplication
+
+`multiply` multiplies each element in the mutable vector by the corresponding
+element of the input vector.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([1.0, 2.0, 3.0]);
+  final mutable = vector.toMutable();
+  mutable.multiply(Vector.fromList([2.0, 3.0, 4.0]));
+  print(mutable.toVector().toList()); // [2.0, 6.0, 12.0]
+````
+
+##### MutableVector element-wise division
+
+`divide` divides each element in the mutable vector by the corresponding
+element of the input vector.
+
+````Dart
+  import 'package:ml_linalg/linalg.dart';
+
+  final vector = Vector.fromList([2.0, 6.0, 12.0]);
+  final mutable = vector.toMutable();
+  mutable.divide(Vector.fromList([2.0, 3.0, 4.0]));
+  print(mutable.toVector().toList()); // [1.0, 2.0, 3.0]
 ````
 
 #### Euclidean norm
@@ -1340,7 +1420,3 @@ different libraries:
 
 `vector_math` supports only four dimensions for vectors and matrices at max; `ml_linalg` can handle vectors and matrices
 of potentially infinite length, keeping SIMD nature.
-
-### Contacts
-If you have questions, feel free to write me on 
- - [Twitter](https://twitter.com/ilgyrd)
