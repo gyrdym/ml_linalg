@@ -5,6 +5,7 @@ import 'package:ml_linalg/decomposition.dart';
 import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/inverse.dart';
 import 'package:ml_linalg/matrix_norm.dart';
+import 'package:ml_linalg/mutable_matrix.dart';
 import 'package:ml_linalg/sort_direction.dart';
 import 'package:ml_linalg/src/common/exception/unimplemented_matrix_exception.dart';
 import 'package:ml_linalg/src/matrix/eigen_method.dart';
@@ -14,6 +15,8 @@ import 'package:ml_linalg/src/matrix/serialization/from_matrix_json.dart';
 import 'package:ml_linalg/vector.dart';
 
 import 'src/matrix/eigen.dart';
+
+export 'package:ml_linalg/mutable_matrix.dart' show MutableMatrix;
 
 /// An algebraic matrix with extended functionality, adapted for data science
 /// applications
@@ -737,6 +740,9 @@ abstract class Matrix implements Iterable<Iterable<double>> {
   /// Exception: Cannot convert 2 x 4 matrix into a vector
   /// ```
   Vector toVector();
+
+  /// Returns an independent mutable copy of this matrix.
+  MutableMatrix toMutable();
 
   /// Returns a max value of the matrix
   double max();

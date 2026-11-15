@@ -18,6 +18,7 @@ import 'package:ml_linalg/src/vector/exception/unsupported_norm_type_exception.d
 import 'package:ml_linalg/src/vector/exception/vector_list_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/exception/vectors_length_mismatch_exception.dart';
 import 'package:ml_linalg/src/vector/serialization/vector_to_json.dart';
+import 'package:ml_linalg/src/vector/float32x4_mutable_vector.dart';
 import 'package:ml_linalg/src/vector/vector_cache_keys.dart';
 import 'package:ml_linalg/vector.dart';
 
@@ -26,7 +27,9 @@ const _bucketSize =
     Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
 final _simdOnes = Float32x4.splat(1.0);
 
-class Float32x4Vector with IterableMixin<double> implements Vector {
+class Float32x4Vector
+    with IterableMixin<double>
+    implements Vector, Float32x4VectorDataProvider {
   Float32x4Vector.fromList(List<num> source, this._cache, this._simdHelper)
       : length = source.length {
     _numOfBuckets = _getNumOfBuckets(source.length, _bucketSize);
@@ -150,6 +153,13 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
   Float32List _getTypedList() =>
       _cachedTypedList ??= _buffer.asFloat32List(0, length);
   Float32List? _cachedTypedList;
+
+  @override
+  late final Float32x4VectorData vectorData = Float32x4VectorData(
+    _getSimdList(),
+    _getTypedList(),
+    length,
+  );
 
   bool get _isLastBucketNotFull => length % _bucketSize > 0;
 
@@ -885,4 +895,7 @@ class Float32x4Vector with IterableMixin<double> implements Vector {
 
   @override
   DType get dtype => DType.float32;
+
+  @override
+  MutableVector toMutable() => Float32x4MutableVector(vectorData);
 }
