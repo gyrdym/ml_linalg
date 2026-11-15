@@ -21,7 +21,8 @@ void expectMatrixClose(
   for (var row = 0; row < expected.length; row++) {
     expect(actualRows[row], hasLength(expected[row].length));
     for (var column = 0; column < expected[row].length; column++) {
-      expect(actualRows[row][column], closeTo(expected[row][column], tolerance));
+      expect(
+          actualRows[row][column], closeTo(expected[row][column], tolerance));
     }
   }
 }

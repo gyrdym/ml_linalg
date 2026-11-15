@@ -9,8 +9,7 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart' show Matrix;
 import 'package:ml_linalg/mutable_matrix.dart';
 
-const _simdSize =
-    Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
+const _simdSize = Float64x2List.bytesPerElement ~/ Float64List.bytesPerElement;
 
 /// Float64-backed mutable matrix with storage independent from its source.
 class Float64MutableMatrix

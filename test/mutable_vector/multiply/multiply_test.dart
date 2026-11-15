@@ -36,7 +36,8 @@ void main() {
         final fiveElementMutable = fiveElementVector.toMutable()
           ..multiply(fiveElementOther);
 
-        expect(fourElementMutable.toVector(), equals([36.0, 80.0, 150.0, 240.0]));
+        expect(
+            fourElementMutable.toVector(), equals([36.0, 80.0, 150.0, 240.0]));
         expect(
           fiveElementMutable.toVector(),
           equals([36.0, 80.0, 150.0, 240.0, 350.0]),

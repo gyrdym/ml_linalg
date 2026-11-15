@@ -6,8 +6,7 @@ import 'package:ml_linalg/dtype.dart';
 import 'package:ml_linalg/matrix.dart' show Matrix;
 import 'package:ml_linalg/mutable_matrix.dart';
 
-const _simdSize =
-    Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
+const _simdSize = Float32x4List.bytesPerElement ~/ Float32List.bytesPerElement;
 
 /// Float32-backed mutable matrix with storage independent from its source.
 class Float32MutableMatrix

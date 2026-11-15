@@ -60,8 +60,14 @@ void main() {
       });
 
       test('should throw when operand shapes differ', () {
-        final mutable = matrixFromRows([[1, 2]], dtype).toMutable();
-        final other = matrixFromRows([[1], [2]], dtype);
+        final mutable = matrixFromRows([
+          [1, 2]
+        ], dtype)
+            .toMutable();
+        final other = matrixFromRows([
+          [1],
+          [2]
+        ], dtype);
 
         expect(() => mutable.addScaled(other, 1), throwsArgumentError);
       });

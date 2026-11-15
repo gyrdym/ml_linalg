@@ -37,16 +37,26 @@ void main() {
       );
 
       test('should propagate NaN values', () {
-        final matrix = matrixFromRows([[double.nan, 2, 3, 4]], dtype)
+        final matrix = matrixFromRows([
+          [double.nan, 2, 3, 4]
+        ], dtype)
             .toMutable();
-        final other = matrixFromRows([[0, 0, 0, 0]], dtype);
+        final other = matrixFromRows([
+          [0, 0, 0, 0]
+        ], dtype);
 
         expect(matrix.differenceNorm(other).isNaN, isTrue);
       });
 
       test('should throw when operand shapes differ', () {
-        final matrix = matrixFromRows([[1, 2]], dtype).toMutable();
-        final other = matrixFromRows([[1], [2]], dtype);
+        final matrix = matrixFromRows([
+          [1, 2]
+        ], dtype)
+            .toMutable();
+        final other = matrixFromRows([
+          [1],
+          [2]
+        ], dtype);
 
         expect(() => matrix.differenceNorm(other), throwsArgumentError);
       });

@@ -36,7 +36,8 @@ void main() {
           ..divide(fiveElementOther);
 
         expect(fourElementMutable.toVector(), equals([4.0, 5.0, 6.0, 5.0]));
-        expect(fiveElementMutable.toVector(), equals([4.0, 5.0, 6.0, 5.0, 5.0]));
+        expect(
+            fiveElementMutable.toVector(), equals([4.0, 5.0, 6.0, 5.0, 5.0]));
         expect(
           fiveElementMutable.toVector() ==
               Vector.fromList([4.0, 5.0, 6.0, 5.0, 5.0], dtype: dtype),

@@ -72,9 +72,17 @@ void main() {
       );
 
       test('should throw when dimensions are incompatible', () {
-        final left = matrixFromRows([[1, 2, 3]], dtype).toMutable();
-        final right = matrixFromRows([[1, 2]], dtype);
-        final destination = matrixFromRows([[0]], dtype).toMutable();
+        final left = matrixFromRows([
+          [1, 2, 3]
+        ], dtype)
+            .toMutable();
+        final right = matrixFromRows([
+          [1, 2]
+        ], dtype);
+        final destination = matrixFromRows([
+          [0]
+        ], dtype)
+            .toMutable();
 
         expect(
           () => left.multiplyInto(right, destination),
@@ -83,9 +91,18 @@ void main() {
       });
 
       test('should throw when destination shape is incorrect', () {
-        final left = matrixFromRows([[1, 2]], dtype).toMutable();
-        final right = matrixFromRows([[1], [2]], dtype);
-        final destination = matrixFromRows([[0, 0]], dtype).toMutable();
+        final left = matrixFromRows([
+          [1, 2]
+        ], dtype)
+            .toMutable();
+        final right = matrixFromRows([
+          [1],
+          [2]
+        ], dtype);
+        final destination = matrixFromRows([
+          [0, 0]
+        ], dtype)
+            .toMutable();
 
         expect(
           () => left.multiplyInto(right, destination),
