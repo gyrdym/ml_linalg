@@ -7,6 +7,19 @@ String matrixTestTitle(DType dtype) => 'with $dtype storage';
 Matrix matrixFromRows(List<List<double>> rows, DType dtype) =>
     Matrix.fromList(rows, dtype: dtype);
 
+Matrix matrixFromFlattened(
+  List<double> values,
+  int rowCount,
+  int columnCount,
+  DType dtype,
+) =>
+    Matrix.fromFlattenedList(
+      values,
+      rowCount,
+      columnCount,
+      dtype: dtype,
+    );
+
 List<List<double>> matrixValues(Iterable<Iterable<double>> matrix) =>
     matrix.map((row) => row.toList()).toList();
 

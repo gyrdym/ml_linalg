@@ -74,6 +74,37 @@ void main() {
         expect(mutable[1], equals([3, 4]));
         expect(mutable.asFlattenedList, equals([1, 2, 3, 4]));
       });
+
+      test('should reject row indices outside the matrix bounds', () {
+        final mutable = matrixFromRows(
+          [
+            [1, 2],
+            [3, 4],
+          ],
+          dtype,
+        ).toMutable();
+
+        expect(() => mutable[-1], throwsRangeError);
+        expect(() => mutable[2], throwsRangeError);
+      });
+
+      test('should remain unchanged when source storage changes', () {
+        final original = matrixFromRows(
+          [
+            [1, 2],
+            [3, 4],
+          ],
+          dtype,
+        );
+        final mutable = original.toMutable();
+
+        original.asFlattenedList[0] = 99;
+
+        expectMatrixClose(mutable, [
+          [1, 2],
+          [3, 4],
+        ]);
+      });
     });
   }
 }
