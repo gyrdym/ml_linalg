@@ -89,6 +89,11 @@
         - [Matrix indexing and sampling](#matrix-indexing-and-sampling)
         - [Add new columns to a matrix](#add-new-columns-to-a-matrix)
         - [Matrix serialization/deserialization](#matrix-serializationdeserialization)
+    - [MutableMatrix](#mutablematrix)
+        - [MutableMatrix scaling](#mutablematrix-scaling)
+        - [MutableMatrix scaled addition](#mutablematrix-scaled-addition)
+        - [Matrix multiplication into a destination](#matrix-multiplication-into-a-destination)
+        - [MutableMatrix difference norm](#mutablematrix-difference-norm)
 - [vector_math and ml_linalg differences](#differences-between-vector-math-and-ml-linalg)
 </details>
 
@@ -1411,6 +1416,65 @@ import 'package:ml_linalg/linalg.dart';
 
 final matrix = Matrix.fromJson(serialized);
 ````
+
+#### MutableMatrix
+
+`Matrix.toMutable()` creates an independent mutable copy. Mutating it does not
+change the original matrix. `MutableMatrix.toMatrix()` returns an immutable
+snapshot of its current values. Its `asFlattenedList` property exposes the
+mutable row-major typed data.
+
+##### MutableMatrix scaling
+
+`scale(factor)` multiplies every element in place:
+
+```dart
+final coefficients = Matrix.fromList([[1.0, 2.0], [3.0, 4.0]]).toMutable();
+coefficients.scale(0.5);
+```
+
+##### MutableMatrix scaled addition
+
+`addScaled(other, factor)` performs `this += other * factor` in one pass.
+Both matrices must have the same shape:
+
+```dart
+coefficients.addScaled(gradient, -learningRate);
+```
+
+##### Matrix multiplication into a destination
+
+`multiplyInto(other, destination)` computes the matrix product and writes it
+into an already allocated mutable matrix. The destination must have the product
+shape; it may be the same mutable matrix as the left operand.
+
+```dart
+final featureMatrix = Matrix.fromList([
+  [1.0, 2.0],
+  [3.0, 4.0],
+]);
+final coefficients = Matrix.fromFlattenedList(
+  List<double>.filled(featureMatrix.columnCount, 1.0),
+  featureMatrix.columnCount,
+  1,
+);
+final features = featureMatrix.toMutable();
+final predictions = Matrix.fromFlattenedList(
+  List<double>.filled(featureMatrix.rowCount, 0.0),
+  featureMatrix.rowCount,
+  1,
+).toMutable();
+features.multiplyInto(coefficients, predictions);
+```
+
+##### MutableMatrix difference norm
+
+`differenceNorm(other)` returns the Frobenius norm of `this - other` without
+allocating an intermediate matrix. Both matrices must have the same shape.
+
+```dart
+final delta = newCoefficients.differenceNorm(coefficients);
+```
 
 ## Differences between vector math and ml linalg
 
