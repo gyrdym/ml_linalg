@@ -45,6 +45,27 @@ void main() {
         ]);
       });
 
+      test('should multiply two 1x1 matrices', () {
+        final left = matrixFromRows([
+          [-3.5]
+        ], dtype)
+            .toMutable();
+        final right = matrixFromRows([
+          [2]
+        ], dtype);
+        final destination = matrixFromRows([
+          [0]
+        ], dtype)
+            .toMutable();
+
+        left.multiplyInto(right, destination);
+
+        expectMatrixClose(destination, [
+          [-7]
+        ]);
+        expect(destination.toMatrix().sum(), -7);
+      });
+
       test(
         'should support a mutable right operand and an aliased destination',
         () {
@@ -120,27 +141,34 @@ void main() {
       test(
         'should handle a destination overlapping the left operand',
         () {
-          final left = matrixFromRows([
-            [2, 3]
-          ], dtype)
-              .toMutable();
+          final left = matrixFromRows(
+            [
+              [2, 3, 4],
+              [5, 6, 7],
+            ],
+            dtype,
+          ).toMutable();
           final destination = MutableMatrixView(
-            typedPrefixView(left.asFlattenedList, 1),
-            1,
-            1,
+            typedPrefixView(left.asFlattenedList, 4),
+            2,
+            2,
             dtype,
           );
           final right = matrixFromRows(
             [
-              [4],
-              [5],
+              [1, 2],
+              [3, 4],
+              [5, 6],
             ],
             dtype,
           );
 
           left.multiplyInto(right, destination);
 
-          expect(destination[0].first, 23);
+          expectMatrixClose(destination, [
+            [31, 40],
+            [58, 76],
+          ]);
         },
       );
 

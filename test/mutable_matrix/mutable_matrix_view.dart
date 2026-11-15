@@ -15,6 +15,7 @@ List<double> typedPrefixView(List<double> values, int length) {
   throw ArgumentError.value(values, 'values', 'Expected typed float data');
 }
 
+/// A test matrix view that can share typed-data storage with another matrix.
 class MutableMatrixView
     with IterableMixin<Iterable<double>>
     implements MutableMatrix {
