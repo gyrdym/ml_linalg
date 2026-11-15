@@ -115,31 +115,35 @@ void main() {
           'should preserve a finite norm when squaring would overflow',
           () {
             final matrix = matrixFromRows([
-              [1e200]
+              [1e200, 1e200]
             ], DType.float64)
                 .toMutable();
             final zero = matrixFromRows([
-              [0]
+              [0, 0]
             ], DType.float64);
 
-            expect(matrix.differenceNorm(zero), closeTo(1e200, 1e185));
+            expect(
+              matrix.differenceNorm(zero),
+              closeTo(1.4142135623730951e200, 1e185),
+            );
           },
-          skip: 'TODO: use a scaled sum-of-squares algorithm.',
         );
         test(
           'should preserve a nonzero norm when squaring would underflow',
           () {
             final matrix = matrixFromRows([
-              [1e-200]
+              [1e-200, 1e-200]
             ], DType.float64)
                 .toMutable();
             final zero = matrixFromRows([
-              [0]
+              [0, 0]
             ], DType.float64);
 
-            expect(matrix.differenceNorm(zero), closeTo(1e-200, 1e-215));
+            expect(
+              matrix.differenceNorm(zero),
+              closeTo(1.4142135623730951e-200, 1e-215),
+            );
           },
-          skip: 'TODO: use a scaled sum-of-squares algorithm.',
         );
       }
     });

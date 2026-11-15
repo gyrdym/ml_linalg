@@ -187,7 +187,7 @@ void main() {
             dtype,
           ).toMutable();
           final destination = MutableMatrixView(
-            typedPrefixView(right.asFlattenedList, 2),
+            typedRangeView(right.asFlattenedList, 1, 2),
             1,
             2,
             dtype,

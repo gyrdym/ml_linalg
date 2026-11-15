@@ -172,16 +172,43 @@ class Float32MutableMatrix
     _checkSameShape(other);
 
     final otherValues = _flattenedValuesOf(other);
-    // Keep subtraction and accumulation in double precision. Accumulating
-    // squares in Float32x4 can overflow/underflow, and sumLanes ignores NaN
-    // lanes, which would make the result depend on the matrix length.
-    var squaredNorm = 0.0;
+    // Scale the sum to keep intermediate squares in a representable range.
+    var scale = 0.0;
+    var scaledSquares = 1.0;
+    var hasInfinity = false;
+
     for (var i = 0; i < _values.length; i++) {
       final difference = _values[i] - otherValues[i];
-      squaredNorm += difference * difference;
+      final absoluteDifference = difference.abs();
+
+      if (absoluteDifference.isNaN) {
+        return double.nan;
+      }
+
+      if (absoluteDifference.isInfinite) {
+        hasInfinity = true;
+        continue;
+      }
+
+      if (absoluteDifference == 0) {
+        continue;
+      }
+
+      if (scale < absoluteDifference) {
+        final ratio = scale / absoluteDifference;
+        scaledSquares = 1 + scaledSquares * ratio * ratio;
+        scale = absoluteDifference;
+      } else {
+        final ratio = absoluteDifference / scale;
+        scaledSquares += ratio * ratio;
+      }
     }
 
-    return math.sqrt(squaredNorm);
+    if (hasInfinity) {
+      return double.infinity;
+    }
+
+    return scale == 0 ? 0.0 : scale * math.sqrt(scaledSquares);
   }
 
   Float32x4List _getSimdValues() =>
@@ -333,7 +360,8 @@ class Float32MutableMatrix
     int secondOffset,
     int secondLength,
   ) {
-    if (!identical(firstBuffer, secondBuffer)) {
+    // Distinct ByteBuffer wrappers can still represent the same backing data.
+    if (firstBuffer != secondBuffer) {
       return false;
     }
 

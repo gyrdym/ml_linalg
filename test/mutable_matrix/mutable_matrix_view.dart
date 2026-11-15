@@ -6,11 +6,23 @@ import 'package:ml_linalg/matrix.dart' show Matrix;
 import 'package:ml_linalg/mutable_matrix.dart';
 
 List<double> typedPrefixView(List<double> values, int length) {
+  return typedRangeView(values, 0, length);
+}
+
+List<double> typedRangeView(List<double> values, int start, int length) {
   if (values is Float32List) {
-    return Float32List.view(values.buffer, values.offsetInBytes, length);
+    return Float32List.view(
+      values.buffer,
+      values.offsetInBytes + start * Float32List.bytesPerElement,
+      length,
+    );
   }
   if (values is Float64List) {
-    return Float64List.view(values.buffer, values.offsetInBytes, length);
+    return Float64List.view(
+      values.buffer,
+      values.offsetInBytes + start * Float64List.bytesPerElement,
+      length,
+    );
   }
   throw ArgumentError.value(values, 'values', 'Expected typed float data');
 }
