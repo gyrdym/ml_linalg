@@ -271,6 +271,10 @@ class Float64MutableMatrix
       : (other as MutableMatrix).asFlattenedList;
 
   bool _overlaps(List<double> first, List<double> second) {
+    if (identical(first, second)) {
+      return first.isNotEmpty;
+    }
+
     if (first is Float32List) {
       if (second is Float32List) {
         return _rangesOverlap(
