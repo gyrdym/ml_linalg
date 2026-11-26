@@ -1,12 +1,16 @@
 import 'generate_float64_matrix.dart';
 import 'generate_float64_matrix_iterator.dart';
+import 'generate_float64_mutable_matrix.dart';
 import 'generate_float64x2_vector.dart';
+import 'generate_float64x2_mutable_vector.dart';
 
 void main() async {
   await Future.wait([
     generateFloat64x2Vector(),
+    generateFloat64x2MutableVector(),
     generateFloat64MatrixIterator(),
     generateFloat64Matrix(),
+    generateFloat64MutableMatrix(),
   ]);
 
   print('Float64-based entities generation completed');

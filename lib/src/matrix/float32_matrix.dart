@@ -23,6 +23,7 @@ import 'package:ml_linalg/src/matrix/helper/get_2d_iterable_length.dart';
 import 'package:ml_linalg/src/matrix/helper/get_length_of_first_or_zero.dart';
 import 'package:ml_linalg/src/matrix/helper/get_zero_based_indices.dart';
 import 'package:ml_linalg/src/matrix/iterator/float32_matrix_iterator.dart';
+import 'package:ml_linalg/src/matrix/float32_mutable_matrix.dart';
 import 'package:ml_linalg/src/matrix/mixin/matrix_shape_validation_mixin.dart';
 import 'package:ml_linalg/src/matrix/serialization/matrix_to_json.dart';
 import 'package:ml_linalg/vector.dart';
@@ -622,6 +623,9 @@ class Float32Matrix
     throw Exception(
         'Cannot convert $rowCount x $columnCount matrix into a vector');
   }
+
+  @override
+  MutableMatrix toMutable() => Float32MutableMatrix(this);
 
   @override
   String toString() {

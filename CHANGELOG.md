@@ -1,5 +1,13 @@
 # Changelog
 
+## 13.13.0
+- `MutableVector`:
+  - added a mutable vector copy for in-place `add`, `subtract`, `multiply`,
+    and `divide` operations
+- `MutableMatrix`:
+  - added in-place scaling, scaled addition, multiplication into a destination,
+    and difference norm operations
+
 ## 13.12.9
 - `Vector.fromList`:
   - factory-constructor speed-up
